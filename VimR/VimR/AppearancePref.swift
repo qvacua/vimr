@@ -21,13 +21,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     case setCharacterspacing(CGFloat)
   }
 
-  override var displayName: String {
-    return "Appearance"
-  }
+  override var displayName: String { "Appearance" }
 
-  override var pinToContainer: Bool {
-    return true
-  }
+  override var pinToContainer: Bool { true }
 
   override func windowWillClose() {
     self.linespacingAction()
@@ -59,10 +55,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
               || self.characterspacing != appearance.characterspacing
               || self.usesLigatures != appearance.usesLigatures
               || self.usesColorscheme != appearance.usesTheme
-              || self.showsFileIcon != appearance.showsFileIcon else {
-
-          return
-        }
+              || self.showsFileIcon != appearance.showsFileIcon
+          else { return }
 
         self.font = appearance.font
         self.linespacing = appearance.linespacing
@@ -98,38 +92,46 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private let previewArea = NSTextView(frame: .zero)
 
   private let exampleText =
-    "abcdefghijklmnopqrstuvwxyz\n" +
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ\n" +
-    "0123456789\n" +
-    "(){}[] +-*/= .,;:!?#&$%@|^\n" +
-    "<- -> => >> << >>= =<< .. \n" +
-    ":: -< >- -<< >>- ++ /= =="
+    """
+    abcdefghijklmnopqrstuvwxyz
+    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    0123456789 -~ - ~
+    (){}[] +-*/= .,;:!?#&$%@|^
+    <- -> => >> << >>= =<< .. 
+    :: -< >- -<< >>- ++ /= ==
+    """
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
 
     let useColorscheme = self.colorschemeCheckbox
-    self.configureCheckbox(button: useColorscheme,
-                           title: "Use Neovim's color scheme for main window and tools.",
-                           action: #selector(AppearancePref.usesColorschemeAction(_:)))
+    self.configureCheckbox(
+      button: useColorscheme,
+      title: "Use Neovim's color scheme for main window and tools.",
+      action: #selector(AppearancePref.usesColorschemeAction(_:))
+    )
 
     let useColorschemeInfo = self.infoTextField(
-      markdown: "If checked, the colors of the selected `colorscheme` will be  \n" +
-                "used to render tools, e.g. the file browser."
+      markdown: """
+                If checked, the colors of the selected `colorscheme` will be
+                used to render tools, e.g. the file browser.
+                """
     )
 
     let fileIcon = self.fileIconCheckbox
-    self.configureCheckbox(button: fileIcon,
-                           title: "Show file icons",
-                           action: #selector(AppearancePref.fileIconAction(_:)))
+    self.configureCheckbox(
+      button: fileIcon,
+      title: "Show file icons",
+      action: #selector(AppearancePref.fileIconAction(_:))
+    )
 
     let fileIconInfo = self.infoTextField(
-      markdown: "In case the selected `colorscheme` does not play well with the file icons  \n" +
-                "in the file browser and the buffer list, you can turn them off."
+      markdown: """
+                In case the selected `colorscheme` does not play well with the file icons
+                in the file browser and the buffer list, you can turn them off.
+                """
     )
 
     let fontTitle = self.titleTextField(title: "Default Font:")
@@ -138,29 +140,24 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     fontPopup.target = self
     fontPopup.action = #selector(AppearancePref.fontPopupAction)
 
-    // This takes approx. 0.8s - 1s on my machine... -_-
-    Observable
-        .just(1)
-        .observeOn(SerialDispatchQueueScheduler(qos: .background))
-        .map { _ in sharedFontManager.availableFontNames(with: .fixedPitchFontMask)! }
-        .observeOn(MainScheduler.instance)
-        .subscribe(onNext: {
-            fontPopup.addItems(withTitles: $0)
-            self.updateViews()
-        })
-        .disposed(by: self.disposeBag)
+    // This takes quite some time.
+    DispatchQueue.global(qos: .userInitiated).async {
+      let fontNames = sharedFontManager.monospacedRegularFontNames()
+      DispatchQueue.main.async {
+        fontPopup.addItems(withTitles: fontNames)
+        self.updateViews()
+      }
+    }
 
     let sizeCombo = self.sizeCombo
     sizeCombo.delegate = self
     sizeCombo.target = self
     sizeCombo.action = #selector(AppearancePref.sizeComboBoxDidEnter(_:))
-    self.sizes.forEach { string in
-      sizeCombo.addItem(withObjectValue: string)
-    }
+    self.sizes.forEach { string in sizeCombo.addItem(withObjectValue: string) }
 
     let linespacingTitle = self.titleTextField(title: "Line Spacing:")
     let linespacingField = self.linespacingField
-    
+
     let characterspacingTitle = self.titleTextField(title: "Character Spacing:")
     let characterspacingField = self.characterspacingField
 
@@ -169,20 +166,27 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     )
 
     let ligatureCheckbox = self.ligatureCheckbox
-    self.configureCheckbox(button: ligatureCheckbox,
-                           title: "Use Ligatures",
-                           action: #selector(AppearancePref.usesLigaturesAction(_:)))
+    self.configureCheckbox(
+      button: ligatureCheckbox,
+      title: "Use Ligatures",
+      action: #selector(AppearancePref.usesLigaturesAction(_:))
+    )
 
     let previewArea = self.previewArea
     previewArea.isEditable = true
-    previewArea.maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    previewArea.maxSize = CGSize(
+      width: CGFloat.greatestFiniteMagnitude,
+      height: CGFloat.greatestFiniteMagnitude
+    )
     previewArea.isVerticallyResizable = true
     previewArea.isHorizontallyResizable = true
     previewArea.textContainer?.heightTracksTextView = false
     previewArea.textContainer?.widthTracksTextView = false
     previewArea.autoresizingMask = [.width, .height]
-    previewArea.textContainer?.containerSize = CGSize(width: CGFloat.greatestFiniteMagnitude,
-                                                      height: CGFloat.greatestFiniteMagnitude)
+    previewArea.textContainer?.containerSize = CGSize(
+      width: CGFloat.greatestFiniteMagnitude,
+      height: CGFloat.greatestFiniteMagnitude
+    )
     previewArea.layoutManager?.replaceTextStorage(NSTextStorage(string: self.exampleText))
     previewArea.isRichText = false
     previewArea.turnOffLigatures(self)
@@ -238,31 +242,39 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     sizeCombo.autoAlignAxis(.horizontal, toSameAxisOf: fontPopup)
     sizeCombo.autoPinEdge(.left, to: .right, of: fontPopup, withOffset: 5)
 
-    linespacingTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    linespacingTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
     linespacingTitle.autoPinEdge(.right, to: .right, of: fontTitle)
     linespacingTitle.autoAlignAxis(.baseline, toSameAxisOf: linespacingField)
 
     linespacingField.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
     linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
     linespacingField.autoSetDimension(.width, toSize: 60)
-    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: linespacingField,
-                                           queue: nil) { [unowned self] _ in
-      self.linespacingAction()
-    }
-    
-    characterspacingTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    NotificationCenter.default.addObserver(
+      forName: NSControl.textDidEndEditingNotification,
+      object: linespacingField,
+      queue: nil
+    ) { [unowned self] _ in self.linespacingAction() }
+
+    characterspacingTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
     characterspacingTitle.autoPinEdge(.right, to: .right, of: linespacingTitle)
     characterspacingTitle.autoAlignAxis(.baseline, toSameAxisOf: characterspacingField)
-    
+
     characterspacingField.autoPinEdge(.top, to: .bottom, of: linespacingField, withOffset: 18)
     characterspacingField.autoPinEdge(.left, to: .right, of: characterspacingTitle, withOffset: 5)
     characterspacingField.autoSetDimension(.width, toSize: 60)
-    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: characterspacingField,
-                                           queue: nil) { [unowned self] _ in
-                                            self.characterspacingAction()
-    }
+    NotificationCenter.default.addObserver(
+      forName: NSControl.textDidEndEditingNotification,
+      object: characterspacingField,
+      queue: nil
+    ) { [unowned self] _ in self.characterspacingAction() }
 
     characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
     characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
@@ -278,7 +290,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   }
 
   private func updateViews() {
-    self.fontPopup.selectItem(withTitle: self.font.fontName)
+    if let familyName = self.font.familyName { self.fontPopup.selectItem(withTitle: familyName) }
     self.sizeCombo.stringValue = String(Int(self.font.pointSize))
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
@@ -311,25 +323,15 @@ extension AppearancePref {
   }
 
   @objc func fontPopupAction(_ sender: NSPopUpButton) {
-    guard let selectedItem = self.fontPopup.selectedItem else {
-      return
-    }
-
-    guard selectedItem.title != self.font.fontName else {
-      return
-    }
-
-    guard let newFont = NSFont(name: selectedItem.title, size: self.font.pointSize) else {
-      return
-    }
+    guard let selectedItem = self.fontPopup.selectedItem else { return }
+    guard selectedItem.title != self.font.familyName else { return }
+    guard let newFont = NSFont(name: selectedItem.title, size: self.font.pointSize) else { return }
 
     self.emit(.setFont(newFont))
   }
 
   func comboBoxSelectionDidChange(_ notification: Notification) {
-    guard (notification.object as! NSComboBox) === self.sizeCombo else {
-      return
-    }
+    guard (notification.object as! NSComboBox) === self.sizeCombo else { return }
 
     let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
     let newFont = sharedFontManager.convert(self.font, toSize: newFontSize)
@@ -352,29 +354,22 @@ extension AppearancePref {
   private func cappedLinespacing(_ linespacing: Float) -> CGFloat {
     let cgfLinespacing = linespacing.cgf
 
-    guard cgfLinespacing >= NvimView.minLinespacing else {
-      return NvimView.defaultLinespacing
-    }
-
-    guard cgfLinespacing <= NvimView.maxLinespacing else {
-      return NvimView.maxLinespacing
-    }
+    guard cgfLinespacing >= NvimView.minLinespacing else { return NvimView.defaultLinespacing }
+    guard cgfLinespacing <= NvimView.maxLinespacing else { return NvimView.maxLinespacing }
 
     return cgfLinespacing
   }
-  
+
   func characterspacingAction() {
     let newCharacterspacing = self.cappedCharacterspacing(self.characterspacingField.floatValue)
     self.emit(.setCharacterspacing(newCharacterspacing))
   }
-  
+
   private func cappedCharacterspacing(_ characterspacing: Float) -> CGFloat {
     let cgfCharacterspacing = characterspacing.cgf
-    
-    guard cgfCharacterspacing >= 0.0 else {
-      return NvimView.defaultCharacterspacing
-    }
-    
+
+    guard cgfCharacterspacing >= 0.0 else { return NvimView.defaultCharacterspacing }
+
     return cgfCharacterspacing
   }
 
@@ -382,13 +377,8 @@ extension AppearancePref {
   private func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = size.cgf
 
-    guard cgfSize >= NvimView.minFontSize else {
-      return NvimView.defaultFont.pointSize
-    }
-
-    guard cgfSize <= NvimView.maxFontSize else {
-      return NvimView.maxFontSize
-    }
+    guard cgfSize >= NvimView.minFontSize else { return NvimView.defaultFont.pointSize }
+    guard cgfSize <= NvimView.maxFontSize else { return NvimView.maxFontSize }
 
     return cgfSize
   }

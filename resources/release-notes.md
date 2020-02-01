@@ -1,10 +1,8 @@
 # Next
 
-We updated the library ShortcutRecorder to the latest version.
-By doing so, we store the shortcuts in a different format than before.
-This means that after you launched this version, old versions will not be compatible with the stored shortcuts.
-To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.menuitems` in Terminal.
+We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.menuitems` in Terminal.
 
+* Show only font family names of monospace fonts.
 * Bugfix: Shortcut buttons are not dark mode compatible.
 * Dependencies updates:
     - Kentzo/ShortcutRecorder@3.1
