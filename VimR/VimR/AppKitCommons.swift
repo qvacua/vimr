@@ -10,35 +10,27 @@ extension NSColor {
 
   static var random: NSColor {
     NSColor(
-      calibratedRed: CGFloat.random(in: 0...1),
-      green: CGFloat.random(in: 0...1),
-      blue: CGFloat.random(in: 0...1),
+      calibratedRed: .random(in: 0...1),
+      green: .random(in: 0...1),
+      blue: .random(in: 0...1),
       alpha: 1.0
     )
   }
 
   var hex: String {
-    if let color = self.usingColorSpace(.sRGB) {
-      return "#" +
-             String(format: "%X", Int(color.redComponent * 255)) +
-             String(format: "%X", Int(color.greenComponent * 255)) +
-             String(format: "%X", Int(color.blueComponent * 255)) +
-             String(format: "%X", Int(color.alphaComponent * 255))
-    } else {
-      return self.description
-    }
+    guard let color = self.usingColorSpace(.sRGB) else { return self.description }
+    return "#" +
+           String(format: "%X", Int(color.redComponent * 255)) +
+           String(format: "%X", Int(color.greenComponent * 255)) +
+           String(format: "%X", Int(color.blueComponent * 255)) +
+           String(format: "%X", Int(color.alphaComponent * 255))
   }
 
   func brightening(by factor: CGFloat) -> NSColor {
-    guard let color = self.usingColorSpace(.sRGB) else {
-      // TODO: what to do?
-      return self
-    }
-
-    let h = color.hueComponent
-    let s = color.saturationComponent
-    let b = color.brightnessComponent
-    let a = color.alphaComponent
+    let h = self.hueComponent
+    let s = self.saturationComponent
+    let b = self.brightnessComponent
+    let a = self.alphaComponent
 
     return NSColor(hue: h, saturation: s, brightness: b * factor, alpha: a)
   }
@@ -47,8 +39,7 @@ extension NSColor {
 extension NSImage {
 
   func tinting(with color: NSColor) -> NSImage {
-
-    let result: NSImage = self.copy() as! NSImage
+    let result = self.copy() as! NSImage
 
     result.lockFocus()
     color.set()
