@@ -10,6 +10,14 @@ readonly code_sign=${code_sign:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
 readonly build_path="./build"
 
+# Carthage often crashes => do it at the beginning.
+echo "### Updating carthage"
+if [[ ${use_carthage_cache} == true ]]; then
+    carthage update --cache-builds --platform macos
+else
+    carthage update --platform macos
+fi
+
 # Build NeoVim
 # 0. Delete previously built things
 # 1. Build normally to get the full runtime folder and copy it to the neovim's project root
@@ -38,13 +46,6 @@ pushd NvimView/neovim
     rm -rf runtime
     cp -r /tmp/nvim-runtime/share/nvim/runtime .
 popd > /dev/null
-
-echo "### Updating carthage"
-if [[ ${use_carthage_cache} == true ]]; then
-    carthage update --cache-builds --platform macos
-else
-    carthage update --platform macos
-fi
 
 echo "### Xcodebuilding"
 
