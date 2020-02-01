@@ -1,5 +1,6 @@
 # Next
 
+* Bugfix: Shortcut buttons are not dark mode compatible.
 * Dependencies updates:
     - Kentzo/ShortcutRecorder 3.1
 
