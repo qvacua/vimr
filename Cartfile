@@ -6,13 +6,13 @@ github "a2/MessagePack.swift" == 3.0.1
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "Kentzo/ShortcutRecorder" == 3.1
-github "qvacua/Sparkle" == 1.21.3-qvacua
+github "sparkle-project/Sparkle" == 1.22.0
 github "qvacua/swifter" "nonpublic"
 
 # included directly
 github "elegantchaos/DictionaryCoding" == 1.0.7
-github "eonil/FSEvents" == 0.1.5
+github "eonil/FSEvents" == 0.1.6
 github "sindresorhus/github-markdown-css" == 3.0.1
 
 # for testing only
-github "Quick/Nimble" == 8.0.4
+github "Quick/Nimble" == 8.0.5
