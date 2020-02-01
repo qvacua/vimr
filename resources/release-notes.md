@@ -7,7 +7,11 @@ To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.men
 
 * Bugfix: Shortcut buttons are not dark mode compatible.
 * Dependencies updates:
-    - Kentzo/ShortcutRecorder 3.1
+    - Kentzo/ShortcutRecorder@3.1
+    - sparkle-project/Sparkle@1.22.0
+    - httpswift/swifter@1.4.7
+    - eonil/FSEvents@0.1.6
+    - Quick/Nimble@8.0.5
 
 # 0.31.0-337
 
