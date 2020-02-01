@@ -65,6 +65,12 @@ extension Array where Element: Hashable {
 
     return result
   }
+
+  // From https://stackoverflow.com/a/46354989
+  func uniqueing() -> [Element] {
+    var seen = Set<Element>()
+    return filter { seen.insert($0).inserted }
+  }
 }
 
 func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)

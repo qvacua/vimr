@@ -234,3 +234,29 @@ extension NSScrollView {
     return scrollView
   }
 }
+
+extension NSFontManager {
+
+  func monospacedRegularFontNames() -> [String] {
+    self
+      .availableFontFamilies
+      .compactMap { name -> [(String, [Any])]? in
+        guard let members = self.availableMembers(ofFontFamily: name) else { return nil }
+        return members.map { member in (name, member) }
+      }
+      .flatMap { $0 }
+      .filter { element in
+        guard let trait = element.1[3] as? NSNumber,
+              let weight = element.1[2] as? NSNumber,
+              trait.uint32Value == NSFontDescriptor.SymbolicTraits.monoSpace.rawValue,
+              weight.intValue == regularWeight
+          else { return false }
+
+        return true
+      }
+      .map { $0.0 }
+      .uniqueing()
+  }
+}
+
+private let regularWeight = 5
