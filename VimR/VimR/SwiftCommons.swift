@@ -96,3 +96,12 @@ extension Dictionary {
     return tuplesToDict(array)
   }
 }
+
+extension Sequence {
+
+  @discardableResult
+  func log() -> Self {
+    self.forEach { Swift.print($0) }
+    return self
+  }
+}
