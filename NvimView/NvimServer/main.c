@@ -25,14 +25,14 @@ int main(int argc, const char *argv[]) {
 
   server_send_msg(NvimServerMsgIdServerReady, NULL);
 
-  os_log_debug(
+  os_log_info(
       logger,
-      "Started NvimServer '%s' and connected it with GUI '%s'.",
+      "Started NvimServer '%{public}s' and connected it with GUI '%{public}s'.",
       local_port_name, remote_port_name
   );
 
   CFRunLoopRun();
-  os_log_debug(logger, "NvimServer exiting.");
+  os_log_info(logger, "NvimServer exiting.");
 
   return 0;
 }
@@ -59,5 +59,6 @@ static void observe_parent_termination() {
     dispatch_source_cancel(source);
   });
 
+  os_log_info(logger, "Monitoring parend PID %{public}u", parent_pid);
   dispatch_resume(source);
 }
