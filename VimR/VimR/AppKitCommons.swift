@@ -27,10 +27,12 @@ extension NSColor {
   }
 
   func brightening(by factor: CGFloat) -> NSColor {
-    let h = self.hueComponent
-    let s = self.saturationComponent
-    let b = self.brightnessComponent
-    let a = self.alphaComponent
+    guard let color = self.usingColorSpace(.sRGB) else { return self }
+
+    let h = color.hueComponent
+    let s = color.saturationComponent
+    let b = color.brightnessComponent
+    let a = color.alphaComponent
 
     return NSColor(hue: h, saturation: s, brightness: b * factor, alpha: a)
   }
