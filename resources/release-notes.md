@@ -4,6 +4,7 @@ We updated the library ShortcutRecorder to the latest version. By doing so, we s
 
 * Show only font family names of monospace fonts.
 * Bugfix: The cursor is not drawn when a new window is opened.
+* Bugfix: Preview in the Appearance preferences is not dark mode compatible.
 * Bugfix: Shortcut buttons are not dark mode compatible.
 * Dependencies updates:
     - Kentzo/ShortcutRecorder@3.1
