@@ -30,6 +30,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.characterspacingAction()
   }
 
+  override func paneWillAppear() {
+    self.previewArea.textColor = NSColor.textColor
+  }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
 
