@@ -215,7 +215,6 @@ public class NvimView: NSView,
 
   var _font = NvimView.defaultFont
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
-  var shouldDrawCursor = false
   var isInitialResize = true
 
   // cache the tabs for Touch Bar use
