@@ -1289,6 +1289,7 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
+				OTHER_CODE_SIGN_FLAGS = "--options=runtime --timestamp";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",
@@ -1317,6 +1318,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_MODULES_AUTOLINK = NO;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = "INCLUDE_GENERATED_DECLARATIONS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/src",
@@ -1329,6 +1331,7 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
+				OTHER_CODE_SIGN_FLAGS = "--options=runtime --timestamp";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",
