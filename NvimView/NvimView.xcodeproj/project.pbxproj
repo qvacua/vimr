@@ -1239,6 +1239,7 @@
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1261,6 +1262,7 @@
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1289,7 +1291,7 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
-				OTHER_CODE_SIGN_FLAGS = "--options=runtime --timestamp";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",
@@ -1331,7 +1333,7 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
-				OTHER_CODE_SIGN_FLAGS = "--options=runtime --timestamp";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",

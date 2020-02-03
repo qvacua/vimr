@@ -2049,6 +2049,7 @@
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
