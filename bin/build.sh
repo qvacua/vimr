@@ -60,8 +60,7 @@ else
     echo "Not publishing and no release => not incrementing the version..."
 fi
 
-#code_sign=true use_carthage_cache=false ./bin/build_vimr.sh
-code_sign=true use_carthage_cache=true ./bin/build_vimr.sh
+code_sign=true use_carthage_cache=false ./bin/build_vimr.sh
 
 pushd VimR > /dev/null
     export readonly bundle_version=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
