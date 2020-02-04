@@ -7,25 +7,32 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-339</title>
+      <title>SNAPSHOT-340</title>
       <description><![CDATA[
     <p>We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
 <ul>
 <li>Show only font family names of monospace fonts.</li>
 <li>Bugfix: The cursor is not drawn when a new window is opened.</li>
 <li>Bugfix: Preview in the Appearance preferences is not dark mode compatible.</li>
+<li>Dependencies updates:<ul>
+<li>httpswift/swifter@1.4.7</li>
+<li>eonil/FSEvents@0.1.6</li>
+<li>Quick/Nimble@8.0.5</li>
+<li>sparkle-project/Sparkle@1.22.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/339
+        https://github.com/qvacua/vimr/releases/tag/snapshot/340
       </releaseNotesLink>
-      <pubDate>2020-02-03T21:02:16.532666</pubDate>
+      <pubDate>2020-02-05T00:58:52.465110</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/339/VimR-SNAPSHOT-339.tar.bz2"
-                 sparkle:version="339"
-                 sparkle:shortVersionString="SNAPSHOT-339"
-                 sparkle:dsaSignature="MC4CFQDoQFJh4zytAZpx7iBwPxS9FJTcpQIVAKUucH/j5FFsMWVncgjWHj9isHX6"
-                 length="14807412"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/340/VimR-SNAPSHOT-340.tar.bz2"
+                 sparkle:version="340"
+                 sparkle:shortVersionString="SNAPSHOT-340"
+                 sparkle:dsaSignature="MC0CFEUnbE5cvUGb/Z6Dwl5kiaVar52pAhUAmMRRvCP0k4B2wCY/hgCXLxsXcAg="
+                 length="14797934"
                  type="application/octet-stream"/>
     </item>
   </channel>
