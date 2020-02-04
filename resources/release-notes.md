@@ -11,6 +11,7 @@ We updated the library ShortcutRecorder to the latest version. By doing so, we s
     - httpswift/swifter@1.4.7
     - eonil/FSEvents@0.1.6
     - Quick/Nimble@8.0.5
+    - sparkle-project/Sparkle@1.22.0
 
 # 0.31.0-337
 

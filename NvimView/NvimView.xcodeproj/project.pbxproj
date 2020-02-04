@@ -223,7 +223,7 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolderSpec = 6;
 			files = (
 				4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */,
 			);
@@ -726,23 +726,28 @@
 				TargetAttributes = {
 					4B0225EF224AAE260052362B = {
 						CreatedOnToolsVersion = 10.2;
+						ProvisioningStyle = Manual;
 					};
 					4B0A1B102129F49500F1E02F = {
 						CreatedOnToolsVersion = 9.4.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					4B90F0031FD2AF59008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
 						LastSwiftMigration = 0910;
+						ProvisioningStyle = Manual;
 					};
 					4B90F04E1FD2AFD3008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Manual;
 					};
 					4BF01CCB2235015E00411218 = {
 						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Manual;
 					};
 					4BF1851F21313EE300954FE7 = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1201,6 +1206,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 339;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1239,7 +1245,6 @@
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1262,7 +1267,6 @@
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1291,7 +1295,6 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
-				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",
@@ -1320,7 +1323,6 @@
 				CLANG_ENABLE_MODULES = NO;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_MODULES_AUTOLINK = NO;
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = "INCLUDE_GENERATED_DECLARATIONS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/src",
@@ -1333,7 +1335,6 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
-				OTHER_CODE_SIGN_FLAGS = "--timestamp --options=runtime";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",
