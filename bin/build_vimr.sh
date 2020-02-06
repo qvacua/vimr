@@ -54,11 +54,10 @@ rm -rf ${build_path}
 if [[ ${code_sign} == true ]] ; then
     identity="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
     entitlements_path=$(realpath NvimView/NvimServer/NvimServer.entitlements)
-    xcodebuild CODE_SIGN_IDENTITY="${identity}" OTHER_CODE_SIGN_FLAGS="--timestamp --options=runtime --entitlements='${entitlements_path}'" -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
+    xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
     pushd ${build_path}/Build/Products/Release > /dev/null
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A
-        codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app
     popd > /dev/null
 else
     xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
