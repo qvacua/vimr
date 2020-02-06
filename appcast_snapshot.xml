@@ -7,7 +7,7 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-340</title>
+      <title>SNAPSHOT-341</title>
       <description><![CDATA[
     <p>We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
 <ul>
@@ -24,15 +24,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/340
+        https://github.com/qvacua/vimr/releases/tag/snapshot/341
       </releaseNotesLink>
-      <pubDate>2020-02-05T00:58:52.465110</pubDate>
+      <pubDate>2020-02-06T22:30:46.962132</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/340/VimR-SNAPSHOT-340.tar.bz2"
-                 sparkle:version="340"
-                 sparkle:shortVersionString="SNAPSHOT-340"
-                 sparkle:dsaSignature="MC0CFEUnbE5cvUGb/Z6Dwl5kiaVar52pAhUAmMRRvCP0k4B2wCY/hgCXLxsXcAg="
-                 length="14797934"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/341/VimR-SNAPSHOT-341.tar.bz2"
+                 sparkle:version="341"
+                 sparkle:shortVersionString="SNAPSHOT-341"
+                 sparkle:dsaSignature="MC0CFC9wDJUIc+uimMn5Xo0dF0UbLgymAhUA3RuHGJslCvKF0QTHYBXp7N+v+6I="
+                 length="14802198"
                  type="application/octet-stream"/>
     </item>
   </channel>
