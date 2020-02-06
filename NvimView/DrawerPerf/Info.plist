@@ -17,9 +17,9 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>SNAPSHOT-340</string>
+        <string>SNAPSHOT-341</string>
         <key>CFBundleVersion</key>
-        <string>340</string>
+        <string>341</string>
         <key>LSMinimumSystemVersion</key>
         <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
         <key>NSHumanReadableCopyright</key>
