@@ -305,11 +305,12 @@ class UiBridge {
   }
 
   private func nvimServerExecutablePath() -> String {
-    guard let plugInsPath = Bundle(for: UiBridge.self).builtInPlugInsPath else {
-      preconditionFailure("NvimServer not available!")
-    }
-
-    return URL(fileURLWithPath: plugInsPath).appendingPathComponent("NvimServer").path
+    Bundle(for: UiBridge.self)
+      .bundleURL
+      .appendingPathComponent("Versions")
+      .appendingPathComponent("A")
+      .appendingPathComponent("NvimServer")
+      .path
   }
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,

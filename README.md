@@ -55,6 +55,7 @@ We will gradually create feature [issues](https://github.com/qvacua/vimr/issues)
 First after cloning the VimR source tree you need to initialize git submodules
 
 ```bash
+git lfs install
 git submodule init
 git submodule update
 ```

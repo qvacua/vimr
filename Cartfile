@@ -6,7 +6,7 @@ github "a2/MessagePack.swift" == 3.0.1
 github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "Kentzo/ShortcutRecorder" == 3.1
-github "sparkle-project/Sparkle" == 1.22.0
+github "qvacua/Sparkle" == 1.22.0
 github "qvacua/swifter" == 1.4.7-qvacua
 
 # included directly

@@ -20,6 +20,10 @@ class PrefPane: NSView {
     return false
   }
 
+  func paneWillAppear() {
+    // noop, override
+  }
+
   func windowWillClose() {
     // noop, override
   }

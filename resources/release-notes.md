@@ -1,13 +1,17 @@
 # Next
 
-We updated the library ShortcutRecorder to the latest version.
-By doing so, we store the shortcuts in a different format than before.
-This means that after you launched this version, old versions will not be compatible with the stored shortcuts.
-To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.menuitems` in Terminal.
+We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.menuitems` in Terminal.
 
+* Show only font family names of monospace fonts.
+* Bugfix: The cursor is not drawn when a new window is opened.
+* Bugfix: Preview in the Appearance preferences is not dark mode compatible.
 * Bugfix: Shortcut buttons are not dark mode compatible.
 * Dependencies updates:
-    - Kentzo/ShortcutRecorder 3.1
+    - Kentzo/ShortcutRecorder@3.1
+    - httpswift/swifter@1.4.7
+    - eonil/FSEvents@0.1.6
+    - Quick/Nimble@8.0.5
+    - sparkle-project/Sparkle@1.22.0
 
 # 0.31.0-337
 

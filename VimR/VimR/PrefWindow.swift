@@ -154,6 +154,7 @@ extension PrefWindow {
 
   func tableViewSelectionDidChange(_: Notification) {
     let idx = self.categoryView.selectedRow
+    self.panes[idx].paneWillAppear()
     self.currentPane = self.panes[idx]
   }
 }

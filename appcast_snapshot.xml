@@ -7,30 +7,32 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-338</title>
+      <title>SNAPSHOT-341</title>
       <description><![CDATA[
-    <p><em>Important:</em> We updated the library ShortcutRecorder to the latest version.
-We store the shortcuts in a different format than before.
-This means that after you launched this version, old versions of VimR will not be compatible with the stored shortcuts.
-To delete the stored shortcuts, such that you can use old versions of VimR again, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
+    <p>We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
 <ul>
-<li>Bugfix: Shortcut buttons are not dark mode compatible.</li>
+<li>Show only font family names of monospace fonts.</li>
+<li>Bugfix: The cursor is not drawn when a new window is opened.</li>
+<li>Bugfix: Preview in the Appearance preferences is not dark mode compatible.</li>
 <li>Dependencies updates:<ul>
-<li>Kentzo/ShortcutRecorder 3.1</li>
+<li>httpswift/swifter@1.4.7</li>
+<li>eonil/FSEvents@0.1.6</li>
+<li>Quick/Nimble@8.0.5</li>
+<li>sparkle-project/Sparkle@1.22.0</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/338
+        https://github.com/qvacua/vimr/releases/tag/snapshot/341
       </releaseNotesLink>
-      <pubDate>2020-02-01T18:13:51.281801</pubDate>
+      <pubDate>2020-02-06T22:30:46.962132</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/338/VimR-SNAPSHOT-338.tar.bz2"
-                 sparkle:version="338"
-                 sparkle:shortVersionString="SNAPSHOT-338"
-                 sparkle:dsaSignature="MC0CFCRXqIhRJL/sZDIrFW0A88ImtuoHAhUAhmDCtVubgQEIesZNAzADZfcIAL0="
-                 length="14821257"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/341/VimR-SNAPSHOT-341.tar.bz2"
+                 sparkle:version="341"
+                 sparkle:shortVersionString="SNAPSHOT-341"
+                 sparkle:dsaSignature="MC0CFC9wDJUIc+uimMn5Xo0dF0UbLgymAhUA3RuHGJslCvKF0QTHYBXp7N+v+6I="
+                 length="14802198"
                  type="application/octet-stream"/>
     </item>
   </channel>

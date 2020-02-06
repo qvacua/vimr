@@ -318,8 +318,6 @@ class FuzzySearchService {
   }
 
   private func handleChange(in folderUrl: URL) {
-    self.log.debug("File event in \(folderUrl)")
-
     self.queue.async {
       let ctx = self.writeContext
       ctx.performAndWait {
@@ -327,14 +325,13 @@ class FuzzySearchService {
         do {
           let fetchResult = try ctx.fetch(req)
           guard let folder = fetchResult.first else {
-            self.log.debug("File with url \(folderUrl) not found, doing nothing")
             return
           }
 
           for child in folder.children ?? [] { ctx.delete(child) }
 
           folder.needsScanChildren = true
-          self.log.debug("Marked \(folder.url!) for scanning")
+          self.log.trace("Marked \(folder.url!) for scanning")
 
           try ctx.save()
         } catch {

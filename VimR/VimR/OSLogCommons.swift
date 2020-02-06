@@ -18,7 +18,7 @@ extension OSLog {
     self.log(
       type: .debug,
       msg: "%{public}@",
-      "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE]"
+      "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE] \(msg)"
     )
     #endif
   }

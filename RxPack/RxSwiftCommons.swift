@@ -8,9 +8,7 @@ import RxSwift
 
 extension ObservableType {
 
-  func compactMap<R>(
-    _ transform: @escaping (Element) throws -> R?
-  ) -> Observable<R> {
+  func compactMap<R>(_ transform: @escaping (Element) throws -> R?) -> Observable<R> {
     self
       .map(transform)
       .filter { $0 != nil }
@@ -22,10 +20,7 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 
   func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 
-  func wait(
-    onCompleted: (() -> Void)? = nil,
-    onError: ((Swift.Error) -> Void)? = nil
-  ) throws {
+  func wait(onCompleted: (() -> Void)? = nil, onError: ((Swift.Error) -> Void)? = nil) throws {
     var trigger = false
     var err: Swift.Error? = nil
 
@@ -60,17 +55,13 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 
 extension PrimitiveSequence where Trait == SingleTrait {
 
-  static func fromSinglesToSingleOfArray(
-    _ singles: [Single<Element>]
-  ) -> Single<[Element]> {
+  static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
     Observable
       .merge(singles.map { $0.asObservable() })
       .toArray()
   }
 
-  func flatMapCompletable(
-    _ selector: @escaping (Element) throws -> Completable
-  ) -> Completable {
+  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
     self
       .asObservable()
       .flatMap { try selector($0).asObservable() }

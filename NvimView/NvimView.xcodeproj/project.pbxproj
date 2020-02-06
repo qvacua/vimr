@@ -71,8 +71,6 @@
 		4B02261B224AAF1C0052362B /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02261A224AAF1B0052362B /* RxSwiftCommons.swift */; };
 		4B022689224ACFE30052362B /* RxMessagePort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022687224ACFE30052362B /* RxMessagePort.swift */; };
 		4B02268A224ACFE30052362B /* RxMessagePort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022687224ACFE30052362B /* RxMessagePort.swift */; };
-		4B02268B224ACFE30052362B /* ReadersWriterLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022688224ACFE30052362B /* ReadersWriterLock.swift */; };
-		4B02268C224ACFE30052362B /* ReadersWriterLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022688224ACFE30052362B /* ReadersWriterLock.swift */; };
 		4B06F70A2247FBEE0069C9F2 /* server_ui_bridge.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B06F7092247FBEE0069C9F2 /* server_ui_bridge.c */; };
 		4B0A1B142129F49500F1E02F /* SwiftCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */; };
 		4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; };
@@ -225,7 +223,7 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolderSpec = 6;
 			files = (
 				4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */,
 			);
@@ -284,7 +282,6 @@
 		4B022603224AAE770052362B /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
 		4B02261A224AAF1B0052362B /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4B022687224ACFE30052362B /* RxMessagePort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxMessagePort.swift; path = ../../RxPack/RxMessagePort.swift; sourceTree = "<group>"; };
-		4B022688224ACFE30052362B /* ReadersWriterLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReadersWriterLock.swift; path = ../../RxPack/ReadersWriterLock.swift; sourceTree = "<group>"; };
 		4B06F7082247FBEE0069C9F2 /* server_ui_bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui_bridge.h; sourceTree = "<group>"; };
 		4B06F7092247FBEE0069C9F2 /* server_ui_bridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server_ui_bridge.c; sourceTree = "<group>"; };
 		4B06F70B22481D3A0069C9F2 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = neovim/build/include; sourceTree = "<group>"; };
@@ -297,6 +294,7 @@
 		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
 		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.vim; path = com.qvacua.NvimView.vim; sourceTree = "<group>"; };
+		4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NvimServer.entitlements; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0081FD2AF59008A39E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B90F0101FD2AFAC008A39E0 /* NvimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimView.swift; sourceTree = "<group>"; };
@@ -447,7 +445,6 @@
 				4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */,
 				4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */,
 				4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */,
-				4B022688224ACFE30052362B /* ReadersWriterLock.swift */,
 				4B022687224ACFE30052362B /* RxMessagePort.swift */,
 			);
 			name = RxPack;
@@ -536,6 +533,7 @@
 		4B90F0501FD2AFD3008A39E0 /* NvimServer */ = {
 			isa = PBXGroup;
 			children = (
+				4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */,
 				4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */,
 				4B90F0511FD2AFD3008A39E0 /* main.c */,
 				4B90F05B1FD2AFF7008A39E0 /* server_log.h */,
@@ -730,23 +728,28 @@
 				TargetAttributes = {
 					4B0225EF224AAE260052362B = {
 						CreatedOnToolsVersion = 10.2;
+						ProvisioningStyle = Manual;
 					};
 					4B0A1B102129F49500F1E02F = {
 						CreatedOnToolsVersion = 9.4.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					4B90F0031FD2AF59008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
 						LastSwiftMigration = 0910;
+						ProvisioningStyle = Manual;
 					};
 					4B90F04E1FD2AFD3008A39E0 = {
 						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Manual;
 					};
 					4BF01CCB2235015E00411218 = {
 						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Manual;
 					};
 					4BF1851F21313EE300954FE7 = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -878,7 +881,6 @@
 				4B02268A224ACFE30052362B /* RxMessagePort.swift in Sources */,
 				1929BF6E40C70A4157A5C755 /* UGridTest.swift in Sources */,
 				1929BB552C9D99E9ED938759 /* CellAttributesCollectionTest.swift in Sources */,
-				4B02268C224ACFE30052362B /* ReadersWriterLock.swift in Sources */,
 				4BB1EFB3224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */,
 				1929BDC146B699BF49116CAB /* Defs.swift in Sources */,
 				1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */,
@@ -918,7 +920,6 @@
 				1929BDD254F59FC0F5B800E7 /* Geometry.swift in Sources */,
 				1929B70D3BA20F66CAFF08C8 /* CoreCommons.swift in Sources */,
 				1929BEA71F454E92A0CE5AB6 /* SwiftCommons.swift in Sources */,
-				4B02268B224ACFE30052362B /* ReadersWriterLock.swift in Sources */,
 				4BB1EFAE224B71ED00A5CD5A /* RxNeovimApi.swift in Sources */,
 				1929B83EAD32DC419FEC68DB /* CocoaCommons.swift in Sources */,
 				1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */,
@@ -1146,7 +1147,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 338;
+				CURRENT_PROJECT_VERSION = 341;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1207,8 +1208,9 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 338;
+				CURRENT_PROJECT_VERSION = 341;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1238,7 +1240,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 338;
+				DYLIB_CURRENT_VERSION = 341;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -1257,16 +1259,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tae Won Ha (H96Q2NKTQH)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 338;
+				DYLIB_CURRENT_VERSION = 341;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1324,6 +1330,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_MODULES_AUTOLINK = NO;
+				CODE_SIGN_ENTITLEMENTS = NvimServer/NvimServer.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tae Won Ha (H96Q2NKTQH)";
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "INCLUDE_GENERATED_DECLARATIONS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/neovim/src",
@@ -1336,6 +1346,7 @@
 					"$(PROJECT_DIR)/neovim/build/lib",
 					"$(PROJECT_DIR)/neovim/.deps/usr/lib",
 				);
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
 				OTHER_LDFLAGS = (
 					"-liconv",
 					"-lpthread",

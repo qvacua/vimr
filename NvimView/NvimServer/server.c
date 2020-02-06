@@ -230,10 +230,7 @@ static void start_nvim(void *arg __unused) {
 
 static void setenv_vimruntime() {
   CFBundleRef main_bundle = CFBundleGetMainBundle();
-  CFURLRef exe_url = CFBundleCopyBundleURL(main_bundle);
-
-  CFURLRef bundle_url = CFURLCreateCopyDeletingLastPathComponent(kCFAllocatorDefault, exe_url);
-  CFRelease(exe_url);
+  CFURLRef bundle_url = CFBundleCopyBundleURL(main_bundle);
 
   CFURLRef rsrc_url = CFURLCreateCopyAppendingPathComponent(
       kCFAllocatorDefault,

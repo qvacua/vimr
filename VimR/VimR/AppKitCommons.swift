@@ -10,30 +10,24 @@ extension NSColor {
 
   static var random: NSColor {
     NSColor(
-      calibratedRed: CGFloat.random(in: 0...1),
-      green: CGFloat.random(in: 0...1),
-      blue: CGFloat.random(in: 0...1),
+      calibratedRed: .random(in: 0...1),
+      green: .random(in: 0...1),
+      blue: .random(in: 0...1),
       alpha: 1.0
     )
   }
 
   var hex: String {
-    if let color = self.usingColorSpace(.sRGB) {
-      return "#" +
-             String(format: "%X", Int(color.redComponent * 255)) +
-             String(format: "%X", Int(color.greenComponent * 255)) +
-             String(format: "%X", Int(color.blueComponent * 255)) +
-             String(format: "%X", Int(color.alphaComponent * 255))
-    } else {
-      return self.description
-    }
+    guard let color = self.usingColorSpace(.sRGB) else { return self.description }
+    return "#" +
+           String(format: "%X", Int(color.redComponent * 255)) +
+           String(format: "%X", Int(color.greenComponent * 255)) +
+           String(format: "%X", Int(color.blueComponent * 255)) +
+           String(format: "%X", Int(color.alphaComponent * 255))
   }
 
   func brightening(by factor: CGFloat) -> NSColor {
-    guard let color = self.usingColorSpace(.sRGB) else {
-      // TODO: what to do?
-      return self
-    }
+    guard let color = self.usingColorSpace(.sRGB) else { return self }
 
     let h = color.hueComponent
     let s = color.saturationComponent
@@ -47,8 +41,7 @@ extension NSColor {
 extension NSImage {
 
   func tinting(with color: NSColor) -> NSImage {
-
-    let result: NSImage = self.copy() as! NSImage
+    let result = self.copy() as! NSImage
 
     result.lockFocus()
     color.set()
@@ -234,3 +227,29 @@ extension NSScrollView {
     return scrollView
   }
 }
+
+extension NSFontManager {
+
+  func monospacedRegularFontNames() -> [String] {
+    self
+      .availableFontFamilies
+      .compactMap { name -> [(String, [Any])]? in
+        guard let members = self.availableMembers(ofFontFamily: name) else { return nil }
+        return members.map { member in (name, member) }
+      }
+      .flatMap { $0 }
+      .filter { element in
+        guard let trait = element.1[3] as? NSNumber,
+              let weight = element.1[2] as? NSNumber,
+              trait.uint32Value == NSFontDescriptor.SymbolicTraits.monoSpace.rawValue,
+              weight.intValue == regularWeight
+          else { return false }
+
+        return true
+      }
+      .map { $0.0 }
+      .uniqueing()
+  }
+}
+
+private let regularWeight = 5
