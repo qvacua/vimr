@@ -679,7 +679,6 @@
 		4B9433D920B95EC6005807BA /* MacVim-sch.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-sch.icns"; path = "macvim-file-icons/MacVim-sch.icns"; sourceTree = "<group>"; };
 		4B9433DA20B95EC6005807BA /* MacVim-ps.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-ps.icns"; path = "macvim-file-icons/MacVim-ps.icns"; sourceTree = "<group>"; };
 		4B9433DB20B95EC6005807BA /* MacVim-css.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-css.icns"; path = "macvim-file-icons/MacVim-css.icns"; sourceTree = "<group>"; };
-		4B95B20223EA1C9000AC91EB /* VimR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VimR.entitlements; sourceTree = "<group>"; };
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4B9DF285209C8A8B00DF2AAD /* Swifter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Swifter.framework; path = ../Carthage/Build/Mac/Swifter.framework; sourceTree = "<group>"; };
 		4BB1F5D02097705E00EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
@@ -1169,7 +1168,6 @@
 		4BEBA5071CFF374B00673FDF /* VimR */ = {
 			isa = PBXGroup;
 			children = (
-				4B95B20223EA1C9000AC91EB /* VimR.entitlements */,
 				4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */,
 				4BB4CCEE224A7E6D00474C79 /* FSEvents */,
 				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
@@ -1309,7 +1307,6 @@
 					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = H96Q2NKTQH;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 					};
@@ -2015,10 +2012,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = VimR/VimR.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
@@ -2045,9 +2040,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = VimR/VimR.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tae Won Ha (H96Q2NKTQH)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2059,6 +2055,7 @@
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
