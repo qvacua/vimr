@@ -9,7 +9,7 @@ import MessagePack
 extension MessagePackValue {
 
   var intValue: Int? {
-    guard let i64 = self.integerValue else {
+    guard let i64 = self.int64Value else {
       return nil
     }
 
