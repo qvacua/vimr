@@ -29,7 +29,7 @@ class ShortcutsPref: PrefPane,
 
     super.init(frame: .zero)
 
-    if let version = self.shortcutsUserDefaults?.integer(forKey: "version"),
+    if let version = self.shortcutsUserDefaults?.integer(forKey: defaultsVersionKey),
        version > defaultsVersion {
       let alert = NSAlert()
       alert.alertStyle = .warning
