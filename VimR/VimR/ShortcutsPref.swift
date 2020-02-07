@@ -76,7 +76,7 @@ class ShortcutsPref: PrefPane,
       return
     }
 
-    legacyDefaultShortcuts.keys.forEach { id in
+    legacyDefaultShortcuts.forEach { id in
       let shortcut: Shortcut?
       if let dict = self.shortcutsUserDefaults?.value(forKey: id) as? [String: Any] {
         shortcut = Shortcut(dictionary: dict)
