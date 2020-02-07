@@ -40,7 +40,7 @@ let defaultShortcuts: [String: Shortcut?] = [
   "com.qvacua.vimr.menuitems.window.zoom": Shortcut(keyEquivalent: ""),
 ]
 
-let legacyDefaultShortcuts: [String] = [
+let legacyDefaultShortcuts = [
   "com.qvacua.vimr.menuitems.edit.copy",
   "com.qvacua.vimr.menuitems.edit.cut",
   "com.qvacua.vimr.menuitems.edit.delete",
