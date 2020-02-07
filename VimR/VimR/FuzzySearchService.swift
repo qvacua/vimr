@@ -424,7 +424,7 @@ class FuzzySearchService {
         do {
           let result = try moc.fetch(req)
           Swift.print("Files with needsScanChildren = true:")
-          result.forEach { Swift.print("\t\($0.url)") }
+          result.forEach { Swift.print("\t\(String(describing: $0.url))") }
           Swift.print("--- \(result.count)")
         } catch {
           Swift.print(error)
