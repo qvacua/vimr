@@ -267,10 +267,7 @@ extension ShortcutsPref {
     return true
   }
 
-  func outlineView(
-    _ outlineView: NSOutlineView,
-    rowViewForItem item: Any
-  ) -> NSTableRowView? {
+  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
       owner: self
@@ -279,11 +276,7 @@ extension ShortcutsPref {
     return view
   }
 
-  func outlineView(
-    _: NSOutlineView,
-    viewFor tableColumn: NSTableColumn?,
-    item: Any
-  ) -> NSView? {
+  func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     let cellView = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-cell-view"),
       owner: self
