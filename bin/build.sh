@@ -43,6 +43,8 @@ if [[ "${is_snapshot}" == true ]] && [[ "${branch}" == "master" ]] ; then
     exit 1
 fi
 
+git lfs install
+
 echo "### Installing some python packages"
 
 pip3 install requests
