@@ -244,10 +244,13 @@ extension ShortcutsPref {
     alert.beginSheetModal(for: window, completionHandler: { response in
       guard response == .alertSecondButtonReturn else { return }
       self.traverseMenuItems { identifier, _ in
-        self.shortcutsDefaultsController.setValue(
-          legacyDefaultShortcuts[identifier],
-          forKeyPath: "values.\(identifier)"
-        )
+        let shortcut = defaultShortcuts[identifier] ?? Shortcut(keyEquivalent: "")
+        let valueToWrite = ValueTransformer
+          .keyedUnarchiveFromDataTransformer
+          .reverseTransformedValue(shortcut)
+
+        self.shortcutsDefaultsController.setValue(valueToWrite, forKeyPath: "values.\(identifier)")
+        self.treeController.rearrangeObjects()
       }
     })
   }
