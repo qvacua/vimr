@@ -379,7 +379,7 @@ static const char *cfstr2cstr(CFStringRef cfstr, bool *free_bytes) {
   }
 
   *free_bytes = true;
-  result[out_len] = NULL;
+  result[out_len] = '\0';
   return result;
 }
 
