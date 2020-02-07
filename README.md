@@ -13,32 +13,36 @@ VimR — Neovim Refined
 
 ## About
 
-Project VimR is a (YA) Neovim GUI for macOS. The goal is to build an editor that uses Neovim inside with many of the convenience GUI features similar to those present in modern editors. We mainly use Swift, but also use Objective-C when its C-nature helps.
+Project VimR is a (YA) Neovim GUI for macOS.
+The goal is to build an editor that uses Neovim inside with many of the convenience
+GUI features similar to those present in modern editors. We mainly use Swift,
+but also use Objective-C when its C-nature helps.
 
 There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://www.onivim.io), etc., so why?
 
-- play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
-- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)) and
+- Play around (obviously) with [Neovim](https://github.com/qvacua/neovim),
+- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
 - (most importantly) have fun!
-
-## (Reusable) Components
-
-* [RxMessagePort](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMessagePort.swift): RxSwift wrapper for local and remote `CFMessagePort`.
-* [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): implementation of MsgpackRpc using RxSwift.
-* [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
-* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App. See the [wiki](https://github.com/qvacua/vimr/wiki/NvimView-Framework).
-
----
-
-If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr). Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support: We list our spendings in the [wiki](https://github.com/qvacua/vimr/wiki/How-we-use-the-donations).
 
 ## Download
 
 Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
 
+## Reusable Components
+
+* [RxMessagePort](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMessagePort.swift): RxSwift wrapper for local and remote `CFMessagePort`.
+* [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): implementation of MsgpackRpc using RxSwift.
+* [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
+* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App.
+
+---
+
+If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr).
+Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support:
+We list our spendings in the [wiki](https://github.com/qvacua/vimr/wiki/How-we-use-the-donations).
+
 ## Some Features
 
-* Basic input including Emojis and Hangul (+Hanja): We don't know whether other input systems work...
 * Markdown preview
 * Generic HTML preview (retains the scroll position when reloading)
 * Fuzzy file finder a la Xcode's "Open Quickly..."
@@ -48,25 +52,22 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * (Simple) File browser
 * Flexible workspace model a la JetBrain's IDEs
 
-We will gradually create feature [issues](https://github.com/qvacua/vimr/issues) with more details. 
-
 ## How to Build
 
 First after cloning the VimR source tree you need to initialize git submodules
 
 ```bash
 git lfs install
-git submodule init
-git submodule update
+git submodule update --init
 ```
 
-You have to use Xcode 10.2. First install `homebrew`, then in the project root:
+First install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle
 
-./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
+code_sign=false use_carthage_cache=false ./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
 ```
 
 If the build fails for some reason, do the following and build again:
@@ -76,8 +77,8 @@ cd NvimView/neovim
 git reset --hard @
 git clean -fd
 make distclean
-cd ..
-./bin/build_vimr.sh
+cd ../..
+code_sign=false use_carthage_cache=false ./bin/build_vimr.sh
 ```
 
 ## Project Setup
