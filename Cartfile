@@ -7,7 +7,7 @@ github "qvacua/CocoaFontAwesome" "master"
 github "qvacua/CocoaMarkdown" "master"
 github "Kentzo/ShortcutRecorder" == 3.1
 github "qvacua/Sparkle" == 1.22.0
-github "qvacua/swifter" == 1.4.7-qvacua
+github "httpswift/swifter" == 1.4.7
 
 # included directly
 github "elegantchaos/DictionaryCoding" == 1.0.7
