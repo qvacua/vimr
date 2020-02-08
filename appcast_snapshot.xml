@@ -7,32 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-341</title>
+      <title>SNAPSHOT-342</title>
       <description><![CDATA[
     <p>We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
 <ul>
-<li>Show only font family names of monospace fonts.</li>
-<li>Bugfix: The cursor is not drawn when a new window is opened.</li>
-<li>Bugfix: Preview in the Appearance preferences is not dark mode compatible.</li>
-<li>Dependencies updates:<ul>
-<li>httpswift/swifter@1.4.7</li>
-<li>eonil/FSEvents@0.1.6</li>
-<li>Quick/Nimble@8.0.5</li>
-<li>sparkle-project/Sparkle@1.22.0</li>
-</ul>
-</li>
+<li>Set <code>gui_running</code> to <code>true</code> (GH-476).</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/341
+        https://github.com/qvacua/vimr/releases/tag/snapshot/342
       </releaseNotesLink>
-      <pubDate>2020-02-06T22:30:46.962132</pubDate>
+      <pubDate>2020-02-08T03:39:29.770602</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/341/VimR-SNAPSHOT-341.tar.bz2"
-                 sparkle:version="341"
-                 sparkle:shortVersionString="SNAPSHOT-341"
-                 sparkle:dsaSignature="MC0CFC9wDJUIc+uimMn5Xo0dF0UbLgymAhUA3RuHGJslCvKF0QTHYBXp7N+v+6I="
-                 length="14802198"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/342/VimR-SNAPSHOT-342.tar.bz2"
+                 sparkle:version="342"
+                 sparkle:shortVersionString="SNAPSHOT-342"
+                 sparkle:dsaSignature="MC0CFC6fmPesrYBNaAyy1XVhyyzfMlOHAhUAxzeFDLvTn4EheH5Y2hPFPWExIGI="
+                 length="14813486"
                  type="application/octet-stream"/>
     </item>
   </channel>
