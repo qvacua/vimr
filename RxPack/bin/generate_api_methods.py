@@ -139,7 +139,7 @@ extension RxNeovimApi.Buffer {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 
@@ -158,7 +158,7 @@ extension RxNeovimApi.Window {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 
@@ -177,7 +177,7 @@ extension RxNeovimApi.Tabpage {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 
@@ -279,7 +279,7 @@ def msgpack_to_swift(msgpack_value_name, type):
         return f'{msgpack_value_name}.boolValue'
 
     if type == 'Int':
-        return f'({msgpack_value_name}.integerValue == nil ? nil : Int({msgpack_value_name}.integerValue!))'
+        return f'({msgpack_value_name}.int64Value == nil ? nil : Int({msgpack_value_name}.int64Value!))'
 
     if type == 'Float':
         return f'{msgpack_value_name}.floatValue'

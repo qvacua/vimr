@@ -29,7 +29,7 @@ class ShortcutsPref: PrefPane,
 
     super.init(frame: .zero)
 
-    if let version = self.shortcutsUserDefaults?.integer(forKey: "version"),
+    if let version = self.shortcutsUserDefaults?.integer(forKey: defaultsVersionKey),
        version > defaultsVersion {
       let alert = NSAlert()
       alert.alertStyle = .warning
@@ -76,7 +76,7 @@ class ShortcutsPref: PrefPane,
       return
     }
 
-    legacyDefaultShortcuts.keys.forEach { id in
+    legacyDefaultShortcuts.forEach { id in
       let shortcut: Shortcut?
       if let dict = self.shortcutsUserDefaults?.value(forKey: id) as? [String: Any] {
         shortcut = Shortcut(dictionary: dict)
@@ -244,10 +244,13 @@ extension ShortcutsPref {
     alert.beginSheetModal(for: window, completionHandler: { response in
       guard response == .alertSecondButtonReturn else { return }
       self.traverseMenuItems { identifier, _ in
-        self.shortcutsDefaultsController.setValue(
-          legacyDefaultShortcuts[identifier],
-          forKeyPath: "values.\(identifier)"
-        )
+        let shortcut = defaultShortcuts[identifier] ?? Shortcut(keyEquivalent: "")
+        let valueToWrite = ValueTransformer
+          .keyedUnarchiveFromDataTransformer
+          .reverseTransformedValue(shortcut)
+
+        self.shortcutsDefaultsController.setValue(valueToWrite, forKeyPath: "values.\(identifier)")
+        self.treeController.rearrangeObjects()
       }
     })
   }
@@ -264,10 +267,7 @@ extension ShortcutsPref {
     return true
   }
 
-  func outlineView(
-    _ outlineView: NSOutlineView,
-    rowViewForItem item: Any
-  ) -> NSTableRowView? {
+  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
       owner: self
@@ -276,11 +276,7 @@ extension ShortcutsPref {
     return view
   }
 
-  func outlineView(
-    _: NSOutlineView,
-    viewFor tableColumn: NSTableColumn?,
-    item: Any
-  ) -> NSView? {
+  func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
     let cellView = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-cell-view"),
       owner: self

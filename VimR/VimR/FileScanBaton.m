@@ -167,7 +167,7 @@ static const char *cfstr_to_cstr_copy(CFStringRef cfstr) {
     return NULL;
   }
 
-  result[out_len] = NULL;
+  result[out_len] = '\0';
   return result;
 }
 
