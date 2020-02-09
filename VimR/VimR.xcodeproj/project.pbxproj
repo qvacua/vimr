@@ -12,7 +12,6 @@
 		1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
 		1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
-		1929B179DBDE58A9D9BCA819 /* MainWindow+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B41F704A4D67621197ED /* MainWindow+Types.swift */; };
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
@@ -35,7 +34,6 @@
 		1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */; };
 		1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B067B3247675BCD09218 /* MainWindow+Actions.swift */; };
 		1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
-		1929B543D5C82485F053CF17 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */; };
 		1929B560C6CE264FD1E1F5A3 /* com.qvacua.VimR.vim in Resources */ = {isa = PBXBuildFile; fileRef = 1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */; };
 		1929B59FA5C286E010F70BEE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFC0A5A9C6DB09BE1368 /* Types.swift */; };
 		1929B5A0EDD1119CFF7BB84C /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7F7A4B3FD52263D211D /* Defs.swift */; };
@@ -60,12 +58,10 @@
 		1929BA715337FE26155B2071 /* BufferList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* BufferList.swift */; };
 		1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
 		1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE168F31344B69E61B62 /* PrefWindow.swift */; };
-		1929BAEE911EC7620EE51911 /* fuzzy_match.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */; };
 		1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4149D5A25C82064DD8 /* UiRoot.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
 		1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B66A5E2D00EA143AFD86 /* RxRedux.swift */; };
 		1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */; };
-		1929BB96BC6037652034BABF /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B333D8752E2E68F35122 /* FileMonitor.swift */; };
 		1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
 		1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
 		1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
@@ -96,177 +92,11 @@
 		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
-		4B2636AA223A487B00021586 /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
-		4B2636AB223A487B00021586 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
-		4B2636AC223A487B00021586 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
-		4B2636AD223A487B00021586 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
-		4B2636AE223A487B00021586 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
-		4B2636AF223A487B00021586 /* WorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */; };
-		4B2636B1223A487B00021586 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
-		4B2636B2223A487B00021586 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
-		4B2636B3223A487B00021586 /* WorkspaceTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */; };
-		4B2636B6223A487B00021586 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
-		4B2636B7223A487B00021586 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
-		4B2636BB223A487B00021586 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
-		4B2636BC223A487B00021586 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
-		4B2636BD223A487B00021586 /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1929B02440BC99C42F9EBD45 /* NetUtils.m */; };
-		4B2636BE223A487B00021586 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB6608B4F0E037CA0F4C /* States.swift */; };
-		4B2636BF223A487B00021586 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B34FC23D805A8B29E8F7 /* Context.swift */; };
-		4B2636C0223A487B00021586 /* AppDelegateReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */; };
-		4B2636C1223A487B00021586 /* UiRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4149D5A25C82064DD8 /* UiRoot.swift */; };
-		4B2636C2223A487B00021586 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
-		4B2636C3223A487B00021586 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
-		4B2636C4223A487B00021586 /* PreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* PreviewTool.swift */; };
-		4B2636C5223A487B00021586 /* PreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* PreviewReducer.swift */; };
-		4B2636C6223A487B00021586 /* PreviewMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B617C229B19DB3E987B8 /* PreviewMiddleware.swift */; };
-		4B2636C7223A487B00021586 /* HttpServerMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */; };
-		4B2636C8223A487B00021586 /* DictionaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCD21063B600043A396 /* DictionaryEncoder.swift */; };
-		4B2636C9223A487B00021586 /* PreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* PreviewToolReducer.swift */; };
-		4B2636CA223A487B00021586 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFC0A5A9C6DB09BE1368 /* Types.swift */; };
-		4B2636CB223A487B00021586 /* OpenQuicklyReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */; };
-		4B2636CE223A487B00021586 /* FileBrowserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */; };
-		4B2636CF223A487B00021586 /* BufferList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* BufferList.swift */; };
-		4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B67A10E6BB2986B2416E /* BufferListReducer.swift */; };
-		4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE168F31344B69E61B62 /* PrefWindow.swift */; };
-		4B2636D2223A487B00021586 /* PrefPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07A4A9209C88380E015 /* PrefPane.swift */; };
-		4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB55946DAEBF55D24048 /* GeneralPref.swift */; };
-		4B2636D4223A487B00021586 /* PrefWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B49E6924847AD085C8C9 /* PrefWindowReducer.swift */; };
-		4B2636D5223A487B00021586 /* GeneralPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */; };
-		4B2636D6223A487B00021586 /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
-		4B2636D7223A487B00021586 /* FileBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */; };
-		4B2636D8223A487B00021586 /* AppearancePref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0FBFB766042CF06E463 /* AppearancePref.swift */; };
-		4B2636D9223A487B00021586 /* AdvencedPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBE0A534F2F6009D31BE /* AdvencedPref.swift */; };
-		4B2636DA223A487B00021586 /* AppearancePrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BED01F5D94BFCA4CF80F /* AppearancePrefReducer.swift */; };
-		4B2636DB223A487B00021586 /* OpenQuicklyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */; };
-		4B2636DD223A487B00021586 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
-		4B2636DE223A487B00021586 /* PrefMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B364460D86F17E80943C /* PrefMiddleware.swift */; };
-		4B2636DF223A487B00021586 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
-		4B2636E0223A487B00021586 /* PreviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8EF9A9F5ACC175452BD /* PreviewUtils.swift */; };
-		4B2636E2223A487B00021586 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
-		4B2636E3223A487B00021586 /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
-		4B2636E4223A487B00021586 /* AdvancedPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */; };
-		4B2636E5223A487B00021586 /* ToolsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */; };
-		4B2636E6223A487B00021586 /* ToolsPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */; };
-		4B2636E7223A487B00021586 /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
-		4B2636E8223A487B00021586 /* ThemedTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */; };
-		4B2636E9223A487B00021586 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */; };
-		4B2636EA223A487B00021586 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC2F05E9A5C0DB039739 /* Theme.swift */; };
-		4B2636EB223A487B00021586 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
-		4B2636EC223A487B00021586 /* MainWindow+CustomTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */; };
-		4B2636ED223A487B00021586 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */; };
-		4B2636EE223A487B00021586 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
-		4B2636EF223A487B00021586 /* MainWindow+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B067B3247675BCD09218 /* MainWindow+Actions.swift */; };
-		4B2636F0223A487B00021586 /* MainWindow+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */; };
-		4B2636F1223A487B00021586 /* KeysPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B14A5949FB64C4B2646F /* KeysPref.swift */; };
-		4B2636F2223A487B00021586 /* KeysPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */; };
-		4B2636F3223A487B00021586 /* RxRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B66A5E2D00EA143AFD86 /* RxRedux.swift */; };
-		4B2636F4223A487B00021586 /* ShortcutsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */; };
-		4B2636F5223A487B00021586 /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */; };
-		4B2636F6223A487B00021586 /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
-		4B2636F7223A487B00021586 /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
-		4B2636F8223A487B00021586 /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
-		4B2636F9223A487B00021586 /* RpcAppearanceEpic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */; };
-		4B2636FA223A487B00021586 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */; };
-		4B2636FB223A487B00021586 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7F7A4B3FD52263D211D /* Defs.swift */; };
-		4B2636FD223A487B00021586 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
-		4B263700223A487B00021586 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; };
-		4B263701223A487B00021586 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
-		4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
-		4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
-		4B263704223A487B00021586 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
-		4B263706223A487B00021586 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
-		4B263708223A487B00021586 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
-		4B263709223A487B00021586 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; };
-		4B26370A223A487B00021586 /* ShortcutRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; };
-		4B26370B223A487B00021586 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
-		4B26370D223A487B00021586 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
-		4B26370E223A487B00021586 /* MacVim-xml.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CE20B95EC5005807BA /* MacVim-xml.icns */; };
-		4B26370F223A487B00021586 /* MacVim-applescript.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AA20B95EC2005807BA /* MacVim-applescript.icns */; };
-		4B263710223A487B00021586 /* MacVim-wiki.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D320B95EC6005807BA /* MacVim-wiki.icns */; };
-		4B263711223A487B00021586 /* MacVim-java.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D420B95EC6005807BA /* MacVim-java.icns */; };
-		4B263712223A487B00021586 /* MacVim-rst.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D720B95EC6005807BA /* MacVim-rst.icns */; };
-		4B263713223A487B00021586 /* MacVim-cfg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D020B95EC5005807BA /* MacVim-cfg.icns */; };
-		4B263714223A487B00021586 /* MacVim-inc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C920B95EC5005807BA /* MacVim-inc.icns */; };
-		4B263715223A487B00021586 /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
-		4B263716223A487B00021586 /* MacVim-perl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D520B95EC6005807BA /* MacVim-perl.icns */; };
-		4B263717223A487B00021586 /* MacVim-vcf.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AF20B95EC2005807BA /* MacVim-vcf.icns */; };
-		4B263718223A487B00021586 /* MacVim-markdown.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C020B95EC4005807BA /* MacVim-markdown.icns */; };
-		4B263719223A487B00021586 /* MacVim-vba.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C120B95EC4005807BA /* MacVim-vba.icns */; };
-		4B26371A223A487B00021586 /* MacVim-cs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B820B95EC3005807BA /* MacVim-cs.icns */; };
-		4B26371B223A487B00021586 /* MacVim-gtd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BE20B95EC3005807BA /* MacVim-gtd.icns */; };
-		4B26371C223A487B00021586 /* MacVim-js.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B120B95EC2005807BA /* MacVim-js.icns */; };
-		4B26371D223A487B00021586 /* MacVim-tex.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A820B95EC1005807BA /* MacVim-tex.icns */; };
-		4B26371E223A487B00021586 /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
-		4B26371F223A487B00021586 /* MacVim-tsv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B420B95EC2005807BA /* MacVim-tsv.icns */; };
-		4B263720223A487B00021586 /* MacVim-asp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BA20B95EC3005807BA /* MacVim-asp.icns */; };
-		4B263721223A487B00021586 /* MacVim-plist.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A520B95EC1005807BA /* MacVim-plist.icns */; };
-		4B263722223A487B00021586 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
-		4B263723223A487B00021586 /* MacVim-rb.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C420B95EC4005807BA /* MacVim-rb.icns */; };
-		4B263724223A487B00021586 /* MacVim-ini.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CB20B95EC5005807BA /* MacVim-ini.icns */; };
-		4B263725223A487B00021586 /* MacVim-yaml.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A720B95EC1005807BA /* MacVim-yaml.icns */; };
-		4B263726223A487B00021586 /* MacVim-vb.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B920B95EC3005807BA /* MacVim-vb.icns */; };
-		4B263727223A487B00021586 /* MacVim-jsp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CC20B95EC5005807BA /* MacVim-jsp.icns */; };
-		4B263728223A487B00021586 /* MacVim-html.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B620B95EC3005807BA /* MacVim-html.icns */; };
-		4B263729223A487B00021586 /* MacVim-tcl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BF20B95EC4005807BA /* MacVim-tcl.icns */; };
-		4B26372A223A487B00021586 /* MacVim-io.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C720B95EC4005807BA /* MacVim-io.icns */; };
-		4B26372B223A487B00021586 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
-		4B26372C223A487B00021586 /* MacVim-csv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AD20B95EC2005807BA /* MacVim-csv.icns */; };
-		4B26372D223A487B00021586 /* MacVim-mm.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BC20B95EC3005807BA /* MacVim-mm.icns */; };
-		4B26372E223A487B00021586 /* MacVim-bib.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CF20B95EC5005807BA /* MacVim-bib.icns */; };
-		4B26372F223A487B00021586 /* MacVim-cpp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B020B95EC2005807BA /* MacVim-cpp.icns */; };
-		4B263730223A487B00021586 /* MacVim-ps.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DA20B95EC6005807BA /* MacVim-ps.icns */; };
-		4B263731223A487B00021586 /* MacVim-sch.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D920B95EC6005807BA /* MacVim-sch.icns */; };
-		4B263732223A487B00021586 /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
-		4B263733223A487B00021586 /* MacVim-sql.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A920B95EC2005807BA /* MacVim-sql.icns */; };
-		4B263734223A487B00021586 /* MacVim-m.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C620B95EC4005807BA /* MacVim-m.icns */; };
-		4B263735223A487B00021586 /* MacVim-hs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B720B95EC3005807BA /* MacVim-hs.icns */; };
-		4B263736223A487B00021586 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
-		4B263737223A487B00021586 /* MacVim-c.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CA20B95EC5005807BA /* MacVim-c.icns */; };
-		4B263738223A487B00021586 /* MacVim-cgi.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AC20B95EC2005807BA /* MacVim-cgi.icns */; };
-		4B263739223A487B00021586 /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
-		4B26373A223A487B00021586 /* MacVim-properties.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BD20B95EC3005807BA /* MacVim-properties.icns */; };
-		4B26373B223A487B00021586 /* MacVim-ics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D620B95EC6005807BA /* MacVim-ics.icns */; };
-		4B26373C223A487B00021586 /* MacVim-php.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433CD20B95EC5005807BA /* MacVim-php.icns */; };
-		4B26373D223A487B00021586 /* MacVim-h.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C820B95EC4005807BA /* MacVim-h.icns */; };
-		4B26373E223A487B00021586 /* MacVim-as.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433BB20B95EC3005807BA /* MacVim-as.icns */; };
-		4B26373F223A487B00021586 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
-		4B263740223A487B00021586 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
-		4B263741223A487B00021586 /* MacVim-txt.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C320B95EC4005807BA /* MacVim-txt.icns */; };
-		4B263742223A487B00021586 /* MacVim-csfg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A620B95EC1005807BA /* MacVim-csfg.icns */; };
-		4B263743223A487B00021586 /* MacVim-fscript.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C520B95EC4005807BA /* MacVim-fscript.icns */; };
-		4B263744223A487B00021586 /* MacVim-erl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D120B95EC5005807BA /* MacVim-erl.icns */; };
-		4B263745223A487B00021586 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
-		4B263746223A487B00021586 /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
-		4B263747223A487B00021586 /* MacVim-patch.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433C220B95EC4005807BA /* MacVim-patch.icns */; };
-		4B263748223A487B00021586 /* MacVim-xsl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D820B95EC6005807BA /* MacVim-xsl.icns */; };
-		4B263749223A487B00021586 /* MacVim-f.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B220B95EC2005807BA /* MacVim-f.icns */; };
-		4B26374A223A487B00021586 /* MacVim-bash.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AE20B95EC2005807BA /* MacVim-bash.icns */; };
-		4B26374B223A487B00021586 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
-		4B26374C223A487B00021586 /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
-		4B26374D223A487B00021586 /* MacVim-vim.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B320B95EC2005807BA /* MacVim-vim.icns */; };
-		4B26374E223A487B00021586 /* MacVim-py.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433B520B95EC3005807BA /* MacVim-py.icns */; };
-		4B26374F223A487B00021586 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
-		4B263750223A487B00021586 /* MacVim-log.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433AB20B95EC2005807BA /* MacVim-log.icns */; };
-		4B263751223A487B00021586 /* MacVim-dtd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D220B95EC5005807BA /* MacVim-dtd.icns */; };
-		4B263752223A487B00021586 /* MacVim-lisp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A420B95EC1005807BA /* MacVim-lisp.icns */; };
-		4B263753223A487B00021586 /* com.qvacua.VimR.vim in Resources */ = {isa = PBXBuildFile; fileRef = 1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */; };
-		4B263755223A487B00021586 /* ShortcutRecorder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263756223A487B00021586 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263758223A487B00021586 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263759223A487B00021586 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263762223A487B00021586 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B263763223A487B00021586 /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
 		4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
 		4B3CF030224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
 		4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
-		4B3CF032224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
 		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B5011FB1EBA6FD700F76C46 /* UrlCommonsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */; };
 		4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
@@ -277,28 +107,20 @@
 		4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */; };
 		4B917E4D2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */; };
 		4B917E4E2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */; };
-		4B917E4F2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */; };
 		4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */; };
 		4B917E512334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */; };
-		4B917E522334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */; };
 		4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E472334D52D00752149 /* EonilFSEventStream.swift */; };
 		4B917E542334D52D00752149 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E472334D52D00752149 /* EonilFSEventStream.swift */; };
-		4B917E552334D52D00752149 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E472334D52D00752149 /* EonilFSEventStream.swift */; };
 		4B917E562334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */; };
 		4B917E572334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */; };
-		4B917E582334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */; };
 		4B917E592334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */; };
 		4B917E5A2334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */; };
-		4B917E5B2334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */; };
 		4B917E5C2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
 		4B917E5D2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
-		4B917E5E2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
 		4B917E5F2334D52D00752149 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4B2334D52D00752149 /* EonilFSEvents.swift */; };
 		4B917E602334D52D00752149 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4B2334D52D00752149 /* EonilFSEvents.swift */; };
-		4B917E612334D52D00752149 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4B2334D52D00752149 /* EonilFSEvents.swift */; };
 		4B917E622334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */; };
 		4B917E632334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */; };
-		4B917E642334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */; };
 		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
 		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
 		4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
@@ -373,8 +195,6 @@
 		4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
 		4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC903EA22799DEB0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
-		4BC903ED22799E170016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
-		4BC903EE22799E180016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
 		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
@@ -412,21 +232,13 @@
 		4BF18C581FD2E53400DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4BF18C591FD2E53B00DF95D1 /* CocoaMarkdown.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */; };
-		4BF70EC523D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */; };
 		4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */; };
-		4BF70EC923D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */; };
 		4BF70ED223D1B4AF009E51E9 /* FoundationCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */; };
-		4BF70ED323D1B4AF009E51E9 /* FoundationCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */; };
 		4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */; };
-		4BF70ED723D1B54F009E51E9 /* ScoredUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */; };
 		4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
-		4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
-		4BF70EE623D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
-		4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 		4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
-		4BF70EEE23D1B619009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -440,28 +252,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4B263754223A487B00021586 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4B263755223A487B00021586 /* ShortcutRecorder.framework in Embed Frameworks */,
-				4B263756223A487B00021586 /* MessagePack.framework in Embed Frameworks */,
-				4B263758223A487B00021586 /* CocoaFontAwesome.framework in Embed Frameworks */,
-				4B263759223A487B00021586 /* CocoaMarkdown.framework in Embed Frameworks */,
-				4B26375B223A487B00021586 /* Socket.framework in Embed Frameworks */,
-				4B26375C223A487B00021586 /* PureLayout.framework in Embed Frameworks */,
-				4B26375D223A487B00021586 /* RxCocoa.framework in Embed Frameworks */,
-				4B263760223A487B00021586 /* RxSwift.framework in Embed Frameworks */,
-				4BC903EE22799E180016A1CD /* RxRelay.framework in Embed Frameworks */,
-				4B263761223A487B00021586 /* Swifter.framework in Embed Frameworks */,
-				4B263762223A487B00021586 /* Sparkle.framework in Embed Frameworks */,
-				4B263763223A487B00021586 /* NvimView.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B2A2BF01D02261F0074CE9A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -599,8 +389,6 @@
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
 		4B19BEFB1E110183007E823C /* preview */ = {isa = PBXFileReference; lastKnownFileType = folder; path = preview; sourceTree = "<group>"; };
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
-		4B263767223A487B00021586 /* VimR-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VimR-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B263768223A487B00021586 /* VimR.dev.Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = VimR.dev.Info.plist; path = /Users/hat/Projects/vimr/VimR/VimR.dev.Info.plist; sourceTree = "<absolute>"; };
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
@@ -612,6 +400,8 @@
 		4B6423991D8EFE3000FC78C8 /* WorkspaceTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceTool.swift; path = Workspace/WorkspaceTool.swift; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
+		4B8C64CD23F02259008733D8 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
+		4B8C64CE23F022C2008733D8 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamError.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamError.swift; sourceTree = "<group>"; };
 		4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamEventFlags.swift; sourceTree = "<group>"; };
 		4B917E472334D52D00752149 /* EonilFSEventStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStream.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStream.swift; sourceTree = "<group>"; };
@@ -721,25 +511,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4B2636FC223A487B00021586 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B2636FD223A487B00021586 /* MessagePack.framework in Frameworks */,
-				4B263700223A487B00021586 /* PureLayout.framework in Frameworks */,
-				4B263701223A487B00021586 /* Socket.framework in Frameworks */,
-				4B263702223A487B00021586 /* CocoaMarkdown.framework in Frameworks */,
-				4B263703223A487B00021586 /* CocoaFontAwesome.framework in Frameworks */,
-				4B263704223A487B00021586 /* RxSwift.framework in Frameworks */,
-				4B263706223A487B00021586 /* Sparkle.framework in Frameworks */,
-				4B263708223A487B00021586 /* Swifter.framework in Frameworks */,
-				4BC903ED22799E170016A1CD /* RxRelay.framework in Frameworks */,
-				4B263709223A487B00021586 /* RxCocoa.framework in Frameworks */,
-				4B26370A223A487B00021586 /* ShortcutRecorder.framework in Frameworks */,
-				4B26370B223A487B00021586 /* NvimView.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4BEBA5021CFF374B00673FDF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1026,6 +797,15 @@
 			name = Workspace;
 			sourceTree = "<group>";
 		};
+		4B8C64D023F024D9008733D8 /* Build configurations */ = {
+			isa = PBXGroup;
+			children = (
+				4B8C64CE23F022C2008733D8 /* Release.xcconfig */,
+				4B8C64CD23F02259008733D8 /* Dev.xcconfig */,
+			);
+			name = "Build configurations";
+			sourceTree = "<group>";
+		};
 		4B9433A020B95EA7005807BA /* MacVim file icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1145,11 +925,11 @@
 		4BEBA4FC1CFF374B00673FDF = {
 			isa = PBXGroup;
 			children = (
+				4B8C64D023F024D9008733D8 /* Build configurations */,
 				4BEBA5071CFF374B00673FDF /* VimR */,
 				4BEBA5171CFF374B00673FDF /* VimRTests */,
 				4B5012001EBA791000F76C46 /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
-				4B263768223A487B00021586 /* VimR.dev.Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1160,7 +940,6 @@
 			children = (
 				4BEBA5051CFF374B00673FDF /* VimR.app */,
 				4BEBA5141CFF374B00673FDF /* VimRTests.xctest */,
-				4B263767223A487B00021586 /* VimR-dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1234,25 +1013,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4B2636A7223A487B00021586 /* VimR.dev */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4B263764223A487B00021586 /* Build configuration list for PBXNativeTarget "VimR.dev" */;
-			buildPhases = (
-				4B2636A8223A487B00021586 /* ShellScript */,
-				4B2636A9223A487B00021586 /* Sources */,
-				4B2636FC223A487B00021586 /* Frameworks */,
-				4B26370C223A487B00021586 /* Resources */,
-				4B263754223A487B00021586 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = VimR.dev;
-			productName = VimR;
-			productReference = 4B263767223A487B00021586 /* VimR-dev.app */;
-			productType = "com.apple.product-type.application";
-		};
 		4BEBA5041CFF374B00673FDF /* VimR */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BEBA51D1CFF374B00673FDF /* Build configuration list for PBXNativeTarget "VimR" */;
@@ -1301,10 +1061,6 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
-					4B2636A7223A487B00021586 = {
-						DevelopmentTeam = H96Q2NKTQH;
-						ProvisioningStyle = Manual;
-					};
 					4BEBA5041CFF374B00673FDF = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0900;
@@ -1331,91 +1087,12 @@
 			projectRoot = "";
 			targets = (
 				4BEBA5041CFF374B00673FDF /* VimR */,
-				4B2636A7223A487B00021586 /* VimR.dev */,
 				4BEBA5131CFF374B00673FDF /* VimRTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4B26370C223A487B00021586 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B26370D223A487B00021586 /* Credits.rtf in Resources */,
-				4B26370E223A487B00021586 /* MacVim-xml.icns in Resources */,
-				4B26370F223A487B00021586 /* MacVim-applescript.icns in Resources */,
-				4B263710223A487B00021586 /* MacVim-wiki.icns in Resources */,
-				4B263711223A487B00021586 /* MacVim-java.icns in Resources */,
-				4B263712223A487B00021586 /* MacVim-rst.icns in Resources */,
-				4B263713223A487B00021586 /* MacVim-cfg.icns in Resources */,
-				4B263714223A487B00021586 /* MacVim-inc.icns in Resources */,
-				4B263715223A487B00021586 /* MacVim-bsh.icns in Resources */,
-				4B263716223A487B00021586 /* MacVim-perl.icns in Resources */,
-				4B263717223A487B00021586 /* MacVim-vcf.icns in Resources */,
-				4B263718223A487B00021586 /* MacVim-markdown.icns in Resources */,
-				4B263719223A487B00021586 /* MacVim-vba.icns in Resources */,
-				4B26371A223A487B00021586 /* MacVim-cs.icns in Resources */,
-				4B26371B223A487B00021586 /* MacVim-gtd.icns in Resources */,
-				4B26371C223A487B00021586 /* MacVim-js.icns in Resources */,
-				4B26371D223A487B00021586 /* MacVim-tex.icns in Resources */,
-				4B26371E223A487B00021586 /* MacVim-css.icns in Resources */,
-				4B26371F223A487B00021586 /* MacVim-tsv.icns in Resources */,
-				4B263720223A487B00021586 /* MacVim-asp.icns in Resources */,
-				4B263721223A487B00021586 /* MacVim-plist.icns in Resources */,
-				4B263722223A487B00021586 /* Assets.xcassets in Resources */,
-				4B263723223A487B00021586 /* MacVim-rb.icns in Resources */,
-				4B263724223A487B00021586 /* MacVim-ini.icns in Resources */,
-				4B263725223A487B00021586 /* MacVim-yaml.icns in Resources */,
-				4B263726223A487B00021586 /* MacVim-vb.icns in Resources */,
-				4B263727223A487B00021586 /* MacVim-jsp.icns in Resources */,
-				4B263728223A487B00021586 /* MacVim-html.icns in Resources */,
-				4B263729223A487B00021586 /* MacVim-tcl.icns in Resources */,
-				4B26372A223A487B00021586 /* MacVim-io.icns in Resources */,
-				4B26372B223A487B00021586 /* OpenQuicklyWindow.xib in Resources */,
-				4B26372C223A487B00021586 /* MacVim-csv.icns in Resources */,
-				4B26372D223A487B00021586 /* MacVim-mm.icns in Resources */,
-				4B26372E223A487B00021586 /* MacVim-bib.icns in Resources */,
-				4B26372F223A487B00021586 /* MacVim-cpp.icns in Resources */,
-				4B263730223A487B00021586 /* MacVim-ps.icns in Resources */,
-				4B263731223A487B00021586 /* MacVim-sch.icns in Resources */,
-				4B263732223A487B00021586 /* MacVim-dylan.icns in Resources */,
-				4B263733223A487B00021586 /* MacVim-sql.icns in Resources */,
-				4B263734223A487B00021586 /* MacVim-m.icns in Resources */,
-				4B263735223A487B00021586 /* MacVim-hs.icns in Resources */,
-				4B263736223A487B00021586 /* vimr in Resources */,
-				4B263737223A487B00021586 /* MacVim-c.icns in Resources */,
-				4B263738223A487B00021586 /* MacVim-cgi.icns in Resources */,
-				4B263739223A487B00021586 /* MacVim-generic.icns in Resources */,
-				4B26373A223A487B00021586 /* MacVim-properties.icns in Resources */,
-				4B26373B223A487B00021586 /* MacVim-ics.icns in Resources */,
-				4B26373C223A487B00021586 /* MacVim-php.icns in Resources */,
-				4B26373D223A487B00021586 /* MacVim-h.icns in Resources */,
-				4B26373E223A487B00021586 /* MacVim-as.icns in Resources */,
-				4B26373F223A487B00021586 /* FileBrowserMenu.xib in Resources */,
-				4B263740223A487B00021586 /* MainMenu.xib in Resources */,
-				4B263741223A487B00021586 /* MacVim-txt.icns in Resources */,
-				4B263742223A487B00021586 /* MacVim-csfg.icns in Resources */,
-				4B263743223A487B00021586 /* MacVim-fscript.icns in Resources */,
-				4B263744223A487B00021586 /* MacVim-erl.icns in Resources */,
-				4B263745223A487B00021586 /* MainWindow.xib in Resources */,
-				4B263746223A487B00021586 /* markdown in Resources */,
-				4B263747223A487B00021586 /* MacVim-patch.icns in Resources */,
-				4B263748223A487B00021586 /* MacVim-xsl.icns in Resources */,
-				4B263749223A487B00021586 /* MacVim-f.icns in Resources */,
-				4B26374A223A487B00021586 /* MacVim-bash.icns in Resources */,
-				4B26374B223A487B00021586 /* PrefWindow.xib in Resources */,
-				4B26374C223A487B00021586 /* preview in Resources */,
-				4B26374D223A487B00021586 /* MacVim-vim.icns in Resources */,
-				4B26374E223A487B00021586 /* MacVim-py.icns in Resources */,
-				4B26374F223A487B00021586 /* sparkle_pub.pem in Resources */,
-				4B263750223A487B00021586 /* MacVim-log.icns in Resources */,
-				4B263751223A487B00021586 /* MacVim-dtd.icns in Resources */,
-				4B263752223A487B00021586 /* MacVim-lisp.icns in Resources */,
-				4B263753223A487B00021586 /* com.qvacua.VimR.vim in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4BEBA5031CFF374B00673FDF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1519,122 +1196,9 @@
 			shellPath = /bin/sh;
 			shellScript = "cp ${SRCROOT}/../Carthage/Checkouts/github-markdown-css/github-markdown.css ${SRCROOT}/VimR/markdown/\n";
 		};
-		4B2636A8223A487B00021586 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cp ${SRCROOT}/../Carthage/Checkouts/github-markdown-css/github-markdown.css ${SRCROOT}/VimR/markdown/\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4B2636A9223A487B00021586 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B917E5B2334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */,
-				4B2636AA223A487B00021586 /* WorkspaceToolButton.swift in Sources */,
-				4B2636AB223A487B00021586 /* Application.swift in Sources */,
-				4B2636AC223A487B00021586 /* Workspace.swift in Sources */,
-				4B2636AD223A487B00021586 /* AppKitCommons.swift in Sources */,
-				4B2636AE223A487B00021586 /* InnterToolBar.swift in Sources */,
-				4B2636AF223A487B00021586 /* WorkspaceBar.swift in Sources */,
-				4B2636B1223A487B00021586 /* SwiftCommons.swift in Sources */,
-				4B2636B2223A487B00021586 /* AppDelegate.swift in Sources */,
-				4B2636B3223A487B00021586 /* WorkspaceTool.swift in Sources */,
-				4B2636B6223A487B00021586 /* DictionaryErrors.swift in Sources */,
-				4B2636B7223A487B00021586 /* FileUtils.swift in Sources */,
-				4B2636BB223A487B00021586 /* ProxyWorkspaceBar.swift in Sources */,
-				4B2636BC223A487B00021586 /* FoundationCommons.swift in Sources */,
-				4B2636BD223A487B00021586 /* NetUtils.m in Sources */,
-				4B2636BE223A487B00021586 /* States.swift in Sources */,
-				4B2636BF223A487B00021586 /* Context.swift in Sources */,
-				4B2636C0223A487B00021586 /* AppDelegateReducer.swift in Sources */,
-				4B2636C1223A487B00021586 /* UiRoot.swift in Sources */,
-				4B2636C2223A487B00021586 /* UiRootReducer.swift in Sources */,
-				4B2636C3223A487B00021586 /* MainWindowReducer.swift in Sources */,
-				4BF70ED723D1B54F009E51E9 /* ScoredUrl.m in Sources */,
-				4BF70EC923D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */,
-				4B2636C4223A487B00021586 /* PreviewTool.swift in Sources */,
-				4B917E612334D52D00752149 /* EonilFSEvents.swift in Sources */,
-				4B2636C5223A487B00021586 /* PreviewReducer.swift in Sources */,
-				4B2636C6223A487B00021586 /* PreviewMiddleware.swift in Sources */,
-				4B2636C7223A487B00021586 /* HttpServerMiddleware.swift in Sources */,
-				4B2636C8223A487B00021586 /* DictionaryEncoder.swift in Sources */,
-				4B2636C9223A487B00021586 /* PreviewToolReducer.swift in Sources */,
-				4B2636CA223A487B00021586 /* Types.swift in Sources */,
-				4B2636CB223A487B00021586 /* OpenQuicklyReducer.swift in Sources */,
-				4BF70EE223D1B5B3009E51E9 /* FileScanBaton.m in Sources */,
-				4B917E582334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */,
-				4B2636CE223A487B00021586 /* FileBrowserReducer.swift in Sources */,
-				4B2636CF223A487B00021586 /* BufferList.swift in Sources */,
-				4B2636D0223A487B00021586 /* BufferListReducer.swift in Sources */,
-				4B2636D1223A487B00021586 /* PrefWindow.swift in Sources */,
-				4B917E552334D52D00752149 /* EonilFSEventStream.swift in Sources */,
-				4B2636D2223A487B00021586 /* PrefPane.swift in Sources */,
-				4B2636D3223A487B00021586 /* GeneralPref.swift in Sources */,
-				4B917E522334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
-				4B2636D4223A487B00021586 /* PrefWindowReducer.swift in Sources */,
-				4B2636D5223A487B00021586 /* GeneralPrefReducer.swift in Sources */,
-				4B2636D6223A487B00021586 /* FileOutlineView.swift in Sources */,
-				4B2636D7223A487B00021586 /* FileBrowser.swift in Sources */,
-				4B2636D8223A487B00021586 /* AppearancePref.swift in Sources */,
-				4B917E5E2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
-				4B2636D9223A487B00021586 /* AdvencedPref.swift in Sources */,
-				4B2636DA223A487B00021586 /* AppearancePrefReducer.swift in Sources */,
-				4B2636DB223A487B00021586 /* OpenQuicklyWindow.swift in Sources */,
-				4B2636DD223A487B00021586 /* OpenQuicklyFileViewRow.swift in Sources */,
-				4BF70EEB23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */,
-				4B2636DE223A487B00021586 /* PrefMiddleware.swift in Sources */,
-				4B2636DF223A487B00021586 /* Debouncer.swift in Sources */,
-				4B2636E0223A487B00021586 /* PreviewUtils.swift in Sources */,
-				4B2636E2223A487B00021586 /* HtmlPreviewTool.swift in Sources */,
-				4B2636E3223A487B00021586 /* HtmlPreviewToolReducer.swift in Sources */,
-				4BF70ED323D1B4AF009E51E9 /* FoundationCommons.m in Sources */,
-				4B2636E4223A487B00021586 /* AdvancedPrefReducer.swift in Sources */,
-				4B2636E5223A487B00021586 /* ToolsPref.swift in Sources */,
-				4B2636E6223A487B00021586 /* ToolsPrefReducer.swift in Sources */,
-				4B2636E7223A487B00021586 /* PrefUtils.swift in Sources */,
-				4BF70EC523D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */,
-				4B917E642334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */,
-				4B2636E8223A487B00021586 /* ThemedTableSubviews.swift in Sources */,
-				4B2636E9223A487B00021586 /* ImageAndTextTableCell.swift in Sources */,
-				4B2636EA223A487B00021586 /* Theme.swift in Sources */,
-				4B917E4F2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */,
-				4B2636EB223A487B00021586 /* DictionaryCodingKey.swift in Sources */,
-				4B2636EC223A487B00021586 /* MainWindow+CustomTitle.swift in Sources */,
-				4B2636ED223A487B00021586 /* MainWindow.swift in Sources */,
-				4B2636EE223A487B00021586 /* DictionaryDecoder.swift in Sources */,
-				4B2636EF223A487B00021586 /* MainWindow+Actions.swift in Sources */,
-				4B2636F0223A487B00021586 /* MainWindow+Delegates.swift in Sources */,
-				4B2636F1223A487B00021586 /* KeysPref.swift in Sources */,
-				4B3CF032224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
-				4B2636F2223A487B00021586 /* KeysPrefReducer.swift in Sources */,
-				4B2636F3223A487B00021586 /* RxRedux.swift in Sources */,
-				4B2636F4223A487B00021586 /* ShortcutsPref.swift in Sources */,
-				4B2636F5223A487B00021586 /* ShortcutsTableSubviews.swift in Sources */,
-				4B2636F6223A487B00021586 /* DefaultShortcuts.swift in Sources */,
-				4BF70EE623D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */,
-				4B2636F7223A487B00021586 /* ShortcutItem.swift in Sources */,
-				4B2636F8223A487B00021586 /* RpcEvents.swift in Sources */,
-				4B2636F9223A487B00021586 /* RpcAppearanceEpic.swift in Sources */,
-				4BF70EEE23D1B619009E51E9 /* ConditionVariable.swift in Sources */,
-				4B2636FA223A487B00021586 /* OSLogCommons.swift in Sources */,
-				4B2636FB223A487B00021586 /* Defs.swift in Sources */,
-				1929B179DBDE58A9D9BCA819 /* MainWindow+Types.swift in Sources */,
-				1929BAEE911EC7620EE51911 /* fuzzy_match.cc in Sources */,
-				1929B543D5C82485F053CF17 /* FuzzySearch.xcdatamodel in Sources */,
-				1929BB96BC6037652034BABF /* FileMonitor.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4BEBA5011CFF374B00673FDF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1832,64 +1396,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		4B263765223A487B00021586 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/../Carthage/Build/Mac",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../third-party/libxz/include",
-					"$(PROJECT_DIR)/../third-party/libpcre/include",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/VimR.dev.Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
-					"-pthread",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
-				PRODUCT_MODULE_NAME = VimR;
-				PRODUCT_NAME = "VimR-dev";
-				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
-			};
-			name = Debug;
-		};
-		4B263766223A487B00021586 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/../Carthage/Build/Mac",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../third-party/libxz/include",
-					"$(PROJECT_DIR)/../third-party/libpcre/include",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/VimR.dev.Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
-					"-pthread",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR.dev;
-				PRODUCT_MODULE_NAME = VimR;
-				PRODUCT_NAME = "VimR-dev";
-				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
-			};
-			name = Release;
-		};
 		4BEBA51B1CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2005,6 +1511,7 @@
 		};
 		4BEBA51E1CFF374B00673FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B8C64CD23F02259008733D8 /* Dev.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2025,7 +1532,7 @@
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
 					"-pthread",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
@@ -2033,6 +1540,7 @@
 		};
 		4BEBA51F1CFF374B00673FDF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B8C64CE23F022C2008733D8 /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2053,7 +1561,7 @@
 					"$(PROJECT_DIR)/../third-party/libag/lib/libag.a",
 					"-pthread",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimR;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = VimR;
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
@@ -2092,15 +1600,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B263764223A487B00021586 /* Build configuration list for PBXNativeTarget "VimR.dev" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4B263765223A487B00021586 /* Debug */,
-				4B263766223A487B00021586 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4BEBA5001CFF374B00673FDF /* Build configuration list for PBXProject "VimR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

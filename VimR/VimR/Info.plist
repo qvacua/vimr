@@ -481,8 +481,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Perl Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>pl</string>
@@ -496,6 +494,8 @@
 			<array>
 				<string>text/x-perl-script</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>Perl Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -504,8 +504,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Python Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>py</string>
@@ -519,6 +517,8 @@
 			<array>
 				<string>text/x-python-script</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>Python Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -527,8 +527,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>PHP Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>php</string>
@@ -545,6 +543,8 @@
 			<array>
 				<string>text/php</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>PHP Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -553,8 +553,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Ruby Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>rb</string>
@@ -569,6 +567,8 @@
 			<array>
 				<string>text/ruby-script</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>Ruby Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -577,8 +577,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Shell script</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>sh</string>
@@ -593,6 +591,8 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-bash</string>
+			<key>CFBundleTypeName</key>
+			<string>Shell script</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -660,14 +660,14 @@
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>AppleScript Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>applescript</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-applescript</string>
+			<key>CFBundleTypeName</key>
+			<string>AppleScript Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -676,20 +676,18 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>ActionScript Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>as</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-as</string>
+			<key>CFBundleTypeName</key>
+			<string>ActionScript Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>ASP document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>asp</string>
@@ -697,12 +695,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-asp</string>
+			<key>CFBundleTypeName</key>
+			<string>ASP document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>ASP.NET document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>aspx</string>
@@ -712,72 +710,72 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-asp</string>
+			<key>CFBundleTypeName</key>
+			<string>ASP.NET document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>BibTeX bibliography</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>bib</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-bib</string>
+			<key>CFBundleTypeName</key>
+			<string>BibTeX bibliography</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>C# Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>cs</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-cs</string>
+			<key>CFBundleTypeName</key>
+			<string>C# Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Context Free Design Grammar</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>cfdg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-csfg</string>
+			<key>CFBundleTypeName</key>
+			<string>Context Free Design Grammar</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Comma separated values</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>csv</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-csv</string>
+			<key>CFBundleTypeName</key>
+			<string>Comma separated values</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Tab separated values</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>tsv</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-tsv</string>
+			<key>CFBundleTypeName</key>
+			<string>Tab separated values</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>CGI script</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>cgi</string>
@@ -785,12 +783,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-cgi</string>
+			<key>CFBundleTypeName</key>
+			<string>CGI script</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Configuration file</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>cfg</string>
@@ -800,48 +798,48 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-cfg</string>
+			<key>CFBundleTypeName</key>
+			<string>Configuration file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Cascading style sheet</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>css</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-css</string>
+			<key>CFBundleTypeName</key>
+			<string>Cascading style sheet</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Document Type Definition</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>dtd</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-dtd</string>
+			<key>CFBundleTypeName</key>
+			<string>Document Type Definition</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Dylan Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>dylan</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-dylan</string>
+			<key>CFBundleTypeName</key>
+			<string>Dylan Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Erlang Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>erl</string>
@@ -849,24 +847,24 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-erl</string>
+			<key>CFBundleTypeName</key>
+			<string>Erlang Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>F-Script Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>fscript</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-fscript</string>
+			<key>CFBundleTypeName</key>
+			<string>F-Script Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Haskell Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>hs</string>
@@ -874,96 +872,96 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-hs</string>
+			<key>CFBundleTypeName</key>
+			<string>Haskell Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Include file</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>inc</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-inc</string>
+			<key>CFBundleTypeName</key>
+			<string>Include file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>iCalendar schedule</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>ics</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-ics</string>
+			<key>CFBundleTypeName</key>
+			<string>iCalendar schedule</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>MS Windows initialization file</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>ini</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-ini</string>
+			<key>CFBundleTypeName</key>
+			<string>MS Windows initialization file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Io Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>io</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-io</string>
+			<key>CFBundleTypeName</key>
+			<string>Io Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>BeanShell script</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>bsh</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-bsh</string>
+			<key>CFBundleTypeName</key>
+			<string>BeanShell script</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Java properties file</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>properties</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-properties</string>
+			<key>CFBundleTypeName</key>
+			<string>Java properties file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Java Server Page</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>jsp</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-jsp</string>
+			<key>CFBundleTypeName</key>
+			<string>Java Server Page</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>LISP Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>lisp</string>
@@ -975,24 +973,24 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-lisp</string>
+			<key>CFBundleTypeName</key>
+			<string>LISP Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Log file</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>log</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-log</string>
+			<key>CFBundleTypeName</key>
+			<string>Log file</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Mediawiki document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>wiki</string>
@@ -1001,12 +999,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-wiki</string>
+			<key>CFBundleTypeName</key>
+			<string>Mediawiki document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>PostScript Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>ps</string>
@@ -1014,12 +1012,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-ps</string>
+			<key>CFBundleTypeName</key>
+			<string>PostScript Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Scheme Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>scm</string>
@@ -1027,36 +1025,36 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-sch</string>
+			<key>CFBundleTypeName</key>
+			<string>Scheme Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>SQL Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>sql</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-sql</string>
+			<key>CFBundleTypeName</key>
+			<string>SQL Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Tcl Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>tcl</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-tcl</string>
+			<key>CFBundleTypeName</key>
+			<string>Tcl Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>XSL stylesheet</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>xsl</string>
@@ -1064,12 +1062,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-xsl</string>
+			<key>CFBundleTypeName</key>
+			<string>XSL stylesheet</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Electronic business card</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vcf</string>
@@ -1077,24 +1075,24 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-vcf</string>
+			<key>CFBundleTypeName</key>
+			<string>Electronic business card</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Visual Basic Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vb</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-vb</string>
+			<key>CFBundleTypeName</key>
+			<string>Visual Basic Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>YAML document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>yaml</string>
@@ -1102,12 +1100,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-yaml</string>
+			<key>CFBundleTypeName</key>
+			<string>YAML document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>GTD document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>gtd</string>
@@ -1115,12 +1113,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-gtd</string>
+			<key>CFBundleTypeName</key>
+			<string>GTD document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Markdown document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>markdown</string>
@@ -1130,36 +1128,36 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-markdown</string>
+			<key>CFBundleTypeName</key>
+			<string>Markdown document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>reStructuredText document</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>rst</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-rst</string>
+			<key>CFBundleTypeName</key>
+			<string>reStructuredText document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Vimball Archive</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vba</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-vba</string>
+			<key>CFBundleTypeName</key>
+			<string>Vimball Archive</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>VHDL Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vhd</string>
@@ -1167,12 +1165,12 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-generic</string>
+			<key>CFBundleTypeName</key>
+			<string>VHDL Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Lua Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>lua</string>
@@ -1183,30 +1181,32 @@
 			<array>
 				<string>text/x-lua-script</string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>Lua Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Verilog HDL Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>v</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-generic</string>
+			<key>CFBundleTypeName</key>
+			<string>Verilog HDL Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Verilog HDL Header Source File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>vh</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>MacVim-generic</string>
+			<key>CFBundleTypeName</key>
+			<string>Verilog HDL Header Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
@@ -1220,7 +1220,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>$(VIMR_DISPLAY_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
