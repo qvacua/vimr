@@ -683,7 +683,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> [Int] {
-      guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -761,7 +761,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1454,7 +1454,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1782,6 +1782,38 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_list_runtime_paths", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  func getRuntimeFile(
+    name: String,
+    all: Bool,
+    errWhenBlocked: Bool = true
+  ) -> Single<[String]> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+        .bool(all),
+    ]
+
+    func transform(_ value: Value) throws -> [String] {
+      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+        throw RxNeovimApi.Error.conversion(type: [String].self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_runtime_file", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_runtime_file", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
