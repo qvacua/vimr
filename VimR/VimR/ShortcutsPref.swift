@@ -22,6 +22,9 @@ class ShortcutsPref: PrefPane,
   override var pinToContainer: Bool { true }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+    // We know that the identifier is not empty.
+    let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
+    self.shortcutsUserDefaults = UserDefaults(suiteName: shortcutSuiteName)
     self.shortcutsDefaultsController = NSUserDefaultsController(
       defaults: self.shortcutsUserDefaults,
       initialValues: nil
@@ -68,7 +71,7 @@ class ShortcutsPref: PrefPane,
   private let keyEqTransformer = DataToKeyEquivalentTransformer()
   private let keyEqModTransformer = DataToKeyEquivalentModifierMaskTransformer()
 
-  private let shortcutsUserDefaults = UserDefaults(suiteName: "com.qvacua.VimR.menuitems")
+  private let shortcutsUserDefaults: UserDefaults?
   private let shortcutsDefaultsController: NSUserDefaultsController
 
   private func migrateDefaults() {

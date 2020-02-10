@@ -17,14 +17,4 @@ struct FontGlyphRun {
   var font: NSFont
   var glyphs: [CGGlyph]
   var positions: [CGPoint]
-
-  func draw(`in` context: CGContext) {
-    CTFontDrawGlyphs(
-      self.font,
-      self.glyphs,
-      self.positions,
-      self.glyphs.count,
-      context
-    )
-  }
 }

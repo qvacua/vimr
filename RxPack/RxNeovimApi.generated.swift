@@ -51,7 +51,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -213,7 +213,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -275,7 +275,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -649,7 +649,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> [Int] {
-      guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -835,7 +835,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -929,7 +929,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1133,7 +1133,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1510,7 +1510,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1736,7 +1736,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2445,7 +2445,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2610,7 +2610,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3211,7 +3211,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> [Int] {
-      guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -3265,7 +3265,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3319,7 +3319,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3513,7 +3513,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> [Int] {
-      guard let result = (value.arrayValue?.compactMap({ v in (v.integerValue == nil ? nil : Int(v.integerValue!)) })) else {
+      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -3573,7 +3573,7 @@ extension RxNeovimApi {
     ]
 
     func transform(_ value: Value) throws -> Int {
-      guard let result = ((value.integerValue == nil ? nil : Int(value.integerValue!))) else {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3714,7 +3714,7 @@ extension RxNeovimApi.Buffer {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 
@@ -3733,7 +3733,7 @@ extension RxNeovimApi.Window {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 
@@ -3752,7 +3752,7 @@ extension RxNeovimApi.Tabpage {
       return nil
     }
 
-    guard let handle = (try? unpack(data))?.value.integerValue else {
+    guard let handle = (try? unpack(data))?.value.int64Value else {
       return nil
     }
 

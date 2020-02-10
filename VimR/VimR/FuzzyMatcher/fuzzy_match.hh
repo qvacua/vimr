@@ -11,7 +11,7 @@ namespace ccls {
 class FuzzyMatcher {
 public:
   constexpr static int kMaxPat = 100;
-  constexpr static int kMaxText = 200 + 300; // TAE: originally 200
+  constexpr static int kMaxText = PATH_MAX; // TAE: originally 200
   // Negative but far from INT_MIN so that intermediate results are hard to
   // overflow.
   constexpr static int kMinScore = INT_MIN / 4;

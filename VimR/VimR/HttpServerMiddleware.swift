@@ -14,6 +14,8 @@ class HttpServerMiddleware {
 
   init(port: Int) {
     let server = HttpServer()
+    server.listenAddressIPv4 = "127.0.0.1"
+
     let resourceUrl = Bundle.main.resourceURL!
     let githubCssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
 
