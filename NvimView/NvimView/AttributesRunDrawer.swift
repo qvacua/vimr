@@ -8,21 +8,15 @@ import Cocoa
 final class AttributesRunDrawer {
 
   var font: NSFont {
-    didSet {
-      self.updateFontMetrics()
-    }
+    didSet { self.updateFontMetrics() }
   }
 
   var linespacing: CGFloat {
-    didSet {
-      self.updateFontMetrics()
-    }
+    didSet { self.updateFontMetrics() }
   }
-  
+
   var characterspacing: CGFloat {
-    didSet {
-      self.updateFontMetrics()
-    }
+    didSet { self.updateFontMetrics() }
   }
 
   var usesLigatures: Bool
@@ -76,24 +70,12 @@ final class AttributesRunDrawer {
     context.saveGState()
     defer { context.restoreGState() }
 
-    self.draw(
-      backgroundFor: run,
-      with: defaultAttributes,
-      in: context
-    )
+    self.draw(backgroundFor: run, with: defaultAttributes, in: context)
 
-    context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveForeground)
-    )
+    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveForeground))
 
     fontGlyphRuns.forEach { run in
-      CTFontDrawGlyphs(
-        run.font,
-        run.glyphs,
-        run.positions,
-        run.glyphs.count,
-        context
-      )
+      CTFontDrawGlyphs(run.font, run.glyphs, run.positions, run.glyphs.count, context)
     }
 
     if run.attrs.fontTrait.contains(.underline) {
@@ -109,25 +91,22 @@ final class AttributesRunDrawer {
     }
   }
 
-  private func drawUnderline(in context: CGContext,
-                             fontGlyphRuns: [FontGlyphRun]) {
-    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else {
-      return
-    }
+  private func drawUnderline(in context: CGContext, fontGlyphRuns: [FontGlyphRun]) {
+    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else { return }
 
     let x1 = lastPosition + self.cellSize.width
     let x0 = fontGlyphRuns[0].positions[0].x
     let y0 = fontGlyphRuns[0].positions[0].y
-    CGRect(x: x0, y: y0 + self.underlinePosition,
-           width: x1 - x0, height: self.underlineThickness).fill()
+    CGRect(
+      x: x0,
+      y: y0 + self.underlinePosition,
+      width: x1 - x0,
+      height: self.underlineThickness
+    ).fill()
   }
 
-  private func drawUndercurl(in context: CGContext,
-                             fontGlyphRuns: [FontGlyphRun],
-                             color: CGColor) {
-    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else {
-      return
-    }
+  private func drawUndercurl(in context: CGContext, fontGlyphRuns: [FontGlyphRun], color: CGColor) {
+    guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else { return }
 
     let x1 = lastPosition + self.cellSize.width
     var x0 = fontGlyphRuns[0].positions[0].x
@@ -138,12 +117,16 @@ final class AttributesRunDrawer {
 
     context.move(to: CGPoint(x: x0, y: y0))
     for _ in (0..<count) {
-      context.addCurve(to: CGPoint(x: x0 + 0.5 * w, y: y0 + h),
-                       control1: CGPoint(x: x0 + 0.25 * w, y: y0),
-                       control2: CGPoint(x: x0 + 0.25 * w, y: y0 + h))
-      context.addCurve(to: CGPoint(x: x0 + w, y: y0),
-                       control1: CGPoint(x: x0 + 0.75 * w, y: y0 + h),
-                       control2: CGPoint(x: x0 + 0.75 * w, y: y0))
+      context.addCurve(
+        to: CGPoint(x: x0 + 0.5 * w, y: y0 + h),
+        control1: CGPoint(x: x0 + 0.25 * w, y: y0),
+        control2: CGPoint(x: x0 + 0.25 * w, y: y0 + h)
+      )
+      context.addCurve(
+        to: CGPoint(x: x0 + w, y: y0),
+        control1: CGPoint(x: x0 + 0.75 * w, y: y0 + h),
+        control2: CGPoint(x: x0 + 0.75 * w, y: y0)
+      )
       x0 += w
     }
     context.setStrokeColor(color)
@@ -155,7 +138,6 @@ final class AttributesRunDrawer {
     with defaultAttributes: CellAttributes,
     `in` context: CGContext
   ) {
-
     if run.attrs.effectiveBackground == defaultAttributes.background { return }
 
     context.saveGState()
@@ -169,19 +151,12 @@ final class AttributesRunDrawer {
       height: self.cellSize.height
     )
 
-    context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveBackground)
-    )
+    context.setFillColor(ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveBackground))
     context.fill(backgroundRect)
   }
 
-  private func fontGlyphRuns(
-    from attrsRun: AttributesRun,
-    offset: CGPoint
-  ) -> [FontGlyphRun] {
-    let font = FontUtils.font(
-      adding: attrsRun.attrs.fontTrait, to: self.font
-    )
+  private func fontGlyphRuns(from attrsRun: AttributesRun, offset: CGPoint) -> [FontGlyphRun] {
+    let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
 
     let typesetFunction = self.usesLigatures
       ? self.typesetter.fontGlyphRunsWithLigatures
@@ -190,9 +165,7 @@ final class AttributesRunDrawer {
     let fontGlyphRuns = typesetFunction(
       attrsRun.cells.map { Array($0.string.utf16) },
       attrsRun.cells.startIndex,
-      CGPoint(
-        x: offset.x, y: attrsRun.location.y + self.baselineOffset
-      ),
+      CGPoint(x: offset.x, y: attrsRun.location.y + self.baselineOffset),
       font,
       self.cellSize.width
     )
