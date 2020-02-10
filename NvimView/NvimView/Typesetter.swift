@@ -143,9 +143,12 @@ final class Typesetter {
       attributes: [.font: font, .ligature: NSNumber(integerLiteral: 1)]
     )
 
+    if let cachedCtRuns = ctRunsCache.object(forKey: attrStr) { return cachedCtRuns }
+
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
+    ctRunsCache.set(object: ctRuns, forKey: attrStr)
     return ctRuns
   }
 
@@ -272,3 +275,5 @@ final class Typesetter {
     }
   }
 }
+
+private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 10000)
