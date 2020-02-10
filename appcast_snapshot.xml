@@ -7,23 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-342</title>
+      <title>SNAPSHOT-343</title>
       <description><![CDATA[
     <p>We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use <code>defaults delete com.qvacua.VimR.menuitems</code> in Terminal.</p>
 <ul>
-<li>Set <code>gui_running</code> to <code>true</code> (GH-476).</li>
+<li>Improve drawing performance.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/342
+        https://github.com/qvacua/vimr/releases/tag/snapshot/343
       </releaseNotesLink>
-      <pubDate>2020-02-08T03:39:29.770602</pubDate>
+      <pubDate>2020-02-10T22:03:06.419277</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/342/VimR-SNAPSHOT-342.tar.bz2"
-                 sparkle:version="342"
-                 sparkle:shortVersionString="SNAPSHOT-342"
-                 sparkle:dsaSignature="MC0CFC6fmPesrYBNaAyy1XVhyyzfMlOHAhUAxzeFDLvTn4EheH5Y2hPFPWExIGI="
-                 length="14813486"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/343/VimR-SNAPSHOT-343.tar.bz2"
+                 sparkle:version="343"
+                 sparkle:shortVersionString="SNAPSHOT-343"
+                 sparkle:dsaSignature="MC4CFQCjD9HYa2HwA4BNhZWorvrezswcogIVAL73Ot6LiWm/hkGWzJTR7kR/0VpS"
+                 length="14808146"
                  type="application/octet-stream"/>
     </item>
   </channel>
