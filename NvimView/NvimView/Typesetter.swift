@@ -276,4 +276,4 @@ final class Typesetter {
   }
 }
 
-private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 10000)
+private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 20000)
