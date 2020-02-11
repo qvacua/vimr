@@ -141,7 +141,7 @@ final class Typesetter {
   private func ctRuns(from utf16Chars: Array<Unicode.UTF16.CodeUnit>, font: NSFont) -> [CTRun] {
     let attrStr = NSAttributedString(
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
-      attributes: [.font: font, .ligature: NSNumber(integerLiteral: 1)]
+      attributes: [.font: font, .ligature: ligatureOption]
     )
 
     if let cachedCtRuns = self.ctRunsCache.object(forKey: attrStr) { return cachedCtRuns }
@@ -276,3 +276,5 @@ final class Typesetter {
     }
   }
 }
+
+private let ligatureOption = NSNumber(integerLiteral: 1)
