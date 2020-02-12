@@ -343,7 +343,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 
     let run = runs[0]
     expect(run.font).to(equalFont(fira))
-    expect(run.glyphs).to(equal([133, 1023, 1023, 1152, 133]))
+    expect(run.glyphs).to(equal([134, 1021, 1021, 1171, 134]))
     expect(run.positions).to(equal(
       (1..<6).map {
         CGPoint(x: offset.x + CGFloat($0) * firaWidth, y: offset.y)
@@ -619,7 +619,7 @@ class TypesetterWithLigaturesTest: XCTestCase {
     expect(run.font).to(equalFont(fira))
     // Ligatures of popular monospace fonts like Fira Code seem to be composed
     // of multiple characters with the same advance as other normal characters.
-    expect(run.glyphs).to(equal([1623, 1623, 1065, 133]))
+    expect(run.glyphs).to(equal([1742, 1742, 1054, 134]))
     expect(run.positions).to(equal(
       (0..<4).map {
         CGPoint(x: offset.x + CGFloat($0) * firaWidth, y: offset.y)
