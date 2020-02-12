@@ -72,8 +72,8 @@ class MyView: NSView {
         cells: self.ugrid.cells[row][0..<10],
         attrs: CellAttributes(
           fontTrait: [],
-          foreground: 0,
-          background: 0xFFFFFF,
+          foreground: NSColor.textColor.int,
+          background: NSColor.textBackgroundColor.int,
           special: 0xFF0000,
           reverse: false
         )
@@ -82,8 +82,8 @@ class MyView: NSView {
 
     let defaultAttrs = CellAttributes(
       fontTrait: [],
-      foreground: 0,
-      background: 0xFFFFFF,
+      foreground: NSColor.textColor.int,
+      background: NSColor.textBackgroundColor.int,
       special: 0xFF0000,
       reverse: false
     )

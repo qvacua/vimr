@@ -9,24 +9,24 @@ extension NSRange {
 
   static let notFound = NSRange(location: NSNotFound, length: 0)
 
-  var inclusiveEndIndex: Int {
-    return self.location + self.length - 1
-  }
+  var inclusiveEndIndex: Int { self.location + self.length - 1 }
 }
 
 extension NSColor {
 
-  var hex: String {
+  var int: Int {
     if let color = self.usingColorSpace(.sRGB) {
-      return "#" +
-             String(format: "%X", Int(color.redComponent * 255)) +
-             String(format: "%X", Int(color.greenComponent * 255)) +
-             String(format: "%X", Int(color.blueComponent * 255)) +
-             String(format: "%X", Int(color.alphaComponent * 255))
+      let a = Int(color.alphaComponent * 255)
+      let r = Int(color.redComponent * 255)
+      let g = Int(color.greenComponent * 255)
+      let b = Int(color.blueComponent * 255)
+      return a << 24 | r << 16 | g << 8 | b
     } else {
-      return self.description
+      return 0
     }
   }
+
+  var hex: String { String(format: "%X", self.int) }
 }
 
 extension NSView {
