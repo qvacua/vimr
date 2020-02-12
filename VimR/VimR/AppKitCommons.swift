@@ -17,14 +17,19 @@ extension NSColor {
     )
   }
 
-  var hex: String {
-    guard let color = self.usingColorSpace(.sRGB) else { return self.description }
-    return "#" +
-           String(format: "%X", Int(color.redComponent * 255)) +
-           String(format: "%X", Int(color.greenComponent * 255)) +
-           String(format: "%X", Int(color.blueComponent * 255)) +
-           String(format: "%X", Int(color.alphaComponent * 255))
+  var int: Int {
+    if let color = self.usingColorSpace(.sRGB) {
+      let a = Int(color.alphaComponent * 255)
+      let r = Int(color.redComponent * 255)
+      let g = Int(color.greenComponent * 255)
+      let b = Int(color.blueComponent * 255)
+      return a << 24 | r << 16 | g << 8 | b
+    } else {
+      return 0
+    }
   }
+
+  var hex: String { String(format: "%X", self.int) }
 
   func brightening(by factor: CGFloat) -> NSColor {
     guard let color = self.usingColorSpace(.sRGB) else { return self }
