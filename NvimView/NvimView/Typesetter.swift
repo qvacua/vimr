@@ -134,21 +134,22 @@ final class Typesetter {
     return runs.flatMap { $0 }
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.view)
+
+  private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 5000)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   private func ctRuns(from utf16Chars: Array<Unicode.UTF16.CodeUnit>, font: NSFont) -> [CTRun] {
     let attrStr = NSAttributedString(
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
-      attributes: [.font: font, .ligature: NSNumber(integerLiteral: 1)]
+      attributes: [.font: font, .ligature: ligatureOption]
     )
 
-    if let cachedCtRuns = ctRunsCache.object(forKey: attrStr) { return cachedCtRuns }
+    if let cachedCtRuns = self.ctRunsCache.object(forKey: attrStr) { return cachedCtRuns }
 
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
-    ctRunsCache.set(object: ctRuns, forKey: attrStr)
+    self.ctRunsCache.set(object: ctRuns, forKey: attrStr)
     return ctRuns
   }
 
@@ -276,4 +277,4 @@ final class Typesetter {
   }
 }
 
-private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 10000)
+private let ligatureOption = NSNumber(integerLiteral: 1)
