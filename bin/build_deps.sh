@@ -11,6 +11,11 @@ readonly pcre_version="8.43"
 readonly xz_version="5.2.4"
 readonly ag_version="2.2.0"
 
+readonly build_ag=${build_ag:-false}
+readonly build_pcre=${build_pcre:-false}
+readonly build_xz=${build_xz:-false}
+readonly build_gettext=${build_gettext:-false}
+
 build_ag () {
 pushd .deps > /dev/null
     curl -L -o ag.tar.gz https://github.com/ggreer/the_silver_searcher/archive/${ag_version}.tar.gz
@@ -87,15 +92,26 @@ popd > /dev/null
 }
 
 build_vimr_deps () {
-rm -rf third-party
-mkdir third-party
-
 rm -rf .deps
 mkdir .deps
 
-build_pcre
-build_xz
-build_ag
+if [[ ${build_pcre} == true ]] ; then
+    rm -rf third-party/libpcre
+    rm -rf third-party/libag
+
+    build_pcre
+    build_ag
+fi
+
+if [[ ${build_xz} == true ]] ; then
+    rm -rf third-party/libxz
+    build_xz
+fi
+
+if [[ ${build_ag} == true ]] ; then
+    rm -rf third-party/libag
+    build_ag
+fi
 }
 
 build_gettext () {
@@ -146,5 +162,8 @@ popd > /dev/null
 echo "### Built deps"
 }
 
-build_gettext
+if [[ ${build_gettext} == true ]] ; then
+    build_gettext
+fi
+
 build_vimr_deps
