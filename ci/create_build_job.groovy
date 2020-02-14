@@ -28,6 +28,7 @@ Builds a new snapshot of VimR and pushes the tag:<br>
     booleanParam('is_snapshot', true)
     booleanParam('update_appcast', true)
     booleanParam('update_snapshot_appcast_for_release', true)
+    booleanParam('use_cache_carthage', false)
   }
 
   scm {

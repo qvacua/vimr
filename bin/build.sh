@@ -14,9 +14,10 @@ readonly is_snapshot=${is_snapshot:?"true or false"}
 readonly update_appcast=${update_appcast:?"true or false"}
 readonly update_snapshot_appcast_for_release=${update_snapshot_appcast_for_release:?"true or false"}
 
-export marketing_version=${marketing_version}
-readonly release_notes=${release_notes}
+export marketing_version=${marketing_version:-"SNAPSHOT"}
+readonly release_notes=${release_notes:-""}
 
+readonly use_cache_carthage=${use_cache_carthage:?"true of false"}
 
 if [[ "${is_snapshot}" = false ]] && [[ "${marketing_version}" == "" ]] ; then
     echo "### ERROR If not snapshot, then the marketing version must be set!"
@@ -62,7 +63,7 @@ else
     echo "Not publishing and no release => not incrementing the version..."
 fi
 
-code_sign=true use_carthage_cache=false ./bin/build_vimr.sh
+code_sign=true use_carthage_cache=${use_cache_carthage} ./bin/build_vimr.sh
 
 pushd VimR > /dev/null
     export readonly bundle_version=$(agvtool what-version | sed '2q;d' | sed -E 's/ +(.+)/\1/')
