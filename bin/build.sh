@@ -34,6 +34,11 @@ if [[ "${is_snapshot}" == false ]] && [[ "${update_appcast}" == false ]] ; then
     exit 1
 fi
 
+if [[ "${publish}" == false ]] && [[ "${use_cache_carthage}" == true ]] ; then
+    echo "### ERROR Publishing, but using cache for Carthage!"
+    exit 1
+fi
+
 if [[ "${is_snapshot}" == false ]] && [[ "${branch}" != "master" ]] ; then
     echo "### ERROR Not building master for release!"
     exit 1
