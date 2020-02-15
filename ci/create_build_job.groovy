@@ -23,11 +23,12 @@ Builds a new snapshot of VimR and pushes the tag:<br>
   parameters {
     booleanParam('publish', true, 'Publish this release to Github?')
     stringParam('branch', 'develop', 'Branch to build; defaults to develop')
-    stringParam('marketing_version', null, 'If "is_snapshot" is unchecked, you have to enter this.')
+    stringParam('marketing_version', null, 'Eg "0.34.0". If "is_snapshot" is unchecked, you have to enter this.')
     textParam('release_notes', null, 'Release notes')
     booleanParam('is_snapshot', true)
     booleanParam('update_appcast', true)
     booleanParam('update_snapshot_appcast_for_release', true)
+    booleanParam('use_cache_carthage', false)
   }
 
   scm {

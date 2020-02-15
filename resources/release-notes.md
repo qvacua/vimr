@@ -1,5 +1,11 @@
 # Next
 
+* Dependencies updates:
+    - ggreer/the_silver_searcher@a509a81
+    - sparkle-project/Sparkle@1.23.0
+
+# 0.32.0-344
+
 We updated the library ShortcutRecorder to the latest version. By doing so, we store the shortcuts in a different format than before. This means that after you launched this version, old versions will not be compatible with the stored shortcuts. To delete the stored shortcuts, you can use `defaults delete com.qvacua.VimR.menuitems` in Terminal.
 
 * Show only font family names of monospace fonts.
