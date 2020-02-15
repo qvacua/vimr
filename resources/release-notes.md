@@ -2,6 +2,7 @@
 
 * Dependencies updates:
     - ggreer/the_silver_searcher@a509a81
+    - sparkle-project/Sparkle@1.23.0
 
 # 0.32.0-344
 
