@@ -67,7 +67,6 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
             latency: fileSystemEventsLatency,
             flags: [.fileEvents],
             handler: { [weak self] event in
-              Swift.print(event)
               self?.reloadWebview(with: serverUrl.payload)
             })
           self.monitor?.setDispatchQueue(monitorDispatchQueue)

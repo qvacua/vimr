@@ -78,7 +78,7 @@ class Context: ReduxContext {
         ],
         middlewares: [
           previewMiddleware.mainWindow.apply,
-          httpMiddleware.mainWindow.apply,
+          httpMiddleware.markdownPreview.apply,
           previewMiddleware.previewTool.apply,
           httpMiddleware.htmlPreview.apply,
         ]

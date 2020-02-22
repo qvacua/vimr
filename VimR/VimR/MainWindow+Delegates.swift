@@ -85,8 +85,15 @@ extension MainWindow {
       .disposed(by: self.disposeBag)
   }
 
-  func colorschemeChanged(to neoVimTheme: NvimView.Theme) {
-    self.emit(uuidAction(for: .setTheme(Theme(neoVimTheme))))
+  func colorschemeChanged(to nvimTheme: NvimView.Theme) {
+    self
+      .updateCssColors()
+      .subscribe(onSuccess: { colors in
+        self.emit(self.uuidAction(
+          for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
+        )
+      })
+      .disposed(by: self.disposeBag)
   }
 
   func ipcBecameInvalid(reason: String) {
@@ -112,6 +119,42 @@ extension MainWindow {
 
     self.editorPosition = Marked(position)
     self.cursorDebouncer.call(.setCursor(to: self.editorPosition))
+  }
+
+  private func updateCssColors() -> Single<[String: CellAttributes]> {
+    let colorNames = [
+      "Normal", // color and background-color
+      "Directory", // a
+      "Question", // blockquote foreground
+      "CursorColumn", // code background and foreground
+    ]
+
+    typealias HlResult = Dictionary<String, RxNeovimApi.Value>
+    typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
+    typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
+
+    return Observable
+      .from(colorNames.map { colorName -> ColorNameObservableTuple in
+        (
+          colorName: colorName,
+          observable: self.neoVimView.api
+            .getHlByName(name: colorName, rgb: true)
+            .asObservable()
+        )
+      })
+      .flatMap { tuple -> Observable<(String, HlResult)> in
+        Observable.zip(Observable.just(tuple.colorName), tuple.observable)
+      }
+      .reduce([ColorNameHlResultTuple]()) { (result, element: ColorNameHlResultTuple) in
+        result + [element]
+      }
+      .map { (array: [ColorNameHlResultTuple]) in
+        Dictionary(uniqueKeysWithValues: array)
+          .mapValues { value in
+            CellAttributes(withDict: value, with: self.neoVimView.defaultCellAttributes)
+          }
+      }
+      .asSingle()
   }
 }
 

@@ -11,7 +11,7 @@ import io
 
 
 void_func_template = Template('''\
-  func ${func_name}(${args}
+  public func ${func_name}(${args}
     expectsReturnValue: Bool = false
   ) -> Completable {
 
@@ -34,7 +34,7 @@ void_func_template = Template('''\
 ''')
 
 get_mode_func_template = Template('''\
-  func ${func_name}(${args}
+  public func ${func_name}(${args}
   ) -> Single<${result_type}> {
 
     let params: [RxNeovimApi.Value] = [
@@ -53,7 +53,7 @@ get_mode_func_template = Template('''\
 ''')
 
 func_template = Template('''\
-  func ${func_name}(${args}
+  public func ${func_name}(${args}
     errWhenBlocked: Bool = true
   ) -> Single<${result_type}> {
 

@@ -18,35 +18,21 @@ final class CellAttributesCollection {
     reverse: false
   )
 
-  init() {
-    self.attributes[CellAttributesCollection.defaultAttributesId]
-      = self.defaultAttributes
-  }
+  init() { self.attributes[CellAttributesCollection.defaultAttributesId] = self.defaultAttributes }
 
   func attributes(of id: Int) -> CellAttributes? {
-    if id == Int.max {
-      return self.defaultAttributes.reversed
-    }
+    if id == Int.max { return self.defaultAttributes.reversed }
 
     let absId = abs(id)
-
-    guard let attrs = self.attributes[absId] else {
-      return nil
-    }
-
-    if id < 0 {
-      return attrs.replacingDefaults(with: self.defaultAttributes).reversed
-    }
+    guard let attrs = self.attributes[absId] else { return nil }
+    if id < 0 { return attrs.replacingDefaults(with: self.defaultAttributes).reversed }
 
     return attrs.replacingDefaults(with: self.defaultAttributes)
   }
 
   func set(attributes: CellAttributes, for id: Int) {
     self.attributes[id] = attributes
-
-    if id == CellAttributesCollection.defaultAttributesId {
-      self.defaultAttributes = attributes
-    }
+    if id == CellAttributesCollection.defaultAttributesId { self.defaultAttributes = attributes }
   }
 
   private var attributes: [Int: CellAttributes] = [:]

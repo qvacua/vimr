@@ -39,6 +39,18 @@ struct Theme: CustomStringConvertible {
 
   var directoryForeground = NSColor.textColor
 
+  var cssColor = NSColor(hex: "24292e")!
+  var cssBackgroundColor = NSColor.white
+  var cssA = NSColor(hex: "0366d6")!
+  var cssHrBorderBackgroundColor = NSColor(hex: "dfe2e5")!
+  var cssHrBorderBottomColor = NSColor(hex: "eeeeee")!
+  var cssBlockquoteBorderLeftColor = NSColor(hex: "dfe2e5")!
+  var cssBlockquoteColor = NSColor(hex: "6a737d")!
+  var cssH2BorderBottomColor = NSColor(hex: "eaecef")!
+  var cssH6Color = NSColor(hex: "6a737d")!
+  var cssCodeColor = NSColor(hex: "24292e")!
+  var cssCodeBackgroundColor = NSColor(hex: "1b1f23")!
+
   public var description: String {
     return "Theme<" +
            "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
@@ -47,17 +59,36 @@ struct Theme: CustomStringConvertible {
            ">"
   }
 
-  init() {
+  init() {}
 
+  init(from nvimTheme: NvimView.Theme, additionalColorDict: [String: CellAttributes]) {
+    self.foreground = nvimTheme.foreground
+    self.background = nvimTheme.background
+
+    self.highlightForeground = nvimTheme.visualForeground
+    self.highlightBackground = nvimTheme.visualBackground
+
+    self.directoryForeground = nvimTheme.directoryForeground
+
+    self.updateCssColors(additionalColorDict)
   }
 
-  init(_ neoVimTheme: NvimView.Theme) {
-    self.foreground = neoVimTheme.foreground
-    self.background = neoVimTheme.background
+  private mutating func updateCssColors(_ colors: [String: CellAttributes]) {
+    guard let normal = colors["Normal"],
+          let directory = colors["Directory"],
+          let question = colors["Question"],
+          let cursorColumn = colors["CursorColumn"] else { return }
 
-    self.highlightForeground = neoVimTheme.visualForeground
-    self.highlightBackground = neoVimTheme.visualBackground
-
-    self.directoryForeground = neoVimTheme.directoryForeground
+    self.cssColor = NSColor(rgb: normal.effectiveForeground)
+    self.cssBackgroundColor = NSColor(rgb: normal.effectiveBackground)
+    self.cssA = NSColor(rgb: directory.effectiveForeground)
+    self.cssHrBorderBackgroundColor = NSColor(rgb: cursorColumn.effectiveForeground)
+    self.cssHrBorderBottomColor = NSColor(rgb: cursorColumn.effectiveBackground)
+    self.cssBlockquoteBorderLeftColor = NSColor(rgb: cursorColumn.effectiveForeground)
+    self.cssBlockquoteColor = NSColor(rgb: question.effectiveBackground)
+    self.cssH2BorderBottomColor = NSColor(rgb: cursorColumn.effectiveBackground)
+    self.cssH6Color = NSColor(rgb: normal.effectiveForeground)
+    self.cssCodeColor = NSColor(rgb: cursorColumn.effectiveForeground)
+    self.cssCodeBackgroundColor = NSColor(rgb: cursorColumn.effectiveBackground)
   }
 }

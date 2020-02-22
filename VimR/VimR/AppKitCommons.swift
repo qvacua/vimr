@@ -29,7 +29,28 @@ extension NSColor {
     }
   }
 
-  var hex: String { String(format: "%X", self.int) }
+  var hex: String { String(String(format: "%06X", self.int).suffix(6)) }
+
+  convenience init(rgb: Int) {
+    // @formatter:off
+    let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
+    let green = ((rgb >>  8) & 0xFF).cgf / 255.0;
+    let blue =  ((rgb      ) & 0xFF).cgf / 255.0;
+    // @formatter:on
+
+    self.init(srgbRed: red, green: green, blue: blue, alpha: 1.0)
+  }
+
+  convenience init?(hex: String) {
+    var result: UInt32 = 0
+    guard hex.count == 6, Scanner(string: hex).scanHexInt32(&result) else { return nil }
+
+    let r = (result & 0xFF0000) >> 16
+    let g = (result & 0x00FF00) >> 8
+    let b = (result & 0x0000FF)
+
+    self.init(srgbRed: r.cgf / 255, green: g.cgf / 255, blue: b.cgf / 255, alpha: 1)
+  }
 
   func brightening(by factor: CGFloat) -> NSColor {
     guard let color = self.usingColorSpace(.sRGB) else { return self }

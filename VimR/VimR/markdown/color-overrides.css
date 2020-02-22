@@ -1,0 +1,45 @@
+:root {
+  --nvim-color: {{ nvim-color }};
+  --nvim-background-color: {{ nvim-background-color }};
+  --nvim-a: {{ nvim-a }};
+  --nvim-hr-background-color: {{ nvim-hr-background-color }};
+  --nvim-hr-border-bottom-color: {{ nvim-hr-border-bottom-color }};
+  --nvim-blockquote-border-left-color: {{ nvim-blockquote-border-left-color }};
+  --nvim-blockquote-color: {{ nvim-blockquote-color }};
+  --nvim-h2-border-bottom-color: {{ nvim-h2-border-bottom-color }};
+  --nvim-h6-color: {{ nvim-h6-color }};
+  --nvim-code-background-color: {{ nvim-code-background-color }};
+  --nvim-code-color: {{ nvim-code-color }};
+}
+
+.markdown-body {
+  color: var(--nvim-color);
+  background-color: var(--nvim-background-color);
+}
+
+.markdown-body a {
+  color: var(--nvim-a);
+}
+
+.markdown-body hr {
+  background-color: var(--nvim-hr-background-color);
+  border-bottom-color: var(--nvim-hr-border-bottom-color);
+}
+
+.markdown-body blockquote {
+  border-left-color: var(--nvim-blockquote-border-left-color);
+  color: var(--nvim-blockquote-foreground);
+}
+
+.markdown-body h2 {
+  border-bottom-color: var(--nvim-border-bottom-color);
+}
+
+.markdown-body h6 {
+  color: var(--nvim-h6-color);
+}
+
+.markdown-body pre {
+  color: var(--nvim-code-color);
+  background-color: var(--nvim-code-background-color);
+}

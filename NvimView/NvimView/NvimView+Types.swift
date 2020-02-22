@@ -77,13 +77,10 @@ extension NvimView {
 
     public var directoryForeground = NSColor.textColor
 
-    public init() {
-    }
+    public init() {}
 
     public init(_ values: [Int]) {
-      if values.count < 5 {
-        preconditionFailure("We need 5 colors!")
-      }
+      if values.count < 5 { preconditionFailure("We need 5 colors!") }
 
       let color = ColorUtils.colorIgnoringAlpha
 
@@ -93,7 +90,9 @@ extension NvimView {
       self.visualForeground = values[2] < 0 ? Theme.default.visualForeground : color(values[2])
       self.visualBackground = values[3] < 0 ? Theme.default.visualBackground : color(values[3])
 
-      self.directoryForeground = values[4] < 0 ? Theme.default.directoryForeground : color(values[4])
+      self.directoryForeground = values[4] < 0
+        ? Theme.default.directoryForeground
+        : color(values[4])
     }
 
     public var description: String {

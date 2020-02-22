@@ -29,6 +29,7 @@ public class NvimView: NSView,
   public var isRightOptionMeta = false
 
   public let uuid = UUID()
+  public let api = RxNeovimApi()
 
   public internal(set) var mode = CursorModeShape.normal
 
@@ -117,6 +118,10 @@ public class NvimView: NSView,
     }
   }
 
+  public var defaultCellAttributes: CellAttributes {
+    self.cellAttributesCollection.defaultAttributes
+  }
+
   override public var acceptsFirstResponder: Bool {
     return true
   }
@@ -184,7 +189,6 @@ public class NvimView: NSView,
   )
 
   let bridge: UiBridge
-  let api = RxNeovimApi()
 
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
