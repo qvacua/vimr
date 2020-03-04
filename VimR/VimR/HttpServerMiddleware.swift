@@ -9,7 +9,8 @@ import os
 
 class HttpServerMiddleware {
 
-  let htmlPreview: HtmlPreviewMiddleware
+  let htmlPreviewTool: HtmlPreviewToolMiddleware
+  let htmlPreviewMainWindow: HtmlPreviewMainWindowMiddleware
   let markdownPreview: MarkdownPreviewMiddleware
 
   init(port: Int) {
@@ -18,32 +19,45 @@ class HttpServerMiddleware {
     // We know that the URL is valid!
     let baseUrl = URL(string: "http://\(localhost):\(port)")!
 
-    let resourceUrl = Bundle.main.resourceURL!
-    let cssUrl = resourceUrl.appendingPathComponent("markdown/github-markdown.css")
+    let cssOverridesTemplate = try! String(contentsOf: Resources.cssOverridesTemplateUrl)
+    let selectFirstHtmlTemplate = try! String(contentsOf: Resources.selectFirstHtmlTemplateUrl)
 
     let server = HttpServer()
     server.listenAddressIPv4 = localhost
 
-    self.htmlPreview = HtmlPreviewMiddleware(server: server, baseUrl: baseUrl, cssUrl: cssUrl)
+    let htmlTemplates = (
+      selectFirst: selectFirstHtmlTemplate,
+      cssOverrides: cssOverridesTemplate
+    )
+    self.htmlPreviewTool = HtmlPreviewToolMiddleware(
+      server: server,
+      baseUrl: baseUrl,
+      cssUrl: Resources.cssUrl,
+      htmlTemplates: htmlTemplates
+    )
+    self.htmlPreviewMainWindow = HtmlPreviewMainWindowMiddleware(
+      server: server,
+      baseUrl: baseUrl,
+      cssUrl: Resources.cssUrl,
+      htmlTemplates: htmlTemplates
+    )
     self.markdownPreview = MarkdownPreviewMiddleware(
       server: server,
       baseUrl: baseUrl,
-      cssUrl: cssUrl
+      cssUrl: Resources.cssUrl,
+      baseCssUrl: Resources.baseCssUrl
     )
 
     do {
       try server.start(in_port_t(port), forceIPv4: true)
       self.log.info("VimR http server started on \(baseUrl)")
 
-      let previewResourceUrl = resourceUrl.appendingPathComponent("preview")
-
-      server["\(MarkdownReducer.basePath)/:path"] = shareFilesFromDirectory(previewResourceUrl.path)
-      server.GET["\(MarkdownReducer.basePath)/github-markdown.css"] = shareFile(cssUrl.path)
-
-      server["\(HtmlPreviewToolReducer.basePath)/:path"] = shareFilesFromDirectory(
-        previewResourceUrl.path
-      )
-      server.GET["\(HtmlPreviewToolReducer.basePath)/github-markdown.css"] = shareFile(cssUrl.path)
+//      server["\(HtmlPreviewToolReducer.basePath)/:path"] = shareFilesFromDirectory(
+//        Resources.previewUrl.path
+//      )
+//      server.GET["\(HtmlPreviewToolReducer.basePath)/github-markdown.css"] = shareFile(
+//        Resources.cssUrl.path
+//      )
     } catch {
       self.log.error("Server could not be started on port \(port): \(error)")
     }
@@ -52,12 +66,60 @@ class HttpServerMiddleware {
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
                           category: Defs.LoggerCategory.middleware)
 
-  class HtmlPreviewMiddleware: MiddlewareType {
+  class HtmlPreviewMainWindowMiddleware: MiddlewareType {
+
+    typealias StateType = MainWindow.State
+    typealias ActionType = UuidAction<MainWindow.Action>
+
+    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL, htmlTemplates: HtmlTemplates) {
+      self.server = server
+      self.baseUrl = baseUrl
+      self.cssUrl = cssUrl
+    }
+
+    func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
+      { tuple in
+        let result = reduce(tuple)
+
+        guard case .setTheme = tuple.action.payload else { return result }
+
+        let state = result.state
+        guard state.htmlPreview.htmlFile == nil,
+              let serverUrl = state.htmlPreview.server else { return result }
+
+        let basePath = serverUrl.payload.deletingLastPathComponent()
+        self.server.GET[basePath.appendingPathComponent("github-markdown.css").path] = shareFile(
+          Resources.cssUrl.path
+        )
+        self.server.GET[basePath.appendingPathComponent("base.css").path] = shareFile(
+          Resources.baseCssUrl.path
+        )
+        self.server.GET[serverUrl.payload.path] = shareFile(
+          HtmlPreviewMiddleware.selectFirstHtmlUrl(uuid: state.uuid).path
+        )
+
+        self.log.info("Serving on \(self.fullUrl(with: serverUrl.payload.path)) the select first")
+
+        return result
+      }
+    }
+
+    private let server: HttpServer
+    private let baseUrl: URL
+    private let cssUrl: URL
+
+    private let log = OSLog(subsystem: Defs.loggerSubsystem,
+                            category: Defs.LoggerCategory.middleware)
+
+    private func fullUrl(with path: String) -> URL { self.baseUrl.appendingPathComponent(path) }
+  }
+
+  class HtmlPreviewToolMiddleware: MiddlewareType {
 
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<HtmlPreviewTool.Action>
 
-    init(server: HttpServer, baseUrl: URL, cssUrl: URL) {
+    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL, htmlTemplates: HtmlTemplates) {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl
@@ -101,10 +163,11 @@ class HttpServerMiddleware {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    init(server: HttpServer, baseUrl: URL, cssUrl: URL) {
+    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL, baseCssUrl: URL) {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl
+      self.baseCssUrl = baseCssUrl
     }
 
     func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
@@ -112,24 +175,34 @@ class HttpServerMiddleware {
         let result = reduce(tuple)
 
         let uuidAction = tuple.action
-        guard case .newCurrentBuffer = uuidAction.payload else { return result }
+        switch uuidAction.payload {
+        case .newCurrentBuffer: fallthrough
+        case .bufferWritten: fallthrough
+        case .setTheme:
+          break
+
+        default:
+          return result
+        }
 
         let preview = result.state.preview
-        guard case .markdown = preview.status,
-              let buffer = preview.buffer,
-              let html = preview.html,
-              let server = preview.server else { return result }
+        guard let htmlUrl = preview.html,
+              let serverUrl = preview.server else { return result }
 
-        self.log.debug("Serving \(html) on \(server)")
-        let htmlBasePath = server.deletingLastPathComponent().path
+        self.log.debug("Serving \(htmlUrl) on \(serverUrl)")
+        let htmlBasePath = serverUrl.deletingLastPathComponent().path
 
-        self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(
-          buffer.deletingLastPathComponent().path
-        )
-        self.server.GET[server.path] = shareFile(html.path)
+        if let bufferUrl = preview.buffer {
+          self.server["\(htmlBasePath)/:path"] = shareFilesFromDirectory(
+            bufferUrl.deletingLastPathComponent().path
+          )
+        }
+
+        self.server.GET[serverUrl.path] = shareFile(htmlUrl.path)
         self.server.GET["\(htmlBasePath)/github-markdown.css"] = shareFile(self.cssUrl.path)
+        self.server.GET["\(htmlBasePath)/base.css"] = shareFile(self.baseCssUrl.path)
 
-        self.log.info("Serving on \(self.fullUrl(with: server.path)) the markdown file \(buffer)")
+        self.log.info("Serving on \(self.fullUrl(with: serverUrl.path)) for markdown preview")
 
         return result
       }
@@ -138,6 +211,7 @@ class HttpServerMiddleware {
     private let server: HttpServer
     private let baseUrl: URL
     private let cssUrl: URL
+    private let baseCssUrl: URL
 
     private let log = OSLog(subsystem: Defs.loggerSubsystem,
                             category: Defs.LoggerCategory.middleware)
@@ -145,3 +219,8 @@ class HttpServerMiddleware {
     private func fullUrl(with path: String) -> URL { self.baseUrl.appendingPathComponent(path) }
   }
 }
+
+private typealias HtmlTemplates = (
+  selectFirst: String,
+  cssOverrides: String
+)

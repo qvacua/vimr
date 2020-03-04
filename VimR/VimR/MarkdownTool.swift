@@ -9,7 +9,7 @@ import PureLayout
 import WebKit
 import os
 
-class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
+class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
 
   enum Action {
 
@@ -63,21 +63,21 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.configureForAutoLayout()
 
     refreshMenuItem.target = self
-    refreshMenuItem.action = #selector(PreviewTool.refreshNowAction)
+    refreshMenuItem.action = #selector(MarkdownTool.refreshNowAction)
     forwardSearchMenuItem.target = self
-    forwardSearchMenuItem.action = #selector(PreviewTool.forwardSearchAction)
+    forwardSearchMenuItem.action = #selector(MarkdownTool.forwardSearchAction)
     reverseSearchMenuItem.target = self
-    reverseSearchMenuItem.action = #selector(PreviewTool.reverseSearchAction)
+    reverseSearchMenuItem.action = #selector(MarkdownTool.reverseSearchAction)
     automaticForward.target = self
-    automaticForward.action = #selector(PreviewTool.automaticForwardSearchAction)
+    automaticForward.action = #selector(MarkdownTool.automaticForwardSearchAction)
     automaticReverse.target = self
-    automaticReverse.action = #selector(PreviewTool.automaticReverseSearchAction)
+    automaticReverse.action = #selector(MarkdownTool.automaticReverseSearchAction)
     refreshOnWrite.target = self
-    refreshOnWrite.action = #selector(PreviewTool.refreshOnWriteAction)
+    refreshOnWrite.action = #selector(MarkdownTool.refreshOnWriteAction)
 
     self.addViews()
     self.webview.navigationDelegate = self
-    self.webview.load(URLRequest(url: state.preview.server!))
+    if let url = state.preview.server { self.webview.load(URLRequest(url: url)) }
 
     source
       .observeOn(MainScheduler.instance)
@@ -173,7 +173,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+                          category: Defs.LoggerCategory.ui)
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -189,7 +189,7 @@ class PreviewTool: NSView, UiComponent, WKNavigationDelegate {
 }
 
 // MARK: - Actions
-extension PreviewTool {
+extension MarkdownTool {
 
   @objc func refreshNowAction(_: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .refreshNow))

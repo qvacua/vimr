@@ -84,7 +84,7 @@ class MainWindow: NSObject,
 
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
-      self.preview = PreviewTool(source: source, emitter: emitter, state: state)
+      self.preview = MarkdownTool(source: source, emitter: emitter, state: state)
       let previewConfig = WorkspaceTool.Config(
         title: "Markdown",
         view: self.preview!,
@@ -237,7 +237,7 @@ class MainWindow: NSObject,
 
   private var previewPosition = Marked(Position.beginning)
 
-  private var preview: PreviewTool?
+  private var preview: MarkdownTool?
   private var htmlPreview: HtmlPreviewTool?
   private var fileBrowser: FileBrowser?
   private var buffersList: BuffersList?
@@ -246,7 +246,7 @@ class MainWindow: NSObject,
   private var lastThemeMark = Token()
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+                          category: Defs.LoggerCategory.ui)
 
   private func setupScrollAndCursorDebouncers() {
     Observable

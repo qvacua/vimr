@@ -83,7 +83,7 @@ class OpenQuicklyWindow: NSObject,
   private let fileView = NSTableView.standardTableView()
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+                          category: Defs.LoggerCategory.ui)
 
   private var window: NSWindow { self.windowController.window! }
 

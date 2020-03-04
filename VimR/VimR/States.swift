@@ -137,13 +137,14 @@ struct PreviewState {
   var previewPosition = Marked(Position.beginning)
   var lastSearch = SearchAction.none
 
-  init(status: Status = .none,
-       buffer: URL? = nil,
-       html: URL? = nil,
-       server: URL? = nil,
-       updateDate: Date = Date(),
-       editorPosition: Marked<Position> = Marked(.beginning),
-       previewPosition: Marked<Position> = Marked(.beginning)
+  init(
+    status: Status = .none,
+    buffer: URL? = nil,
+    html: URL? = nil,
+    server: URL? = nil,
+    updateDate: Date = Date(),
+    editorPosition: Marked<Position> = Marked(.beginning),
+    previewPosition: Marked<Position> = Marked(.beginning)
   ) {
     self.status = status
     self.buffer = buffer
@@ -258,7 +259,7 @@ extension MainWindow {
     var preview = PreviewState.default
     var htmlPreview = HtmlPreviewState.default
 
-    var previewTool = PreviewTool.State.default
+    var previewTool = MarkdownTool.State.default
 
     var fileBrowserShowHidden = false
 
@@ -449,7 +450,7 @@ struct WorkspaceToolState: Codable {
   }
 }
 
-extension PreviewTool {
+extension MarkdownTool {
 
   struct State: Codable {
 

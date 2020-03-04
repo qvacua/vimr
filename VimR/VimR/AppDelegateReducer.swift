@@ -56,9 +56,11 @@ class AppDelegateReducer: ReducerType {
 
     mainWindow.htmlPreview = HtmlPreviewState(
       htmlFile: nil,
-      server: Marked(self.baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath))
+      server: Marked(
+        HtmlPreviewReducer.serverUrl(baseUrl: self.baseServerUrl, uuid: mainWindow.uuid)
+      )
     )
-    mainWindow.preview.server = self.baseServerUrl.appendingPathComponent(MarkdownReducer.nonePath)
+    mainWindow.preview.server = nil
 
     mainWindow.usesVcsIgnores = state.openQuickly.defaultUsesVcsIgnores
     mainWindow.nvimArgs = config.nvimArgs

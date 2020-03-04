@@ -183,7 +183,7 @@ class FileOutlineView: NSOutlineView,
   private var triangleOpen: NSImage
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+                          category: Defs.LoggerCategory.ui)
 
   private func initContextMenu() {
     // Loading the nib file will set self.menu.

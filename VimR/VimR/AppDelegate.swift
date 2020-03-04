@@ -48,9 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
       initialAppState = .default
     }
 
-    initialAppState.mainWindowTemplate.htmlPreview.server = Marked(
-      baseServerUrl.appendingPathComponent(HtmlPreviewToolReducer.selectFirstPath)
-    )
+    initialAppState.mainWindowTemplate.htmlPreview.server = nil
 
     self.context = Context(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.context.actionEmitter.typedEmit()
