@@ -7,7 +7,7 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-345</title>
+      <title>SNAPSHOT-346</title>
       <description><![CDATA[
     <p>GH-775: Use the colors of the selected color scheme for the markdown preview.</p>
 <ul>
@@ -19,15 +19,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/345
+        https://github.com/qvacua/vimr/releases/tag/snapshot/346
       </releaseNotesLink>
-      <pubDate>2020-03-04T23:54:50.561212</pubDate>
+      <pubDate>2020-03-05T20:30:07.566073</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/345/VimR-SNAPSHOT-345.tar.bz2"
-                 sparkle:version="345"
-                 sparkle:shortVersionString="SNAPSHOT-345"
-                 sparkle:dsaSignature="MCwCFE4+kzl4moVAH6ycxmkVVXQRLkvYAhRsLEWQRnAv9H19Ft2XDhtIf4FR7A=="
-                 length="14970121"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/346/VimR-SNAPSHOT-346.tar.bz2"
+                 sparkle:version="346"
+                 sparkle:shortVersionString="SNAPSHOT-346"
+                 sparkle:dsaSignature="MC0CFFYQ4F9Vv9/I6qHgVbfGXU76f1GTAhUAvAMhk/V9JOnbO4k5+q6O4zpc+xw="
+                 length="14969295"
                  type="application/octet-stream"/>
     </item>
   </channel>
