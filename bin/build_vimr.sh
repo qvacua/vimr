@@ -64,7 +64,7 @@ if [[ ${code_sign} == true ]] ; then
     pushd ${build_path}/Build/Products/Release > /dev/null
         codesign --force -s "${identity}" --timestamp --options=runtime --entitlements="${entitlements_path}" \
             VimR.app/Contents/Frameworks/NvimView.framework/Versions/A/NvimServer
-        codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/NvimView.framework/Versions/A
+        codesign --force -s "${identity}" --timestamp --options=runtime VimR.app/Contents/Frameworks/NvimView.framework/Versions/A
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A
     popd > /dev/null
