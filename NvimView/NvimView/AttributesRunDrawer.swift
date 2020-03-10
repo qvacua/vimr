@@ -158,19 +158,23 @@ final class AttributesRunDrawer {
   private func fontGlyphRuns(from attrsRun: AttributesRun, offset: CGPoint) -> [FontGlyphRun] {
     let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
 
-    let typesetFunction = self.usesLigatures
-      ? self.typesetter.fontGlyphRunsWithLigatures
-      : self.typesetter.fontGlyphRunsWithoutLigatures
-
-    let fontGlyphRuns = typesetFunction(
-      attrsRun.cells.map { Array($0.string.utf16) },
-      attrsRun.cells.startIndex,
-      CGPoint(x: offset.x, y: attrsRun.location.y + self.baselineOffset),
-      font,
-      self.cellSize.width
-    )
-
-    return fontGlyphRuns
+    if self.usesLigatures {
+      return self.typesetter.fontGlyphRunsWithLigatures(
+        nvimUtf16Cells: attrsRun.cells.map { Array($0.string.utf16) },
+        startColumn: attrsRun.cells.startIndex,
+        offset: CGPoint(x: offset.x, y: attrsRun.location.y + self.baselineOffset),
+        font: font,
+        cellWidth: self.cellSize.width
+      )
+    } else {
+      return self.typesetter.fontGlyphRunsWithoutLigatures(
+        nvimUtf16Cells: attrsRun.cells.map { Array($0.string.utf16) },
+        startColumn: attrsRun.cells.startIndex,
+        offset: CGPoint(x: offset.x, y: attrsRun.location.y + self.baselineOffset),
+        font: font,
+        cellWidth: self.cellSize.width
+      )
+    }
   }
 
   private func updateFontMetrics() {

@@ -134,30 +134,24 @@ final class Typesetter {
     return runs.flatMap { $0 }
   }
 
-
-  private let ctRunsCache = SimpleCache<NSAttributedString, [CTRun]>(countLimit: 5000)
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
-
   private func ctRuns(from utf16Chars: Array<Unicode.UTF16.CodeUnit>, font: NSFont) -> [CTRun] {
+    if let ctRunsAndFont = self.ctRunsCache.valueForKey(utf16Chars),
+       font == ctRunsAndFont.font { return ctRunsAndFont.ctRuns }
+
     let attrStr = NSAttributedString(
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
       attributes: [.font: font, .ligature: ligatureOption]
     )
 
-    if let cachedCtRuns = self.ctRunsCache.object(forKey: attrStr) { return cachedCtRuns }
-
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
-    self.ctRunsCache.set(object: ctRuns, forKey: attrStr)
+    self.ctRunsCache.set(
+      CtRunsAndFont(ctRuns: ctRuns, font: font),
+      forKey: utf16Chars
+    )
+
     return ctRuns
-  }
-
-  private struct NvimUtf16CellsRun {
-
-    var startColumn: Int
-    var nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
-    var isSimple: Bool
   }
 
   private func groupSimpleAndNonSimpleChars(
@@ -257,23 +251,41 @@ final class Typesetter {
   }
 
   private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> Array<UInt16> {
-    return nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
-      var count = 0
-      for i in 0..<pointer.count { count = count + pointer[i].count }
+    nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
+      let count = pointer.reduce(0) { acc, elem in acc + elem.count }
 
-      var result = Array(repeating: Unicode.UTF16.CodeUnit(), count: count)
-      var i = 0
-      for k in 0..<pointer.count {
-        let element = pointer[k]
-        if element.isEmpty { continue }
+      return Array<Unicode.UTF16.CodeUnit>(
+        unsafeUninitializedCapacity: count
+      ) { resultPtr, initCount in
+        var i = 0
+        for k in 0..<pointer.count {
+          let element = pointer[k]
+          if element.isEmpty { continue }
 
-        for j in 0..<element.count { result[i + j] = element[j] }
+          for j in 0..<element.count { resultPtr[i + j] = element[j] }
 
-        i = i + element.count
+          i = i + element.count
+        }
+        initCount = count
       }
-
-      return result
     }
+  }
+
+  private let ctRunsCache = FifoCache<Array<Unicode.UTF16.CodeUnit>, CtRunsAndFont>(count: 5000)
+
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
+
+  private struct CtRunsAndFont {
+
+    var ctRuns: [CTRun]
+    var font: NSFont
+  }
+
+  private struct NvimUtf16CellsRun {
+
+    var startColumn: Int
+    var nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
+    var isSimple: Bool
   }
 }
 
