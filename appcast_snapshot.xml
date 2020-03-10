@@ -7,27 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-346</title>
+      <title>SNAPSHOT-347</title>
       <description><![CDATA[
-    <p>GH-775: Use the colors of the selected color scheme for the markdown preview.</p>
-<ul>
-<li>Dependencies updates:<ul>
-<li>ggreer/the_silver_searcher@a509a81</li>
-<li>sparkle-project/Sparkle@1.23.0</li>
-</ul>
-</li>
+    <ul>
+<li>Improve drawing performance.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/346
+        https://github.com/qvacua/vimr/releases/tag/snapshot/347
       </releaseNotesLink>
-      <pubDate>2020-03-05T20:30:07.566073</pubDate>
+      <pubDate>2020-03-10T21:36:52.552729</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/346/VimR-SNAPSHOT-346.tar.bz2"
-                 sparkle:version="346"
-                 sparkle:shortVersionString="SNAPSHOT-346"
-                 sparkle:dsaSignature="MC0CFFYQ4F9Vv9/I6qHgVbfGXU76f1GTAhUAvAMhk/V9JOnbO4k5+q6O4zpc+xw="
-                 length="14969295"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/347/VimR-SNAPSHOT-347.tar.bz2"
+                 sparkle:version="347"
+                 sparkle:shortVersionString="SNAPSHOT-347"
+                 sparkle:dsaSignature="MCwCFFJBf//mmjwwPtTUwsMwxcfAsVOOAhQ2dOcIku8wb+DHCfQW97AKaqj7fA=="
+                 length="14983113"
                  type="application/octet-stream"/>
     </item>
   </channel>
