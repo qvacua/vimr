@@ -25,7 +25,9 @@ class FileUtils {
   private static let fileManager = FileManager.default
 
   static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
-  
+
+  static func tempDir() -> URL { URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true) }
+
   static func directDescendants(of url: URL) -> [URL] {
     guard let childUrls = try? self.fileManager.contentsOfDirectory(
       at: url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions

@@ -25,11 +25,53 @@ class NvimMsgPackTests: XCTestCase {
   }
 
   func testSth() {
-    nvim
-      .command(command: "pwd")
-      .subscribe(onCompleted: { print("completed") }, onError: { print($0) })
-//      .subscribe(onSuccess: { print($0) })
+    let colorNames = [
+      "Normal", // color and background-color
+      "Directory", // a
+      "StatusLine", // code background and foreground
+      "NonText", // hr and block quote border
+      "Question", // blockquote foreground
+    ]
+
+    typealias HlResult = Dictionary<String, RxNeovimApi.Value>
+    typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
+    typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
+
+    Observable
+      .from(colorNames.map { colorName -> ColorNameObservableTuple in
+        (
+          colorName: colorName,
+          observable: self.nvim
+            .getHlByName(name: colorName, rgb: true)
+            .asObservable()
+        )
+      })
+      .flatMap { tuple -> Observable<(String, HlResult)> in
+        Observable.zip(Observable.just(tuple.colorName), tuple.observable)
+      }
+      .subscribe(onNext: { (tuple: ColorNameHlResultTuple) in
+        print(tuple)
+      })
       .disposed(by: self.disposeBag)
+
+//    Observable
+//      .concat(colorNames.map { colorName in
+//        self.nvim
+//          .getHlByName(name: colorName, rgb: true)
+//          .asObservable()
+//      })
+//      .enumerated()
+//      .subscribe(onNext: { dict in print(dict) })
+//      .disposed(by: self.disposeBag)
+
+//    self.nvim
+//      .getHlByName(name: "Normal", rgb: true)
+//      .subscribe(onSuccess: { dict in
+//        guard let f = dict["foreground"]?.uint64Value,
+//              let b = dict["background"]?.uint64Value else { return }
+//        print(String(format: "%06X %06X", f, b))
+//      }, onError: { err in print(err) })
+//      .disposed(by: self.disposeBag)
 
     sleep(1)
   }

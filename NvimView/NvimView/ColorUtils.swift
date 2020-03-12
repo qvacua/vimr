@@ -5,39 +5,30 @@
 
 import Cocoa
 
-private let colorCache = SimpleCache<Int, NSColor>(countLimit: 500)
-private let cgColorCache = SimpleCache<Int, CGColor>(countLimit: 500)
-
 final class ColorUtils {
 
   /// ARGB
   static func cgColorIgnoringAlpha(_ rgb: Int) -> CGColor {
-    if let color = cgColorCache.object(forKey: rgb) {
-      return color
-    }
+    if let color = cgColorCache.valueForKey(rgb) { return color }
 
     let color = self.colorIgnoringAlpha(rgb).cgColor
-    cgColorCache.set(object: color, forKey: rgb)
+    cgColorCache.set(color, forKey: rgb)
 
     return color
   }
 
   static func cgColorIgnoringAlpha(_ rgb: Int32) -> CGColor {
-    if let color = cgColorCache.object(forKey: Int(rgb)) {
-      return color
-    }
+    if let color = cgColorCache.valueForKey(Int(rgb)) { return color }
 
     let color = self.colorIgnoringAlpha(Int(rgb)).cgColor
-    cgColorCache.set(object: color, forKey: Int(rgb))
+    cgColorCache.set(color, forKey: Int(rgb))
 
     return color
   }
 
   /// ARGB
   static func colorIgnoringAlpha(_ rgb: Int) -> NSColor {
-    if let color = colorCache.object(forKey: rgb) {
-      return color
-    }
+    if let color = colorCache.valueForKey(rgb) { return color }
 
     // @formatter:off
     let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
@@ -46,8 +37,11 @@ final class ColorUtils {
     // @formatter:on
 
     let color = NSColor(srgbRed: red, green: green, blue: blue, alpha: 1.0)
-    colorCache.set(object: color, forKey: rgb)
+    colorCache.set(color, forKey: rgb)
 
     return color
   }
 }
+
+private let colorCache = FifoCache<Int, NSColor>(count: 500)
+private let cgColorCache = FifoCache<Int, CGColor>(count: 500)

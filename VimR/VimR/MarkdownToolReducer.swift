@@ -5,10 +5,10 @@
 
 import Foundation
 
-class PreviewToolReducer: ReducerType {
+class MarkdownToolReducer: ReducerType {
 
   typealias StateType = MainWindow.State
-  typealias ActionType = UuidAction<PreviewTool.Action>
+  typealias ActionType = UuidAction<MarkdownTool.Action>
 
   init(baseServerUrl: URL) {
     self.baseServerUrl = baseServerUrl

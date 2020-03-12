@@ -47,7 +47,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui);
 #pragma mark ui_bridge callbacks
 
 static void server_ui_flush(UI *ui __unused) {
-  if (flush_sbuffer.size == 0) { return; }
+  if (flush_sbuffer.size == 0) {return;}
 
   CFDataRef const data = CFDataCreateWithBytesNoCopy(
       kCFAllocatorDefault,
@@ -145,10 +145,10 @@ static void server_ui_hl_attr_define(
     Array info __unused
 ) {
   FontTrait trait = FontTraitNone;
-  if (attrs.rgb_ae_attr & HL_ITALIC) { trait |= FontTraitItalic; }
-  if (attrs.rgb_ae_attr & HL_BOLD) { trait |= FontTraitBold; }
-  if (attrs.rgb_ae_attr & HL_UNDERLINE) { trait |= FontTraitUnderline; }
-  if (attrs.rgb_ae_attr & HL_UNDERCURL) { trait |= FontTraitUndercurl; }
+  if (attrs.rgb_ae_attr & HL_ITALIC) {trait |= FontTraitItalic;}
+  if (attrs.rgb_ae_attr & HL_BOLD) {trait |= FontTraitBold;}
+  if (attrs.rgb_ae_attr & HL_UNDERLINE) {trait |= FontTraitUnderline;}
+  if (attrs.rgb_ae_attr & HL_UNDERCURL) {trait |= FontTraitUndercurl;}
 
   send_msg_packing(NvimServerMsgIdHighlightAttrs, ^(msgpack_packer *packer) {
     msgpack_pack_array(packer, 6);
@@ -159,6 +159,9 @@ static void server_ui_hl_attr_define(
     msgpack_pack_int32(packer, attrs.rgb_sp_color);
     msgpack_pack_bool(packer, (bool) (attrs.rgb_ae_attr & HL_INVERSE));
   });
+}
+
+static void server_hl_group_set(UI *ui, String name, Integer id) {
 }
 
 static void server_ui_raw_line(
@@ -185,9 +188,9 @@ static void server_ui_raw_line(
     msgpack_pack_int64(packer, clearattr);
 
     msgpack_pack_array(packer, (size_t) count);
-    for (Integer i = 0; i < count; i++) { msgpack_pack_cstr(packer, (const char *) chunk[i]); }
+    for (Integer i = 0; i < count; i++) {msgpack_pack_cstr(packer, (const char *) chunk[i]);}
     msgpack_pack_array(packer, (size_t) count);
-    for (Integer i = 0; i < count; i++) { msgpack_pack_int16(packer, attrs[i]); }
+    for (Integer i = 0; i < count; i++) {msgpack_pack_int16(packer, attrs[i]);}
   });
 }
 
@@ -207,9 +210,9 @@ static void server_ui_default_colors_set(
     Integer cterm_fg __unused,
     Integer cterm_bg __unused
 ) {
-  if (rgb_fg != -1) { default_foreground = rgb_fg; }
-  if (rgb_bg != -1) { default_background = rgb_bg; }
-  if (rgb_sp != -1) { default_special = rgb_sp; }
+  if (rgb_fg != -1) {default_foreground = rgb_fg;}
+  if (rgb_bg != -1) {default_background = rgb_bg;}
+  if (rgb_sp != -1) {default_special = rgb_sp;}
 
   send_msg_packing(
       NvimServerMsgIdDefaultColorsChanged,
@@ -223,7 +226,7 @@ static void server_ui_default_colors_set(
 }
 
 static void server_ui_set_title(UI *ui __unused, String title) {
-  if (title.size == 0) { return; }
+  if (title.size == 0) {return;}
 
   send_msg_packing(NvimServerMsgIdSetTitle, ^(msgpack_packer *packer) {
     msgpack_rpc_from_string(title, packer);
@@ -271,6 +274,7 @@ void custom_ui_start(void) {
   ui->mode_change = server_ui_mode_change;
   ui->grid_scroll = server_ui_grid_scroll;
   ui->hl_attr_define = server_ui_hl_attr_define;
+  ui->hl_group_set = server_hl_group_set;
   ui->default_colors_set = server_ui_default_colors_set;
   ui->raw_line = server_ui_raw_line;
   ui->bell = server_ui_bell;
@@ -352,7 +356,7 @@ void custom_ui_autocmds_groups(
 
 static bool has_dirty_docs() {
   FOR_ALL_BUFFERS(buffer) {
-    if (bufIsChanged(buffer)) { return true; }
+    if (bufIsChanged(buffer)) {return true;}
   }
 
   return false;
@@ -366,7 +370,7 @@ static void pack_flush_data(RenderDataType type, pack_block body) {
 
 static void send_dirty_status() {
   const bool new_dirty_status = has_dirty_docs();
-  if (are_buffers_dirty == new_dirty_status) { return; }
+  if (are_buffers_dirty == new_dirty_status) {return;}
 
   are_buffers_dirty = new_dirty_status;
 
@@ -405,7 +409,7 @@ static int background_for(HlAttrs attrs) {
 static void send_colorscheme() {
   // It seems that the highlight groupt only gets updated when the screen is
   // redrawn. Since there's a guard var, probably it's safe to call it here...
-  if (need_highlight_changed) { highlight_changed(); }
+  if (need_highlight_changed) {highlight_changed();}
 
   const HlAttrs visualAttrs = syn_attr2entry(highlight_attr[HLF_V]);
   const HlAttrs dirAttrs = syn_attr2entry(highlight_attr[HLF_D]);
@@ -459,7 +463,7 @@ static void server_ui_main(UIBridgeData *bridge, UI *ui) {
   // We have to manually trigger this to initially get the colorscheme.
   send_colorscheme();
 
-  while (!bridge_data.stop) { loop_poll_events(&loop, -1); }
+  while (!bridge_data.stop) {loop_poll_events(&loop, -1);}
 
   ui_bridge_stopped(bridge);
   loop_close(&loop, false);

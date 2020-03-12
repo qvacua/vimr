@@ -47,18 +47,19 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.viewToBeFocused != nil,
-           case .htmlPreview = state.viewToBeFocused! {
-          self.beFirstResponder()
-        }
+           case .htmlPreview = state.viewToBeFocused! { self.beFirstResponder() }
 
-        guard let serverUrl = state.htmlPreview.server, let htmlFileUrl = state.htmlPreview.htmlFile else {
+        guard let serverUrl = state.htmlPreview.server else {
           self.monitor = nil
           return
         }
 
-        if serverUrl.mark == self.mark {
-          return
-        }
+        if serverUrl.mark == self.mark { return }
+
+        self.mark = serverUrl.mark
+        self.reloadWebview(with: serverUrl.payload)
+
+        guard let htmlFileUrl = state.htmlPreview.htmlFile else { return }
 
         do {
           self.monitor = try EonilFSEventStream(
@@ -67,19 +68,16 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
             latency: fileSystemEventsLatency,
             flags: [.fileEvents],
             handler: { [weak self] event in
-              Swift.print(event)
               self?.reloadWebview(with: serverUrl.payload)
             })
           self.monitor?.setDispatchQueue(monitorDispatchQueue)
           try self.monitor?.start()
         } catch {
-          self.log.error("Could not start file monitor for \(htmlFileUrl): "
-                         + "\(error)")
+          self.log.error("Could not start file monitor for \(htmlFileUrl): \(error)")
         }
 
-        self.innerCustomToolbar.selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
-        self.mark = serverUrl.mark
-        self.reloadWebview(with: serverUrl.payload)
+        self.innerCustomToolbar
+          .selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
       })
       .disposed(by: self.disposeBag)
   }
@@ -117,25 +115,19 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   private let disposeBag = DisposeBag()
   private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.uiComponents)
+                          category: Defs.LoggerCategory.ui)
 
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   @objc func selectHtmlFile(sender: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = false
     panel.allowsMultipleSelection = false
     panel.beginSheetModal(for: self.window!) { result in
-      guard result == .OK else {
-        return
-      }
+      guard result == .OK else { return }
 
       let urls = panel.urls
-      guard urls.count == 1 else {
-        return
-      }
+      guard urls.count == 1 else { return }
 
       self.emit(UuidAction(uuid: self.uuid, action: .selectHtmlFile(urls[0])))
     }
@@ -151,9 +143,7 @@ extension HtmlPreviewTool {
   class InnerCustomToolbar: CustomToolBar {
 
     fileprivate weak var htmlPreviewTool: HtmlPreviewTool? {
-      didSet {
-        self.selectHtmlFile.target = self.htmlPreviewTool
-      }
+      didSet { self.selectHtmlFile.target = self.htmlPreviewTool }
     }
 
     let selectHtmlFile = NSButton(forAutoLayout: ())
@@ -187,12 +177,9 @@ extension HtmlPreviewTool {
       self.addSubview(selectHtmlFile)
 
       selectHtmlFile.autoPinEdge(toSuperviewEdge: .top)
-      selectHtmlFile.autoPinEdge(toSuperviewEdge: .right,
-                                 withInset: InnerToolBar.itemPadding)
+      selectHtmlFile.autoPinEdge(toSuperviewEdge: .right, withInset: InnerToolBar.itemPadding)
     }
 
-    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   }
 }

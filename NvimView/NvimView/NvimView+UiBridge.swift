@@ -379,7 +379,7 @@ extension NvimView {
     ) else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
-    }
+      }
 
     let theme = Theme(values)
     self.bridgeLogger.debug(theme)

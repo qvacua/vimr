@@ -21,8 +21,9 @@ class Context: ReduxContext {
   init(baseServerUrl: URL, state: AppState) {
     super.init(initialState: state)
 
-    let previewMiddleware = PreviewMiddleware()
-    let markdownReducer = MarkdownReducer(baseServerUrl: baseServerUrl)
+    let markdownPreviewMiddleware = MarkdownPreviewMiddleware()
+    let markdownPreviewReducer = MarkdownPreviewReducer(baseServerUrl: baseServerUrl)
+    let htmlPreviewReducer = HtmlPreviewReducer(baseServerUrl: baseServerUrl)
     let httpMiddleware: HttpServerMiddleware = HttpServerMiddleware(port: baseServerUrl.port!)
     let uiRootReducer = UiRootReducer()
     let openQuicklyReducer = OpenQuicklyReducer()
@@ -68,19 +69,22 @@ class Context: ReduxContext {
       .reduce(
         by: [
           MainWindowReducer().reduce,
-          markdownReducer.mainWindow.reduce,
-          markdownReducer.previewTool.reduce,
-          PreviewToolReducer(baseServerUrl: baseServerUrl).reduce,
-          HtmlPreviewToolReducer(baseServerUrl: baseServerUrl).reduce,
+          markdownPreviewReducer.mainWindow.reduce,
+          markdownPreviewReducer.previewTool.reduce,
+          MarkdownToolReducer(baseServerUrl: baseServerUrl).reduce,
+          htmlPreviewReducer.mainWindow.reduce,
+          htmlPreviewReducer.htmlPreview.reduce,
           FileBrowserReducer().reduce,
           BuffersListReducer().reduce,
-          markdownReducer.buffersList.reduce,
+          markdownPreviewReducer.buffersList.reduce,
         ],
         middlewares: [
-          previewMiddleware.mainWindow.apply,
-          httpMiddleware.mainWindow.apply,
-          previewMiddleware.previewTool.apply,
-          httpMiddleware.htmlPreview.apply,
+          markdownPreviewMiddleware.mainWindow.apply,
+          httpMiddleware.markdownPreview.apply,
+          markdownPreviewMiddleware.markdownTool.apply,
+          HtmlPreviewMiddleware().apply,
+          httpMiddleware.htmlPreviewMainWindow.apply,
+          httpMiddleware.htmlPreviewTool.apply,
         ]
       )
       .filter { $0.modified }

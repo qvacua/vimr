@@ -70,6 +70,8 @@ extension NvimView {
       fileURLWithPath: NSTemporaryDirectory()
     ).appendingPathComponent("vimr_\(self.uuid).sock").path
 
+    self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
+
     self.api.msgpackRawStream
       .subscribe(onNext: { [weak self] msg in
         switch msg {

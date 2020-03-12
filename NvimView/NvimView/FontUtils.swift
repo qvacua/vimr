@@ -24,7 +24,7 @@ extension FontTrait: Hashable {
 final class FontUtils {
 
   static func cellSize(of font: NSFont, linespacing: CGFloat, characterspacing: CGFloat) -> CGSize {
-    if let cached = cellSizeWithDefaultLinespacingCache.object(forKey: font) {
+    if let cached = cellSizeWithDefaultLinespacingCache.valueForKey(font) {
       return CGSize(
         width: characterspacing * cached.width,
         height: ceil(linespacing * cached.height)
@@ -41,13 +41,8 @@ final class FontUtils {
     let descent = CTFontGetDescent(font)
     let leading = CTFontGetLeading(font)
 
-    let cellSizeToCache = CGSize(
-      width: advancement.width,
-      height: ceil(ascent + descent + leading)
-    )
-    cellSizeWithDefaultLinespacingCache.set(
-      object: cellSizeToCache, forKey: font
-    )
+    let cellSizeToCache = CGSize(width: advancement.width, height: ceil(ascent + descent + leading))
+    cellSizeWithDefaultLinespacingCache.set(cellSizeToCache, forKey: font)
 
     let cellSize = CGSize(
       width: characterspacing * advancement.width,
@@ -58,24 +53,16 @@ final class FontUtils {
   }
 
   static func font(adding trait: FontTrait, to font: NSFont) -> NSFont {
-    if trait.isEmpty {
-      return font
-    }
+    if trait.isEmpty { return font }
 
     let sizedFontTrait = SizedFontTrait(trait: trait, size: font.pointSize)
 
-    if let cachedFont = fontCache.object(forKey: sizedFontTrait) {
-      return cachedFont
-    }
+    if let cachedFont = fontCache.valueForKey(sizedFontTrait) { return cachedFont }
 
     var ctFontTrait: CTFontSymbolicTraits = []
-    if trait.contains(.bold) {
-      ctFontTrait.insert(.boldTrait)
-    }
+    if trait.contains(.bold) { ctFontTrait.insert(.boldTrait) }
 
-    if trait.contains(.italic) {
-      ctFontTrait.insert(.italicTrait)
-    }
+    if trait.contains(.italic) { ctFontTrait.insert(.italicTrait) }
 
     guard let ctFont = CTFontCreateCopyWithSymbolicTraits(
       font, 0.0, nil, ctFontTrait, ctFontTrait
@@ -83,10 +70,10 @@ final class FontUtils {
       return font
     }
 
-    fontCache.set(object: ctFont, forKey: sizedFontTrait)
+    fontCache.set(ctFont, forKey: sizedFontTrait)
     return ctFont
   }
 }
 
-private let fontCache = SimpleCache<SizedFontTrait, NSFont>(countLimit: 100)
-private let cellSizeWithDefaultLinespacingCache = SimpleCache<NSFont, CGSize>(countLimit: 100)
+private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100)
+private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(count: 100)

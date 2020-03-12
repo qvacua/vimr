@@ -8,13 +8,13 @@ import WebKit
 
 struct Defs {
 
-  static let loggerSubsystem = "com.qvacua.VimR"
+  static let loggerSubsystem = Bundle.main.bundleIdentifier!
 
   struct LoggerCategory {
 
     static let general = "general"
 
-    static let uiComponents = "ui-components"
+    static let ui = "ui"
     static let middleware = "middleware"
     static let service = "service"
   }

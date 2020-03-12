@@ -29,7 +29,7 @@ class Document: NSDocument, NSWindowDelegate {
 
         case .neoVimStopped: self.close()
 
-        default: break //Swift.print("Event received: \(event)")
+        default: break
 
         }
       })

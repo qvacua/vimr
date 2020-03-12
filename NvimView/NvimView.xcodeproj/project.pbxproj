@@ -15,6 +15,7 @@
 		1929B13ACA836714CD801F41 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */; };
 		1929B14D2EBC34BCFEC78ACB /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */; };
 		1929B1A7CC32FD7D05646B98 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
+		1929B21A36207DF558518597 /* FifoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */; };
 		1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAF033A398BFBC2A7890 /* MyView.swift */; };
 		1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF88DE64FC62AFFCBC84 /* NimbleCommons.swift */; };
 		1929B326D5117A670105C209 /* 2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B0522C47787B50071806 /* 2.json */; };
@@ -28,7 +29,6 @@
 		1929B4632DE08273F990806F /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Runs.swift */; };
 		1929B4C729F3713A6BBEAEC9 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		1929B5C5DB438B66EC131EDE /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
-		1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
 		1929B70D3BA20F66CAFF08C8 /* CoreCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BAB9FFE8345228B559EC /* CoreCommons.swift */; };
 		1929B738A3677586230704F7 /* MessagePackCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9290D503536FFDA9C49 /* MessagePackCommons.swift */; };
 		1929B74691D92B9F369787E5 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDE2C6003A6EDC02129C /* ColorUtils.swift */; };
@@ -115,7 +115,6 @@
 		4BF01CE52235022300411218 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B96A876229DA394F906E /* FontUtils.swift */; };
 		4BF01CE62235022300411218 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
 		4BF01CE72235022300411218 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
-		4BF01CE82235022300411218 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
 		4BF01CE92235022300411218 /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Runs.swift */; };
 		4BF01CEA2235022300411218 /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		4BF01CEB2235022300411218 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B73455764E42DACF6BB8 /* Geometry.swift */; };
@@ -140,10 +139,16 @@
 		4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE45756C88F8B43804D2 /* CellAttributes.swift */; };
 		4BF18534213142FA00954FE7 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D83D7E150F518D49FE /* UGrid.swift */; };
 		4BF18535213142FA00954FE7 /* AttributesRunDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */; };
-		4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B60D1775A75D7C0F6721 /* SimpleCache.swift */; };
 		4BF18537213142FA00954FE7 /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B06A73BE6DAA2679AAA2 /* Runs.swift */; };
 		4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B47330DAD129520A2273 /* Typesetter.swift */; };
 		4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BF4FD7724169FD60025ACC4 /* FifoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */; };
+		4BF4FD782416A0180025ACC4 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
+		4BF4FD792416A0180025ACC4 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF4FD7B2416A03B0025ACC4 /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
+		4BF4FD7C2416A03B0025ACC4 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BF4FD7E2416A06D0025ACC4 /* FifoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */; };
+		4BF4FD802416A18E0025ACC4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -229,6 +234,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BF4FD7A2416A0180025ACC4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BF4FD792416A0180025ACC4 /* MessagePack.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF4FD7D2416A03B0025ACC4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BF4FD7C2416A03B0025ACC4 /* MessagePack.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -248,7 +275,6 @@
 		1929B47330DAD129520A2273 /* Typesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typesetter.swift; sourceTree = "<group>"; };
 		1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
-		1929B60D1775A75D7C0F6721 /* SimpleCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleCache.swift; sourceTree = "<group>"; };
 		1929B73455764E42DACF6BB8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		1929B7398AD1DE525FA53E38 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		1929B8619FD13BC2570CBFB2 /* 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 1.json; sourceTree = "<group>"; };
@@ -257,6 +283,7 @@
 		1929B9C55A79D97272894F5D /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		1929B9D7F040B8B9E2F038DF /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
 		1929B9D83D7E150F518D49FE /* UGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UGrid.swift; sourceTree = "<group>"; };
+		1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FifoCache.swift; sourceTree = "<group>"; };
 		1929BAB0B8BA4E6CDF5C56F3 /* NvimView+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Types.swift"; sourceTree = "<group>"; };
 		1929BAB9FFE8345228B559EC /* CoreCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreCommons.swift; sourceTree = "<group>"; };
 		1929BAF033A398BFBC2A7890 /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
@@ -332,6 +359,7 @@
 		4BF1852921313EE500954FE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF18C5A1FD2E72D00DF95D1 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = "<group>"; };
 		4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimView.h; sourceTree = "<group>"; };
+		4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -381,6 +409,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF4FD802416A18E0025ACC4 /* GameKit.framework in Frameworks */,
+				4BF4FD7B2416A03B0025ACC4 /* MessagePack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +418,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF4FD782416A0180025ACC4 /* MessagePack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,7 +446,6 @@
 				1929BE45756C88F8B43804D2 /* CellAttributes.swift */,
 				1929B9D83D7E150F518D49FE /* UGrid.swift */,
 				1929BB7E3430BD3FD88A7698 /* AttributesRunDrawer.swift */,
-				1929B60D1775A75D7C0F6721 /* SimpleCache.swift */,
 				1929B06A73BE6DAA2679AAA2 /* Runs.swift */,
 				1929B47330DAD129520A2273 /* Typesetter.swift */,
 				1929B73455764E42DACF6BB8 /* Geometry.swift */,
@@ -526,6 +556,7 @@
 				1929BAB0B8BA4E6CDF5C56F3 /* NvimView+Types.swift */,
 				1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */,
 				1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */,
+				1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */,
 			);
 			path = NvimView;
 			sourceTree = "<group>";
@@ -549,6 +580,7 @@
 		4B90F06F1FD2B9F1008A39E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */,
 				4B022603224AAE770052362B /* PureLayout.framework */,
 				4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */,
 				4BEBC239215FD19C007113C4 /* Socket.framework */,
@@ -689,6 +721,7 @@
 				4BF01CC82235015E00411218 /* Sources */,
 				4BF01CC92235015E00411218 /* Frameworks */,
 				4BF01CCA2235015E00411218 /* Resources */,
+				4BF4FD7D2416A03B0025ACC4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -706,6 +739,7 @@
 				4BF1851C21313EE300954FE7 /* Sources */,
 				4BF1851D21313EE300954FE7 /* Frameworks */,
 				4BF1851E21313EE300954FE7 /* Resources */,
+				4BF4FD7A2416A0180025ACC4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -914,7 +948,6 @@
 				1929B9A949EE85C27FF66367 /* UGrid.swift in Sources */,
 				4BB1EFB2224B71ED00A5CD5A /* RxNeovimApi.generated.swift in Sources */,
 				1929BC8495028D66F0A7D618 /* AttributesRunDrawer.swift in Sources */,
-				1929B6776A1D11409335FAAB /* SimpleCache.swift in Sources */,
 				1929B4632DE08273F990806F /* Runs.swift in Sources */,
 				1929B7D2EB80FEA7BFBC3D2C /* Typesetter.swift in Sources */,
 				1929BDD254F59FC0F5B800E7 /* Geometry.swift in Sources */,
@@ -935,6 +968,7 @@
 				1929BA25DA32AE80C527BB2A /* NvimView+Types.swift in Sources */,
 				1929B13ACA836714CD801F41 /* ConditionVariable.swift in Sources */,
 				1929B3D4281D2E30A9603368 /* NvimCursorModeShape.generated.swift in Sources */,
+				1929B21A36207DF558518597 /* FifoCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,6 +986,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF4FD7E2416A06D0025ACC4 /* FifoCache.swift in Sources */,
 				4BF01CF2223502DB00411218 /* CoreCommons.swift in Sources */,
 				4BF01CF1223502D400411218 /* Defs.swift in Sources */,
 				4BF01CF0223502CC00411218 /* SwiftCommons.swift in Sources */,
@@ -962,7 +997,6 @@
 				4BF01CE52235022300411218 /* FontUtils.swift in Sources */,
 				4BF01CE62235022300411218 /* CellAttributes.swift in Sources */,
 				4BF01CE72235022300411218 /* UGrid.swift in Sources */,
-				4BF01CE82235022300411218 /* SimpleCache.swift in Sources */,
 				4BF01CE92235022300411218 /* Runs.swift in Sources */,
 				4BF01CEA2235022300411218 /* Typesetter.swift in Sources */,
 				4BF01CEB2235022300411218 /* Geometry.swift in Sources */,
@@ -977,6 +1011,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF4FD7724169FD60025ACC4 /* FifoCache.swift in Sources */,
 				4B6DFB39223592B90066BB43 /* OSLogCommons.swift in Sources */,
 				4B21ED53213D4AEC009FD017 /* CocoaCommons.swift in Sources */,
 				4BF18531213142F900954FE7 /* ColorUtils.swift in Sources */,
@@ -984,7 +1019,6 @@
 				4BF18533213142FA00954FE7 /* CellAttributes.swift in Sources */,
 				4BF18534213142FA00954FE7 /* UGrid.swift in Sources */,
 				4BF18535213142FA00954FE7 /* AttributesRunDrawer.swift in Sources */,
-				4BF18536213142FA00954FE7 /* SimpleCache.swift in Sources */,
 				4BF18537213142FA00954FE7 /* Runs.swift in Sources */,
 				4BF18538213142FA00954FE7 /* Typesetter.swift in Sources */,
 				4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */,
@@ -1148,7 +1182,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 344;
+				CURRENT_PROJECT_VERSION = 347;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1211,7 +1245,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 344;
+				CURRENT_PROJECT_VERSION = 347;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1241,7 +1275,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 344;
+				DYLIB_CURRENT_VERSION = 347;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -1263,7 +1297,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 344;
+				DYLIB_CURRENT_VERSION = 347;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				FRAMEWORK_VERSION = A;
@@ -1368,6 +1402,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerPerf/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1384,6 +1419,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerPerf/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MTL_FAST_MATH = YES;

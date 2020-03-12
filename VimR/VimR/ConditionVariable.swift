@@ -19,6 +19,7 @@ class ConditionVariable {
 
     while !self.posted {
       self.condition.wait(until: Date(timeIntervalSinceNow: seconds))
+      self.posted = true
     }
 
     fn?()

@@ -20,7 +20,11 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 
   func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 
-  func wait(onCompleted: (() -> Void)? = nil, onError: ((Swift.Error) -> Void)? = nil) throws {
+  func wait(
+    timeout: TimeInterval = 5,
+    onCompleted: (() -> Void)? = nil,
+    onError: ((Swift.Error) -> Void)? = nil
+  ) throws {
     var trigger = false
     var err: Swift.Error? = nil
 
@@ -46,7 +50,11 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
       condition.broadcast()
     })
 
-    while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
+    while !trigger {
+      condition.wait(until: Date(timeIntervalSinceNow: timeout))
+      trigger = true
+    }
+
     disposable.dispose()
 
     if let e = err { throw e }
@@ -68,7 +76,7 @@ extension PrimitiveSequence where Trait == SingleTrait {
       .ignoreElements()
   }
 
-  func syncValue() -> Element? {
+  func syncValue(timeout: TimeInterval = 5) -> Element? {
     var trigger = false
     var value: Element?
 
@@ -91,7 +99,11 @@ extension PrimitiveSequence where Trait == SingleTrait {
       condition.broadcast()
     })
 
-    while !trigger { condition.wait(until: Date(timeIntervalSinceNow: 5)) }
+    while !trigger {
+      condition.wait(until: Date(timeIntervalSinceNow: timeout))
+      trigger = true
+    }
+
     disposable.dispose()
 
     return value

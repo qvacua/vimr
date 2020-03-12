@@ -41,7 +41,7 @@ extension RxNeovimApi {
 
 extension RxNeovimApi {
 
-  func bufLineCount(
+  public func bufLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -71,7 +71,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufAttach(
+  public func bufAttach(
     buffer: RxNeovimApi.Buffer,
     send_buffer: Bool,
     opts: Dictionary<String, RxNeovimApi.Value>,
@@ -105,7 +105,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDetach(
+  public func bufDetach(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -135,7 +135,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetLines(
+  public func bufGetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -171,7 +171,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetLines(
+  public func bufSetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -201,7 +201,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetOffset(
+  public func bufGetOffset(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
@@ -233,7 +233,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetVar(
+  public func bufGetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -265,7 +265,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetChangedtick(
+  public func bufGetChangedtick(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -295,7 +295,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetKeymap(
+  public func bufGetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     errWhenBlocked: Bool = true
@@ -327,7 +327,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetKeymap(
+  public func bufSetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
@@ -357,7 +357,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufDelKeymap(
+  public func bufDelKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
@@ -383,7 +383,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetCommands(
+  public func bufGetCommands(
     buffer: RxNeovimApi.Buffer,
     opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
@@ -415,7 +415,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetVar(
+  public func bufSetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -441,7 +441,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufDelVar(
+  public func bufDelVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -465,7 +465,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetOption(
+  public func bufGetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -497,7 +497,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetOption(
+  public func bufSetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -523,7 +523,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetName(
+  public func bufGetName(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
@@ -553,7 +553,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetName(
+  public func bufSetName(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -577,7 +577,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufIsLoaded(
+  public func bufIsLoaded(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -607,7 +607,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufIsValid(
+  public func bufIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -637,7 +637,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetMark(
+  public func bufGetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -669,7 +669,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetExtmarkById(
+  public func bufGetExtmarkById(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
@@ -703,7 +703,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetExtmarks(
+  public func bufGetExtmarks(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     start: RxNeovimApi.Value,
@@ -741,7 +741,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetExtmark(
+  public func bufSetExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
@@ -781,7 +781,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDelExtmark(
+  public func bufDelExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
@@ -815,7 +815,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufAddHighlight(
+  public func bufAddHighlight(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
     hl_group: String,
@@ -855,7 +855,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufClearNamespace(
+  public func bufClearNamespace(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
@@ -883,7 +883,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufClearHighlight(
+  public func bufClearHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
@@ -911,7 +911,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufSetVirtualText(
+  public func bufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
     line: Int,
@@ -949,7 +949,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetVirtualText(
+  public func bufGetVirtualText(
     buffer: RxNeovimApi.Buffer,
     line: Int,
     errWhenBlocked: Bool = true
@@ -981,7 +981,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageListWins(
+  public func tabpageListWins(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
@@ -1011,7 +1011,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageGetVar(
+  public func tabpageGetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
@@ -1043,7 +1043,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageSetVar(
+  public func tabpageSetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     value: RxNeovimApi.Value,
@@ -1069,7 +1069,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func tabpageDelVar(
+  public func tabpageDelVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     expectsReturnValue: Bool = false
@@ -1093,7 +1093,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func tabpageGetWin(
+  public func tabpageGetWin(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
@@ -1123,7 +1123,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageGetNumber(
+  public func tabpageGetNumber(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -1153,7 +1153,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageIsValid(
+  public func tabpageIsValid(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -1183,7 +1183,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func uiAttach(
+  public func uiAttach(
     width: Int,
     height: Int,
     options: Dictionary<String, RxNeovimApi.Value>,
@@ -1209,7 +1209,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiDetach(
+  public func uiDetach(
     expectsReturnValue: Bool = false
   ) -> Completable {
 
@@ -1230,7 +1230,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiTryResize(
+  public func uiTryResize(
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
@@ -1254,7 +1254,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiSetOption(
+  public func uiSetOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -1278,7 +1278,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiTryResizeGrid(
+  public func uiTryResizeGrid(
     grid: Int,
     width: Int,
     height: Int,
@@ -1304,7 +1304,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiPumSetHeight(
+  public func uiPumSetHeight(
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1326,7 +1326,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func exec(
+  public func exec(
     src: String,
     output: Bool,
     errWhenBlocked: Bool = true
@@ -1358,7 +1358,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func command(
+  public func command(
     command: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1380,7 +1380,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getHlByName(
+  public func getHlByName(
     name: String,
     rgb: Bool,
     errWhenBlocked: Bool = true
@@ -1412,7 +1412,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getHlById(
+  public func getHlById(
     hl_id: Int,
     rgb: Bool,
     errWhenBlocked: Bool = true
@@ -1444,7 +1444,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getHlIdByName(
+  public func getHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -1474,7 +1474,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func feedkeys(
+  public func feedkeys(
     keys: String,
     mode: String,
     escape_csi: Bool,
@@ -1500,7 +1500,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func input(
+  public func input(
     keys: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -1530,7 +1530,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func inputMouse(
+  public func inputMouse(
     button: String,
     action: String,
     modifier: String,
@@ -1562,7 +1562,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func replaceTermcodes(
+  public func replaceTermcodes(
     str: String,
     from_part: Bool,
     do_lt: Bool,
@@ -1598,7 +1598,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func eval(
+  public func eval(
     expr: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -1628,7 +1628,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func execLua(
+  public func execLua(
     code: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -1660,7 +1660,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func callFunction(
+  public func callFunction(
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -1692,7 +1692,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func callDictFunction(
+  public func callDictFunction(
     dict: RxNeovimApi.Value,
     fn: String,
     args: RxNeovimApi.Value,
@@ -1726,7 +1726,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func strwidth(
+  public func strwidth(
     text: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -1756,7 +1756,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func listRuntimePaths(
+  public func listRuntimePaths(
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
 
@@ -1785,7 +1785,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getRuntimeFile(
+  public func getRuntimeFile(
     name: String,
     all: Bool,
     errWhenBlocked: Bool = true
@@ -1817,7 +1817,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentDir(
+  public func setCurrentDir(
     dir: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1839,7 +1839,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getCurrentLine(
+  public func getCurrentLine(
     errWhenBlocked: Bool = true
   ) -> Single<String> {
 
@@ -1868,7 +1868,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentLine(
+  public func setCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1890,7 +1890,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delCurrentLine(
+  public func delCurrentLine(
     expectsReturnValue: Bool = false
   ) -> Completable {
 
@@ -1911,7 +1911,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getVar(
+  public func getVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -1941,7 +1941,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setVar(
+  public func setVar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -1965,7 +1965,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delVar(
+  public func delVar(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1987,7 +1987,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getVvar(
+  public func getVvar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -2017,7 +2017,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setVvar(
+  public func setVvar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -2041,7 +2041,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getOption(
+  public func getOption(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -2071,7 +2071,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setOption(
+  public func setOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -2095,7 +2095,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func outWrite(
+  public func outWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2117,7 +2117,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func errWrite(
+  public func errWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2139,7 +2139,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func errWriteln(
+  public func errWriteln(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2161,7 +2161,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func listBufs(
+  public func listBufs(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
 
@@ -2190,7 +2190,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentBuf(
+  public func getCurrentBuf(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
 
@@ -2219,7 +2219,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentBuf(
+  public func setCurrentBuf(
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2241,7 +2241,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func listWins(
+  public func listWins(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
 
@@ -2270,7 +2270,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentWin(
+  public func getCurrentWin(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
 
@@ -2299,7 +2299,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentWin(
+  public func setCurrentWin(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2321,7 +2321,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func createBuf(
+  public func createBuf(
     listed: Bool,
     scratch: Bool,
     errWhenBlocked: Bool = true
@@ -2353,7 +2353,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func openWin(
+  public func openWin(
     buffer: RxNeovimApi.Buffer,
     enter: Bool,
     config: Dictionary<String, RxNeovimApi.Value>,
@@ -2387,7 +2387,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func listTabpages(
+  public func listTabpages(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Tabpage]> {
 
@@ -2416,7 +2416,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentTabpage(
+  public func getCurrentTabpage(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
 
@@ -2445,7 +2445,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentTabpage(
+  public func setCurrentTabpage(
     tabpage: RxNeovimApi.Tabpage,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2467,7 +2467,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func createNamespace(
+  public func createNamespace(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -2497,7 +2497,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getNamespaces(
+  public func getNamespaces(
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
@@ -2526,7 +2526,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func paste(
+  public func paste(
     data: String,
     crlf: Bool,
     phase: Int,
@@ -2560,7 +2560,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func put(
+  public func put(
     lines: [String],
     type: String,
     after: Bool,
@@ -2588,7 +2588,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func subscribe(
+  public func subscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2610,7 +2610,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func unsubscribe(
+  public func unsubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2632,7 +2632,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getColorByName(
+  public func getColorByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -2662,7 +2662,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getColorMap(
+  public func getColorMap(
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
@@ -2691,7 +2691,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getContext(
+  public func getContext(
     opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
@@ -2721,7 +2721,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func loadContext(
+  public func loadContext(
     dict: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -2751,7 +2751,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getMode(
+  public func getMode(
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
     let params: [RxNeovimApi.Value] = [
@@ -2768,7 +2768,7 @@ extension RxNeovimApi {
       }
   }
 
-  func getKeymap(
+  public func getKeymap(
     mode: String,
     errWhenBlocked: Bool = true
   ) -> Single<[Dictionary<String, RxNeovimApi.Value>]> {
@@ -2798,7 +2798,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setKeymap(
+  public func setKeymap(
     mode: String,
     lhs: String,
     rhs: String,
@@ -2826,7 +2826,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delKeymap(
+  public func delKeymap(
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
@@ -2850,7 +2850,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getCommands(
+  public func getCommands(
     opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
@@ -2880,7 +2880,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getApiInfo(
+  public func getApiInfo(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
 
@@ -2909,7 +2909,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func setClientInfo(
+  public func setClientInfo(
     name: String,
     version: Dictionary<String, RxNeovimApi.Value>,
     type: String,
@@ -2939,7 +2939,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getChanInfo(
+  public func getChanInfo(
     chan: Int,
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
@@ -2969,7 +2969,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func listChans(
+  public func listChans(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
 
@@ -2998,7 +2998,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func callAtomic(
+  public func callAtomic(
     calls: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -3028,7 +3028,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func parseExpression(
+  public func parseExpression(
     expr: String,
     flags: String,
     highlight: Bool,
@@ -3062,7 +3062,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func listUis(
+  public func listUis(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
 
@@ -3091,7 +3091,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getProcChildren(
+  public func getProcChildren(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -3121,7 +3121,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func getProc(
+  public func getProc(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -3151,7 +3151,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func selectPopupmenuItem(
+  public func selectPopupmenuItem(
     item: Int,
     insert: Bool,
     finish: Bool,
@@ -3179,7 +3179,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetBuf(
+  public func winGetBuf(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
@@ -3209,7 +3209,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetBuf(
+  public func winSetBuf(
     window: RxNeovimApi.Window,
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
@@ -3233,7 +3233,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetCursor(
+  public func winGetCursor(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -3263,7 +3263,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetCursor(
+  public func winSetCursor(
     window: RxNeovimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
@@ -3287,7 +3287,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetHeight(
+  public func winGetHeight(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3317,7 +3317,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetHeight(
+  public func winSetHeight(
     window: RxNeovimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
@@ -3341,7 +3341,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetWidth(
+  public func winGetWidth(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3371,7 +3371,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetWidth(
+  public func winSetWidth(
     window: RxNeovimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
@@ -3395,7 +3395,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetVar(
+  public func winGetVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -3427,7 +3427,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetVar(
+  public func winSetVar(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -3453,7 +3453,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winDelVar(
+  public func winDelVar(
     window: RxNeovimApi.Window,
     name: String,
     expectsReturnValue: Bool = false
@@ -3477,7 +3477,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetOption(
+  public func winGetOption(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -3509,7 +3509,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetOption(
+  public func winSetOption(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -3535,7 +3535,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetPosition(
+  public func winGetPosition(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -3565,7 +3565,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winGetTabpage(
+  public func winGetTabpage(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
@@ -3595,7 +3595,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winGetNumber(
+  public func winGetNumber(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3625,7 +3625,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winIsValid(
+  public func winIsValid(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -3655,7 +3655,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetConfig(
+  public func winSetConfig(
     window: RxNeovimApi.Window,
     config: Dictionary<String, RxNeovimApi.Value>,
     expectsReturnValue: Bool = false
@@ -3679,7 +3679,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetConfig(
+  public func winGetConfig(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
@@ -3709,7 +3709,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  func winClose(
+  public func winClose(
     window: RxNeovimApi.Window,
     force: Bool,
     expectsReturnValue: Bool = false
