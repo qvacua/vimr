@@ -16,6 +16,7 @@ pushd NvimView/neovim
     # Use custom gettext source only when building libnvim => not in local.mk which is also used to build the full nvim
     # to get the full runtime.
     make \
+        SDKROOT=$(xcrun --show-sdk-path) \
         CFLAGS="-mmacosx-version-min=${deployment_target}" \
         CXXFLAGS="-mmacosx-version-min=${deployment_target}" \
         MACOSX_DEPLOYMENT_TARGET=${deployment_target} \
