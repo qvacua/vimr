@@ -1,4 +1,5 @@
 brew 'carthage'
+brew 'coreutils'
 brew 'gnu-sed'
 brew 'libtool'
 brew 'automake'
