@@ -35,6 +35,7 @@ pushd NvimView/neovim
         CFLAGS="-mmacosx-version-min=${deployment_target}" \
         MACOSX_DEPLOYMENT_TARGET=${deployment_target} \
         CMAKE_FLAGS="-DCUSTOM_UI=0 -DCMAKE_INSTALL_PREFIX=/tmp/nvim-runtime" \
+        DEPS_CMAKE_FLAGS="-DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_CXX_COMPILER=$(xcrun -find c++)" \
         install
 
     rm -rf build
