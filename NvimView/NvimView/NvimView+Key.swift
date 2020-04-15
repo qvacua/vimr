@@ -122,6 +122,14 @@ extension NvimView {
       return false
     }
 
+    // Space key (especially in combination with modifiers) can result in
+    // unexpected chars (e.g. ctrl-space = \0), so catch the event early and
+    // pass it to keyDown.
+    if 49 == event.keyCode {
+      self.keyDown(with: event)
+      return true
+    }
+
     guard let chars = event.characters else {
       return false;
     }
