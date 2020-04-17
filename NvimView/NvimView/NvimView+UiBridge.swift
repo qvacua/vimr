@@ -62,6 +62,10 @@ extension NvimView {
     }
   }
 
+  final func modeInfoSet(_ value: MessagePackValue) {
+    self.bridgeLogger.trace("modeInfoSet: \(value)")
+  }
+
   final func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
