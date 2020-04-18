@@ -32,6 +32,7 @@ public class NvimView: NSView,
   public let api = RxNeovimApi()
 
   public internal(set) var mode = CursorModeShape.normal
+  public internal(set) var modeInfoList = [ModeInfo]()
 
   public internal(set) var theme = Theme.default
 

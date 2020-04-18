@@ -149,6 +149,7 @@
 		4BF4FD7C2416A03B0025ACC4 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF4FD7E2416A06D0025ACC4 /* FifoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */; };
 		4BF4FD802416A18E0025ACC4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */; };
+		A1670FEA244A19E2006A05AB /* ModeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1670FE9244A19E2006A05AB /* ModeInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -360,6 +361,7 @@
 		4BF18C5A1FD2E72D00DF95D1 /* nvim */ = {isa = PBXFileReference; lastKnownFileType = folder; name = nvim; path = neovim/src/nvim; sourceTree = "<group>"; };
 		4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NvimView.h; sourceTree = "<group>"; };
 		4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		A1670FE9244A19E2006A05AB /* ModeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -450,6 +452,7 @@
 				1929B47330DAD129520A2273 /* Typesetter.swift */,
 				1929B73455764E42DACF6BB8 /* Geometry.swift */,
 				1929BB19DD03ECD6ECC35F94 /* CellAttributesCollection.swift */,
+				A1670FE9244A19E2006A05AB /* ModeInfo.swift */,
 			);
 			name = Drawing;
 			sourceTree = "<group>";
@@ -936,6 +939,7 @@
 				4B90F0351FD2AFAE008A39E0 /* NvimView+Mouse.swift in Sources */,
 				4B90F0431FD2AFAE008A39E0 /* NvimView+MenuItems.swift in Sources */,
 				4B90F0391FD2AFAE008A39E0 /* NvimView+Api.swift in Sources */,
+				A1670FEA244A19E2006A05AB /* ModeInfo.swift in Sources */,
 				4B90F0321FD2AFAE008A39E0 /* NvimView+Dragging.swift in Sources */,
 				4B90F0301FD2AFAE008A39E0 /* KeyUtils.swift in Sources */,
 				4B90F03A1FD2AFAE008A39E0 /* NvimView+Key.swift in Sources */,
