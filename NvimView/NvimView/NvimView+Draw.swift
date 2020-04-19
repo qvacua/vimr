@@ -100,7 +100,8 @@ extension NvimView {
 
     guard let cursorAttrId = modeInfo.attrId,
       let cursorShapeAttrs = self.cellAttributesCollection.attributes(
-        of: cursorAttrId
+        of: cursorAttrId,
+        withDefaults: cellAtCursorAttrs
       ) else {
         self.log.error("Could not get the attributes" +
           " for cursor in mode: \(mode) \(modeInfo)")
