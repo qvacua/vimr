@@ -5,7 +5,7 @@
 
 import MessagePack
 
-public enum CursorShape {
+public enum CursorShape : Equatable {
   case Block
   case Horizontal(cellPercentage: Int)
   case Vertical(cellPercentage: Int)
@@ -25,7 +25,6 @@ public enum CursorShape {
 }
 
 public struct ModeInfo: CustomStringConvertible {
-  public let description: String
   public let attrId: Int?
   public let cursorShape: CursorShape
   public let shortName: String
@@ -43,7 +42,9 @@ public struct ModeInfo: CustomStringConvertible {
     }
     shortName = dict["short_name"]?.stringValue ?? "?"
     name = dict["name"]?.stringValue ?? (dict["short_name"]?.stringValue ?? "???")
+  }
 
-    description = "ModeInfo<\(name) (\(shortName)) shape: \(cursorShape) attr_id:\(attrId)>"
+  public var description: String {
+    return "ModeInfo<\(name) (\(shortName)) shape: \(cursorShape) attr_id:\(attrId)>"
   }
 }
