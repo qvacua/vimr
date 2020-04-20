@@ -24,7 +24,7 @@ final class AttributesRunDrawer {
 
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
-  private(set) var ascent: CGFloat = 0
+  private(set) var textHeight: CGFloat = 0
   private(set) var descent: CGFloat = 0
   private(set) var underlinePosition: CGFloat = 0
   private(set) var underlineThickness: CGFloat = 0
@@ -183,9 +183,9 @@ final class AttributesRunDrawer {
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
 
-    self.ascent = CTFontGetAscent(font)
+    self.textHeight = FontUtils.cellHeight(of: font)
     self.descent = CTFontGetDescent(font)
-    self.baselineOffset = (self.cellSize.height - ascent + descent) / 2
+    self.baselineOffset = (self.cellSize.height - textHeight) / 2
     self.underlinePosition = CTFontGetUnderlinePosition(font)
     self.underlineThickness = CTFontGetUnderlineThickness(font)
   }
