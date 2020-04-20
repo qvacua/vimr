@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate {
+class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate, NSFontChanging {
 
   typealias StateType = AppState
 
@@ -49,6 +49,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.addViews()
     self.updateViews()
 
+    sharedFontManager.target = self
+
     source
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
@@ -86,10 +88,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   private let colorschemeCheckbox = NSButton(forAutoLayout: ())
   private let fileIconCheckbox = NSButton(forAutoLayout: ())
-
-  private let sizes = [9, 10, 11, 12, 13, 14, 16, 18, 24, 36, 48, 64]
-  private let sizeCombo = NSComboBox(forAutoLayout: ())
-  private let fontPopup = NSPopUpButton(frame: .zero, pullsDown: false)
+  private let fontPanelButton = NSButton(forAutoLayout: ())
   private let linespacingField = NSTextField(forAutoLayout: ())
   private let characterspacingField = NSTextField(forAutoLayout: ())
   private let ligatureCheckbox = NSButton(forAutoLayout: ())
@@ -139,25 +138,12 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     )
 
     let fontTitle = self.titleTextField(title: "Default Font:")
-
-    let fontPopup = self.fontPopup
-    fontPopup.target = self
-    fontPopup.action = #selector(AppearancePref.fontPopupAction)
-
-    // This takes quite some time.
-    DispatchQueue.global(qos: .userInitiated).async {
-      let fontNames = sharedFontManager.monospacedRegularFontNames()
-      DispatchQueue.main.async {
-        fontPopup.addItems(withTitles: fontNames)
-        self.updateViews()
-      }
-    }
-
-    let sizeCombo = self.sizeCombo
-    sizeCombo.delegate = self
-    sizeCombo.target = self
-    sizeCombo.action = #selector(AppearancePref.sizeComboBoxDidEnter(_:))
-    self.sizes.forEach { string in sizeCombo.addItem(withObjectValue: string) }
+    let fontPanelButton = self.fontPanelButton
+    fontPanelButton.bezelStyle = .rounded
+    fontPanelButton.isBordered = true
+    fontPanelButton.setButtonType(.momentaryPushIn)
+    fontPanelButton.target = self
+    fontPanelButton.action = #selector(AppearancePref.showFontPanel(_:))
 
     let linespacingTitle = self.titleTextField(title: "Line Spacing:")
     let linespacingField = self.linespacingField
@@ -209,8 +195,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.addSubview(fileIcon)
     self.addSubview(fileIconInfo)
     self.addSubview(fontTitle)
-    self.addSubview(fontPopup)
-    self.addSubview(sizeCombo)
+    self.addSubview(fontPanelButton)
     self.addSubview(linespacingTitle)
     self.addSubview(linespacingField)
     self.addSubview(characterspacingTitle)
@@ -235,16 +220,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     fileIconInfo.autoPinEdge(.left, to: .left, of: fileIcon)
 
     fontTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
-    fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPopup)
+    fontTitle.autoAlignAxis(.baseline, toSameAxisOf: fontPanelButton)
 
-    fontPopup.autoPinEdge(.top, to: .bottom, of: fileIconInfo, withOffset: 18)
-    fontPopup.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
-    fontPopup.autoSetDimension(.width, toSize: 240)
-
-    sizeCombo.autoSetDimension(.width, toSize: 60)
-    // If we use .Baseline the combo box is placed one pixel off...
-    sizeCombo.autoAlignAxis(.horizontal, toSameAxisOf: fontPopup)
-    sizeCombo.autoPinEdge(.left, to: .right, of: fontPopup, withOffset: 5)
+    fontPanelButton.autoPinEdge(.top, to: .bottom, of: fileIconInfo, withOffset: 18)
+    fontPanelButton.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
     linespacingTitle.autoPinEdge(
       toSuperviewEdge: .left,
@@ -254,7 +233,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     linespacingTitle.autoPinEdge(.right, to: .right, of: fontTitle)
     linespacingTitle.autoAlignAxis(.baseline, toSameAxisOf: linespacingField)
 
-    linespacingField.autoPinEdge(.top, to: .bottom, of: sizeCombo, withOffset: 18)
+    linespacingField.autoPinEdge(.top, to: .bottom, of: fontPanelButton, withOffset: 18)
     linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
     linespacingField.autoSetDimension(.width, toSize: 60)
     NotificationCenter.default.addObserver(
@@ -294,8 +273,8 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   }
 
   private func updateViews() {
-    if let familyName = self.font.familyName { self.fontPopup.selectItem(withTitle: familyName) }
-    self.sizeCombo.stringValue = String(Int(self.font.pointSize))
+    sharedFontPanel.setPanelFont(font, isMultiple: false)
+    self.fontPanelButton.title = font.displayName.map { "\($0) \(font.pointSize)" } ?? "Show fonts..."
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
@@ -308,6 +287,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     } else {
       self.previewArea.turnOffLigatures(self)
     }
+  }
+}
+
+// MARK: - NSFontChanging
+extension AppearancePref {
+  func changeFont(_ sender: NSFontManager?) {
+    guard let fontManager = sender else { return }
+    let font = fontManager.convert(self.font)
+
+    self.emit(.setFont(font))
   }
 }
 
@@ -326,28 +315,8 @@ extension AppearancePref {
     self.emit(.setUsesLigatures(sender.boolState))
   }
 
-  @objc func fontPopupAction(_ sender: NSPopUpButton) {
-    guard let selectedItem = self.fontPopup.selectedItem else { return }
-    guard selectedItem.title != self.font.familyName else { return }
-    guard let newFont = NSFont(name: selectedItem.title, size: self.font.pointSize) else { return }
-
-    self.emit(.setFont(newFont))
-  }
-
-  func comboBoxSelectionDidChange(_ notification: Notification) {
-    guard (notification.object as! NSComboBox) === self.sizeCombo else { return }
-
-    let newFontSize = self.cappedFontSize(Int(self.sizes[self.sizeCombo.indexOfSelectedItem]))
-    let newFont = sharedFontManager.convert(self.font, toSize: newFontSize)
-
-    self.emit(.setFont(newFont))
-  }
-
-  @objc func sizeComboBoxDidEnter(_ sender: AnyObject!) {
-    let newFontSize = self.cappedFontSize(self.sizeCombo.integerValue)
-    let newFont = sharedFontManager.convert(self.font, toSize: newFontSize)
-
-    self.emit(.setFont(newFont))
+  @objc func showFontPanel(_ sender: NSButton) {
+    sharedFontPanel.makeKeyAndOrderFront(sender)
   }
 
   func linespacingAction() {
@@ -389,3 +358,4 @@ extension AppearancePref {
 }
 
 private let sharedFontManager = NSFontManager.shared
+private let sharedFontPanel = NSFontPanel.shared
