@@ -1,6 +1,9 @@
 # Next
 
 * GH-775: Use the colors of the selected color scheme for the markdown preview.
+* GH-792: Use the macOS Font Panel to select the font: Thank you @apaleslimghost!
+    - If you select a variable width font, the rendering will be broken.
+* GH-786: Improve space key handling which enables <c-space> to be mapped: Thank you @cypheon!
 * Improve drawing performance.
 * Dependencies updates:
     - ggreer/the_silver_searcher@a509a81
