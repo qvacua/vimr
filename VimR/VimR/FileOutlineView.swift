@@ -155,7 +155,7 @@ class FileOutlineView: NSOutlineView,
 
   private func handleFileSystemChanges(_ changedUrl: URL) {
     DispatchQueue.main.async {
-      guard let changeTreeNode = self.changeRootTreeNode(for: changedUrl) else { return }
+      guard let changeTreeNode = self.changedTreeNode(for: changedUrl) else { return }
 
       let newChildUrls = Set(self.childUrls(for: changedUrl))
       self.handleRemoval(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
@@ -218,7 +218,7 @@ class FileOutlineView: NSOutlineView,
     self.bind(.selectionIndexPaths, to: self.treeController, withKeyPath: "selectionIndexPaths")
   }
 
-  private func changeRootTreeNode(`for` url: URL) -> NSTreeNode? {
+  private func changedTreeNode(`for` url: URL) -> NSTreeNode? {
     if url == self.cwd { return self.treeController.arrangedObjects }
 
     let cwdCompsCount = self.cwd.pathComponents.count
@@ -226,15 +226,15 @@ class FileOutlineView: NSOutlineView,
     let comps = url.pathComponents.suffix(cwdCompsCount)
 
     let rootTreeNode = self.treeController.arrangedObjects
-    let changeTreeNode = comps.reduce(rootTreeNode) { prev, comp in
-      return prev.children?.first { child in return child.node?.displayName == comp } ?? prev
+    let changedTreeNode = comps.reduce(rootTreeNode) { prev, comp in
+      prev.children?.first { child in return child.node?.displayName == comp } ?? prev
     }
 
-    guard let changeNode = changeTreeNode.node else { return nil }
+    guard let changeNode = changedTreeNode.node else { return nil }
 
     guard changeNode.url == url && changeNode.children != nil else { return nil }
 
-    return changeTreeNode
+    return changedTreeNode
   }
 
   private func handleAddition(changeTreeNode: NSTreeNode, newChildUrls: Set<URL>) {
