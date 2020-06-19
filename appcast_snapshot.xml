@@ -7,22 +7,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-347</title>
+      <title>SNAPSHOT-349</title>
       <description><![CDATA[
     <ul>
-<li>Improve drawing performance.</li>
+<li>GH-792: Use the macOS Font Panel to select the font: Thank you @apaleslimghost!<ul>
+<li>If you select a variable width font, the rendering will be broken.</li>
+</ul>
+</li>
+<li>GH-786: Improve space key handling which enables <c-space> to be mapped: Thank you @cypheon!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/347
+        https://github.com/qvacua/vimr/releases/tag/snapshot/349
       </releaseNotesLink>
-      <pubDate>2020-03-10T21:36:52.552729</pubDate>
+      <pubDate>2020-06-19T11:44:01.746186</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/347/VimR-SNAPSHOT-347.tar.bz2"
-                 sparkle:version="347"
-                 sparkle:shortVersionString="SNAPSHOT-347"
-                 sparkle:dsaSignature="MCwCFFJBf//mmjwwPtTUwsMwxcfAsVOOAhQ2dOcIku8wb+DHCfQW97AKaqj7fA=="
-                 length="14983113"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/349/VimR-SNAPSHOT-349.tar.bz2"
+                 sparkle:version="349"
+                 sparkle:shortVersionString="SNAPSHOT-349"
+                 sparkle:dsaSignature="MC0CFQDZ/QdAra04p6Ls81XhDFgSMCDneAIUX+p/Exesv4JFLHBdCSHD8bzJXj4="
+                 length="14948375"
                  type="application/octet-stream"/>
     </item>
   </channel>
