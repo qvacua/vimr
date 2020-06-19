@@ -154,10 +154,10 @@ class FileOutlineView: NSOutlineView,
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func handleFileSystemChanges(_ changedUrl: URL) {
-    let newChildUrls = Set(self.childUrls(for: changedUrl))
     DispatchQueue.main.async {
       guard let changeTreeNode = self.changeRootTreeNode(for: changedUrl) else { return }
 
+      let newChildUrls = Set(self.childUrls(for: changedUrl))
       self.handleRemoval(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
       self.handleAddition(changeTreeNode: changeTreeNode, newChildUrls: newChildUrls)
     }
@@ -182,8 +182,7 @@ class FileOutlineView: NSOutlineView,
   private var triangleClosed: NSImage
   private var triangleOpen: NSImage
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.ui)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   private func initContextMenu() {
     // Loading the nib file will set self.menu.
