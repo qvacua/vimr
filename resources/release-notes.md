@@ -1,5 +1,6 @@
 # Next
 
+* GH-799: Bugfix: VimR sometimes uses High-CPU usage for apparent reason.
 * GH-775: Use the colors of the selected color scheme for the markdown preview.
 * Improve drawing performance.
 * Dependencies updates:
