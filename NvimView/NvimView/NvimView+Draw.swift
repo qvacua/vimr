@@ -76,18 +76,6 @@ extension NvimView {
     let cursorPosition = self.ugrid.cursorPosition
     let defaultAttrs = self.cellAttributesCollection.defaultAttributes
 
-    if self.mode == .insert {
-      context.setFillColor(
-        ColorUtils.cgColorIgnoringAlpha(defaultAttrs.foreground)
-      )
-      var cursorRect = self.rect(
-        forRow: cursorPosition.row, column: cursorPosition.column
-      )
-      cursorRect.size.width = 2
-      context.fill(cursorRect)
-      return
-    }
-
     let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
     if cursorRegion.top < 0
        || cursorRegion.bottom > self.ugrid.size.height - 1
@@ -96,14 +84,58 @@ extension NvimView {
       self.log.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
     }
-    guard let cursorAttrs = self.cellAttributesCollection.attributes(
+    guard let cellAtCursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
-    )?.reversed else {
+    ) else {
       self.log.error("Could not get the attributes" +
                      " at cursor: \(cursorPosition)")
       return
     }
 
+    guard self.modeInfoList.count > self.mode.rawValue else {
+      self.log.error("Could not get modeInfo for mode index \(self.mode.rawValue)")
+      return
+    }
+    let modeInfo = modeInfoList[Int(mode.rawValue)]
+
+    guard let cursorAttrId = modeInfo.attrId,
+      let cursorShapeAttrs = self.cellAttributesCollection.attributes(
+        of: cursorAttrId,
+        withDefaults: cellAtCursorAttrs
+      ) else {
+        self.log.error("Could not get the attributes" +
+          " for cursor in mode: \(mode) \(modeInfo)")
+        return
+    }
+
+    // will be used for clipping
+    var cursorRect: CGRect
+    var cursorTextColor: Int
+
+    switch (modeInfo.cursorShape) {
+    case .Block:
+      cursorRect = self.rect(for: cursorRegion)
+      cursorTextColor = cursorShapeAttrs.effectiveForeground
+    case .Horizontal(let cellPercentage):
+      cursorRect = self.rect(for: cursorRegion)
+      cursorRect.size.height = (cursorRect.size.height * CGFloat(cellPercentage)) / 100
+      cursorTextColor = cellAtCursorAttrs.effectiveForeground
+    case .Vertical(let cellPercentage):
+      cursorRect = self.rect(forRow: cursorPosition.row, column: cursorPosition.column)
+      cursorRect.size.width = (cursorRect.size.width * CGFloat(cellPercentage)) / 100
+      cursorTextColor = cellAtCursorAttrs.effectiveForeground
+    }
+
+    let cursorAttrs = CellAttributes(
+      fontTrait: cellAtCursorAttrs.fontTrait,
+      foreground: cursorTextColor,
+      background: cursorShapeAttrs.effectiveBackground,
+      special: cellAtCursorAttrs.special,
+      reverse: false)
+
+    context.saveGState()
+    // clip to cursor rect to support shapes like "ver25" and "hor50"
+    context.clip(to: cursorRect)
     let attrsRun = AttributesRun(
       location: self.pointInView(
         forRow: cursorPosition.row, column: cursorPosition.column
@@ -117,6 +149,7 @@ extension NvimView {
       offset: self.offset,
       in: context
     )
+    context.restoreGState()
   }
 
   private func drawResizeInfo(

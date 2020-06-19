@@ -14,6 +14,7 @@ protocol UiBridgeConsumer: class {
   func resize(_ value: MessagePackValue)
   func clear()
   func modeChange(_ value: MessagePackValue)
+  func modeInfoSet(_ value: MessagePackValue)
   func flush(_ renderData: [MessagePackValue])
   func setTitle(with value: MessagePackValue)
   func stop()
@@ -185,6 +186,10 @@ class UiBridge {
     case .modeChange:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.consumer?.modeChange(v)
+
+    case .modeInfoSet:
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      self.consumer?.modeInfoSet(v)
 
     case .bell:
       self.consumer?.bell()
