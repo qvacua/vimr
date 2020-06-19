@@ -8,10 +8,10 @@ readonly branch=${branch:?"Eg develop"}
 readonly tag=${tag:?"v0.29.0-329"}
 
 echo "### Committing version bump"
-git commit -S -am "Bump version: ${tag}"
+git commit -am "Bump version: ${tag}"
 
 echo "### tagging VimR"
-git tag -s -m "${tag}" "${tag}"
+git tag -m "${tag}" "${tag}"
 
 echo "### Pushing commit and tag to vimr repository"
 git push origin HEAD:"${branch}"

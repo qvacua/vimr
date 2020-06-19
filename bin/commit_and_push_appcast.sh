@@ -22,7 +22,7 @@ fi
 echo "### Commiting and pushing appcast(s) to ${branch}"
 
 git add appcast*
-git commit -S -m "Bump appcast(s) to ${compound_version}"
+git commit -m "Bump appcast(s) to ${compound_version}"
 git push origin HEAD:"${branch}"
 
 popd > /dev/null

@@ -54,6 +54,8 @@ pip3 install waiting
 
 echo "### Building VimR"
 
+git lfs pull
+
 ./bin/prepare_repositories.sh
 ./bin/clean_old_builds.sh
 
