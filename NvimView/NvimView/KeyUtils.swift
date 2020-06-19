@@ -92,4 +92,5 @@ private let specialKeys = [
   0x09: "Tab",
   0x19: "Tab",
   0xd: "CR",
+  0x20: "Space",
 ]
