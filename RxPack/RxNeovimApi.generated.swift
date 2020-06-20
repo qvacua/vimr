@@ -1326,6 +1326,34 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  public func uiPumSetBounds(
+    width: Float,
+    height: Float,
+    row: Float,
+    col: Float,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .float(width),
+        .float(height),
+        .float(row),
+        .float(col),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_ui_pum_set_bounds", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_ui_pum_set_bounds", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
   public func exec(
     src: String,
     output: Bool,
