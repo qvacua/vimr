@@ -125,6 +125,9 @@ fi
 if [[ "${update_appcast}" == true ]]; then
     ./bin/set_appcast.py "build/Build/Products/Release/${vimr_file_name}" "${bundle_version}" "${marketing_version}" "${tag}" ${is_snapshot}
     ./bin/commit_and_push_appcast.sh "${branch}" "${compound_version}" ${is_snapshot} ${update_snapshot_appcast_for_release}
+else
+    echo "Not updating appcast on develop => exiting now..."
+    exit 0
 fi
 
 if [[ "${is_snapshot}" == false ]] ; then
