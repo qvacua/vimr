@@ -5,8 +5,6 @@ VimR — Neovim Refined
 
 [Download](https://github.com/qvacua/vimr/releases) • [Documentation](https://github.com/qvacua/vimr/wiki) • <http://vimr.org>
 
-[![Bountysource](https://www.bountysource.com/badge/team?team_id=933&style=raised)](https://www.bountysource.com/teams/vimr?utm_source=VimR%20%E2%80%94%20Vim%20Refined&utm_medium=shield&utm_campaign=raised) [![Chat at https://gitter.im/vimr/vimr](https://badges.gitter.im/vimr/vimr.svg)](https://gitter.im/vimr/vimr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
 ![Screenshot 0](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot0.png)
 ![Screenshot 2](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot2.png)
@@ -24,6 +22,9 @@ There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/N
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
 - (most importantly) have fun!
 
+If you want to support VimR financially, click the [Github's Sponsor](https://github.com/sponsors/qvacua)
+or [Bountysource](https://www.bountysource.com/teams/vimr).
+
 ## Download
 
 Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
@@ -34,12 +35,6 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 * [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): implementation of MsgpackRpc using RxSwift.
 * [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
 * [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): Cocoa Framework which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App.
-
----
-
-If you want to support VimR financially, you can use [Bountysource](https://www.bountysource.com/teams/vimr).
-Big thanks to [all](https://www.bountysource.com/teams/vimr/backers) who did support:
-We list our spendings in the [wiki](https://github.com/qvacua/vimr/wiki/How-we-use-the-donations).
 
 ## Some Features
 
