@@ -1,5 +1,6 @@
 # Next
 
+* GH-762: Bugfix: parinfer-rust dylib does not load.
 * Dependencies updates:
     - PureLayout/PureLayout@3.1.6
     - a2/MessagePack.swift@4.0.0
@@ -7,7 +8,7 @@
     - eonil/FSEvents@0.1.7
     - Quick/Nimble@8.1.1
 
-# 0.33.0-???
+# 0.33.0-351
 
 * GH-799: Bugfix: VimR sometimes uses High-CPU usage for apparent reason.
 * GH-775: Use the colors of the selected color scheme for the markdown preview.
