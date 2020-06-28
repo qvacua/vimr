@@ -82,9 +82,9 @@ extension NvimView {
         switch type {
 
         case .rawLine:
-          let (r, s) = self.doRawLine(data: innerArray)
-          recompute = recompute ? true : r
-          rowStart = r ? min(rowStart, s) : rowStart
+          let possibleNewRowStart = self.doRawLine(data: innerArray)
+          rowStart = min(rowStart, possibleNewRowStart)
+          recompute = true
 
         case .goto:
           guard let row = innerArray[0].uint64Value,
@@ -104,8 +104,9 @@ extension NvimView {
             return
           }
 
+          let possibleNewRowStart = self.doScroll(values)
+          rowStart = min(possibleNewRowStart, rowStart)
           recompute = true
-          rowStart = min(self.doScroll(values), rowStart)
 
         @unknown default:
           self.log.error("Unknown flush data type")
@@ -113,12 +114,11 @@ extension NvimView {
         }
       }
 
-      if recompute {
-        self.ugrid.recomputeFlatIndices(
-          rowStart: rowStart,
-          rowEndInclusive: self.ugrid.size.height - 1
-        )
-      }
+      guard recompute else { return }
+      self.ugrid.recomputeFlatIndices(
+        rowStart: rowStart,
+        rowEndInclusive: self.ugrid.size.height - 1
+      )
     }
   }
 
@@ -238,10 +238,10 @@ extension NvimView {
       })
   }
 
-  private func doRawLine(data: [MessagePackValue]) -> (Bool, Int) {
+  private func doRawLine(data: [MessagePackValue]) -> Int {
     guard data.count == 7 else {
       self.bridgeLogger.error("Could not convert; wrong count: \(data)")
-      return (false, Int.max)
+      return Int.max
     }
 
     guard let row = data[0].intValue,
@@ -254,7 +254,7 @@ extension NvimView {
       else {
 
       self.bridgeLogger.error("Could not convert \(data)")
-      return (false, Int.max)
+      return Int.max
     }
 
     #if TRACE
@@ -268,7 +268,7 @@ extension NvimView {
     let count = endCol - startCol
     guard chunk.count == count && attrIds.count == count else {
       self.bridgeLogger.error("The count of chunks and attrIds do not match.")
-      return (false, Int.max)
+      return Int.max
     }
     self.ugrid.update(row: row,
                       startCol: startCol,
@@ -308,15 +308,7 @@ extension NvimView {
       self.ugrid.markCell(at: self.markedPosition)
     }
 
-    let oldRowContainsWideChar = self.ugrid.cells[row][startCol..<endCol]
-                                   .first(where: { $0.string.isEmpty }) != nil
-    let newRowContainsWideChar = chunk.first(where: { $0.isEmpty }) != nil
-
-    if !oldRowContainsWideChar && !newRowContainsWideChar {
-      return (false, row)
-    }
-
-    return (newRowContainsWideChar, row)
+    return row
   }
 
   private func doGoto(position: Position, textPosition: Position) {
