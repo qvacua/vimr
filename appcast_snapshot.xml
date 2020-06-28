@@ -7,9 +7,11 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-352</title>
+      <title>SNAPSHOT-353</title>
       <description><![CDATA[
-    <ul>
+    <p>Since  0.33.0-351:</p>
+<ul>
+<li>Bugfix: The Emoji popup is sometimes misplaced.</li>
 <li>GH-762: Bugfix: parinfer-rust dylib does not load.</li>
 <li>Dependencies updates:<ul>
 <li>PureLayout/PureLayout@3.1.6</li>
@@ -22,15 +24,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/352
+        https://github.com/qvacua/vimr/releases/tag/snapshot/353
       </releaseNotesLink>
-      <pubDate>2020-06-23T20:19:19.237198</pubDate>
+      <pubDate>2020-06-28T11:09:10.627227</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/352/VimR-SNAPSHOT-352.tar.bz2"
-                 sparkle:version="352"
-                 sparkle:shortVersionString="SNAPSHOT-352"
-                 sparkle:dsaSignature="MC4CFQCtqMLhaIxHjsNrOWOt1LkcBeasowIVAO0HD3u4hkoF5AQgR5JnIJoFs6v/"
-                 length="14951217"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/353/VimR-SNAPSHOT-353.tar.bz2"
+                 sparkle:version="353"
+                 sparkle:shortVersionString="SNAPSHOT-353"
+                 sparkle:dsaSignature="MC0CFB0YiFiWJqPZTUgxX3/r1fZSdQ+BAhUArVc4RiVUt3/GZXodjQe6xhTRjzQ="
+                 length="14950571"
                  type="application/octet-stream"/>
     </item>
   </channel>
