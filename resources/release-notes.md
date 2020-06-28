@@ -1,5 +1,6 @@
 # Next
 
+* Bugfix: The Emoji popup is sometimes misplaced.
 * GH-762: Bugfix: parinfer-rust dylib does not load.
 * Dependencies updates:
     - PureLayout/PureLayout@3.1.6
