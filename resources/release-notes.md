@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# 0.33.1-???
+
 * Bugfix: The Emoji popup is sometimes misplaced.
 * GH-762: Bugfix: parinfer-rust dylib does not load.
 * Dependencies updates:
