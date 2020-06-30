@@ -7,35 +7,31 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.33.0-351</title>
+      <title>v0.33.1-354</title>
       <description><![CDATA[
     <ul>
-<li>GH-799: Bugfix: VimR sometimes uses High-CPU usage for apparent reason.</li>
-<li>GH-775: Use the colors of the selected color scheme for the markdown preview.</li>
-<li>GH-792: Use the macOS Font Panel to select the font: Thank you @apaleslimghost!<ul>
-<li>Warning: If you select a variable width font, the rendering will be broken.</li>
-</ul>
-</li>
-<li>GH-786: Improve space key handling which enables <c-space> to be mapped: Thank you @cypheon!</li>
-<li>Improve drawing performance.</li>
+<li>Bugfix: The Emoji popup is sometimes misplaced.</li>
+<li>GH-762: Bugfix: parinfer-rust dylib does not load.</li>
 <li>Dependencies updates:<ul>
-<li>ggreer/the_silver_searcher@a509a81</li>
-<li>sparkle-project/Sparkle@1.23.0</li>
-<li>ReactiveX/RxSwift@5.1.1</li>
+<li>PureLayout/PureLayout@3.1.6</li>
+<li>a2/MessagePack.swift@4.0.0</li>
+<li>Kentzo/ShortcutRecorder@3.2</li>
+<li>eonil/FSEvents@0.1.7</li>
+<li>Quick/Nimble@8.1.1</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.33.0-351
+        https://github.com/qvacua/vimr/releases/tag/v0.33.1-354
       </releaseNotesLink>
-      <pubDate>2020-06-22T18:24:28.531466</pubDate>
+      <pubDate>2020-06-30T22:35:22.394389</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.33.0-351/VimR-v0.33.0-351.tar.bz2"
-                 sparkle:version="351"
-                 sparkle:shortVersionString="0.33.0"
-                 sparkle:dsaSignature="MCwCFGtaj/uGdz/xmSMa2iZGLCw+e5O+AhRQ/Ddxlb62A2pFWsNddrG9cFQ4Dg=="
-                 length="14949285"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.33.1-354/VimR-v0.33.1-354.tar.bz2"
+                 sparkle:version="354"
+                 sparkle:shortVersionString="0.33.1"
+                 sparkle:dsaSignature="MC0CFBTCLbmdBUhqxjqh+YeombIcoQRCAhUA2gEL2uwfFvq+w/Mk2Cu0QddW2b0="
+                 length="14950306"
                  type="application/octet-stream"/>
     </item>
   </channel>
