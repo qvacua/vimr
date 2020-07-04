@@ -411,7 +411,7 @@ if __name__ == '__main__':
     nvim_path = os.environ['NVIM_PATH'] if 'NVIM_PATH' in os.environ else 'nvim'
 
     nvim_output = subprocess.run([nvim_path, '--api-info'], stdout=subprocess.PIPE)
-    api = msgpack.unpackb(nvim_output.stdout, encoding='utf-8')
+    api = msgpack.unpackb(nvim_output.stdout)
 
     version = parse_version(api['version'])
     functions = [f for f in api['functions'] if 'deprecated_since' not in f]
