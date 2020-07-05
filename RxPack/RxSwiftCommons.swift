@@ -7,7 +7,6 @@ import Foundation
 import RxSwift
 
 extension ObservableType {
-
   func compactMap<R>(_ transform: @escaping (Element) throws -> R?) -> Observable<R> {
     self
       .map(transform)
@@ -17,7 +16,6 @@ extension ObservableType {
 }
 
 extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
-
   func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 
   func wait(
@@ -26,7 +24,7 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
     onError: ((Swift.Error) -> Void)? = nil
   ) throws {
     var trigger = false
-    var err: Swift.Error? = nil
+    var err: Swift.Error?
 
     let condition = NSCondition()
 
@@ -62,7 +60,6 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
 }
 
 extension PrimitiveSequence where Trait == SingleTrait {
-
   static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
     Observable
       .merge(singles.map { $0.asObservable() })
@@ -92,7 +89,7 @@ extension PrimitiveSequence where Trait == SingleTrait {
       defer { condition.unlock() }
       trigger = true
       condition.broadcast()
-    }, onError: { error in
+    }, onError: { _ in
       condition.lock()
       defer { condition.unlock() }
       trigger = true
