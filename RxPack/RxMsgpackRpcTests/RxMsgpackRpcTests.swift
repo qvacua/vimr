@@ -3,11 +3,10 @@
  * See LICENSE
  */
 
-import XCTest
 import RxSwift
+import XCTest
 
 class RxMsgpackRpcTests: XCTestCase {
-
   private var connection: RxMsgpackRpc!
   private let disposeBag = DisposeBag()
 
@@ -15,8 +14,8 @@ class RxMsgpackRpcTests: XCTestCase {
     super.setUp()
 
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim --headless $SOMEFILE
-    connection = RxMsgpackRpc()
-    connection.stream
+    self.connection = RxMsgpackRpc()
+    self.connection.stream
       .subscribe(onNext: { msg in
         switch msg {
         case let .notification(method, params):
@@ -29,8 +28,8 @@ class RxMsgpackRpcTests: XCTestCase {
       }, onError: { print("ERROR: \($0)") })
       .disposed(by: self.disposeBag)
 
-    _ = connection.run(at: "/tmp/nvim.sock")
-      .andThen(connection.request(
+    _ = self.connection.run(at: "/tmp/nvim.sock")
+      .andThen(self.connection.request(
         method: "nvim_ui_attach",
         params: [.int(40), .int(40), .map([:])],
         expectsReturnValue: true
@@ -53,7 +52,7 @@ class RxMsgpackRpcTests: XCTestCase {
   func testExample() {
     let disposeBag = DisposeBag()
 
-    let lineCount = connection
+    let lineCount = self.connection
       .request(
         method: "nvim_buf_line_count",
         params: [.int(0)],
@@ -64,7 +63,7 @@ class RxMsgpackRpcTests: XCTestCase {
 
     let formatter = DateFormatter()
     formatter.dateFormat = "mm:ss.SSS"
-    for i in 0...100 {
+    for i in 0 ... 100 {
       let date = Date()
       connection
         .request(

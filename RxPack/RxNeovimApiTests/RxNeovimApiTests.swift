@@ -3,12 +3,11 @@
  * See LICENSE
  */
 
-import XCTest
-import RxSwift
 import MessagePack
+import RxSwift
+import XCTest
 
 class NvimMsgPackTests: XCTestCase {
-
   var nvim = RxNeovimApi()
   let disposeBag = DisposeBag()
 
@@ -16,7 +15,7 @@ class NvimMsgPackTests: XCTestCase {
     super.setUp()
 
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim $SOME_FILES
-    try? nvim.run(at: "/tmp/nvim.sock").wait()
+    try? self.nvim.run(at: "/tmp/nvim.sock").wait()
   }
 
   override func tearDown() {
@@ -33,7 +32,7 @@ class NvimMsgPackTests: XCTestCase {
       "Question", // blockquote foreground
     ]
 
-    typealias HlResult = Dictionary<String, RxNeovimApi.Value>
+    typealias HlResult = [String: RxNeovimApi.Value]
     typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
     typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
 
@@ -82,8 +81,8 @@ class NvimMsgPackTests: XCTestCase {
     formatter.timeStyle = .full
     let now = Date()
     let dispose = DisposeBag()
-    for i in 0...5 {
-      nvim
+    for i in 0 ... 5 {
+      self.nvim
         .command(
           command: "echo '\(formatter.string(from: now)) \(i)'"
         )

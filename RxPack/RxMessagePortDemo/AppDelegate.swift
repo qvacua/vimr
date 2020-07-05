@@ -8,13 +8,12 @@ import RxSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+  @IBOutlet var window: NSWindow!
 
-  @IBOutlet weak var window: NSWindow!
+  @IBOutlet var clientTextField: NSTextField!
 
-  @IBOutlet weak var clientTextField: NSTextField!
-
-  @IBOutlet weak var serverTextView: NSTextView!
-  @IBOutlet weak var clientTextView: NSTextView!
+  @IBOutlet var serverTextView: NSTextView!
+  @IBOutlet var clientTextView: NSTextView!
 
   private let server = RxMessagePortServer()
   private let client = RxMessagePortClient()
@@ -23,18 +22,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   private let disposeBag = DisposeBag()
 
-  @IBAction func serverStop(sender: Any?) {
+  @IBAction func serverStop(sender _: Any?) {
     self.server.stop().subscribe().disposed(by: self.disposeBag)
   }
 
-  @IBAction func clientStop(sender: Any?) {
+  @IBAction func clientStop(sender _: Any?) {
     self.client.stop().subscribe().disposed(by: self.disposeBag)
   }
 
-  @IBAction func clientSend(sender: Any?) {
+  @IBAction func clientSend(sender _: Any?) {
     let text = self.clientTextField.stringValue
 
-    logClient("Sending msg (\(msgid), \(text))")
+    self.logClient("Sending msg (\(self.msgid), \(text))")
     self.client.send(msgid: self.msgid, data: text.data(using: .utf8)!, expectsReply: true)
       .observeOn(MainScheduler.instance)
       .subscribe(onSuccess: { data in
@@ -51,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.msgid += 1
   }
 
-  func applicationDidFinishLaunching(_ aNotification: Notification) {
+  func applicationDidFinishLaunching(_: Notification) {
     self
       .startServer()
       .andThen(self.startClient())
@@ -69,13 +68,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       .disposed(by: self.disposeBag)
   }
 
-  func applicationWillTerminate(_ notification: Notification) {
+  func applicationWillTerminate(_: Notification) {
     self.client.stop().subscribe().disposed(by: self.disposeBag)
     self.server.stop().subscribe().disposed(by: self.disposeBag)
   }
 
   private func startServer() -> Completable {
-    logServer("Starting server...")
+    self.logServer("Starting server...")
 
     self.server.stream
       .observeOn(MainScheduler.instance)
@@ -114,7 +113,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension NSTextView {
-
   func append(string: String) {
     self.textStorage?.append(NSAttributedString(string: string))
     self.scrollToEndOfDocument(nil)
