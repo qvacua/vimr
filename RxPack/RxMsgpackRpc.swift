@@ -53,6 +53,15 @@ public final class RxMsgpackRpc {
    */
   public var streamResponses = false
 
+  public let uuid = UUID()
+
+  public init() {
+    self.queue = DispatchQueue(
+      label: "\(String(reflecting: RxMsgpackRpc.self))-\(self.uuid.uuidString)",
+      qos: .userInitiated
+    )
+  }
+
   public func run(at path: String) -> Completable {
     Completable.create { completable in
       self.queue.async {
@@ -90,6 +99,7 @@ public final class RxMsgpackRpc {
 
         completable(.completed)
       }
+
       return Disposables.create()
     }
   }
@@ -162,16 +172,11 @@ public final class RxMsgpackRpc {
     }
   }
 
-  // MARK: - Private
-
   private var nextMsgid: UInt32 = 0
 
   private var socket: Socket?
   private var thread: Thread?
-  private let queue = DispatchQueue(
-    label: String(reflecting: RxMsgpackRpc.self),
-    qos: .userInitiated
-  )
+  private let queue: DispatchQueue
 
   private var stopped = true
   private var singles: [UInt32: SingleResponseObserver] = [:]
@@ -227,9 +232,7 @@ public final class RxMsgpackRpc {
       return
     }
 
-    guard let rawType = array[0].uint64Value,
-      let type = MessageType(rawValue: rawType)
-    else {
+    guard let rawType = array[0].uint64Value, let type = MessageType(rawValue: rawType) else {
       self.streamSubject.onNext(.error(
         value: unpacked, msg: "Could not get the type of the message"
       ))
@@ -265,9 +268,7 @@ public final class RxMsgpackRpc {
         return
       }
 
-      guard let method = array[1].stringValue,
-        let params = array[2].arrayValue
-      else {
+      guard let method = array[1].stringValue, let params = array[2].arrayValue else {
         self.streamSubject.onNext(.error(
           value: unpacked,
           msg: "Could not get the method and params"
