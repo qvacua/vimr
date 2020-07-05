@@ -7,29 +7,47 @@ import Foundation
 import RxSwift
 
 public final class RxMessagePortClient {
+  public enum ResponseCode {
+    // Unfortunately, case success = kCFMessagePortSuccess is not possible.
+    case success
+    case sendTimeout
+    case receiveTimeout
+    case isInvalid
+    case transportError
+    case becameInvalidError
+    case unknown
 
-  public enum Error: Swift.Error {
-
-    case serverInit
-    case clientInit
-    case portInvalid
-    case send(msgid: Int32, response: Int32)
-
-    public static func responseCodeToString(code: Int32) -> String {
+    fileprivate init(rawResponseCode code: Int32) {
       switch code {
-      case kCFMessagePortSendTimeout:return "kCFMessagePortSendTimeout"
-      case kCFMessagePortReceiveTimeout:return "kCFMessagePortReceiveTimeout"
-      case kCFMessagePortIsInvalid:return "kCFMessagePortIsInvalid"
-      case kCFMessagePortTransportError:return "kCFMessagePortTransportError"
-      case kCFMessagePortBecameInvalidError:return "kCFMessagePortBecameInvalidError"
-      default:return "unknown"
+      case kCFMessagePortSuccess: self = .success
+      case kCFMessagePortSendTimeout: self = .sendTimeout
+      case kCFMessagePortReceiveTimeout: self = .receiveTimeout
+      case kCFMessagePortIsInvalid: self = .isInvalid
+      case kCFMessagePortTransportError: self = .transportError
+      case kCFMessagePortBecameInvalidError: self = .becameInvalidError
+      default: self = .unknown
       }
     }
   }
 
+  public enum Error: Swift.Error {
+    case serverInit
+    case clientInit
+    case portInvalid
+    case send(msgid: Int32, response: ResponseCode)
+  }
+
   public static let defaultTimeout = CFTimeInterval(5)
 
+  public let uuid = UUID()
   public var timeout = RxMessagePortClient.defaultTimeout
+
+  public init() {
+    self.queue = DispatchQueue(
+      label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
+      qos: .userInitiated
+    )
+  }
 
   public func send(
     msgid: Int32,
@@ -43,8 +61,7 @@ public final class RxMessagePortClient {
           return
         }
 
-        let returnDataPtr: UnsafeMutablePointer<Unmanaged<CFData>?>
-          = UnsafeMutablePointer.allocate(capacity: 1)
+        let returnDataPtr = UnsafeMutablePointer<Unmanaged<CFData>?>.allocate(capacity: 1)
         defer { returnDataPtr.deallocate() }
 
         let responseCode = CFMessagePortSendRequest(
@@ -58,7 +75,9 @@ public final class RxMessagePortClient {
         )
 
         guard responseCode == kCFMessagePortSuccess else {
-          single(.error(Error.send(msgid: msgid, response: responseCode)))
+          single(.error(
+            Error.send(msgid: msgid, response: ResponseCode(rawResponseCode: responseCode))
+          ))
           return
         }
 
@@ -94,6 +113,7 @@ public final class RxMessagePortClient {
         self.portIsValid = true
         completable(.completed)
       }
+
       return Disposables.create()
     }
   }
@@ -115,21 +135,18 @@ public final class RxMessagePortClient {
   private var portIsValid = false
   private var port: CFMessagePort?
 
-  private let queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortClient.self),
-    qos: .userInitiated
-  )
+  private let queue: DispatchQueue
 }
 
 public final class RxMessagePortServer {
-
   public typealias SyncReplyBody = (Int32, Data?) -> Data?
 
   public struct Message {
-
-    public let msgid: Int32
-    public let data: Data?
+    public var msgid: Int32
+    public var data: Data?
   }
+
+  public let uuid = UUID()
 
   public var syncReplyBody: SyncReplyBody? {
     get { self.messageHandler.syncReplyBody }
@@ -138,7 +155,13 @@ public final class RxMessagePortServer {
 
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
-  public init() { self.messageHandler = MessageHandler(subject: self.streamSubject) }
+  public init() {
+    self.queue = DispatchQueue(
+      label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
+      qos: .userInitiated
+    )
+    self.messageHandler = MessageHandler(subject: self.streamSubject)
+  }
 
   public func run(as name: String) -> Completable {
     Completable.create { completable in
@@ -170,7 +193,8 @@ public final class RxMessagePortServer {
         }
 
         self.portThread = Thread { self.runServer() }
-        self.portThread?.name = String(reflecting: RxMessagePortServer.self)
+        self.portThread?.name
+          = "\(String(reflecting: RxMessagePortServer.self))-\(self.uuid.uuidString)"
         self.portThread?.start()
 
         completable(.completed)
@@ -203,10 +227,7 @@ public final class RxMessagePortServer {
   private var portThread: Thread?
   private var portRunLoop: CFRunLoop?
 
-  private let queue = DispatchQueue(
-    label: String(reflecting: RxMessagePortClient.self),
-    qos: .userInitiated
-  )
+  private let queue: DispatchQueue
 
   private var messageHandler: MessageHandler
   private let streamSubject = PublishSubject<Message>()
@@ -220,7 +241,6 @@ public final class RxMessagePortServer {
 }
 
 private class MessageHandler {
-
   fileprivate var syncReplyBody: RxMessagePortServer.SyncReplyBody?
 
   fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) { self.subject = subject }
@@ -245,16 +265,13 @@ private class MessageHandler {
 }
 
 private extension Data {
-
   var cfdata: CFData { self as NSData }
 }
 
 private extension CFData {
-
   var data: Data { self as NSData as Data }
 }
 
 private extension String {
-
   var cfstr: CFString { self as NSString }
 }

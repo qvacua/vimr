@@ -1,0 +1,9 @@
+--swiftversion 5.2
+
+--exclude Carthage,third-party,**/*.generated.swift
+
+--indent 2
+--maxwidth 100
+
+--self insert
+--wraparguments before-first
