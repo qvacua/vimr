@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* Neovim 0.5-dev (neovim/neovim@bd5f0e9)
 
 # 0.33.1-???
 
