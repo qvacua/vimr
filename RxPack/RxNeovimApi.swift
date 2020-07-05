@@ -80,9 +80,4 @@ public final class RxNeovimApi {
   }
 
   private let msgpackRpc = RxMsgpackRpc()
-
-  private let queue = DispatchQueue(
-    label: String(reflecting: RxNeovimApi.self),
-    qos: .userInitiated
-  )
 }
