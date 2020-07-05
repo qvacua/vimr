@@ -7,15 +7,12 @@ import Foundation
 import RxSwift
 
 public final class RxNeovimApi {
-
   public enum Event {
-
     case error(msg: String)
   }
 
   public struct Buffer: Equatable {
-
-    public static func ==(lhs: Buffer, rhs: Buffer) -> Bool { lhs.handle == rhs.handle }
+    public static func == (lhs: Buffer, rhs: Buffer) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
@@ -23,8 +20,7 @@ public final class RxNeovimApi {
   }
 
   public struct Window: Equatable {
-
-    public static func ==(lhs: Window, rhs: Window) -> Bool { lhs.handle == rhs.handle }
+    public static func == (lhs: Window, rhs: Window) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
@@ -32,8 +28,7 @@ public final class RxNeovimApi {
   }
 
   public struct Tabpage: Equatable {
-
-    public static func ==(lhs: Tabpage, rhs: Tabpage) -> Bool { lhs.handle == rhs.handle }
+    public static func == (lhs: Tabpage, rhs: Tabpage) -> Bool { lhs.handle == rhs.handle }
 
     public let handle: Int
 
