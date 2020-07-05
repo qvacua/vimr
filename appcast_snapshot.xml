@@ -7,31 +7,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.33.1-354</title>
+      <title>SNAPSHOT-355</title>
       <description><![CDATA[
-    <ul>
-<li>Bugfix: The Emoji popup is sometimes misplaced.</li>
-<li>GH-762: Bugfix: parinfer-rust dylib does not load.</li>
-<li>Dependencies updates:<ul>
-<li>PureLayout/PureLayout@3.1.6</li>
-<li>a2/MessagePack.swift@4.0.0</li>
-<li>Kentzo/ShortcutRecorder@3.2</li>
-<li>eonil/FSEvents@0.1.7</li>
-<li>Quick/Nimble@8.1.1</li>
-</ul>
-</li>
+    <p><em>WARNING</em> This version may be very instable!</p>
+<p>Since v0.33.1-354</p>
+<ul>
+<li>Neovim 0.5-dev (neovim/neovim@bd5f0e9): </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.33.1-354
+        https://github.com/qvacua/vimr/releases/tag/snapshot/355
       </releaseNotesLink>
-      <pubDate>2020-06-30T22:35:22.394389</pubDate>
+      <pubDate>2020-07-05T10:56:04.658501</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.33.1-354/VimR-v0.33.1-354.tar.bz2"
-                 sparkle:version="354"
-                 sparkle:shortVersionString="0.33.1"
-                 sparkle:dsaSignature="MC0CFBTCLbmdBUhqxjqh+YeombIcoQRCAhUA2gEL2uwfFvq+w/Mk2Cu0QddW2b0="
-                 length="14950306"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/355/VimR-SNAPSHOT-355.tar.bz2"
+                 sparkle:version="355"
+                 sparkle:shortVersionString="SNAPSHOT-355"
+                 sparkle:dsaSignature="MC0CFQC46/krCOPJoVoB0bnozaRmI6xW5QIUQTy6YIp2sxyEwfsDpz+hl/ePrUo="
+                 length="15242114"
                  type="application/octet-stream"/>
     </item>
   </channel>
