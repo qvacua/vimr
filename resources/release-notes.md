@@ -3,7 +3,7 @@
 * Neovim 0.5-dev (neovim/neovim@b39edb5)
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
 
-# 0.33.1-???
+# 0.33.1-354
 
 * Bugfix: The Emoji popup is sometimes misplaced.
 * GH-762: Bugfix: parinfer-rust dylib does not load.
