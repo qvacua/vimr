@@ -6,18 +6,18 @@
 import MessagePack
 
 public enum CursorShape : Equatable {
-  case Block
-  case Horizontal(cellPercentage: Int)
-  case Vertical(cellPercentage: Int)
+  case block
+  case horizontal(cellPercentage: Int)
+  case vertical(cellPercentage: Int)
 
   static func of(shape: String, cellPercentage: Int?) -> CursorShape? {
     switch shape {
     case "block":
-      return Block
+      return block
     case "horizontal":
-      return cellPercentage.map(Horizontal(cellPercentage:))
+      return cellPercentage.map(horizontal(cellPercentage:))
     case "vertical":
-      return cellPercentage.map(Vertical(cellPercentage:))
+      return cellPercentage.map(vertical(cellPercentage:))
     default:
       return nil
     }
@@ -38,7 +38,7 @@ public struct ModeInfo: CustomStringConvertible {
       let cursorShape = CursorShape.of(shape: shapeName, cellPercentage: dict["cell_percentage"]?.intValue) {
       self.cursorShape = cursorShape
     } else {
-      self.cursorShape = .Block
+      self.cursorShape = .block
     }
     shortName = dict["short_name"]?.stringValue ?? "?"
     name = dict["name"]?.stringValue ?? (dict["short_name"]?.stringValue ?? "???")

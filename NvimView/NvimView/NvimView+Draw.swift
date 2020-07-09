@@ -110,17 +110,17 @@ extension NvimView {
 
     // will be used for clipping
     var cursorRect: CGRect
-    var cursorTextColor: Int
+    let cursorTextColor: Int
 
     switch (modeInfo.cursorShape) {
-    case .Block:
+    case .block:
       cursorRect = self.rect(for: cursorRegion)
       cursorTextColor = cursorShapeAttrs.effectiveForeground
-    case .Horizontal(let cellPercentage):
+    case .horizontal(let cellPercentage):
       cursorRect = self.rect(for: cursorRegion)
       cursorRect.size.height = (cursorRect.size.height * CGFloat(cellPercentage)) / 100
       cursorTextColor = cellAtCursorAttrs.effectiveForeground
-    case .Vertical(let cellPercentage):
+    case .vertical(let cellPercentage):
       cursorRect = self.rect(forRow: cursorPosition.row, column: cursorPosition.column)
       cursorRect.size.width = (cursorRect.size.width * CGFloat(cellPercentage)) / 100
       cursorTextColor = cellAtCursorAttrs.effectiveForeground
