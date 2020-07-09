@@ -76,8 +76,8 @@ public struct CellAttributes: CustomStringConvertible, Equatable {
   public func replacingDefaults(with defaultAttributes: CellAttributes) -> CellAttributes {
     var result = self
 
-    if self.foreground == -1 { result.foreground = defaultAttributes.foreground }
-    if self.background == -1 { result.background = defaultAttributes.background }
+    if self.foreground == -1 { result.foreground = defaultAttributes.effectiveForeground }
+    if self.background == -1 { result.background = defaultAttributes.effectiveBackground }
     if self.special == -1 { result.special = defaultAttributes.special }
 
     return result

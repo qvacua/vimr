@@ -62,6 +62,17 @@ extension NvimView {
     }
   }
 
+  final func modeInfoSet(_ value: MessagePackValue) {
+    // value[0] = cursorStyleEnabled: Bool
+    // value[1] = modeInfoList: [ModeInfo]]
+    self.bridgeLogger.trace("modeInfoSet: \(value)")
+    if let mainTuple = value.arrayValue,
+        mainTuple.count == 2,
+        let modeInfoList = mainTuple[1].arrayValue?.map(ModeInfo.init(withMsgPackDict:)) {
+      self.modeInfoList = modeInfoList
+    }
+  }
+
   final func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
