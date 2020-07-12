@@ -77,6 +77,12 @@
 		4B0A1B3B212B333700F1E02F /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1B38212B332800F1E02F /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B21ED53213D4AEC009FD017 /* CocoaCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0C89838D8402BB80BFC /* CocoaCommons.swift */; };
 		4B379CCD2248CFB7004B89B4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */; };
+		4B3C735B24BB2631006274F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C735A24BB2631006274F0 /* AppDelegate.swift */; };
+		4B3C735D24BB2634006274F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B3C735C24BB2634006274F0 /* Assets.xcassets */; };
+		4B3C736024BB2634006274F0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3C735E24BB2634006274F0 /* MainMenu.xib */; };
+		4B3C736624BB26ED006274F0 /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
+		4B3C736724BB26F1006274F0 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
+		4B3C736824BB2702006274F0 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B6DFB39223592B90066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B8662E81FDC3F9F007F490D /* com.qvacua.NvimView.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */; };
@@ -319,6 +325,11 @@
 		4B0A1B152129F49500F1E02F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B0A1B38212B332800F1E02F /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 		4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4B3C735824BB2631006274F0 /* EnvTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnvTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B3C735A24BB2631006274F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4B3C735C24BB2634006274F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4B3C735F24BB2634006274F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4B3C736124BB2634006274F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
 		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.vim; path = com.qvacua.NvimView.vim; sourceTree = "<group>"; };
@@ -386,6 +397,13 @@
 				4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */,
 				4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */,
 				4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B3C735524BB2631006274F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +514,17 @@
 			path = NvimViewTests;
 			sourceTree = "<group>";
 		};
+		4B3C735924BB2631006274F0 /* EnvTest */ = {
+			isa = PBXGroup;
+			children = (
+				4B3C735A24BB2631006274F0 /* AppDelegate.swift */,
+				4B3C735C24BB2634006274F0 /* Assets.xcassets */,
+				4B3C735E24BB2634006274F0 /* MainMenu.xib */,
+				4B3C736124BB2634006274F0 /* Info.plist */,
+			);
+			path = EnvTest;
+			sourceTree = "<group>";
+		};
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
@@ -509,6 +538,7 @@
 				4BF1852121313EE400954FE7 /* DrawerDev */,
 				4BF01CCD2235015E00411218 /* DrawerPerf */,
 				4B0225F1224AAE260052362B /* MinimalNvimViewDemo */,
+				4B3C735924BB2631006274F0 /* EnvTest */,
 				4B90F0051FD2AF59008A39E0 /* Products */,
 				4B90F06F1FD2B9F1008A39E0 /* Frameworks */,
 			);
@@ -523,6 +553,7 @@
 				4BF1852021313EE300954FE7 /* DrawerDev.app */,
 				4BF01CCC2235015E00411218 /* DrawerPerf.app */,
 				4B0225F0224AAE260052362B /* MinimalNvimViewDemo.app */,
+				4B3C735824BB2631006274F0 /* EnvTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -677,6 +708,23 @@
 			productReference = 4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4B3C735724BB2631006274F0 /* EnvTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B3C736524BB2634006274F0 /* Build configuration list for PBXNativeTarget "EnvTest" */;
+			buildPhases = (
+				4B3C735424BB2631006274F0 /* Sources */,
+				4B3C735524BB2631006274F0 /* Frameworks */,
+				4B3C735624BB2631006274F0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EnvTest;
+			productName = EnvTest;
+			productReference = 4B3C735824BB2631006274F0 /* EnvTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4B90F0031FD2AF59008A39E0 /* NvimView */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B90F00C1FD2AF59008A39E0 /* Build configuration list for PBXNativeTarget "NvimView" */;
@@ -759,7 +807,7 @@
 		4B90EFFB1FD2AF59008A39E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
@@ -769,6 +817,10 @@
 					};
 					4B0A1B102129F49500F1E02F = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Manual;
+					};
+					4B3C735724BB2631006274F0 = {
+						CreatedOnToolsVersion = 11.5;
 						ProvisioningStyle = Manual;
 					};
 					4B90F0031FD2AF59008A39E0 = {
@@ -809,6 +861,7 @@
 				4BF1851F21313EE300954FE7 /* DrawerDev */,
 				4BF01CCB2235015E00411218 /* DrawerPerf */,
 				4B0225EF224AAE260052362B /* MinimalNvimViewDemo */,
+				4B3C735724BB2631006274F0 /* EnvTest */,
 			);
 		};
 /* End PBXProject section */
@@ -828,6 +881,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B3C735624BB2631006274F0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B3C735D24BB2634006274F0 /* Assets.xcassets in Resources */,
+				4B3C736024BB2634006274F0 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -923,6 +985,17 @@
 				1929B2E9F089A9E2800B67F2 /* NimbleCommons.swift in Sources */,
 				1929BB125782E25A9CF7F56C /* ConditionVariable.swift in Sources */,
 				1929B09C1ADB384F37698FB8 /* NvimCursorModeShape.generated.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B3C735424BB2631006274F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B3C736824BB2702006274F0 /* OSLogCommons.swift in Sources */,
+				4B3C736724BB26F1006274F0 /* Defs.swift in Sources */,
+				4B3C736624BB26ED006274F0 /* ProcessUtils.swift in Sources */,
+				4B3C735B24BB2631006274F0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1073,6 +1146,14 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
+		4B3C735E24BB2634006274F0 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B3C735F24BB2634006274F0 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
 		4BF01CD22235015E00411218 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1150,6 +1231,51 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimViewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B3C736324BB2634006274F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = EnvTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.EnvTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4B3C736424BB2634006274F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H96Q2NKTQH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = EnvTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.EnvTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1478,6 +1604,15 @@
 			buildConfigurations = (
 				4B0A1B192129F49600F1E02F /* Debug */,
 				4B0A1B1A2129F49600F1E02F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B3C736524BB2634006274F0 /* Build configuration list for PBXNativeTarget "EnvTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B3C736324BB2634006274F0 /* Debug */,
+				4B3C736424BB2634006274F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
