@@ -210,8 +210,6 @@
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
-		4BEBC23B215FD1AA007113C4 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
-		4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
 		4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; };
 		4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
@@ -265,7 +263,6 @@
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
 				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
-				4BEBC23C215FD1AA007113C4 /* Socket.framework in Embed Frameworks */,
 				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
 				4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */,
@@ -522,7 +519,6 @@
 				4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */,
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
-				4BEBC23B215FD1AA007113C4 /* Socket.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,

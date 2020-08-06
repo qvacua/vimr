@@ -62,8 +62,6 @@
 		4B022608224AAEA80052362B /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B02260B224AAEA80052362B /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B022603224AAE770052362B /* PureLayout.framework */; };
 		4B02260C224AAEA80052362B /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B022603224AAE770052362B /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B02260D224AAEA80052362B /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
-		4B02260E224AAEA80052362B /* Socket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B022613224AAEA80052362B /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4B022614224AAEA80052362B /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B022617224AAEA80052362B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
@@ -84,6 +82,9 @@
 		4B3C736724BB26F1006274F0 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
 		4B3C736824BB2702006274F0 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4B4B31EE24DC6415000ADAE4 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */; };
+		4B4B31EF24DC6415000ADAE4 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31EC24DC6415000ADAE4 /* Socket.swift */; };
+		4B4B31F024DC6415000ADAE4 /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */; };
 		4B6DFB39223592B90066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B8662E81FDC3F9F007F490D /* com.qvacua.NvimView.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */; };
 		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
@@ -113,7 +114,6 @@
 		4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
 		4BE45C081FD2D4E3005C0A95 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B90F04F1FD2AFD3008A39E0 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4BE45C0C1FD2DA49005C0A95 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BE45C0B1FD2DA49005C0A95 /* runtime */; };
-		4BEBC23A215FD19C007113C4 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
 		4BF01CCF2235015E00411218 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF01CCE2235015E00411218 /* AppDelegate.swift */; };
 		4BF01CD12235015E00411218 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD02235015E00411218 /* Assets.xcassets */; };
 		4BF01CD42235015E00411218 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD22235015E00411218 /* MainMenu.xib */; };
@@ -189,7 +189,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B02260E224AAEA80052362B /* Socket.framework in Embed Frameworks */,
 				4B02260C224AAEA80052362B /* PureLayout.framework in Embed Frameworks */,
 				4B022614224AAEA80052362B /* MessagePack.framework in Embed Frameworks */,
 				4B022618224AAEA80052362B /* RxSwift.framework in Embed Frameworks */,
@@ -332,6 +331,9 @@
 		4B3C736124BB2634006274F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
 		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
+		4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketProtocols.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/SocketProtocols.swift; sourceTree = "<group>"; };
+		4B4B31EC24DC6415000ADAE4 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/Socket.swift; sourceTree = "<group>"; };
+		4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketUtils.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/SocketUtils.swift; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.vim; path = com.qvacua.NvimView.vim; sourceTree = "<group>"; };
 		4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NvimServer.entitlements; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -380,7 +382,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B02260D224AAEA80052362B /* Socket.framework in Frameworks */,
 				4B02260B224AAEA80052362B /* PureLayout.framework in Frameworks */,
 				4B022613224AAEA80052362B /* MessagePack.framework in Frameworks */,
 				4B022617224AAEA80052362B /* RxSwift.framework in Frameworks */,
@@ -411,7 +412,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BEBC23A215FD19C007113C4 /* Socket.framework in Frameworks */,
 				4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */,
 				4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */,
 			);
@@ -525,6 +525,16 @@
 			path = EnvTest;
 			sourceTree = "<group>";
 		};
+		4B4B31EA24DC63FE000ADAE4 /* Blue Socket */ = {
+			isa = PBXGroup;
+			children = (
+				4B4B31EC24DC6415000ADAE4 /* Socket.swift */,
+				4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */,
+				4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */,
+			);
+			name = "Blue Socket";
+			sourceTree = "<group>";
+		};
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
@@ -561,6 +571,7 @@
 		4B90F0061FD2AF59008A39E0 /* NvimView */ = {
 			isa = PBXGroup;
 			children = (
+				4B4B31EA24DC63FE000ADAE4 /* Blue Socket */,
 				4B022678224ACE320052362B /* RxPack */,
 				4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */,
 				4B90F0081FD2AF59008A39E0 /* Info.plist */,
@@ -1035,8 +1046,11 @@
 				1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */,
 				1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */,
 				4B022689224ACFE30052362B /* RxMessagePort.swift in Sources */,
+				4B4B31EF24DC6415000ADAE4 /* Socket.swift in Sources */,
 				1929B738A3677586230704F7 /* MessagePackCommons.swift in Sources */,
 				4BB1EFB0224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */,
+				4B4B31EE24DC6415000ADAE4 /* SocketProtocols.swift in Sources */,
+				4B4B31F024DC6415000ADAE4 /* SocketUtils.swift in Sources */,
 				4BB1EFB4224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */,
 				1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */,
 				1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */,
