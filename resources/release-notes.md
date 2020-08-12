@@ -5,6 +5,11 @@
 * Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
 * Improved pasting.
 
+# 0.34.0-???
+
+* Neovim 0.4.4
+* Improved pasting.
+
 # 0.33.1-354
 
 * Bugfix: The Emoji popup is sometimes misplaced.
