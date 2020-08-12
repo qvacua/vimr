@@ -2,7 +2,11 @@
 
 * ...
 
-# 0.33.1-???
+# 0.34.0-???
+
+* Neovim 0.4.4
+
+# 0.33.1-354
 
 * Bugfix: The Emoji popup is sometimes misplaced.
 * GH-762: Bugfix: parinfer-rust dylib does not load.
