@@ -46,7 +46,7 @@ extension NvimView {
 // MARK: - Edit Menu Items
 extension NvimView {
 
-  @IBAction func undo(_ sender: AnyObject?) {
+  @IBAction func undo(_ sender: Any?) {
     switch self.mode {
     case .insert, .replace:
       self.api
@@ -67,7 +67,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func redo(_ sender: AnyObject?) {
+  @IBAction func redo(_ sender: Any?) {
     switch self.mode {
     case .insert, .replace:
       self.api
@@ -88,7 +88,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func cut(_ sender: AnyObject?) {
+  @IBAction func cut(_ sender: Any?) {
     switch self.mode {
     case .visual, .normal:
       self.api
@@ -102,7 +102,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func copy(_ sender: AnyObject?) {
+  @IBAction func copy(_ sender: Any?) {
     switch self.mode {
     case .visual, .normal:
       self.api
@@ -116,7 +116,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func paste(_ sender: AnyObject?) {
+  @IBAction func paste(_ sender: Any?) {
     guard let content = NSPasteboard.general.string(forType: .string) else {
       return
     }
@@ -182,7 +182,7 @@ extension NvimView {
       .disposed(by: self.disposeBag)
   }
 
-  @IBAction func delete(_ sender: AnyObject?) {
+  @IBAction func delete(_ sender: Any?) {
     switch self.mode {
     case .normal, .visual:
       self.api
