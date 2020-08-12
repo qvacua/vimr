@@ -1,7 +1,9 @@
 # Next
 
-* Neovim 0.5-dev (neovim/neovim@b39edb5)
+* Neovim 0.5-dev (neovim/neovim@94b7ff730a1914c14f347f5dc75175dc34a4b3f5)
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
+* Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
+* Improved pasting.
 
 # 0.33.1-354
 
