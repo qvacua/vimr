@@ -220,11 +220,6 @@ static void start_nvim(void *arg __unused) {
   backspace = cstr_as_string("<BS>");
 
   setenv_vimruntime();
-
-  // Set $LANG to en_US.UTF-8 such that the copied text to the system clipboard
-  // is not garbled.
-  setenv("LANG", "en_US.UTF-8", true);
-
   nvim_main(nvim_argc, nvim_argv);
 }
 
