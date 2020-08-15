@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -82,9 +82,6 @@
 		4B3C736724BB26F1006274F0 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
 		4B3C736824BB2702006274F0 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B4B31EE24DC6415000ADAE4 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */; };
-		4B4B31EF24DC6415000ADAE4 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31EC24DC6415000ADAE4 /* Socket.swift */; };
-		4B4B31F024DC6415000ADAE4 /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */; };
 		4B6DFB39223592B90066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B8662E81FDC3F9F007F490D /* com.qvacua.NvimView.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */; };
 		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
@@ -155,6 +152,7 @@
 		4BF4FD7C2416A03B0025ACC4 /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF4FD7E2416A06D0025ACC4 /* FifoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA35C7CA9FEA9FFA3A51 /* FifoCache.swift */; };
 		4BF4FD802416A18E0025ACC4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */; };
+		4BFB6C1E24E80B7F00B105BA /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 4BFB6C1D24E80B7F00B105BA /* Socket */; };
 		A1670FEA244A19E2006A05AB /* ModeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1670FE9244A19E2006A05AB /* ModeInfo.swift */; };
 /* End PBXBuildFile section */
 
@@ -331,9 +329,6 @@
 		4B3C736124BB2634006274F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
 		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
-		4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketProtocols.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/SocketProtocols.swift; sourceTree = "<group>"; };
-		4B4B31EC24DC6415000ADAE4 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/Socket.swift; sourceTree = "<group>"; };
-		4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketUtils.swift; path = ../../Carthage/Checkouts/BlueSocket/Sources/Socket/SocketUtils.swift; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.vim; path = com.qvacua.NvimView.vim; sourceTree = "<group>"; };
 		4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NvimServer.entitlements; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -412,6 +407,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BFB6C1E24E80B7F00B105BA /* Socket in Frameworks */,
 				4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */,
 				4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */,
 			);
@@ -525,16 +521,6 @@
 			path = EnvTest;
 			sourceTree = "<group>";
 		};
-		4B4B31EA24DC63FE000ADAE4 /* Blue Socket */ = {
-			isa = PBXGroup;
-			children = (
-				4B4B31EC24DC6415000ADAE4 /* Socket.swift */,
-				4B4B31EB24DC6415000ADAE4 /* SocketProtocols.swift */,
-				4B4B31ED24DC6415000ADAE4 /* SocketUtils.swift */,
-			);
-			name = "Blue Socket";
-			sourceTree = "<group>";
-		};
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
@@ -571,7 +557,6 @@
 		4B90F0061FD2AF59008A39E0 /* NvimView */ = {
 			isa = PBXGroup;
 			children = (
-				4B4B31EA24DC63FE000ADAE4 /* Blue Socket */,
 				4B022678224ACE320052362B /* RxPack */,
 				4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */,
 				4B90F0081FD2AF59008A39E0 /* Info.plist */,
@@ -753,6 +738,9 @@
 				4B90F06E1FD2B9E3008A39E0 /* PBXTargetDependency */,
 			);
 			name = NvimView;
+			packageProductDependencies = (
+				4BFB6C1D24E80B7F00B105BA /* Socket */,
+			);
 			productName = NvimView;
 			productReference = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */;
 			productType = "com.apple.product-type.framework";
@@ -862,6 +850,9 @@
 				Base,
 			);
 			mainGroup = 4B90EFFA1FD2AF59008A39E0;
+			packageReferences = (
+				4BFB6C1C24E80B7F00B105BA /* XCRemoteSwiftPackageReference "BlueSocket" */,
+			);
 			productRefGroup = 4B90F0051FD2AF59008A39E0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1046,11 +1037,8 @@
 				1929BAB9A0399206FB7EBC76 /* CellAttributesCollection.swift in Sources */,
 				1929B3B70C96A78FD63DE737 /* NvimView+Debug.swift in Sources */,
 				4B022689224ACFE30052362B /* RxMessagePort.swift in Sources */,
-				4B4B31EF24DC6415000ADAE4 /* Socket.swift in Sources */,
 				1929B738A3677586230704F7 /* MessagePackCommons.swift in Sources */,
 				4BB1EFB0224B71ED00A5CD5A /* RxMsgpackRpc.swift in Sources */,
-				4B4B31EE24DC6415000ADAE4 /* SocketProtocols.swift in Sources */,
-				4B4B31F024DC6415000ADAE4 /* SocketUtils.swift in Sources */,
 				4BB1EFB4224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */,
 				1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */,
 				1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */,
@@ -1196,7 +1184,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = MinimalNvimViewDemo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.MinimalNvimViewDemo;
@@ -1214,7 +1205,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = MinimalNvimViewDemo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.MinimalNvimViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1229,7 +1223,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = NvimViewTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimViewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1242,7 +1240,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = NvimViewTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimViewTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1259,7 +1261,10 @@
 				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = EnvTest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1282,7 +1287,10 @@
 				DEVELOPMENT_TEAM = H96Q2NKTQH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = EnvTest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.EnvTest;
@@ -1404,8 +1412,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1425,7 +1434,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1447,7 +1460,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = NvimView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.NvimView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1546,7 +1563,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerPerf/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerPerf;
@@ -1563,7 +1583,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerPerf/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerPerf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1579,7 +1602,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerDev/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1594,7 +1620,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/Mac";
 				INFOPLIST_FILE = DrawerDev/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.DrawerDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1677,6 +1706,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4BFB6C1C24E80B7F00B105BA /* XCRemoteSwiftPackageReference "BlueSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/IBM-Swift/BlueSocket";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.52;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4BFB6C1D24E80B7F00B105BA /* Socket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BFB6C1C24E80B7F00B105BA /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = Socket;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B90EFFB1FD2AF59008A39E0 /* Project object */;
 }

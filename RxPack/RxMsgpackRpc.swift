@@ -6,6 +6,7 @@
 import Foundation
 import MessagePack
 import RxSwift
+import Socket
 
 public final class RxMsgpackRpc {
   public typealias Value = MessagePackValue
