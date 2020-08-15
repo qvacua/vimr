@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -187,7 +187,6 @@
 		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
-		4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; };
 		4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
@@ -201,6 +200,7 @@
 		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BD5655324E8014100D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
 		4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
 		4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
@@ -521,8 +521,8 @@
 				4BF18C3A1FD2E2AB00DF95D1 /* PureLayout.framework in Frameworks */,
 				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
+				4BD5655324E8014100D52809 /* Swifter in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
-				4B9DF286209C8A8B00DF2AAD /* Swifter.framework in Frameworks */,
 				4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
 				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
@@ -1030,6 +1030,9 @@
 			dependencies = (
 			);
 			name = VimR;
+			packageProductDependencies = (
+				4BD5655224E8014100D52809 /* Swifter */,
+			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
 			productType = "com.apple.product-type.application";
@@ -1084,6 +1087,9 @@
 				Base,
 			);
 			mainGroup = 4BEBA4FC1CFF374B00673FDF;
+			packageReferences = (
+				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
+			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1506,8 +1512,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1529,7 +1536,10 @@
 					"$(PROJECT_DIR)/../third-party/libpcre/include",
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
@@ -1558,7 +1568,10 @@
 					"$(PROJECT_DIR)/../third-party/libpcre/include",
 				);
 				INFOPLIST_FILE = VimR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(PROJECT_DIR)/../third-party/libxz/lib/liblzma.a",
 					"$(PROJECT_DIR)/../third-party/libpcre/lib/libpcre.a",
@@ -1580,7 +1593,11 @@
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = VimRTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
 			};
@@ -1595,7 +1612,11 @@
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = VimRTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qvacua.VimRTests;
 				PRODUCT_NAME = VimRTests;
 			};
@@ -1632,6 +1653,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/httpswift/swifter";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4BD5655224E8014100D52809 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4BEBA4FD1CFF374B00673FDF /* Project object */;
 }
