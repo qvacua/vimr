@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "PureLayout",
+        "repositoryURL": "https://github.com/PureLayout/PureLayout",
+        "state": {
+          "branch": null,
+          "revision": "d19b40e831e4d621097765998be97df3856e8413",
+          "version": "3.1.6"
+        }
+      },
+      {
         "package": "Swifter",
         "repositoryURL": "https://github.com/httpswift/swifter",
         "state": {
