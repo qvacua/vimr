@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Down",
+        "repositoryURL": "https://github.com/iwasrobbed/Down",
+        "state": {
+          "branch": null,
+          "revision": "427aec0a0ab342246ec02369dea398597b61174a",
+          "version": "0.9.3"
+        }
+      },
+      {
         "package": "PureLayout",
         "repositoryURL": "https://github.com/PureLayout/PureLayout",
         "state": {

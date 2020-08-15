@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1929B0153C780675EE33F9EC /* AttributedStringMarkdownStyler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD6439FB8568CD045A41 /* AttributedStringMarkdownStyler.swift */; };
 		1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B5D45C9792BBE76B8AFF /* StringCommonsTest.swift */; };
 		1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */; };
 		1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */; };
@@ -187,7 +188,6 @@
 		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
-		4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9DF285209C8A8B00DF2AAD /* Swifter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
 		4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -200,8 +200,6 @@
 		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BD5655324E8014100D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
-		4BD5655924E8040E00D52809 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
 		4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
 		4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
@@ -212,13 +210,10 @@
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
-		4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; };
 		4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
 		4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
 		4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; };
 		4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C331FD2E2AA00DF95D1 /* CocoaMarkdown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C321FD2E2AA00DF95D1 /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C4A1FD2E2DE00DF95D1 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */; };
@@ -262,12 +257,9 @@
 				4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */,
 				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
-				4BF18C421FD2E2C900DF95D1 /* CocoaMarkdown.framework in Embed Frameworks */,
-				4BF18C441FD2E2C900DF95D1 /* PureLayout.framework in Embed Frameworks */,
 				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
 				4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */,
 				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
-				4B9DF287209C8A8B00DF2AAD /* Swifter.framework in Embed Frameworks */,
 				4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -369,6 +361,7 @@
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
+		1929BD6439FB8568CD045A41 /* AttributedStringMarkdownStyler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedStringMarkdownStyler.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowReducer.swift; sourceTree = "<group>"; };
 		1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAndTextTableCell.swift; sourceTree = "<group>"; };
 		1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserReducer.swift; sourceTree = "<group>"; };
@@ -518,14 +511,11 @@
 			files = (
 				4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */,
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
-				4BF18C3B1FD2E2AB00DF95D1 /* CocoaMarkdown.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
-				4BD5655324E8014100D52809 /* Swifter in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
 				4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
 				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
-				4BD5655924E8040E00D52809 /* PureLayout in Frameworks */,
 				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -919,6 +909,7 @@
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
 				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
 				1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */,
+				1929BD6439FB8568CD045A41 /* AttributedStringMarkdownStyler.swift */,
 			);
 			name = Commons;
 			sourceTree = "<group>";
@@ -1031,8 +1022,9 @@
 			);
 			name = VimR;
 			packageProductDependencies = (
-				4BD5655224E8014100D52809 /* Swifter */,
-				4BD5655824E8040E00D52809 /* PureLayout */,
+				4BD5655224E8014100D52809,
+				4BD5655824E8040E00D52809,
+				4BD5656024E8311400D52809,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
@@ -1089,8 +1081,9 @@
 			);
 			mainGroup = 4BEBA4FC1CFF374B00673FDF;
 			packageReferences = (
-				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
-				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
+				4BD5655124E8014100D52809,
+				4BD5655724E8040E00D52809,
+				4BD5655F24E8311400D52809,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1308,6 +1301,7 @@
 				1929B223C6E97C090474B2C2 /* Resources.swift in Sources */,
 				1929BC64D3C195A92BE3FD64 /* HtmlPreviewMiddleware.swift in Sources */,
 				1929B29FF537A339CF4075BD /* CssUtils.swift in Sources */,
+				1929B0153C780675EE33F9EC /* AttributedStringMarkdownStyler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1657,7 +1651,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
+		4BD5655124E8014100D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
 			requirement = {
@@ -1665,7 +1659,7 @@
 				version = 1.4.7;
 			};
 		};
-		4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */ = {
+		4BD5655724E8040E00D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
 			requirement = {
@@ -1673,18 +1667,31 @@
 				version = 3.1.6;
 			};
 		};
+		4BD5655F24E8311400D52809 = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iwasrobbed/Down";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4BD5655224E8014100D52809 /* Swifter */ = {
+		4BD5655224E8014100D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */;
+			package = 4BD5655124E8014100D52809;
 			productName = Swifter;
 		};
-		4BD5655824E8040E00D52809 /* PureLayout */ = {
+		4BD5655824E8040E00D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */;
+			package = 4BD5655724E8040E00D52809;
 			productName = PureLayout;
+		};
+		4BD5656024E8311400D52809 = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD5655F24E8311400D52809;
+			productName = Down;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

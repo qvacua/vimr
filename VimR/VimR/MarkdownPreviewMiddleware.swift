@@ -4,7 +4,7 @@
  */
 
 import Foundation
-import CocoaMarkdown
+import Down
 import os
 
 class MarkdownPreviewMiddleware {
@@ -105,13 +105,9 @@ class MarkdownPreviewMiddleware {
                             category: Defs.LoggerCategory.middleware)
 
     private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
-      let doc = CMDocument(contentsOfFile: bufferUrl.path, options: .sourcepos)
-      let renderer = CMHTMLRenderer(document: doc)
-
-      guard let body = renderer?.render() else {
-        // FIXME: error handling!
-        return
-      }
+      let md = try String(contentsOf: bufferUrl)
+      let down = Down(markdownString: md)
+      let body = try down.toHTML(DownOptions.sourcePos)
 
       let html = filledTemplate(body: body, title: bufferUrl.lastPathComponent)
       let htmlFilePath = htmlUrl.path

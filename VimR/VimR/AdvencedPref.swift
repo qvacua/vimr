@@ -97,45 +97,43 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
                            title: "Use interactive mode for zsh",
                            action: #selector(AdvancedPref.useInteractiveZshAction(_:)))
 
-    let useInteractiveZshInfo = self.infoTextField(markdown: """
-      If your login shell is `zsh`, when checked, the `-i` option will be used to launch `zsh`.
-      Checking this option may break VimR if your `.zshrc` contains complex stuff.
-      It may be a good idea to put the `PATH`-settings in `.zshenv` and let this unchecked.
-      *Use with caution.*
-     """)
+    let useInteractiveZshInfo = self.infoTextField(markdown: #"""
+If your login shell is `zsh`, when checked, the `-i` option will be used to launch `zsh`.\
+Checking this option may break VimR if your `.zshrc` contains complex stuff.\
+It may be a good idea to put the `PATH`-settings in `.zshenv` and let this unchecked.\
+*Use with caution.*
+"""#)
 
     let useSnapshotUpdate = self.useSnapshotUpdateCheckbox
     self.configureCheckbox(button: self.useSnapshotUpdateCheckbox,
                            title: "Use Snapshot Update Channel",
                            action: #selector(AdvancedPref.useSnapshotUpdateChannelAction(_:)))
 
-    let useSnapshotUpdateInfo = self.infoTextField(markdown: """
-      If you are adventurous, check this.
-      You'll be test driving the newest snapshot builds of VimR in no time!
-    """)
+    let useSnapshotUpdateInfo = self.infoTextField(markdown: #"""
+If you are adventurous, check this. You'll be test driving the newest snapshot builds\
+of VimR in no time!
+"""#)
 
     let useLiveResize = self.useLiveResizeCheckbox
     self.configureCheckbox(button: useLiveResize,
                            title: "Use Live Window Resizing",
                            action: #selector(AdvancedPref.useLiveResizeAction(_:)))
 
-    let useLiveResizeInfo = self.infoTextField(markdown: """
-      The Live Resizing is yet experimental. You may experience some issues.
-      If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
-    """)
+    let useLiveResizeInfo = self.infoTextField(markdown: #"""
+The Live Resizing is yet experimental. You may experience some issues.\
+If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
+"""#)
 
     let drawsParallelBox = self.drawsParallelCheckbox
     self.configureCheckbox(button: drawsParallelBox,
                            title: "Use Concurrent Rendering",
                            action: #selector(AdvancedPref.drawParallelAction(_:)))
 
-    let drawsParallelInfo = self.infoTextField(
-      markdown: """
-                VimR can compute the glyphs concurrently. This may result in faster rendering,
-                depending on the situation. It will definitely result in higher CPU usage, e.g.
-                when scrolling very fast.
-                """
-    )
+    let drawsParallelInfo = self.infoTextField(markdown: #"""
+VimR can compute the glyphs concurrently. This may result in faster rendering,\
+depending on the situation. It will definitely result in higher CPU usage, e.g.\
+when scrolling very fast.
+"""#)
 
     let sensitivityTitle = self.titleTextField(title: "Scroll Sensitivity:")
     let sensitivity = self.sensitivitySlider
@@ -143,10 +141,10 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     sensitivity.minValue = 1 / 500
     sensitivity.target = self
     sensitivity.action = #selector(sensitivitySliderAction)
-    let sensitivityInfo = self.infoTextField(markdown: """
-      Trackpad scroll sensitivity is yet experimental. You may experience some issues.
-      If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
-    """)
+    let sensitivityInfo = self.infoTextField(markdown: #"""
+Trackpad scroll sensitivity is yet experimental. You may experience some issues.\
+If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
+"""#)
 
     // We set the value of the NSSlider only at the beginning.
     self.sensitivitySlider.doubleValue = self.sensitivity
@@ -178,35 +176,30 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     sensitivityInfo.autoPinEdge(.top, to: .bottom, of: sensitivitySlider, withOffset: 5)
     sensitivityInfo.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
-    sensitivityInfo.autoSetDimension(.width, toSize: 300)
 
     useLiveResize.autoPinEdge(.top, to: .bottom, of: sensitivityInfo, withOffset: 18)
     useLiveResize.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useLiveResizeInfo.autoPinEdge(.top, to: .bottom, of: useLiveResize, withOffset: 5)
     useLiveResizeInfo.autoPinEdge(.left, to: .left, of: useLiveResize)
-    useLiveResizeInfo.autoSetDimension(.width, toSize: 300)
 
     drawsParallelBox.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
     drawsParallelBox.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     drawsParallelInfo.autoPinEdge(.top, to: .bottom, of: drawsParallelBox, withOffset: 5)
     drawsParallelInfo.autoPinEdge(.left, to: .left, of: drawsParallelBox)
-    drawsParallelInfo.autoSetDimension(.width, toSize: 300)
 
     useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: drawsParallelInfo, withOffset: 18)
     useSnapshotUpdate.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useSnapshotUpdateInfo.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdate, withOffset: 5)
     useSnapshotUpdateInfo.autoPinEdge(.left, to: .left, of: useSnapshotUpdate)
-    useSnapshotUpdateInfo.autoSetDimension(.width, toSize: 300)
 
     useInteractiveZsh.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdateInfo, withOffset: 18)
     useInteractiveZsh.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useInteractiveZshInfo.autoPinEdge(.top, to: .bottom, of: useInteractiveZsh, withOffset: 5)
     useInteractiveZshInfo.autoPinEdge(.left, to: .left, of: useInteractiveZsh)
-    useInteractiveZshInfo.autoSetDimension(.width, toSize: 300)
   }
 }
 
