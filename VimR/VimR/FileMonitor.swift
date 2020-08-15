@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import EonilFSEvents
 import os
 
 class FileMonitor {

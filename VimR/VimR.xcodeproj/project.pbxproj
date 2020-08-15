@@ -83,14 +83,6 @@
 		1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8042AC566CDF6C998A3 /* FileUtilsTest.swift */; };
 		1929BF5D0EFCC56A733BB4B7 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
-		4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
-		4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCB21063B600043A396 /* DictionaryDecoder.swift */; };
-		4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
-		4B004BD221063B600043A396 /* DictionaryCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */; };
-		4B004BD321063B600043A396 /* DictionaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCD21063B600043A396 /* DictionaryEncoder.swift */; };
-		4B004BD421063B600043A396 /* DictionaryEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCD21063B600043A396 /* DictionaryEncoder.swift */; };
-		4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
-		4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B004BCE21063B600043A396 /* DictionaryErrors.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B19BEFC1E110183007E823C /* markdown in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFA1E110183007E823C /* markdown */; };
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
@@ -108,22 +100,6 @@
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE867BD8F0ED0246CC94 /* OSLogCommons.swift */; };
-		4B917E4D2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */; };
-		4B917E4E2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */; };
-		4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */; };
-		4B917E512334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */; };
-		4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E472334D52D00752149 /* EonilFSEventStream.swift */; };
-		4B917E542334D52D00752149 /* EonilFSEventStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E472334D52D00752149 /* EonilFSEventStream.swift */; };
-		4B917E562334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */; };
-		4B917E572334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */; };
-		4B917E592334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */; };
-		4B917E5A2334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */; };
-		4B917E5C2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
-		4B917E5D2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */; };
-		4B917E5F2334D52D00752149 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4B2334D52D00752149 /* EonilFSEvents.swift */; };
-		4B917E602334D52D00752149 /* EonilFSEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4B2334D52D00752149 /* EonilFSEvents.swift */; };
-		4B917E622334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */; };
-		4B917E632334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */; };
 		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
 		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
 		4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
@@ -200,6 +176,11 @@
 		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BD5657324E842E900D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
+		4BD5657424E842E900D52809 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
+		4BD5657524E842E900D52809 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5656024E8311400D52809 /* Down */; };
+		4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
+		4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
 		4BDA50B42160BE70004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; };
 		4BDA50B52160BE76004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B0A1AA72120C35100F1E02F /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
@@ -374,10 +355,6 @@
 		1929BF230875DED6CD7AB3EB /* ShortcutItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutItem.swift; sourceTree = "<group>"; };
 		1929BFB0F294F3714D5E095F /* MarkdownToolReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownToolReducer.swift; sourceTree = "<group>"; };
 		1929BFC0A5A9C6DB09BE1368 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
-		4B004BCB21063B600043A396 /* DictionaryDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryDecoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryDecoder.swift; sourceTree = "<group>"; };
-		4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryCodingKey.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryCodingKey.swift; sourceTree = "<group>"; };
-		4B004BCD21063B600043A396 /* DictionaryEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryEncoder.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryEncoder.swift; sourceTree = "<group>"; };
-		4B004BCE21063B600043A396 /* DictionaryErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryErrors.swift; path = ../../Carthage/Checkouts/DictionaryCoding/Sources/DictionaryCoding/DictionaryErrors.swift; sourceTree = "<group>"; };
 		4B029F1B1D45E349004EE0D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrefWindow.xib; sourceTree = "<group>"; };
 		4B0A1AA72120C35100F1E02F /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
 		4B19BEFA1E110183007E823C /* markdown */ = {isa = PBXFileReference; lastKnownFileType = folder; path = markdown; sourceTree = "<group>"; };
@@ -396,14 +373,6 @@
 		4B6A70951D6100E300E12030 /* SwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftCommons.swift; sourceTree = "<group>"; };
 		4B8C64CD23F02259008733D8 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		4B8C64CE23F022C2008733D8 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamError.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamError.swift; sourceTree = "<group>"; };
-		4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamEventFlags.swift; sourceTree = "<group>"; };
-		4B917E472334D52D00752149 /* EonilFSEventStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStream.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStream.swift; sourceTree = "<group>"; };
-		4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamCreateFlags.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamCreateFlags.swift; sourceTree = "<group>"; };
-		4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEvent.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamEvent.swift; sourceTree = "<group>"; };
-		4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamIllogicalErrorLog.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamIllogicalErrorLog.swift; sourceTree = "<group>"; };
-		4B917E4B2334D52D00752149 /* EonilFSEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEvents.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEvents.swift; sourceTree = "<group>"; };
-		4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EonilFSEventStreamEventID.swift; path = ../../Carthage/Checkouts/FSEvents/Sources/EonilFSEvents/EonilFSEventStreamEventID.swift; sourceTree = "<group>"; };
 		4B9433A120B95EC1005807BA /* MacVim-bsh.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-bsh.icns"; path = "macvim-file-icons/MacVim-bsh.icns"; sourceTree = "<group>"; };
 		4B9433A220B95EC1005807BA /* MacVim-generic.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-generic.icns"; path = "macvim-file-icons/MacVim-generic.icns"; sourceTree = "<group>"; };
 		4B9433A320B95EC1005807BA /* MacVim-dylan.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "MacVim-dylan.icns"; path = "macvim-file-icons/MacVim-dylan.icns"; sourceTree = "<group>"; };
@@ -509,13 +478,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD5657524E842E900D52809 /* Down in Frameworks */,
+				4BD5657324E842E900D52809 /* Swifter in Frameworks */,
 				4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */,
 				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
 				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
 				4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */,
+				4BD5657424E842E900D52809 /* PureLayout in Frameworks */,
+				4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */,
 				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
 				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
+				4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */,
 				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -743,17 +717,6 @@
 			name = Middlewares;
 			sourceTree = "<group>";
 		};
-		4B004BCA21063B4D0043A396 /* DictionaryCoding */ = {
-			isa = PBXGroup;
-			children = (
-				4B004BCC21063B600043A396 /* DictionaryCodingKey.swift */,
-				4B004BCB21063B600043A396 /* DictionaryDecoder.swift */,
-				4B004BCD21063B600043A396 /* DictionaryEncoder.swift */,
-				4B004BCE21063B600043A396 /* DictionaryErrors.swift */,
-			);
-			name = DictionaryCoding;
-			sourceTree = "<group>";
-		};
 		4B5012001EBA791000F76C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -884,21 +847,6 @@
 			name = resources;
 			sourceTree = "<group>";
 		};
-		4BB4CCEE224A7E6D00474C79 /* FSEvents */ = {
-			isa = PBXGroup;
-			children = (
-				4B917E4B2334D52D00752149 /* EonilFSEvents.swift */,
-				4B917E472334D52D00752149 /* EonilFSEventStream.swift */,
-				4B917E482334D52D00752149 /* EonilFSEventStreamCreateFlags.swift */,
-				4B917E452334D52D00752149 /* EonilFSEventStreamError.swift */,
-				4B917E492334D52D00752149 /* EonilFSEventStreamEvent.swift */,
-				4B917E462334D52D00752149 /* EonilFSEventStreamEventFlags.swift */,
-				4B917E4C2334D52D00752149 /* EonilFSEventStreamEventID.swift */,
-				4B917E4A2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift */,
-			);
-			name = FSEvents;
-			sourceTree = "<group>";
-		};
 		4BDF50101D760AB700D8FBC3 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
@@ -940,8 +888,6 @@
 			isa = PBXGroup;
 			children = (
 				4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */,
-				4BB4CCEE224A7E6D00474C79 /* FSEvents */,
-				4B004BCA21063B4D0043A396 /* DictionaryCoding */,
 				4B2A2C0D1D0353750074CE9A /* Bridge.h */,
 				4B238BE01D3BF24200CBDD98 /* Application.swift */,
 				4BEBA5081CFF374B00673FDF /* AppDelegate.swift */,
@@ -1022,9 +968,11 @@
 			);
 			name = VimR;
 			packageProductDependencies = (
-				4BD5655224E8014100D52809,
-				4BD5655824E8040E00D52809,
-				4BD5656024E8311400D52809,
+				4BD5655224E8014100D52809 /* Swifter */,
+				4BD5655824E8040E00D52809 /* PureLayout */,
+				4BD5656024E8311400D52809 /* Down */,
+				4BD5657724E8443300D52809 /* DictionaryCoding */,
+				4BD5657A24E8448300D52809 /* EonilFSEvents */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
@@ -1081,9 +1029,11 @@
 			);
 			mainGroup = 4BEBA4FC1CFF374B00673FDF;
 			packageReferences = (
-				4BD5655124E8014100D52809,
-				4BD5655724E8040E00D52809,
-				4BD5655F24E8311400D52809,
+				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
+				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
+				4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */,
+				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
+				4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1206,7 +1156,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B917E592334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */,
 				4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */,
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
 				4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */,
@@ -1216,7 +1165,6 @@
 				4B6A70961D6100E300E12030 /* SwiftCommons.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
-				4B004BD521063B600043A396 /* DictionaryErrors.swift in Sources */,
 				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
@@ -1230,30 +1178,24 @@
 				4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */,
 				4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */,
 				1929B8FB248D71BF88A35761 /* MarkdownTool.swift in Sources */,
-				4B917E5F2334D52D00752149 /* EonilFSEvents.swift in Sources */,
 				1929B4B70926DE113E6BF990 /* MarkdownPreviewReducer.swift in Sources */,
 				1929B5C1BABBC0D09D97C3EF /* MarkdownPreviewMiddleware.swift in Sources */,
 				1929B0F599D1F62C7BE53D2C /* HttpServerMiddleware.swift in Sources */,
-				4B004BD321063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B3AC66EFE35D68C020E3 /* MarkdownToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
 				4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */,
-				4B917E562334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */,
 				1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */,
 				1929BA715337FE26155B2071 /* BufferList.swift in Sources */,
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
 				1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */,
-				4B917E532334D52D00752149 /* EonilFSEventStream.swift in Sources */,
 				1929BEAE0592096BC1191B67 /* PrefPane.swift in Sources */,
 				1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */,
-				4B917E502334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
 				1929B3217A7A3D79E28C80DB /* PrefWindowReducer.swift in Sources */,
 				1929B6BE1610892E6C4C0CE6 /* GeneralPrefReducer.swift in Sources */,
 				1929B05B9D664052EC2D23EF /* FileOutlineView.swift in Sources */,
 				1929BCC9D3604933DFF07E2E /* FileBrowser.swift in Sources */,
 				1929B4F0612224E594E89B92 /* AppearancePref.swift in Sources */,
-				4B917E5C2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
 				1929B50D933A369A86A165DE /* AdvencedPref.swift in Sources */,
 				1929BCC7908DD899999B70BE /* AppearancePrefReducer.swift in Sources */,
 				1929B3557317755A43513B17 /* OpenQuicklyWindow.swift in Sources */,
@@ -1269,15 +1211,11 @@
 				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
 				1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */,
 				4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */,
-				4B917E622334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */,
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
 				1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */,
-				4B917E4D2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */,
-				4B004BD121063B600043A396 /* DictionaryCodingKey.swift in Sources */,
 				1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */,
 				1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */,
-				4B004BCF21063B600043A396 /* DictionaryDecoder.swift in Sources */,
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
@@ -1311,31 +1249,19 @@
 			files = (
 				4B6DFB3A22366D140066BB43 /* OSLogCommons.swift in Sources */,
 				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
-				4B917E572334D52D00752149 /* EonilFSEventStreamCreateFlags.swift in Sources */,
-				4B004BD621063B600043A396 /* DictionaryErrors.swift in Sources */,
 				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
 				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
-				4B004BD021063B600043A396 /* DictionaryDecoder.swift in Sources */,
 				4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */,
 				4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
-				4B004BD221063B600043A396 /* DictionaryCodingKey.swift in Sources */,
-				4B917E542334D52D00752149 /* EonilFSEventStream.swift in Sources */,
 				1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */,
 				1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */,
-				4B917E5A2334D52D00752149 /* EonilFSEventStreamEvent.swift in Sources */,
 				1929B04CE8ECBD75CBBB0991 /* StringCommonsTest.swift in Sources */,
 				1929B370A275F8C70AD5AA08 /* UrlCommonsTest.swift in Sources */,
 				1929BF4FF30D9A9DE82C3052 /* FileUtilsTest.swift in Sources */,
-				4B917E4E2334D52D00752149 /* EonilFSEventStreamError.swift in Sources */,
-				4B917E632334D52D00752149 /* EonilFSEventStreamEventID.swift in Sources */,
-				4B917E602334D52D00752149 /* EonilFSEvents.swift in Sources */,
-				4B917E512334D52D00752149 /* EonilFSEventStreamEventFlags.swift in Sources */,
-				4B004BD421063B600043A396 /* DictionaryEncoder.swift in Sources */,
 				1929B8E90A1378E494D481E7 /* PrefUtilsTest.swift in Sources */,
 				1929B20CE35B43BB1CE023BA /* Theme.swift in Sources */,
 				1929B9318D32146D58BB38EC /* AppKitCommons.swift in Sources */,
-				4B917E5D2334D52D00752149 /* EonilFSEventStreamIllogicalErrorLog.swift in Sources */,
 				1929BE601267D52FA2E0D6D2 /* Defs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1651,7 +1577,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4BD5655124E8014100D52809 = {
+		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
 			requirement = {
@@ -1659,7 +1585,7 @@
 				version = 1.4.7;
 			};
 		};
-		4BD5655724E8040E00D52809 = {
+		4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
 			requirement = {
@@ -1667,7 +1593,7 @@
 				version = 3.1.6;
 			};
 		};
-		4BD5655F24E8311400D52809 = {
+		4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iwasrobbed/Down";
 			requirement = {
@@ -1675,23 +1601,49 @@
 				version = 0.9.3;
 			};
 		};
+		4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.9;
+			};
+		};
+		4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eonil/FSEvents";
+			requirement = {
+				kind = exactVersion;
+				version = 0.1.7;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4BD5655224E8014100D52809 = {
+		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655124E8014100D52809;
+			package = 4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */;
 			productName = Swifter;
 		};
-		4BD5655824E8040E00D52809 = {
+		4BD5655824E8040E00D52809 /* PureLayout */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655724E8040E00D52809;
+			package = 4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */;
 			productName = PureLayout;
 		};
-		4BD5656024E8311400D52809 = {
+		4BD5656024E8311400D52809 /* Down */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655F24E8311400D52809;
+			package = 4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */;
 			productName = Down;
+		};
+		4BD5657724E8443300D52809 /* DictionaryCoding */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
+			productName = DictionaryCoding;
+		};
+		4BD5657A24E8448300D52809 /* EonilFSEvents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */;
+			productName = EonilFSEvents;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

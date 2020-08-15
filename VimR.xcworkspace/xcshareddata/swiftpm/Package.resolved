@@ -11,12 +11,30 @@
         }
       },
       {
+        "package": "DictionaryCoding",
+        "repositoryURL": "https://github.com/elegantchaos/DictionaryCoding",
+        "state": {
+          "branch": null,
+          "revision": "ae19e456bd550fed8f341e5bae4318333c53a5b4",
+          "version": "1.0.9"
+        }
+      },
+      {
         "package": "Down",
         "repositoryURL": "https://github.com/iwasrobbed/Down",
         "state": {
           "branch": null,
           "revision": "427aec0a0ab342246ec02369dea398597b61174a",
           "version": "0.9.3"
+        }
+      },
+      {
+        "package": "EonilFSEvents",
+        "repositoryURL": "https://github.com/eonil/FSEvents",
+        "state": {
+          "branch": null,
+          "revision": "e6b7cdfa2754454e194a45ee6c2004d0f630fe88",
+          "version": "0.1.7"
         }
       },
       {
