@@ -3,7 +3,7 @@
  * See LICENSE
  */
 
-#import <NvimView/SharedTypes.h>
+#import <NvimView/server_shared_types.h>
 #import "NetUtils.h"
 #import "FuzzyMatcher.h"
 #import "FoundationCommons.h"

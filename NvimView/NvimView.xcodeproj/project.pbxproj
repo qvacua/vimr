@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1929B00C084F8EA5EF0BE6E2 /* NvimView+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */; };
-		1929B0533B55B2349DE2EFE2 /* foundation_shim.h in Headers */ = {isa = PBXBuildFile; fileRef = 1929B27A8FF9A75A09969777 /* foundation_shim.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1929B06F50B2585777FFBE48 /* NvimApiCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B002A03693B14B14BE34 /* NvimApiCommons.swift */; };
 		1929B09C1ADB384F37698FB8 /* NvimCursorModeShape.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */; };
 		1929B0B1A64AA449F666FCC9 /* 1.json in Resources */ = {isa = PBXBuildFile; fileRef = 1929B8619FD13BC2570CBFB2 /* 1.json */; };
@@ -59,8 +58,6 @@
 		4B0225FD224AAE270052362B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225FB224AAE270052362B /* MainMenu.xib */; };
 		4B022607224AAEA80052362B /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; };
 		4B022608224AAEA80052362B /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B90F0041FD2AF59008A39E0 /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B02260B224AAEA80052362B /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B022603224AAE770052362B /* PureLayout.framework */; };
-		4B02260C224AAEA80052362B /* PureLayout.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B022603224AAE770052362B /* PureLayout.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B022613224AAEA80052362B /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4B022614224AAEA80052362B /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B022617224AAEA80052362B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
@@ -78,7 +75,6 @@
 		4B3C736624BB26ED006274F0 /* ProcessUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD167BE7C6BB788DAE2A /* ProcessUtils.swift */; };
 		4B3C736724BB26F1006274F0 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BF14AE831C6832659B66 /* Defs.swift */; };
 		4B3C736824BB2702006274F0 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
-		4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B6DFB39223592B90066BB43 /* OSLogCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */; };
 		4B8662E81FDC3F9F007F490D /* com.qvacua.NvimView.vim in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */; };
 		4B90F02E1FD2AFAE008A39E0 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90F0101FD2AFAC008A39E0 /* NvimView.swift */; };
@@ -102,11 +98,11 @@
 		4BB1EFB5224B71ED00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */; };
 		4BB1F5CB209740E900EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5CA209740E900EC394A /* MessagePack.framework */; };
 		4BC5B0431FE551DF0071D64F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC5B0421FE551DF0071D64F /* RxSwift.framework */; };
-		4BD565AA24E933D700D52809 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BD565A924E933D600D52809 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		4BD565AC24E9361500D52809 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BD565AB24E9360300D52809 /* runtime */; };
+		4BD565B824E9507600D52809 /* runtime in Resources */ = {isa = PBXBuildFile; fileRef = 4BD565B624E9506600D52809 /* runtime */; };
+		4BD565B924E9507D00D52809 /* NvimServer in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BD565B724E9506600D52809 /* NvimServer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		4BD565BC24E950D700D52809 /* foundation_shim.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD565BB24E950B700D52809 /* foundation_shim.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BD565BD24E950D700D52809 /* server_shared_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD565BA24E950B700D52809 /* server_shared_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD874302014C2600039888E /* NvimAutoCommandEvent.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */; };
-		4BDA50B22160BE1B004D10A9 /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BEBC239215FD19C007113C4 /* Socket.framework */; };
 		4BF01CCF2235015E00411218 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF01CCE2235015E00411218 /* AppDelegate.swift */; };
 		4BF01CD12235015E00411218 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD02235015E00411218 /* Assets.xcassets */; };
 		4BF01CD42235015E00411218 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF01CD22235015E00411218 /* MainMenu.xib */; };
@@ -176,7 +172,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B02260C224AAEA80052362B /* PureLayout.framework in Embed Frameworks */,
 				4B022614224AAEA80052362B /* MessagePack.framework in Embed Frameworks */,
 				4B022618224AAEA80052362B /* RxSwift.framework in Embed Frameworks */,
 				4B022608224AAEA80052362B /* NvimView.framework in Embed Frameworks */,
@@ -190,7 +185,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4BDA50B22160BE1B004D10A9 /* Socket.framework in CopyFiles */,
 				4BF18519212DCD7900954FE7 /* MessagePack.framework in CopyFiles */,
 				4BF1851B212DCD7900954FE7 /* RxSwift.framework in CopyFiles */,
 				4BF18511212DCCF600954FE7 /* NvimView.framework in CopyFiles */,
@@ -214,7 +208,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				4BD565AA24E933D700D52809 /* NvimServer in CopyFiles */,
+				4BD565B924E9507D00D52809 /* NvimServer in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,15 +246,12 @@
 		1929B0C89838D8402BB80BFC /* CocoaCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaCommons.swift; sourceTree = "<group>"; };
 		1929B114CC85D012D7477D58 /* PerfTester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerfTester.swift; sourceTree = "<group>"; };
 		1929B22A0CAD417EC3790F02 /* NvimView+Objects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Objects.swift"; sourceTree = "<group>"; };
-		1929B27A8FF9A75A09969777 /* foundation_shim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = foundation_shim.h; sourceTree = "<group>"; };
 		1929B2CE622DF2B4D21D0C0E /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
 		1929B39C7DCDA4E9D5220CD8 /* OSLogCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogCommons.swift; sourceTree = "<group>"; };
-		1929B3EAE37505620F8AECD5 /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
 		1929B47330DAD129520A2273 /* Typesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typesetter.swift; sourceTree = "<group>"; };
 		1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
 		1929B52174EC68D2974B5BAE /* UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiBridge.swift; sourceTree = "<group>"; };
 		1929B73455764E42DACF6BB8 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
-		1929B7398AD1DE525FA53E38 /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		1929B8619FD13BC2570CBFB2 /* 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 1.json; sourceTree = "<group>"; };
 		1929B9290D503536FFDA9C49 /* MessagePackCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePackCommons.swift; sourceTree = "<group>"; };
 		1929B96A876229DA394F906E /* FontUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontUtils.swift; sourceTree = "<group>"; };
@@ -282,7 +273,6 @@
 		1929BF14AE831C6832659B66 /* Defs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defs.swift; sourceTree = "<group>"; };
 		1929BF88DE64FC62AFFCBC84 /* NimbleCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NimbleCommons.swift; sourceTree = "<group>"; };
 		1929BFCCDE5C7145BE5A7387 /* TypesetterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypesetterTest.swift; sourceTree = "<group>"; };
-		1929BFDA282A4CA4838385E9 /* foundation_shim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = foundation_shim.h; sourceTree = "<group>"; };
 		4B0225F0224AAE260052362B /* MinimalNvimViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MinimalNvimViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0225F2224AAE260052362B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B0225F4224AAE260052362B /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -290,25 +280,18 @@
 		4B0225F9224AAE270052362B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B0225FC224AAE270052362B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B0225FE224AAE270052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B022603224AAE770052362B /* PureLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureLayout.framework; path = ../Carthage/Build/Mac/PureLayout.framework; sourceTree = "<group>"; };
 		4B02261A224AAF1B0052362B /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4B022687224ACFE30052362B /* RxMessagePort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxMessagePort.swift; path = ../../RxPack/RxMessagePort.swift; sourceTree = "<group>"; };
-		4B06F7082247FBEE0069C9F2 /* server_ui_bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_ui_bridge.h; sourceTree = "<group>"; };
-		4B06F7092247FBEE0069C9F2 /* server_ui_bridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server_ui_bridge.c; sourceTree = "<group>"; };
 		4B0A1B112129F49500F1E02F /* NvimViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NvimViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0A1B132129F49500F1E02F /* SwiftCommonsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCommonsTest.swift; sourceTree = "<group>"; };
 		4B0A1B152129F49500F1E02F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B0A1B38212B332800F1E02F /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = ../Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
-		4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4B3C735824BB2631006274F0 /* EnvTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnvTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B3C735A24BB2631006274F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B3C735C24BB2634006274F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B3C735F24BB2634006274F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B3C736124BB2634006274F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_shared_types.h; sourceTree = "<group>"; };
-		4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.vim; path = com.qvacua.NvimView.vim; sourceTree = "<group>"; };
-		4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NvimServer.entitlements; sourceTree = "<group>"; };
 		4B90F0041FD2AF59008A39E0 /* NvimView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NvimView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B90F0081FD2AF59008A39E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B90F0101FD2AFAC008A39E0 /* NvimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimView.swift; sourceTree = "<group>"; };
@@ -322,18 +305,17 @@
 		4B90F0211FD2AFAD008A39E0 /* NvimView+Draw.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+Draw.swift"; sourceTree = "<group>"; };
 		4B90F0241FD2AFAD008A39E0 /* NvimView+UiBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+UiBridge.swift"; sourceTree = "<group>"; };
 		4B90F0251FD2AFAD008A39E0 /* NvimView+MenuItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NvimView+MenuItems.swift"; sourceTree = "<group>"; };
-		4B90F0511FD2AFD3008A39E0 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		4B90F05B1FD2AFF7008A39E0 /* server_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server_log.h; sourceTree = "<group>"; };
 		4BB1EFAA224B71EC00A5CD5A /* RxNeovimApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxNeovimApi.swift; path = ../../RxPack/RxNeovimApi.swift; sourceTree = "<group>"; };
 		4BB1EFAB224B71EC00A5CD5A /* RxMsgpackRpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxMsgpackRpc.swift; path = ../../RxPack/RxMsgpackRpc.swift; sourceTree = "<group>"; };
 		4BB1EFAC224B71EC00A5CD5A /* RxNeovimApi.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxNeovimApi.generated.swift; path = ../../RxPack/RxNeovimApi.generated.swift; sourceTree = "<group>"; };
 		4BB1EFAD224B71ED00A5CD5A /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxSwiftCommons.swift; path = ../../RxPack/RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4BB1F5CA209740E900EC394A /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
 		4BC5B0421FE551DF0071D64F /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
-		4BD565A924E933D600D52809 /* NvimServer */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = NvimServer; path = ../Carthage/Build/Mac/NvimServer/NvimServer; sourceTree = "<group>"; };
-		4BD565AB24E9360300D52809 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = ../Carthage/Build/Mac/NvimServer/runtime; sourceTree = "<group>"; };
+		4BD565B624E9506600D52809 /* runtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = runtime; path = ../Carthage/Build/Mac/NvimServer/runtime; sourceTree = "<group>"; };
+		4BD565B724E9506600D52809 /* NvimServer */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = NvimServer; path = ../Carthage/Build/Mac/NvimServer/NvimServer; sourceTree = "<group>"; };
+		4BD565BA24E950B700D52809 /* server_shared_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = server_shared_types.h; path = ../Carthage/Build/Mac/NvimServer/server_shared_types.h; sourceTree = "<group>"; };
+		4BD565BB24E950B700D52809 /* foundation_shim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = foundation_shim.h; path = ../Carthage/Build/Mac/NvimServer/foundation_shim.h; sourceTree = "<group>"; };
 		4BD8742F2014C25F0039888E /* NvimAutoCommandEvent.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimAutoCommandEvent.generated.swift; sourceTree = "<group>"; };
-		4BEBC239215FD19C007113C4 /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
 		4BF01CCC2235015E00411218 /* DrawerPerf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawerPerf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BF01CCE2235015E00411218 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BF01CD02235015E00411218 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -354,7 +336,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B02260B224AAEA80052362B /* PureLayout.framework in Frameworks */,
 				4B022613224AAEA80052362B /* MessagePack.framework in Frameworks */,
 				4B022617224AAEA80052362B /* RxSwift.framework in Frameworks */,
 				4B022607224AAEA80052362B /* NvimView.framework in Frameworks */,
@@ -368,7 +349,6 @@
 				4BF18510212DCCEA00954FE7 /* NvimView.framework in Frameworks */,
 				4B0A1B39212B332800F1E02F /* Nimble.framework in Frameworks */,
 				4BF18514212DCD6E00954FE7 /* MessagePack.framework in Frameworks */,
-				4BDA50B32160BE2C004D10A9 /* Socket.framework in Frameworks */,
 				4BF18516212DCD6E00954FE7 /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,10 +473,8 @@
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
-				4BD565A924E933D600D52809 /* NvimServer */,
-				4BD565AB24E9360300D52809 /* runtime */,
+				4BD565B524E9504800D52809 /* NvimServer */,
 				4B90F0061FD2AF59008A39E0 /* NvimView */,
-				4B90F0501FD2AFD3008A39E0 /* NvimServer */,
 				4B0A1B122129F49500F1E02F /* NvimViewTests */,
 				4BF1852121313EE400954FE7 /* DrawerDev */,
 				4BF01CCD2235015E00411218 /* DrawerPerf */,
@@ -524,7 +502,6 @@
 			isa = PBXGroup;
 			children = (
 				4B022678224ACE320052362B /* RxPack */,
-				4B4A48DB222C7C6A00C8E3A1 /* SharedTypes.h */,
 				4B90F0081FD2AF59008A39E0 /* Info.plist */,
 				4B8662E41FDC3D4F007F490D /* com.qvacua.NvimView.vim */,
 				4BF18C5C1FD2EEE400DF95D1 /* NvimView.h */,
@@ -548,7 +525,6 @@
 				1929BDC8F32F4A0D2299B5C5 /* NvimView+Debug.swift */,
 				1929BD896D408673954F4AA2 /* NvimView+Geometry.swift */,
 				1929BF14AE831C6832659B66 /* Defs.swift */,
-				1929B27A8FF9A75A09969777 /* foundation_shim.h */,
 				1929BAB0B8BA4E6CDF5C56F3 /* NvimView+Types.swift */,
 				1929B4CC2D4AF391223461A2 /* ConditionVariable.swift */,
 				1929B03EB461210D48D47510 /* NvimCursorModeShape.generated.swift */,
@@ -557,34 +533,26 @@
 			path = NvimView;
 			sourceTree = "<group>";
 		};
-		4B90F0501FD2AFD3008A39E0 /* NvimServer */ = {
-			isa = PBXGroup;
-			children = (
-				4B8C647C23EB6F91008733D8 /* NvimServer.entitlements */,
-				4B4A48DA222C7C5600C8E3A1 /* server_shared_types.h */,
-				4B90F0511FD2AFD3008A39E0 /* main.c */,
-				4B90F05B1FD2AFF7008A39E0 /* server_log.h */,
-				1929B3EAE37505620F8AECD5 /* server.h */,
-				1929B7398AD1DE525FA53E38 /* server.c */,
-				4B06F7082247FBEE0069C9F2 /* server_ui_bridge.h */,
-				4B06F7092247FBEE0069C9F2 /* server_ui_bridge.c */,
-				1929BFDA282A4CA4838385E9 /* foundation_shim.h */,
-			);
-			path = NvimServer;
-			sourceTree = "<group>";
-		};
 		4B90F06F1FD2B9F1008A39E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				4BF4FD7F2416A18E0025ACC4 /* GameKit.framework */,
-				4B022603224AAE770052362B /* PureLayout.framework */,
-				4B379CCC2248CFB6004B89B4 /* CoreFoundation.framework */,
-				4BEBC239215FD19C007113C4 /* Socket.framework */,
 				4B0A1B38212B332800F1E02F /* Nimble.framework */,
 				4BB1F5CA209740E900EC394A /* MessagePack.framework */,
 				4BC5B0421FE551DF0071D64F /* RxSwift.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4BD565B524E9504800D52809 /* NvimServer */ = {
+			isa = PBXGroup;
+			children = (
+				4BD565BB24E950B700D52809 /* foundation_shim.h */,
+				4BD565BA24E950B700D52809 /* server_shared_types.h */,
+				4BD565B724E9506600D52809 /* NvimServer */,
+				4BD565B624E9506600D52809 /* runtime */,
+			);
+			name = NvimServer;
 			sourceTree = "<group>";
 		};
 		4BF01CCD2235015E00411218 /* DrawerPerf */ = {
@@ -624,8 +592,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BF18C5D1FD2EEE400DF95D1 /* NvimView.h in Headers */,
-				4B4A48DC222C7C6A00C8E3A1 /* SharedTypes.h in Headers */,
-				1929B0533B55B2349DE2EFE2 /* foundation_shim.h in Headers */,
+				4BD565BC24E950D700D52809 /* foundation_shim.h in Headers */,
+				4BD565BD24E950D700D52809 /* server_shared_types.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -840,7 +808,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD565AC24E9361500D52809 /* runtime in Resources */,
+				4BD565B824E9507600D52809 /* runtime in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

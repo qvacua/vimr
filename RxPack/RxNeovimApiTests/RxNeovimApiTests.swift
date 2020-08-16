@@ -20,6 +20,9 @@ class NvimMsgPackTests: XCTestCase {
 
   override func tearDown() {
     super.tearDown()
+    try? self.nvim
+      .command(command: "q!")
+      .wait()
     try? self.nvim.stop().wait()
   }
 

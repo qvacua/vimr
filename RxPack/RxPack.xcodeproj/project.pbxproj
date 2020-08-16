@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,11 +14,9 @@
 		4B022670224ACCE70052362B /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B022686224ACFCB0052362B /* RxMessagePort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B022684224ACFCB0052362B /* RxMessagePort.swift */; };
 		4B0226A8224B58DB0052362B /* RxMsgpackRpcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0226A7224B58DB0052362B /* RxMsgpackRpcTests.swift */; };
-		4B0226AD224B59010052362B /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02268E224B56F10052362B /* Socket.framework */; };
 		4B0226AE224B59030052362B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; };
 		4B0226AF224B59050052362B /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02268D224B56F10052362B /* MessagePack.framework */; };
 		4B0226B1224B5A180052362B /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02268D224B56F10052362B /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B0226B2224B5A180052362B /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02268E224B56F10052362B /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B0226B3224B5A180052362B /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B0226B5224B5A310052362B /* RxMsgpackRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDD5380FFB00320A20C9 /* RxMsgpackRpc.swift */; };
 		4BB1EF8C224B62BB00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */; };
@@ -28,11 +26,11 @@
 		4BB1EFA0224B66BB00A5CD5A /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */; };
 		4BB1EFA2224B66BB00A5CD5A /* RxMsgpackRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDD5380FFB00320A20C9 /* RxMsgpackRpc.swift */; };
 		4BB1EFA3224B66C700A5CD5A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02268D224B56F10052362B /* MessagePack.framework */; };
-		4BB1EFA4224B66C700A5CD5A /* Socket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02268E224B56F10052362B /* Socket.framework */; };
 		4BB1EFA5224B66C700A5CD5A /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; };
 		4BB1EFA7224B66D700A5CD5A /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02268D224B56F10052362B /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BB1EFA8224B66D700A5CD5A /* Socket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02268E224B56F10052362B /* Socket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB1EFA9224B66D700A5CD5A /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B02266D224ACCE10052362B /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4BD565C024E9550D00D52809 /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD565BF24E9550D00D52809 /* Socket */; };
+		4BD565C224E9552300D52809 /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD565C124E9552300D52809 /* Socket */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,7 +52,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4B0226B1224B5A180052362B /* MessagePack.framework in CopyFiles */,
-				4B0226B2224B5A180052362B /* Socket.framework in CopyFiles */,
 				4B0226B3224B5A180052362B /* RxSwift.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,7 +63,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BB1EFA7224B66D700A5CD5A /* MessagePack.framework in CopyFiles */,
-				4BB1EFA8224B66D700A5CD5A /* Socket.framework in CopyFiles */,
 				4BB1EFA9224B66D700A5CD5A /* RxSwift.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,7 +79,6 @@
 		4B02266D224ACCE10052362B /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		4B022684224ACFCB0052362B /* RxMessagePort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxMessagePort.swift; sourceTree = "<group>"; };
 		4B02268D224B56F10052362B /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
-		4B02268E224B56F10052362B /* Socket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Socket.framework; path = ../Carthage/Build/Mac/Socket.framework; sourceTree = "<group>"; };
 		4B0226A5224B58DB0052362B /* RxMsgpackRpcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxMsgpackRpcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0226A7224B58DB0052362B /* RxMsgpackRpcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxMsgpackRpcTests.swift; sourceTree = "<group>"; };
 		4B0226A9224B58DB0052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,9 +103,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B0226AD224B59010052362B /* Socket.framework in Frameworks */,
 				4B0226AE224B59030052362B /* RxSwift.framework in Frameworks */,
 				4B0226AF224B59050052362B /* MessagePack.framework in Frameworks */,
+				4BD565C024E9550D00D52809 /* Socket in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,8 +113,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BD565C224E9552300D52809 /* Socket in Frameworks */,
 				4BB1EFA3224B66C700A5CD5A /* MessagePack.framework in Frameworks */,
-				4BB1EFA4224B66C700A5CD5A /* Socket.framework in Frameworks */,
 				4BB1EFA5224B66C700A5CD5A /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -167,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				4B02268D224B56F10052362B /* MessagePack.framework */,
-				4B02268E224B56F10052362B /* Socket.framework */,
 				4B02266D224ACCE10052362B /* RxSwift.framework */,
 			);
 			name = Frameworks;
@@ -235,6 +229,9 @@
 			dependencies = (
 			);
 			name = RxMsgpackRpcTests;
+			packageProductDependencies = (
+				4BD565BF24E9550D00D52809 /* Socket */,
+			);
 			productName = RxMsgpackRpcTests;
 			productReference = 4B0226A5224B58DB0052362B /* RxMsgpackRpcTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -253,6 +250,9 @@
 			dependencies = (
 			);
 			name = RxNeovimApiTests;
+			packageProductDependencies = (
+				4BD565C124E9552300D52809 /* Socket */,
+			);
 			productName = RxNeovimApiTests;
 			productReference = 4BB1EF95224B66AA00A5CD5A /* RxNeovimApiTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -287,6 +287,9 @@
 				Base,
 			);
 			mainGroup = 4B02263A224AB11A0052362B;
+			packageReferences = (
+				4BD565BE24E9550D00D52809 /* XCRemoteSwiftPackageReference "BlueSocket" */,
+			);
 			productRefGroup = 4B022644224AB11A0052362B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -634,6 +637,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4BD565BE24E9550D00D52809 /* XCRemoteSwiftPackageReference "BlueSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/IBM-Swift/BlueSocket";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.52;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4BD565BF24E9550D00D52809 /* Socket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD565BE24E9550D00D52809 /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = Socket;
+		};
+		4BD565C124E9552300D52809 /* Socket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BD565BE24E9550D00D52809 /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = Socket;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B02263B224AB11A0052362B /* Project object */;
 }
