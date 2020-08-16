@@ -17,13 +17,5 @@ echo "### Pushing commit and tag to vimr repository"
 git push origin HEAD:"${branch}"
 git push origin "${tag}"
 
-#pushd NvimView/neovim > /dev/null
-#    echo "### tagging neovim"
-#    git tag -s -m "vimr/${tag}" "vimr/${tag}"
-#
-#    echo "### Pushing tag to neovim repository"
-#    git push origin "vimr/${tag}"
-#popd > /dev/null
-
 popd > /dev/null
 echo "### Committed and pushed tags"
