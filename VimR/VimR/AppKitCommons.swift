@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import CocoaMarkdown
+import Down
 
 extension NSColor {
 
@@ -119,24 +119,8 @@ extension NSAttributedString {
 
   static func infoLabel(markdown: String) -> NSAttributedString {
     let size = NSFont.smallSystemFontSize
-    let document = CMDocument(data: markdown.data(using: .utf8), options: .normalize)
-
-    let attrs = CMTextAttributes()
-    attrs?.textAttributes = [
-      NSAttributedString.Key.font: NSFont.systemFont(ofSize: size),
-      NSAttributedString.Key.foregroundColor: NSColor.gray,
-    ]
-    attrs?.inlineCodeAttributes = [
-      NSAttributedString.Key.font: NSFont.userFixedPitchFont(ofSize: size)!,
-      NSAttributedString.Key.foregroundColor: NSColor.gray,
-    ]
-
-    let renderer = CMAttributedStringRenderer(document: document, attributes: attrs)
-    renderer?.register(CMHTMLStrikethroughTransformer())
-    renderer?.register(CMHTMLSuperscriptTransformer())
-    renderer?.register(CMHTMLUnderlineTransformer())
-
-    guard let result = renderer?.render() else {
+    let down = Down(markdownString: markdown)
+    guard let result = try? down.toAttributedString(styler: downStyler) else {
       preconditionFailure("Wrong markdown: \(markdown)")
     }
 
@@ -253,3 +237,10 @@ extension NSScrollView {
     return scrollView
   }
 }
+
+private let fontCollection = StaticFontCollection(
+  body: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+  code: NSFont.userFixedPitchFont(ofSize: NSFont.smallSystemFontSize)!
+)
+
+private let downStyler = AttributedStringMarkdownStyler.new()

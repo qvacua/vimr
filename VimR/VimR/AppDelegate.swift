@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 import Sparkle
 import CocoaFontAwesome
+import DictionaryCoding
 import os
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")

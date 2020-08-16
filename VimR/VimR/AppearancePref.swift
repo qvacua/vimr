@@ -94,15 +94,14 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private let ligatureCheckbox = NSButton(forAutoLayout: ())
   private let previewArea = NSTextView(frame: .zero)
 
-  private let exampleText =
-    """
-    abcdefghijklmnopqrstuvwxyz
-    ABCDEFGHIJKLMNOPQRSTUVWXYZ
-    0123456789 -~ - ~
-    (){}[] +-*/= .,;:!?#&$%@|^
-    <- -> => >> << >>= =<< .. 
-    :: -< >- -<< >>- ++ /= ==
-    """
+  private let exampleText = #"""
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+0123456789 -~ - ~
+(){}[] +-*/= .,;:!?#&$%@|^
+<- -> => >> << >>= =<< .. 
+:: -< >- -<< >>- ++ /= ==
+"""#
 
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
@@ -116,12 +115,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       action: #selector(AppearancePref.usesColorschemeAction(_:))
     )
 
-    let useColorschemeInfo = self.infoTextField(
-      markdown: """
-                If checked, the colors of the selected `colorscheme` will be
-                used to render tools, e.g. the file browser.
-                """
-    )
+    let useColorschemeInfo = self.infoTextField(markdown: #"""
+If checked, the colors of the selected `colorscheme` will be used to render tools,\
+for example the file browser.
+"""#)
 
     let fileIcon = self.fileIconCheckbox
     self.configureCheckbox(
@@ -130,12 +127,10 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       action: #selector(AppearancePref.fileIconAction(_:))
     )
 
-    let fileIconInfo = self.infoTextField(
-      markdown: """
-                In case the selected `colorscheme` does not play well with the file icons
-                in the file browser and the buffer list, you can turn them off.
-                """
-    )
+    let fileIconInfo = self.infoTextField(markdown: #"""
+In case the selected `colorscheme` does not play well with the file icons\
+in the file browser and the buffer list, you can turn them off.
+"""#)
 
     let fontTitle = self.titleTextField(title: "Default Font:")
     let fontPanelButton = self.fontPanelButton

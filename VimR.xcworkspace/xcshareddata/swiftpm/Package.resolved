@@ -1,0 +1,61 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Socket",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
+        "state": {
+          "branch": null,
+          "revision": "c46a3d41f5b2401d18bcb46d0101cdc5cd13e307",
+          "version": "1.0.52"
+        }
+      },
+      {
+        "package": "DictionaryCoding",
+        "repositoryURL": "https://github.com/elegantchaos/DictionaryCoding",
+        "state": {
+          "branch": null,
+          "revision": "ae19e456bd550fed8f341e5bae4318333c53a5b4",
+          "version": "1.0.9"
+        }
+      },
+      {
+        "package": "Down",
+        "repositoryURL": "https://github.com/iwasrobbed/Down",
+        "state": {
+          "branch": null,
+          "revision": "427aec0a0ab342246ec02369dea398597b61174a",
+          "version": "0.9.3"
+        }
+      },
+      {
+        "package": "EonilFSEvents",
+        "repositoryURL": "https://github.com/eonil/FSEvents",
+        "state": {
+          "branch": null,
+          "revision": "e6b7cdfa2754454e194a45ee6c2004d0f630fe88",
+          "version": "0.1.7"
+        }
+      },
+      {
+        "package": "PureLayout",
+        "repositoryURL": "https://github.com/PureLayout/PureLayout",
+        "state": {
+          "branch": null,
+          "revision": "d19b40e831e4d621097765998be97df3856e8413",
+          "version": "3.1.6"
+        }
+      },
+      {
+        "package": "Swifter",
+        "repositoryURL": "https://github.com/httpswift/swifter",
+        "state": {
+          "branch": null,
+          "revision": "8b5afb48ae64d4f729f0489ddcfe09c62b9c3687",
+          "version": "1.4.7"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

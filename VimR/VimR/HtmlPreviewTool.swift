@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import WebKit
+import EonilFSEvents
 import os
 
 private let fileSystemEventsLatency = 1.0
