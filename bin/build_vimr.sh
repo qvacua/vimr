@@ -31,7 +31,7 @@ if [[ ${code_sign} == true ]] ; then
     xcodebuild -configuration Release -derivedDataPath ./build -workspace VimR.xcworkspace -scheme VimR clean build
 
     pushd ${build_path}/Build/Products/Release > /dev/null
-        codesign --force -s "${identity}" --timestamp --options=runtime VimR.app
+        codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app
         codesign --force -s "${identity}" --timestamp --options=runtime --entitlements="${entitlements_path}" \
             VimR.app/Contents/Frameworks/NvimView.framework/Versions/A/NvimServer
         codesign --force -s "${identity}" --timestamp --options=runtime VimR.app/Contents/Frameworks/NvimView.framework/Versions/A
