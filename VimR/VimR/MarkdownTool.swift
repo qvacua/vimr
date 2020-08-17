@@ -8,6 +8,7 @@ import RxSwift
 import PureLayout
 import WebKit
 import os
+import NvimView
 
 class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
 

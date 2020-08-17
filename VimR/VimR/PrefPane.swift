@@ -3,7 +3,7 @@
 // Copyright (c) 2017 Tae Won Ha. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 
 class PrefPane: NSView {
 

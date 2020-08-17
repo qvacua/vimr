@@ -3,7 +3,8 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
+import NvimView
 import RxSwift
 
 struct AppState: Codable {

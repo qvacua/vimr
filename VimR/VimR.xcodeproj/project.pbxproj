@@ -164,16 +164,16 @@
 		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70951D6100E300E12030 /* SwiftCommons.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
+		4B9BC41E24EB2E22000209B5 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC41D24EB2E22000209B5 /* MessagePack */; };
+		4B9BC42124EB2E45000209B5 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42024EB2E45000209B5 /* RxCocoa */; };
+		4B9BC42324EB2E45000209B5 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42224EB2E45000209B5 /* RxSwift */; };
+		4B9BC42524EB2E45000209B5 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42424EB2E45000209B5 /* RxRelay */; };
+		4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42624EB2E51000209B5 /* NvimView */; };
+		4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */; };
 		4B9DF288209C8DA000DF2AAD /* MessagePack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; };
-		4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB1F5D02097705E00EC394A /* MessagePack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB409ED1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift */; };
-		4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
-		4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC903EA22799DEB0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
-		4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; };
-		4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC903E822799DEB0016A1CD /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
 		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BD5657324E842E900D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
@@ -183,18 +183,12 @@
 		4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
-		4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; };
-		4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE34B822225BAC7002F57D3 /* ShortcutRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
 		4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; };
-		4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
-		4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; };
 		4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C341FD2E2AA00DF95D1 /* CocoaFontAwesome.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C381FD2E2AB00DF95D1 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BF18C4A1FD2E2DE00DF95D1 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C491FD2E2DE00DF95D1 /* Nimble.framework */; };
 		4BF18C4C1FD2E4CE00DF95D1 /* NvimView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC1642B1FD2DEE1001903BE /* NvimView.framework */; };
 		4BF18C4F1FD2E4F100DF95D1 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C361FD2E2AB00DF95D1 /* RxSwift.framework */; };
@@ -231,13 +225,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */,
-				4BE34B842225BAD2002F57D3 /* ShortcutRecorder.framework in Embed Frameworks */,
-				4BB1F5D22097706700EC394A /* MessagePack.framework in Embed Frameworks */,
 				4BF18C411FD2E2C900DF95D1 /* CocoaFontAwesome.framework in Embed Frameworks */,
-				4BF18C451FD2E2C900DF95D1 /* RxCocoa.framework in Embed Frameworks */,
-				4BC903F022799E2D0016A1CD /* RxRelay.framework in Embed Frameworks */,
-				4BF18C461FD2E2C900DF95D1 /* RxSwift.framework in Embed Frameworks */,
-				4BC1642E1FD2DEEA001903BE /* NvimView.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,19 +456,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B9BC42124EB2E45000209B5 /* RxCocoa in Frameworks */,
+				4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */,
+				4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */,
 				4BD5657524E842E900D52809 /* Down in Frameworks */,
+				4B9BC42324EB2E45000209B5 /* RxSwift in Frameworks */,
+				4B9BC41E24EB2E22000209B5 /* MessagePack in Frameworks */,
 				4BD5657324E842E900D52809 /* Swifter in Frameworks */,
 				4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */,
-				4BB1F5D12097705E00EC394A /* MessagePack.framework in Frameworks */,
 				4BF18C3C1FD2E2AB00DF95D1 /* CocoaFontAwesome.framework in Frameworks */,
-				4BF18C3E1FD2E2AB00DF95D1 /* RxSwift.framework in Frameworks */,
-				4BC903EF22799E2D0016A1CD /* RxRelay.framework in Frameworks */,
 				4BD5657424E842E900D52809 /* PureLayout in Frameworks */,
 				4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */,
-				4BF18C401FD2E2AB00DF95D1 /* RxCocoa.framework in Frameworks */,
-				4BE34B832225BAC7002F57D3 /* ShortcutRecorder.framework in Frameworks */,
 				4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */,
-				4BC164281FD2DEE1001903BE /* NvimView.framework in Frameworks */,
+				4B9BC42524EB2E45000209B5 /* RxRelay in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -957,6 +945,12 @@
 				4BD5656024E8311400D52809 /* Down */,
 				4BD5657724E8443300D52809 /* DictionaryCoding */,
 				4BD5657A24E8448300D52809 /* EonilFSEvents */,
+				4B9BC41D24EB2E22000209B5 /* MessagePack */,
+				4B9BC42024EB2E45000209B5 /* RxCocoa */,
+				4B9BC42224EB2E45000209B5 /* RxSwift */,
+				4B9BC42424EB2E45000209B5 /* RxRelay */,
+				4B9BC42624EB2E51000209B5 /* NvimView */,
+				4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
@@ -1018,6 +1012,9 @@
 				4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */,
 				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
 				4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */,
+				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */,
+				4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1561,6 +1558,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/a2/MessagePack.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.0;
+			};
+		};
+		4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = exactVersion;
+				version = 5.1.1;
+			};
+		};
+		4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Kentzo/ShortcutRecorder";
+			requirement = {
+				kind = exactVersion;
+				version = 3.3.0;
+			};
+		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
@@ -1604,6 +1625,35 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
+			productName = MessagePack;
+		};
+		4B9BC42024EB2E45000209B5 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		4B9BC42224EB2E45000209B5 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		4B9BC42424EB2E45000209B5 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		4B9BC42624EB2E51000209B5 /* NvimView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NvimView;
+		};
+		4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */;
+			productName = ShortcutRecorder;
+		};
 		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */;

@@ -6,6 +6,7 @@
 import Cocoa
 import PureLayout
 import RxSwift
+import NvimView
 
 class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate, NSFontChanging {
 

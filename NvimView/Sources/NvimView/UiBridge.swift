@@ -310,11 +310,8 @@ class UiBridge {
   }
 
   private func nvimServerExecutablePath() -> String {
-    Bundle(for: UiBridge.self)
-      .bundleURL
-      .appendingPathComponent("Versions")
-      .appendingPathComponent("A")
-      .appendingPathComponent("NvimServer")
+    Bundle.module
+      .url(forResource: "NvimServer", withExtension: nil, subdirectory: "Resources")!
       .path
   }
 
