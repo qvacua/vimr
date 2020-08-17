@@ -1,3 +1,0 @@
-[submodule "neovim"]
-	path = NvimView/neovim
-	url = https://github.com/qvacua/neovim.git
