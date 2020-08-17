@@ -7,7 +7,4 @@
    <FileRef
       location = "group:VimR/VimR.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:NvimView/NvimView.xcodeproj">
-   </FileRef>
 </Workspace>
