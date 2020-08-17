@@ -38,12 +38,30 @@
         }
       },
       {
+        "package": "MessagePack",
+        "repositoryURL": "https://github.com/a2/MessagePack.swift",
+        "state": {
+          "branch": null,
+          "revision": "27b35fd49e92fcae395bf8ccb233499d89cc7890",
+          "version": "4.0.0"
+        }
+      },
+      {
         "package": "PureLayout",
         "repositoryURL": "https://github.com/PureLayout/PureLayout",
         "state": {
           "branch": null,
           "revision": "d19b40e831e4d621097765998be97df3856e8413",
           "version": "3.1.6"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
         }
       },
       {
