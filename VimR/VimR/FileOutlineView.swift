@@ -9,6 +9,7 @@ import PureLayout
 import RxSwift
 import CocoaFontAwesome
 import os
+import Commons
 
 class FileOutlineView: NSOutlineView,
                        UiComponent,

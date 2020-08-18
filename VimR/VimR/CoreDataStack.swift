@@ -6,6 +6,7 @@
 import Foundation
 import CoreData
 import os
+import Commons
 
 class CoreDataStack {
 

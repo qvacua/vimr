@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import NvimView
+import Commons
 
 class BuffersList: NSView,
                    UiComponent,

@@ -8,6 +8,7 @@ import RxSwift
 import RxCocoa
 import PureLayout
 import os
+import Commons
 
 class OpenQuicklyWindow: NSObject,
                          UiComponent,

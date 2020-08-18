@@ -4,6 +4,7 @@
  */
 
 import Foundation
+import Commons
 
 class HtmlPreviewMiddleware: MiddlewareType {
 

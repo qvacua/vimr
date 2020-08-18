@@ -8,7 +8,7 @@ import Cocoa
 private let workspace = NSWorkspace.shared
 private let iconsCache = NSCache<NSURL, NSImage>()
 
-class FileUtils {
+public final class FileUtils {
   
   private static let keysToGet: [URLResourceKey] = [
     .isDirectoryKey,
@@ -24,11 +24,11 @@ class FileUtils {
   
   private static let fileManager = FileManager.default
 
-  static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
+  public static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
 
-  static func tempDir() -> URL { URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true) }
+  public static func tempDir() -> URL { URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true) }
 
-  static func directDescendants(of url: URL) -> [URL] {
+  public static func directDescendants(of url: URL) -> [URL] {
     guard let childUrls = try? self.fileManager.contentsOfDirectory(
       at: url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions
     ) else {
@@ -39,7 +39,7 @@ class FileUtils {
     return childUrls
   }
   
-  static func fileExists(at url: URL) -> Bool {
+  public static func fileExists(at url: URL) -> Bool {
     guard url.isFileURL else {
       return false
     }
@@ -48,7 +48,7 @@ class FileUtils {
     return self.fileManager.fileExists(atPath: path)
   }
 
-  static func commonParent(of urls: [URL]) -> URL {
+  public static func commonParent(of urls: [URL]) -> URL {
     guard urls.count > 0 else {
       return URL(fileURLWithPath: "/", isDirectory: true)
     }
@@ -70,11 +70,11 @@ class FileUtils {
     return possibleParent.isDir ? possibleParent : possibleParent.parent
   }
 
-  static func icon(forType type: String) -> NSImage {
+  public static func icon(forType type: String) -> NSImage {
     return workspace.icon(forFileType: type)
   }
 
-  static func icon(forUrl url: URL) -> NSImage? {
+  public static func icon(forUrl url: URL) -> NSImage? {
     if let cached = iconsCache.object(forKey: url as NSURL) {
       return cached
     }

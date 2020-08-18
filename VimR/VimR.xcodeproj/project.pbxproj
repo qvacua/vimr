@@ -42,7 +42,6 @@
 		1929B5C1BABBC0D09D97C3EF /* MarkdownPreviewMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B617C229B19DB3E987B8 /* MarkdownPreviewMiddleware.swift */; };
 		1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC3F82CB4CB4FE56D1B /* ImageAndTextTableCell.swift */; };
 		1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9355C892BEBA7496C71 /* DictionaryCommonsTest.swift */; };
-		1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		1929B6BE1610892E6C4C0CE6 /* GeneralPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */; };
 		1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */; };
 		1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */; };
@@ -153,7 +152,6 @@
 		4B94341420B95EC7005807BA /* MacVim-sch.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433D920B95EC6005807BA /* MacVim-sch.icns */; };
 		4B94341520B95EC7005807BA /* MacVim-ps.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DA20B95EC6005807BA /* MacVim-ps.icns */; };
 		4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
-		4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA8AC40B901B20F20B71 /* FileUtils.swift */; };
 		4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */; };
 		4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
@@ -191,7 +189,6 @@
 		4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
-		4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -292,7 +289,6 @@
 		1929BA43449BA41666CD55ED /* BufferList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferList.swift; sourceTree = "<group>"; };
 		1929BA5854064776A5C38257 /* decompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = decompress.h; path = "../../third-party/libag/include/decompress.h"; sourceTree = "<group>"; };
 		1929BA5C7099CDEB04B76BA4 /* FileBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowser.swift; sourceTree = "<group>"; };
-		1929BA8AC40B901B20F20B71 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
 		1929BADEB143008EFA6F3318 /* NetUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetUtils.h; sourceTree = "<group>"; };
 		1929BAF13FAD5DA8D3762367 /* ArrayCommonsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayCommonsTest.swift; sourceTree = "<group>"; };
 		1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsPref.swift; sourceTree = "<group>"; };
@@ -420,7 +416,6 @@
 		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
 		4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchService.swift; sourceTree = "<group>"; };
 		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionVariable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -867,8 +862,6 @@
 		4BF8EED91D858C4400CAC08A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4BF70EEC23D1B618009E51E9 /* ConditionVariable.swift */,
-				1929BA8AC40B901B20F20B71 /* FileUtils.swift */,
 				1929B02440BC99C42F9EBD45 /* NetUtils.m */,
 				1929BADEB143008EFA6F3318 /* NetUtils.h */,
 				1929B6AD3396160AA2C46919 /* Debouncer.swift */,
@@ -1106,7 +1099,6 @@
 				4B6423981D8EFDE000FC78C8 /* WorkspaceBar.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
 				4B64239A1D8EFE3000FC78C8 /* WorkspaceTool.swift in Sources */,
-				1929B67DA3EB21A631EF1DBB /* FileUtils.swift in Sources */,
 				4BB409EE1DDA77E9005F39A2 /* ProxyWorkspaceBar.swift in Sources */,
 				1929B0E0C3BC59F52713D5A2 /* FoundationCommons.swift in Sources */,
 				1929BD2F41D93ADFF43C1C98 /* NetUtils.m in Sources */,
@@ -1169,7 +1161,6 @@
 				1929B0C7150100A84FBDB8BF /* ShortcutItem.swift in Sources */,
 				1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */,
 				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,
-				4BF70EED23D1B618009E51E9 /* ConditionVariable.swift in Sources */,
 				1929B5A0EDD1119CFF7BB84C /* Defs.swift in Sources */,
 				1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */,
 				1929B443B7AB2176A7818CA1 /* fuzzy_match.cc in Sources */,
@@ -1185,7 +1176,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B96FB3C1EBBC56F00E4E164 /* FileUtils.swift in Sources */,
 				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
 				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
