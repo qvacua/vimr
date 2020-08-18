@@ -1,1 +1,1 @@
-nvimserver-0.1.0+sha.94b7ff7
+0.1.0-nvimserver
