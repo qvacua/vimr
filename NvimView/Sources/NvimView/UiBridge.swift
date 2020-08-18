@@ -7,6 +7,7 @@ import Foundation
 import RxSwift
 import MessagePack
 import os
+import NvimServerTypes
 
 protocol UiBridgeConsumer: class {
 

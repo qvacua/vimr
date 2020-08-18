@@ -5,6 +5,7 @@
 
 import Cocoa
 import MessagePack
+import NvimServerTypes
 
 public struct CellAttributes: CustomStringConvertible, Equatable {
 

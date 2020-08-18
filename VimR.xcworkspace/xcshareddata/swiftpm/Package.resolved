@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "NvimServerTypes",
+        "repositoryURL": "https://github.com/qvacua/neovim",
+        "state": {
+          "branch": null,
+          "revision": "13be312e380e7f93878486c8851a605a4e7af0eb",
+          "version": "0.1.0-types"
+        }
+      },
+      {
         "package": "PureLayout",
         "repositoryURL": "https://github.com/PureLayout/PureLayout",
         "state": {

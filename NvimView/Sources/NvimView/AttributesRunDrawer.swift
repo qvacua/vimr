@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import NvimServerTypes
 
 final class AttributesRunDrawer {
 
@@ -78,11 +79,11 @@ final class AttributesRunDrawer {
       CTFontDrawGlyphs(run.font, run.glyphs, run.positions, run.glyphs.count, context)
     }
 
-    if run.attrs.fontTrait.contains(.underline) {
+    if run.attrs.fontTrait.contains(FontTrait.underline) {
       self.drawUnderline(in: context, fontGlyphRuns: fontGlyphRuns)
     }
 
-    if run.attrs.fontTrait.contains(.undercurl) {
+    if run.attrs.fontTrait.contains(FontTrait.undercurl) {
       self.drawUndercurl(
         in: context,
         fontGlyphRuns: fontGlyphRuns,
