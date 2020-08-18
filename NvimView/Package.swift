@@ -17,9 +17,10 @@ let package = Package(
     .target(
       name: "NvimView",
       dependencies: ["RxSwift", "MessagePack", "Socket"],
+      // com.qvacua.NvimView.vim is copied by the download NvimServer script.
+      exclude: ["com.qvacua.NvimView.vim"],
       resources: [
         .copy("runtime"),
-        .copy("com.qvacua.NvimView.vim"),
         .copy("NvimServer"),
       ]
     ),
