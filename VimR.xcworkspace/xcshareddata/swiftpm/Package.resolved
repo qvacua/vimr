@@ -51,8 +51,17 @@
         "repositoryURL": "https://github.com/qvacua/neovim",
         "state": {
           "branch": null,
-          "revision": "13be312e380e7f93878486c8851a605a4e7af0eb",
+          "revision": "246da2521cdf3720b11a5045720d2ae1497a9268",
           "version": "0.1.0-types"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble",
+        "state": {
+          "branch": null,
+          "revision": "2b1809051b4a65c1d7f5233331daa24572cd7fca",
+          "version": "8.1.1"
         }
       },
       {

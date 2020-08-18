@@ -4,6 +4,3 @@ github "sparkle-project/Sparkle" == 1.23.0
 
 # included directly
 github "sindresorhus/github-markdown-css" == 4.0.0
-
-# for testing only
-github "Quick/Nimble" == 8.1.1
