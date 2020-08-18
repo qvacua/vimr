@@ -3,3 +3,6 @@
 /Packages
 /*.xcodeproj
 xcuserdata/
+
+#Sources/NvimView/runtime
+#Sources/NvimView/NvimServer
