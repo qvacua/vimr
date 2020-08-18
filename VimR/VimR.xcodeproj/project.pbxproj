@@ -1558,8 +1558,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
 			requirement = {
-				kind = exactVersion;
-				version = 1.4.7;
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.4.7;
 			};
 		};
 		4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */ = {

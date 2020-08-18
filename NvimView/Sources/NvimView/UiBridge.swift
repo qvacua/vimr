@@ -288,6 +288,7 @@ class UiBridge {
   private func launchNvimUsingLoginShellEnv() {
     let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
     var env = self.envDict
+    env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
 
     self.log.debug("Socket: \(listenAddress.path)")
