@@ -6,6 +6,7 @@
 
 import Cocoa
 import RxSwift
+import RxPack
 
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
 

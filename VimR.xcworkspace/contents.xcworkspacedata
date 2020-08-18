@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:NvimView">
+      location = "group:RxPack">
    </FileRef>
    <FileRef
-      location = "group:RxPack/RxPack.xcodeproj">
+      location = "group:NvimView">
    </FileRef>
    <FileRef
       location = "group:VimR/VimR.xcodeproj">

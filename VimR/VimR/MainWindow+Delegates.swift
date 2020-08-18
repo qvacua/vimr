@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import NvimView
+import RxPack
 
 // MARK: - NvimViewDelegate
 extension MainWindow {

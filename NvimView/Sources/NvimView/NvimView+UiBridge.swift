@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import MessagePack
 import NvimServerTypes
+import RxPack
 
 extension NvimView {
 

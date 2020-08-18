@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-extension ObservableType {
+public extension ObservableType {
   func compactMap<R>(_ transform: @escaping (Element) throws -> R?) -> Observable<R> {
     self
       .map(transform)
@@ -15,7 +15,7 @@ extension ObservableType {
   }
 }
 
-extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
+public extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
   func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 
   func wait(
@@ -59,7 +59,7 @@ extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
   }
 }
 
-extension PrimitiveSequence where Trait == SingleTrait {
+public extension PrimitiveSequence where Trait == SingleTrait {
   static func fromSinglesToSingleOfArray(_ singles: [Single<Element>]) -> Single<[Element]> {
     Observable
       .merge(singles.map { $0.asObservable() })

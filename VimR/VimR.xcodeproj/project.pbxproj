@@ -90,8 +90,6 @@
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
 		4B3965361DEB21300082D3C1 /* InnterToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3965351DEB21300082D3C1 /* InnterToolBar.swift */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
-		4B3CF030224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
-		4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */; };
 		4B4147A31D97361400DD4A2C /* WorkspaceToolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB489411D952CF6005BB0E8 /* WorkspaceToolButton.swift */; };
 		4B5011FB1EBA6FD700F76C46 /* UrlCommonsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */; };
 		4B6423961D8EFD7100FC78C8 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6423951D8EFD7100FC78C8 /* Workspace.swift */; };
@@ -179,6 +177,7 @@
 		4BD5657524E842E900D52809 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5656024E8311400D52809 /* Down */; };
 		4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
 		4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
+		4BD67C7824EC488200147C51 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7724EC488200147C51 /* RxPack */; };
 		4BDF500C1D760A3500D8FBC3 /* FileUtilsTest in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF500B1D760A3500D8FBC3 /* FileUtilsTest */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
@@ -333,7 +332,6 @@
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
 		4B3965351DEB21300082D3C1 /* InnterToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InnterToolBar.swift; path = Workspace/InnterToolBar.swift; sourceTree = "<group>"; };
 		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
-		4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxSwiftCommons.swift; path = ../../RxPack/RxSwiftCommons.swift; sourceTree = "<group>"; };
 		4B5011FA1EBA6FD700F76C46 /* UrlCommonsTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = UrlCommonsTest; sourceTree = "<group>"; };
 		4B6423951D8EFD7100FC78C8 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = Workspace/Workspace.swift; sourceTree = "<group>"; };
 		4B6423971D8EFDE000FC78C8 /* WorkspaceBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkspaceBar.swift; path = Workspace/WorkspaceBar.swift; sourceTree = "<group>"; };
@@ -438,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B9BC42124EB2E45000209B5 /* RxCocoa in Frameworks */,
+				4BD67C7824EC488200147C51 /* RxPack in Frameworks */,
 				4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */,
 				4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */,
 				4BD5657524E842E900D52809 /* Down in Frameworks */,
@@ -794,7 +793,6 @@
 			children = (
 				4BF70ED023D1B4AF009E51E9 /* FoundationCommons.h */,
 				4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */,
-				4B3CF02F224B7EAC00FA9833 /* RxSwiftCommons.swift */,
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
 				4B6A70951D6100E300E12030 /* SwiftCommons.swift */,
@@ -921,6 +919,7 @@
 				4B9BC42424EB2E45000209B5 /* RxRelay */,
 				4B9BC42624EB2E51000209B5 /* NvimView */,
 				4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */,
+				4BD67C7724EC488200147C51 /* RxPack */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
@@ -1170,7 +1169,6 @@
 				1929B5257DB27F03C6663482 /* MainWindow+Actions.swift in Sources */,
 				1929BE0F64A6CE5BCE2A5092 /* MainWindow+Delegates.swift in Sources */,
 				1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */,
-				4B3CF030224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
 				1929B5A2EE366F79ED32744C /* KeysPrefReducer.swift in Sources */,
 				1929BB67CAAD4F6CBD38DF0A /* RxRedux.swift in Sources */,
 				1929BB85B2D30E548A32663D /* ShortcutsPref.swift in Sources */,
@@ -1203,7 +1201,6 @@
 				4B96FB3F1EBBC56F00E4E164 /* PrefUtils.swift in Sources */,
 				4B96FB401EBBC56F00E4E164 /* FoundationCommons.swift in Sources */,
 				4B96FB421EBBC56F00E4E164 /* SwiftCommons.swift in Sources */,
-				4B3CF031224B7EAC00FA9833 /* RxSwiftCommons.swift in Sources */,
 				1929B66F795867B8C07FAAD4 /* DictionaryCommonsTest.swift in Sources */,
 				1929B98F94536E3912AD9F3B /* ArrayCommonsTest.swift in Sources */,
 				1929BDFDBDA7180D02ACB37E /* RxSwiftCommonsTest.swift in Sources */,
@@ -1650,6 +1647,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */;
 			productName = EonilFSEvents;
+		};
+		4BD67C7724EC488200147C51 /* RxPack */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxPack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

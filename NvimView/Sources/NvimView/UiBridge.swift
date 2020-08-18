@@ -8,6 +8,7 @@ import RxSwift
 import MessagePack
 import os
 import NvimServerTypes
+import RxPack
 
 protocol UiBridgeConsumer: class {
 
