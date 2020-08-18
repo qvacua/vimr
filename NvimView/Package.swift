@@ -24,7 +24,11 @@ let package = Package(
     .target(
       name: "NvimView",
       dependencies: ["RxSwift", "MessagePack", "Socket"],
-      resources: [.copy("Resources")]),
+      resources: [
+        .copy("runtime"),
+        .copy("com.qvacua.NvimView.vim"),
+        .copy("NvimServer"),
+      ]),
     .testTarget(
       name: "NvimViewTests",
       dependencies: ["NvimView"]),

@@ -311,7 +311,7 @@ class UiBridge {
 
   private func nvimServerExecutablePath() -> String {
     Bundle.module
-      .url(forResource: "NvimServer", withExtension: nil, subdirectory: "Resources")!
+      .url(forResource: "NvimServer", withExtension: nil)!
       .path
   }
 
