@@ -20,7 +20,10 @@ let package = Package(
     ),
     .testTarget(
       name: "CommonsTests",
-      dependencies: ["Commons", "Nimble"]
+      dependencies: ["Commons", "Nimble"],
+      resources: [
+        .copy("Resources")
+      ]
     ),
   ]
 )

@@ -6,6 +6,8 @@
 import XCTest
 import Nimble
 
+@testable import Commons
+
 fileprivate class DummyToken: Comparable {
 
   static func ==(left: DummyToken, right: DummyToken) -> Bool {

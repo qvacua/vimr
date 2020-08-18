@@ -28,22 +28,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1929BDD5380FFB00320A20C9 /* RxMsgpackRpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxMsgpackRpc.swift; sourceTree = "<group>"; };
 		4B02265C224AB1490052362B /* RxMessagePortDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxMessagePortDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B02265E224AB1490052362B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B022660224AB1490052362B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B022663224AB1490052362B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B022665224AB1490052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B02266D224ACCE10052362B /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = ../Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
-		4B022684224ACFCB0052362B /* RxMessagePort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxMessagePort.swift; sourceTree = "<group>"; };
-		4B02268D224B56F10052362B /* MessagePack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessagePack.framework; path = ../Carthage/Build/Mac/MessagePack.framework; sourceTree = "<group>"; };
-		4B0226A7224B58DB0052362B /* RxMsgpackRpcTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxMsgpackRpcTests.swift; sourceTree = "<group>"; };
-		4B0226A9224B58DB0052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxSwiftCommons.swift; sourceTree = "<group>"; };
-		4BB1EF8E224B662E00A5CD5A /* RxNeovimApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxNeovimApi.swift; sourceTree = "<group>"; };
-		4BB1EF90224B662E00A5CD5A /* RxNeovimApi.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxNeovimApi.generated.swift; sourceTree = "<group>"; };
-		4BB1EF97224B66AB00A5CD5A /* RxNeovimApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxNeovimApiTests.swift; sourceTree = "<group>"; };
-		4BB1EF99224B66AB00A5CD5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,15 +51,8 @@
 		4B02263A224AB11A0052362B = {
 			isa = PBXGroup;
 			children = (
-				4BB1EF8D224B660E00A5CD5A /* RxNeovimApi */,
-				4BB1EF8B224B625700A5CD5A /* RxSwiftCommons.swift */,
-				4B022684224ACFCB0052362B /* RxMessagePort.swift */,
 				4B02265D224AB1490052362B /* RxMessagePortDemo */,
-				4B0226A6224B58DB0052362B /* RxMsgpackRpcTests */,
-				4BB1EF96224B66AB00A5CD5A /* RxNeovimApiTests */,
-				4B02266C224ACCD20052362B /* Frameworks */,
 				4B022644224AB11A0052362B /* Products */,
-				1929BDD5380FFB00320A20C9 /* RxMsgpackRpc.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,42 +73,6 @@
 				4B022665224AB1490052362B /* Info.plist */,
 			);
 			path = RxMessagePortDemo;
-			sourceTree = "<group>";
-		};
-		4B02266C224ACCD20052362B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4B02268D224B56F10052362B /* MessagePack.framework */,
-				4B02266D224ACCE10052362B /* RxSwift.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		4B0226A6224B58DB0052362B /* RxMsgpackRpcTests */ = {
-			isa = PBXGroup;
-			children = (
-				4B0226A7224B58DB0052362B /* RxMsgpackRpcTests.swift */,
-				4B0226A9224B58DB0052362B /* Info.plist */,
-			);
-			path = RxMsgpackRpcTests;
-			sourceTree = "<group>";
-		};
-		4BB1EF8D224B660E00A5CD5A /* RxNeovimApi */ = {
-			isa = PBXGroup;
-			children = (
-				4BB1EF90224B662E00A5CD5A /* RxNeovimApi.generated.swift */,
-				4BB1EF8E224B662E00A5CD5A /* RxNeovimApi.swift */,
-			);
-			name = RxNeovimApi;
-			sourceTree = "<group>";
-		};
-		4BB1EF96224B66AB00A5CD5A /* RxNeovimApiTests */ = {
-			isa = PBXGroup;
-			children = (
-				4BB1EF97224B66AB00A5CD5A /* RxNeovimApiTests.swift */,
-				4BB1EF99224B66AB00A5CD5A /* Info.plist */,
-			);
-			path = RxNeovimApiTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,7 +115,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4B02263E224AB11A0052362B /* Build configuration list for PBXProject "RxPackExamples" */;
+			buildConfigurationList = 4B02263E224AB11A0052362B /* Build configuration list for PBXProject "RxPackSupport" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -380,7 +326,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4B02263E224AB11A0052362B /* Build configuration list for PBXProject "RxPackExamples" */ = {
+		4B02263E224AB11A0052362B /* Build configuration list for PBXProject "RxPackSupport" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4B02264F224AB11A0052362B /* Debug */,

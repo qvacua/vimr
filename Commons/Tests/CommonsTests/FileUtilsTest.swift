@@ -6,13 +6,15 @@
 import XCTest
 import Nimble
 
+@testable import Commons
+
 class FileUtilsTest: XCTestCase {
 
   var fileUtilsRsrcUrl = URL(fileURLWithPath: "/")
   var a1Dir = URL(fileURLWithPath: "/")
 
   override func setUp() {
-    fileUtilsRsrcUrl = Bundle.init(for: type(of: self)).url(forResource: "FileUtilsTest", withExtension: "")!
+    fileUtilsRsrcUrl = Bundle.module.url(forResource: "FileUtilsTest", withExtension: "", subdirectory: "Resources")!
     a1Dir = fileUtilsRsrcUrl.appendingPathComponent("a1")
   }
 

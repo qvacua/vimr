@@ -52,7 +52,7 @@ class UrlCommonsTest: XCTestCase {
   }
 
   func testIsDir() {
-    let resourceUrl = Bundle.init(for: type(of: self)).url(forResource: "UrlCommonsTest", withExtension: "")!
+    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
     let hidden = resourceUrl.appendingPathComponent(".dot-hidden-file")
 
     expect(resourceUrl.isDir).to(beTrue())
@@ -60,7 +60,7 @@ class UrlCommonsTest: XCTestCase {
   }
 
   func testIsHidden() {
-    let resourceUrl = Bundle.init(for: type(of: self)).url(forResource: "UrlCommonsTest", withExtension: "")!
+    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
     let hidden = resourceUrl.appendingPathComponent(".dot-hidden-file")
 
     expect(hidden.isHidden).to(beTrue())
@@ -68,7 +68,7 @@ class UrlCommonsTest: XCTestCase {
   }
 
   func testIsPackage() {
-    let resourceUrl = Bundle.init(for: type(of: self)).url(forResource: "UrlCommonsTest", withExtension: "")!
+    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
     let package = resourceUrl.appendingPathComponent("dummy.rtfd")
 
     expect(package.isPackage).to(beTrue())
