@@ -6,9 +6,9 @@
 import Foundation
 import os
 
-class ProcessUtils {
+public final class ProcessUtils {
 
-  static func envVars(
+  public static func envVars(
     of shellPath: URL, usingInteractiveMode: Bool
   ) -> [String: String] {
     let shellName = shellPath.lastPathComponent
@@ -64,5 +64,5 @@ class ProcessUtils {
   }
 
   private static let logger = OSLog(subsystem: Defs.loggerSubsystem,
-                                    category: Defs.LoggerCategory.view)
+                                    category: Defs.LoggerCategory.general)
 }

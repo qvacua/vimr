@@ -5,15 +5,15 @@
 
 import Foundation
 
-class ConditionVariable {
+public final class ConditionVariable {
 
   private(set) var posted: Bool
 
-  init(posted: Bool = false) {
+  public init(posted: Bool = false) {
     self.posted = posted
   }
 
-  func wait(`for` seconds: TimeInterval, then fn: (() -> Void)? = nil) {
+  public func wait(`for` seconds: TimeInterval, then fn: (() -> Void)? = nil) {
     self.condition.lock()
     defer { self.condition.unlock() }
 
@@ -25,7 +25,7 @@ class ConditionVariable {
     fn?()
   }
 
-  func broadcast(then fn: (() -> Void)? = nil) {
+  public func broadcast(then fn: (() -> Void)? = nil) {
     self.condition.lock()
     defer { self.condition.unlock() }
 

@@ -5,16 +5,16 @@
 
 import Foundation
 
-final class FifoCache<Key: Hashable, Value> {
+public final class FifoCache<Key: Hashable, Value> {
 
-  init(count: Int) {
+  public init(count: Int) {
     self.count = count
     self.keyWriteIndex = 0
     self.keys = Array(repeating: nil, count: count)
     self.storage = Dictionary(minimumCapacity: count)
   }
 
-  func set(_ value: Value, forKey key: Key) {
+  public func set(_ value: Value, forKey key: Key) {
     self.lock.lock()
     defer { self.lock.unlock() }
 
@@ -26,7 +26,7 @@ final class FifoCache<Key: Hashable, Value> {
     self.storage[key] = value
   }
 
-  func valueForKey(_ key: Key) -> Value? { self.lock.withLock { self.storage[key] } }
+  public func valueForKey(_ key: Key) -> Value? { self.lock.withLock { self.storage[key] } }
 
   private let count: Int
   private var keys: Array<Key?>

@@ -8,6 +8,7 @@ import RxSwift
 import MessagePack
 import os
 import RxPack
+import Commons
 
 public class NvimView: NSView,
                        UiBridgeConsumer,

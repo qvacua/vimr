@@ -9,6 +9,7 @@ import MessagePack
 import os
 import NvimServerTypes
 import RxPack
+import Commons
 
 protocol UiBridgeConsumer: class {
 

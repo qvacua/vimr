@@ -5,6 +5,7 @@
 
 import Cocoa
 import NvimServerTypes
+import Commons
 
 private struct SizedFontTrait: Hashable {
 
