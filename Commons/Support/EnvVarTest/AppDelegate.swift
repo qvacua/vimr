@@ -1,12 +1,10 @@
-//
-//  AppDelegate.swift
-//  EnvTest
-//
-//  Created by Tae Won Ha on 12.07.20.
-//  Copyright © 2020 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
+import Commons
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
