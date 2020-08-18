@@ -1,0 +1,3 @@
+[submodule "NvimServer"]
+	path = NvimServer
+	url = git@github.com:qvacua/neovim.git
