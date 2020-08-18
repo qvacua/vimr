@@ -14,6 +14,7 @@ let package = Package(
     .package(name: "NvimServerTypes", url: "https://github.com/qvacua/neovim", .exact("0.1.0-types")),
     .package(name: "RxPack", path: "../RxPack"),
     .package(name: "Commons", path: "../Commons"),
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
   ],
   targets: [
     .target(
@@ -28,7 +29,7 @@ let package = Package(
     ),
     .testTarget(
       name: "NvimViewTests",
-      dependencies: ["NvimView"]
+      dependencies: ["NvimView", "Nimble"]
     ),
   ]
 )

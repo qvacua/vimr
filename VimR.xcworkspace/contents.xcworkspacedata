@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:RxPack/Examples/RxPackExamples.xcodeproj">
+      location = "group:RxPack/Support/RxPackSupport.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Commons">
