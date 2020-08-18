@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import PureLayout
 import CocoaFontAwesome
+import Commons
 
 class FileBrowser: NSView,
                    UiComponent {

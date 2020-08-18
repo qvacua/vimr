@@ -6,7 +6,7 @@
 import Foundation
 import os
 
-extension OSLog {
+public extension OSLog {
 
   func trace<T>(
     file: String = #file,
@@ -18,7 +18,7 @@ extension OSLog {
     self.log(
       type: .debug,
       msg: "%{public}@",
-      "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE]"
+      "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE] \(msg)"
     )
     #endif
   }

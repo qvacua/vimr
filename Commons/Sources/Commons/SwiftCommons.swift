@@ -5,19 +5,19 @@
 
 import Foundation
 
-func identity<T>(_ input: T) -> T { input }
+public func identity<T>(_ input: T) -> T { input }
 
-extension BinaryFloatingPoint {
-
-  var cgf: CGFloat { CGFloat(self) }
-}
-
-extension FixedWidthInteger {
+public extension BinaryFloatingPoint {
 
   var cgf: CGFloat { CGFloat(self) }
 }
 
-extension String {
+public extension FixedWidthInteger {
+
+  var cgf: CGFloat { CGFloat(self) }
+}
+
+public extension String {
 
   func without(prefix: String) -> String {
     guard self.hasPrefix(prefix) else { return self }
@@ -27,7 +27,7 @@ extension String {
   }
 }
 
-extension Array where Element: Equatable {
+public extension Array where Element: Equatable {
 
   func removingDuplicatesPreservingFromBeginning() -> [Element] {
     var result = [Element]()
@@ -57,7 +57,7 @@ extension Array where Element: Equatable {
   }
 }
 
-extension Array where Element: Hashable {
+public extension Array where Element: Hashable {
 
   func toDict<V>(by mapper: @escaping (Element) -> V) -> Dictionary<Element, V> {
     var result = Dictionary<Element, V>(minimumCapacity: self.count)
@@ -82,7 +82,7 @@ func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
   return result
 }
 
-extension Dictionary {
+public extension Dictionary {
 
   func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows
       -> Dictionary<K, V> {
@@ -97,7 +97,7 @@ extension Dictionary {
   }
 }
 
-extension Sequence {
+public extension Sequence {
 
   @discardableResult
   func log() -> Self {

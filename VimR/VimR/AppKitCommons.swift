@@ -6,93 +6,12 @@
 import Cocoa
 import Down
 
-extension NSColor {
 
-  static var random: NSColor {
-    NSColor(
-      calibratedRed: .random(in: 0...1),
-      green: .random(in: 0...1),
-      blue: .random(in: 0...1),
-      alpha: 1.0
-    )
-  }
-
-  var int: Int {
-    if let color = self.usingColorSpace(.sRGB) {
-      let a = Int(color.alphaComponent * 255)
-      let r = Int(color.redComponent * 255)
-      let g = Int(color.greenComponent * 255)
-      let b = Int(color.blueComponent * 255)
-      return a << 24 | r << 16 | g << 8 | b
-    } else {
-      return 0
-    }
-  }
-
-  var hex: String { String(String(format: "%06X", self.int).suffix(6)) }
-
-  convenience init(rgb: Int) {
-    // @formatter:off
-    let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
-    let green = ((rgb >>  8) & 0xFF).cgf / 255.0;
-    let blue =  ((rgb      ) & 0xFF).cgf / 255.0;
-    // @formatter:on
-
-    self.init(srgbRed: red, green: green, blue: blue, alpha: 1.0)
-  }
-
-  convenience init?(hex: String) {
-    var result: UInt32 = 0
-    guard hex.count == 6, Scanner(string: hex).scanHexInt32(&result) else { return nil }
-
-    let r = (result & 0xFF0000) >> 16
-    let g = (result & 0x00FF00) >> 8
-    let b = (result & 0x0000FF)
-
-    self.init(srgbRed: r.cgf / 255, green: g.cgf / 255, blue: b.cgf / 255, alpha: 1)
-  }
-
-  func brightening(by factor: CGFloat) -> NSColor {
-    guard let color = self.usingColorSpace(.sRGB) else { return self }
-
-    let h = color.hueComponent
-    let s = color.saturationComponent
-    let b = color.brightnessComponent
-    let a = color.alphaComponent
-
-    return NSColor(hue: h, saturation: s, brightness: b * factor, alpha: a)
-  }
+extension NSView {
+  
+  @objc var isFirstResponder: Bool { self.window?.firstResponder == self }
 }
 
-extension NSImage {
-
-  func tinting(with color: NSColor) -> NSImage {
-    let result = self.copy() as! NSImage
-
-    result.lockFocus()
-    color.set()
-    CGRect(origin: .zero, size: self.size).fill(using: .sourceAtop)
-    result.unlockFocus()
-
-    return result
-  }
-}
-
-extension NSButton {
-
-  var boolState: Bool {
-    get { self.state == .on ? true : false }
-    set { self.state = newValue ? .on : .off }
-  }
-}
-
-extension NSMenuItem {
-
-  var boolState: Bool {
-    get { self.state == .on ? true : false }
-    set { self.state = newValue ? .on : .off }
-  }
-}
 
 extension NSAttributedString {
 
@@ -126,17 +45,6 @@ extension NSAttributedString {
 
     return result
   }
-}
-
-extension NSView {
-
-  func removeAllSubviews() { self.subviews.forEach { $0.removeFromSuperview() } }
-
-  func removeAllConstraints() { self.removeConstraints(self.constraints) }
-
-  @objc var isFirstResponder: Bool { self.window?.firstResponder == self }
-
-  func beFirstResponder() { self.window?.makeFirstResponder(self) }
 }
 
 extension NSTableView {
@@ -237,6 +145,54 @@ extension NSScrollView {
     return scrollView
   }
 }
+
+private class AttributedStringMarkdownStyler {
+
+  static func new() -> Styler {
+    let fonts = StaticFontCollection(
+      body: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+      code: NSFont.userFixedPitchFont(ofSize: NSFont.smallSystemFontSize)!
+    )
+
+    let style = DownStylerConfiguration(fonts: fonts, paragraphStyles: ParagraphStyles())
+    return DownStyler(configuration: style)
+  }
+}
+
+private struct ParagraphStyles: ParagraphStyleCollection {
+
+  let heading1: NSParagraphStyle
+  let heading2: NSParagraphStyle
+  let heading3: NSParagraphStyle
+  let heading4: NSParagraphStyle
+  let heading5: NSParagraphStyle
+  let heading6: NSParagraphStyle
+  let body: NSParagraphStyle
+  let code: NSParagraphStyle
+
+  public init() {
+    let headingStyle = NSParagraphStyle()
+
+    let bodyStyle = NSMutableParagraphStyle()
+    bodyStyle.paragraphSpacingBefore = 2
+    bodyStyle.paragraphSpacing = 2
+    bodyStyle.lineSpacing = 2
+
+    let codeStyle = NSMutableParagraphStyle()
+    codeStyle.paragraphSpacingBefore = 2
+    codeStyle.paragraphSpacing = 2
+
+    self.heading1 = headingStyle
+    self.heading2 = headingStyle
+    self.heading3 = headingStyle
+    self.heading4 = headingStyle
+    self.heading5 = headingStyle
+    self.heading6 = headingStyle
+    self.body = bodyStyle
+    self.code = codeStyle
+  }
+}
+
 
 private let fontCollection = StaticFontCollection(
   body: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),

@@ -10,6 +10,7 @@ import Sparkle
 import CocoaFontAwesome
 import DictionaryCoding
 import os
+import Commons
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
