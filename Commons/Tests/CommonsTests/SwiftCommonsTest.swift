@@ -7,7 +7,7 @@ import Cocoa
 import XCTest
 import Nimble
 
-@testable import NvimView
+@testable import Commons
 
 struct Dummy {
 

@@ -10,7 +10,9 @@ let package = Package(
       name: "Commons",
       targets: ["Commons"]),
   ],
-  dependencies: [],
+  dependencies: [
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
+  ],
   targets: [
     .target(
       name: "Commons",
@@ -18,7 +20,7 @@ let package = Package(
     ),
     .testTarget(
       name: "CommonsTests",
-      dependencies: ["Commons"]
+      dependencies: ["Commons", "Nimble"]
     ),
   ]
 )
