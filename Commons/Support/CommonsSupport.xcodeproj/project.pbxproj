@@ -38,7 +38,6 @@
 			children = (
 				4B7FBFF924EC936C002D12A1 /* EnvVarTest */,
 				4B7FBFE424EC92F2002D12A1 /* Products */,
-				4B7FC00624EC9425002D12A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,13 +58,6 @@
 				4B7FC00124EC936E002D12A1 /* Info.plist */,
 			);
 			path = EnvVarTest;
-			sourceTree = "<group>";
-		};
-		4B7FC00624EC9425002D12A1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
