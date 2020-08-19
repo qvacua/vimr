@@ -23,6 +23,24 @@ extension FontTrait: Hashable {
 
 final class FontUtils {
 
+  static func cellHeight(of font: NSFont) -> CGFloat {
+    let ascent = CTFontGetAscent(font)
+    let descent = CTFontGetDescent(font)
+    let leading = CTFontGetLeading(font)
+
+    return ceil(ascent + descent + leading)
+  }
+
+  static func cellWidth(of font: NSFont) -> CGFloat {
+    let capitalM = [UniChar(0x004D)]
+    var glyph = [CGGlyph(0)]
+    var advancement = CGSize.zero
+    CTFontGetGlyphsForCharacters(font, capitalM, &glyph, 1)
+    CTFontGetAdvancesForGlyphs(font, .horizontal, glyph, &advancement, 1)
+
+    return advancement.width
+  }
+
   static func cellSize(of font: NSFont, linespacing: CGFloat, characterspacing: CGFloat) -> CGSize {
     if let cached = cellSizeWithDefaultLinespacingCache.valueForKey(font) {
       return CGSize(
@@ -31,21 +49,11 @@ final class FontUtils {
       )
     }
 
-    let capitalM = [UniChar(0x004D)]
-    var glyph = [CGGlyph(0)]
-    var advancement = CGSize.zero
-    CTFontGetGlyphsForCharacters(font, capitalM, &glyph, 1)
-    CTFontGetAdvancesForGlyphs(font, .horizontal, glyph, &advancement, 1)
-
-    let ascent = CTFontGetAscent(font)
-    let descent = CTFontGetDescent(font)
-    let leading = CTFontGetLeading(font)
-
-    let cellSizeToCache = CGSize(width: advancement.width, height: ceil(ascent + descent + leading))
+    let cellSizeToCache = CGSize(width: cellWidth(of: font), height: cellHeight(of: font))
     cellSizeWithDefaultLinespacingCache.set(cellSizeToCache, forKey: font)
 
     let cellSize = CGSize(
-      width: characterspacing * advancement.width,
+      width: characterspacing * cellSizeToCache.width,
       height: ceil(linespacing * cellSizeToCache.height)
     )
 
