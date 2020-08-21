@@ -7,6 +7,7 @@ import Cocoa
 import NvimView
 import RxSwift
 import Commons
+import Workspace
 
 struct AppState: Codable {
 

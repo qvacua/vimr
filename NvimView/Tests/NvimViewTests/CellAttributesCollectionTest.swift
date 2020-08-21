@@ -33,7 +33,8 @@ class CellAttributesCollectionTest: XCTestCase {
     let defaultAttrs = CellAttributes(
       fontTrait: [], foreground: 10, background: 20, special: 30, reverse: true
     )
-    self.cellAttributesCollection.set(attributes: defaultAttrs, for: 0)
+    self.cellAttributesCollection
+      .set(attributes: defaultAttrs, for: CellAttributesCollection.defaultAttributesId)
 
     var attrs = CellAttributes(
       fontTrait: [], foreground: -1, background: 2, special: 3, reverse: true
@@ -41,7 +42,7 @@ class CellAttributesCollectionTest: XCTestCase {
     self.cellAttributesCollection.set(attributes: attrs, for: 1)
     expect(self.cellAttributesCollection.attributes(of: 1))
       .to(equal(CellAttributes(
-        fontTrait: [], foreground: 10, background: 2, special: 3, reverse: true
+        fontTrait: [], foreground: 20, background: 2, special: 3, reverse: true
       )))
 
     attrs = CellAttributes(
@@ -50,7 +51,7 @@ class CellAttributesCollectionTest: XCTestCase {
     self.cellAttributesCollection.set(attributes: attrs, for: 1)
     expect(self.cellAttributesCollection.attributes(of: 1))
       .to(equal(CellAttributes(
-        fontTrait: [], foreground: 1, background: 20, special: 3, reverse: true
+        fontTrait: [], foreground: 1, background: 10, special: 3, reverse: true
       )))
 
     attrs = CellAttributes(
@@ -59,7 +60,7 @@ class CellAttributesCollectionTest: XCTestCase {
     self.cellAttributesCollection.set(attributes: attrs, for: 1)
     expect(self.cellAttributesCollection.attributes(of: 1))
       .to(equal(CellAttributes(
-        fontTrait: [], foreground: 1, background: 20, special: 30, reverse: true
+        fontTrait: [], foreground: 1, background: 10, special: 30, reverse: true
       )))
   }
 

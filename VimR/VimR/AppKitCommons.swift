@@ -15,27 +15,6 @@ extension NSView {
 
 extension NSAttributedString {
 
-  func draw(at point: CGPoint, angle: CGFloat) {
-    var translation = AffineTransform.identity
-    var rotation = AffineTransform.identity
-
-    translation.translate(x: point.x, y: point.y)
-    rotation.rotate(byRadians: angle)
-
-    (translation as NSAffineTransform).concat()
-    (rotation as NSAffineTransform).concat()
-
-    self.draw(at: CGPoint.zero)
-
-    rotation.invert()
-    translation.invert()
-
-    (rotation as NSAffineTransform).concat()
-    (translation as NSAffineTransform).concat()
-  }
-
-  var wholeRange: NSRange { NSRange(location: 0, length: self.length) }
-
   static func infoLabel(markdown: String) -> NSAttributedString {
     let size = NSFont.smallSystemFontSize
     let down = Down(markdownString: markdown)

@@ -7,7 +7,7 @@ import Cocoa
 import NvimView
 import PureLayout
 import RxSwift
-import CocoaFontAwesome
+import MaterialIcons
 import os
 import Commons
 
@@ -30,17 +30,15 @@ class FileOutlineView: NSOutlineView,
     self.usesTheme = state.appearance.usesTheme
     self.showsFileIcon = state.appearance.showsFileIcon
     self.isShowHidden = state.fileBrowserShowHidden
-    self.triangleClosed = NSImage.fontAwesomeIcon(
-      name: .caretRight,
-      style: .solid,
-      textColor: self.theme.directoryForeground,
-      dimension: triangleImageSize
+    self.triangleClosed = Icon.chevronRight.asImage(
+      dimension: triangleImageSize,
+      style: .filled,
+      color: self.theme.directoryForeground
     )
-    self.triangleOpen = NSImage.fontAwesomeIcon(
-      name: .caretDown,
-      style: .solid,
-      textColor: self.theme.directoryForeground,
-      dimension: triangleImageSize
+    self.triangleOpen = Icon.expandMore.asImage(
+      dimension: triangleImageSize,
+      style: .filled,
+      color: self.theme.directoryForeground
     )
 
     super.init(frame: .zero)
@@ -317,17 +315,15 @@ class FileOutlineView: NSOutlineView,
     self.theme = theme.payload
     self.enclosingScrollView?.backgroundColor = self.theme.background
     self.backgroundColor = self.theme.background
-    self.triangleClosed = NSImage.fontAwesomeIcon(
-      name: .caretRight,
-      style: .solid,
-      textColor: self.theme.directoryForeground,
-      dimension: triangleImageSize
+    self.triangleClosed = Icon.chevronRight.asImage(
+      dimension: triangleImageSize,
+      style: .filled,
+      color: self.theme.directoryForeground
     )
-    self.triangleOpen = NSImage.fontAwesomeIcon(
-      name: .caretDown,
-      style: .solid,
-      textColor: self.theme.directoryForeground,
-      dimension: triangleImageSize
+    self.triangleOpen = Icon.expandMore.asImage(
+      dimension: triangleImageSize,
+      style: .filled,
+      color: self.theme.directoryForeground
     )
 
     self.lastThemeMark = theme.mark

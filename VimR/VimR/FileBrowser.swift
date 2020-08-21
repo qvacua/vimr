@@ -6,8 +6,9 @@
 import Cocoa
 import RxSwift
 import PureLayout
-import CocoaFontAwesome
+import MaterialIcons
 import Commons
+import Workspace
 
 class FileBrowser: NSView,
                    UiComponent {
@@ -105,25 +106,22 @@ extension FileBrowser {
     }
 
     override func repaint(with theme: Workspace.Theme) {
-      self.goToParentButton.image = NSImage.fontAwesomeIcon(
-        name: .levelUpAlt,
-        style: .solid,
-        textColor: theme.toolbarForeground,
-        dimension: InnerToolBar.iconDimension
+      self.goToParentButton.image = Icon.arrowUpward.asImage(
+        dimension: InnerToolBar.iconDimension,
+        style: .filled,
+        color: theme.toolbarForeground
       )
 
-      self.scrollToSourceButton.image = NSImage.fontAwesomeIcon(
-        name: .bullseye,
-        style: .solid,
-        textColor: theme.toolbarForeground,
-        dimension: InnerToolBar.iconDimension
+      self.scrollToSourceButton.image = Icon.adjust.asImage(
+        dimension: InnerToolBar.iconDimension,
+        style: .filled,
+        color: theme.toolbarForeground
       )
 
-      self.refreshButton.image = NSImage.fontAwesomeIcon(
-        name: .sync,
-        style: .solid,
-        textColor: theme.toolbarForeground,
-        dimension: InnerToolBar.iconDimension
+      self.refreshButton.image = Icon.refresh.asImage(
+        dimension: InnerToolBar.iconDimension,
+        style: .filled,
+        color: theme.toolbarForeground
       )
     }
 
@@ -139,8 +137,8 @@ extension FileBrowser {
       let goToParent = self.goToParentButton
       InnerToolBar.configureToStandardIconButton(
         button: goToParent,
-        iconName: .levelUpAlt,
-        style: .solid
+        iconName: .arrowUpward,
+        style: .filled
       )
       goToParent.toolTip = "Set parent as working directory"
       goToParent.action = #selector(FileBrowser.goToParentAction)
@@ -148,14 +146,14 @@ extension FileBrowser {
       let scrollToSource = self.scrollToSourceButton
       InnerToolBar.configureToStandardIconButton(
         button: scrollToSource,
-        iconName: .bullseye,
-        style: .solid
+        iconName: .adjust,
+        style: .filled
       )
       scrollToSource.toolTip = "Navigate to the current buffer"
       scrollToSource.action = #selector(FileBrowser.scrollToSourceAction)
 
       let refresh = self.refreshButton
-      InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .sync, style: .solid)
+      InnerToolBar.configureToStandardIconButton(button: refresh, iconName: .sync, style: .filled)
       refresh.toolTip = "Refresh"
       refresh.action = #selector(FileBrowser.refreshAction)
 

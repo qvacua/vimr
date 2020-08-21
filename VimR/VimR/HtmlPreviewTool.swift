@@ -8,7 +8,9 @@ import RxSwift
 import PureLayout
 import WebKit
 import EonilFSEvents
+import MaterialIcons
 import os
+import Workspace
 
 private let fileSystemEventsLatency = 1.0
 private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
@@ -157,11 +159,10 @@ extension HtmlPreviewTool {
     }
 
     override func repaint(with theme: Workspace.Theme) {
-      self.selectHtmlFile.image = NSImage.fontAwesomeIcon(
-        name: .fileCode,
-        style: .solid,
-        textColor: theme.toolbarForeground,
-        dimension: InnerToolBar.iconDimension
+      self.selectHtmlFile.image = Icon.description.asImage(
+        dimension: InnerToolBar.iconDimension,
+        style: .outlined,
+        color: theme.toolbarForeground
       )
     }
 
@@ -169,8 +170,8 @@ extension HtmlPreviewTool {
       let selectHtmlFile = self.selectHtmlFile
       InnerToolBar.configureToStandardIconButton(
         button: selectHtmlFile,
-        iconName: .fileCode,
-        style: .solid
+        iconName: Icon.description,
+        style: .outlined
       )
       selectHtmlFile.toolTip = "Select the HTML file"
       selectHtmlFile.action = #selector(HtmlPreviewTool.selectHtmlFile)

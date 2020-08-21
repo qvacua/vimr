@@ -4,7 +4,7 @@ set -Eeuo pipefail
 echo "### Building VimR target"
 pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
 
-readonly deployment_target_file="./resources/macos_deployment_target.txt"
+readonly deployment_target_file="./resources/x86_deployment_target.txt"
 readonly deployment_target=$(cat ${deployment_target_file})
 readonly code_sign=${code_sign:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}

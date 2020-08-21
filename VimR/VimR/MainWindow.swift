@@ -8,6 +8,7 @@ import RxSwift
 import NvimView
 import PureLayout
 import os
+import Workspace
 
 class MainWindow: NSObject,
                   UiComponent,

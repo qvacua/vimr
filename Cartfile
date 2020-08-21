@@ -1,6 +1,2 @@
-# included as Framework
-github "qvacua/CocoaFontAwesome" "master"
 github "sparkle-project/Sparkle" == 1.23.0
-
-# included directly
 github "sindresorhus/github-markdown-css" == 4.0.0

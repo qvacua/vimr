@@ -7,6 +7,7 @@ import Cocoa
 import RxSwift
 import MessagePack
 import Commons
+import Workspace
 
 // MARK: - RpcEvent Actions
 extension MainWindow {

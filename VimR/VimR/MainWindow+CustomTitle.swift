@@ -23,10 +23,10 @@ extension MainWindow {
     self.set(repUrl: self.window.representedURL, themed: true)
 
     self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdge(toSuperviewEdge: .top, withInset: 22)
-    self.workspace.autoPinEdge(toSuperviewEdge: .right)
-    self.workspace.autoPinEdge(toSuperviewEdge: .bottom)
-    self.workspace.autoPinEdge(toSuperviewEdge: .left)
+    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.top, withInset: 22)
+    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.right)
+    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.bottom)
+    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.left)
 
     self.titlebarThemed = true
 

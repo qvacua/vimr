@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "MaterialIcons",
+        "repositoryURL": "https://github.com/qvacua/material-icons",
+        "state": {
+          "branch": null,
+          "revision": "c3db645060fd27df5f7e0a9873c2af22c280725e",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "MessagePack",
         "repositoryURL": "https://github.com/a2/MessagePack.swift",
         "state": {

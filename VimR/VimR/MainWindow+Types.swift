@@ -5,6 +5,7 @@
 
 import Cocoa
 import NvimView
+import Workspace
 
 extension MainWindow {
 

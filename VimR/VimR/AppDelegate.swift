@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 import PureLayout
 import Sparkle
-import CocoaFontAwesome
 import DictionaryCoding
 import os
 import Commons
