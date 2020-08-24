@@ -1294,10 +1294,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../third-party/libxz/include",
-					"$(PROJECT_DIR)/../third-party/libpcre/include",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/include";
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1326,10 +1323,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../third-party/libxz/include",
-					"$(PROJECT_DIR)/../third-party/libpcre/include",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/include";
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

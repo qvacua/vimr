@@ -26,10 +26,8 @@ pushd ag >/dev/null
       MACOSX_DEPLOYMENT_TARGET="${deployment_target}"
       
   pushd src > /dev/null
-    cc ${cflags} ${include_flags} -c ignore.c log.c options.c print.c scandir.c search.c lang.c \ 
-       util.c decompress.c zfile.c
-    ar -crs libag.a ignore.o log.o options.o print.o scandir.o \
-       search.o lang.o util.o decompress.o zfile.o
+    cc ${cflags} ${include_flags} -c ignore.c log.c options.c print.c scandir.c search.c lang.c util.c decompress.c zfile.c
+    ar -crs libag.a ignore.o log.o options.o print.o scandir.o search.o lang.o util.o decompress.o zfile.o
     mkdir -p "${install_path}/lib"
     mv libag.a "${install_path}/lib"
   
@@ -58,7 +56,7 @@ class AgBuilder(Builder):
         include_flags = " ".join(
             [f'-I{c.x86_64_install_path.joinpath("include")}' for c in self.deps]
         )
-        ldflags = " ".join([f'-L{c.x86_64_install_path.joinpath("lib")}' for c in self.deps])
+        ldflags = " ".join([f'-L{c.install_path_lib}' for c in self.deps])
         cmd = self.make_command.substitute(
             dict(
                 cflags=self.config.x86_64_full_cflags,

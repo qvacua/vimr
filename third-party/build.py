@@ -51,6 +51,7 @@ if __name__ == "__main__":
     cwd = pathlib.Path(__file__).parent.resolve()
     install_path = cwd
     install_path_lib = install_path.joinpath("lib")
+    install_path_include= install_path.joinpath("include")
 
     xz_config = Config(
         version=args.xz_version,
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         default_cflags="-g -O2",
         target_install_path_parent=cwd.joinpath("libxz"),
         install_path_lib=install_path_lib,
-        install_path_include=install_path.joinpath("libxz/include"),
+        install_path_include=install_path_include,
         working_directory=cwd.joinpath(DEPS_FILE_NAME),
     )
     pcre_config = Config(
@@ -69,7 +70,7 @@ if __name__ == "__main__":
         default_cflags="-D_THREAD_SAFE -pthread -g -O2",
         target_install_path_parent=cwd.joinpath("libpcre"),
         install_path_lib=install_path_lib,
-        install_path_include=install_path.joinpath("libpcre/include"),
+        install_path_include=install_path_include,
         working_directory=cwd.joinpath(DEPS_FILE_NAME),
     )
     builders = {
@@ -93,7 +94,7 @@ if __name__ == "__main__":
                 default_cflags="-g -O2 -D_THREAD_SAFE -pthread",
                 target_install_path_parent=cwd.joinpath("libag"),
                 install_path_lib=install_path_lib,
-                install_path_include=install_path.joinpath("libag/include"),
+                install_path_include=install_path_include,
                 working_directory=cwd.joinpath(DEPS_FILE_NAME),
             ),
             download_command=ag.download_command,
