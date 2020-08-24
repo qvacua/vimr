@@ -26,8 +26,10 @@ pushd ag >/dev/null
       MACOSX_DEPLOYMENT_TARGET="${deployment_target}"
       
   pushd src > /dev/null
-    cc ${cflags} ${include_flags} -c ignore.c log.c options.c print.c scandir.c search.c lang.c util.c decompress.c zfile.c
-    ar -crs libag.a ignore.o log.o options.o print.o scandir.o search.o lang.o util.o decompress.o zfile.o
+    cc ${cflags} ${include_flags} -c ignore.c log.c options.c print.c scandir.c search.c lang.c \ 
+       util.c decompress.c zfile.c
+    ar -crs libag.a ignore.o log.o options.o print.o scandir.o \
+       search.o lang.o util.o decompress.o zfile.o
     mkdir -p "${install_path}/lib"
     mv libag.a "${install_path}/lib"
   
@@ -42,8 +44,8 @@ popd >/dev/null
 # language=bash
 copy_command = Template(
     """
-cp -r "${x86_64_install_path}/include"/* "${install_include_path}"
-cp -r "${x86_64_install_path}/lib"/* "${install_lib_path}"
+cp -r "${target_specific_install_path}/include"/* "${install_include_path}"
+cp -r "${target_specific_install_path}/lib"/* "${install_lib_path}"
 """
 )
 

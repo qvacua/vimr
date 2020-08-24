@@ -37,7 +37,7 @@ popd >/dev/null
 # language=bash
 copy_command = Template(
     """
-cp -r "${x86_64_install_path}/include"/* "${install_include_path}"
-cp -r "${x86_64_install_path}/lib"/* "${install_lib_path}"
+cp -r "${target_specific_install_path}/include"/* "${install_include_path}"
+cp -r "${target_specific_install_path}/lib"/* "${install_lib_path}"
 """
 )

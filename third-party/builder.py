@@ -31,7 +31,7 @@ class Builder:
     def copy_to_install_path(self):
         cmd = self.copy_command.substitute(
             dict(
-                x86_64_install_path=self.config.x86_64_install_path,
+                target_specific_install_path=self.config.x86_64_install_path,
                 install_include_path=self.config.install_path_include,
                 install_lib_path=self.config.install_path_lib,
             )

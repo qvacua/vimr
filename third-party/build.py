@@ -9,31 +9,20 @@ from deps.ag import AgBuilder
 
 DEPS_FILE_NAME = ".deps"
 
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--xz-version",
-        action="store",
-        dest="xz_version",
-        type=str,
-        required=True,
+        "--xz-version", action="store", dest="xz_version", type=str, required=True,
     )
 
     parser.add_argument(
-        "--pcre-version",
-        action="store",
-        dest="pcre_version",
-        type=str,
-        required=True,
+        "--pcre-version", action="store", dest="pcre_version", type=str, required=True,
     )
 
     parser.add_argument(
-        "--ag-version",
-        action="store",
-        dest="ag_version",
-        type=str,
-        required=True,
+        "--ag-version", action="store", dest="ag_version", type=str, required=True,
     )
 
     parser.add_argument(
