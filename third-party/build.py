@@ -2,12 +2,15 @@ import argparse
 import pathlib
 import shutil
 
+import package
 from builder import Builder
 from config import Config
 from deps import ag, pcre, xz
 from deps.ag import AgBuilder
+from utils.shell import shell
 
 DEPS_FILE_NAME = ".deps"
+PACKAGE_NAME = "vimr-deps"
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,6 +43,14 @@ def parse_args() -> argparse.Namespace:
         required=False,
     )
 
+    parser.add_argument(
+        "--local-dev",
+        action="store",
+        dest="local_dev",
+        type=bool,
+        required=False
+    )
+
     return parser.parse_args()
 
 
@@ -49,7 +60,7 @@ if __name__ == "__main__":
     x86_64_deployment_target = args.x86_64_deployment_target
 
     cwd = pathlib.Path(__file__).parent.resolve()
-    install_path = cwd
+    install_path = cwd.joinpath(PACKAGE_NAME)
     install_path_lib = install_path.joinpath("lib")
     install_path_include= install_path.joinpath("include")
 
@@ -104,9 +115,16 @@ if __name__ == "__main__":
         ),
     }
 
+    shutil.rmtree(install_path, ignore_errors=True)
     shutil.rmtree(install_path_lib, ignore_errors=True)
-    shutil.rmtree(install_path.joinpath("include"), ignore_errors=True)
+    shutil.rmtree(install_path_include, ignore_errors=True)
 
     builders["xz"].build()
     builders["pcre"].build()
     builders["ag"].build()
+
+    shell(package.package_command.substitute(dict(
+        parent_of_install_path=install_path.parent,
+        install_path=install_path,
+        package_name=PACKAGE_NAME,
+    )), cwd=cwd)
