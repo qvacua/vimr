@@ -1,1 +1,3 @@
-vimr-deps*
+/libag
+/libxz
+/libpcre

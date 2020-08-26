@@ -2,12 +2,10 @@ import argparse
 import pathlib
 import shutil
 
-import package
 from builder import Builder
 from config import Config
 from deps import ag, pcre, xz
 from deps.ag import AgBuilder
-from utils.shell import shell
 
 DEPS_FILE_NAME = ".deps"
 PACKAGE_NAME = "vimr-deps"
@@ -41,14 +39,6 @@ def parse_args() -> argparse.Namespace:
         dest="x86_64_deployment_target",
         type=str,
         required=False,
-    )
-
-    parser.add_argument(
-        "--local-dev",
-        action="store",
-        dest="local_dev",
-        type=bool,
-        required=False
     )
 
     return parser.parse_args()
@@ -122,9 +112,3 @@ if __name__ == "__main__":
     builders["xz"].build()
     builders["pcre"].build()
     builders["ag"].build()
-
-    shell(package.package_command.substitute(dict(
-        parent_of_install_path=install_path.parent,
-        install_path=install_path,
-        package_name=PACKAGE_NAME,
-    )), cwd=cwd)
