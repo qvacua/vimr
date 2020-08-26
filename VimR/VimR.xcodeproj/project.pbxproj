@@ -1294,16 +1294,16 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/include";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/lib/libag.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libag.a",
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
@@ -1323,16 +1323,16 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/include";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/lib/libag.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/liblzma.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libpcre.a",
+					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libag.a",
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
