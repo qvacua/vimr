@@ -13,7 +13,7 @@ main () {
     local -r ag_version="2.2.0"
 
     pushd ./third-party >/dev/null
-      python build.py \
+      python3 build.py \
           --target="${target}" \
           --arm64-deployment-target="${arm64_deployment_target}" \
           --x86_64-deployment-target="${x86_64_deployment_target}" \
