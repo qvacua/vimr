@@ -59,11 +59,11 @@ class AgBuilder(Builder):
         ldflags = " ".join([f'-L{c.install_path_lib}' for c in self.deps])
         cmd = self.make_command.substitute(
             dict(
-                cflags=self.config.x86_64_full_cflags,
+                cflags=self.config.target_specific_full_cflags,
                 ldflags=ldflags,
                 include_flags=include_flags,
-                deployment_target=self.config.x86_64_deployment_target,
-                install_path=self.config.x86_64_install_path,
+                deployment_target=self.config.target_specific_deployment_target,
+                install_path=self.config.target_specific_install_path,
             )
         )
         print(cmd)

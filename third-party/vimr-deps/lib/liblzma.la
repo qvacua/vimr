@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/hat/Projects/vimr/third-party/libxz/x86_64/lib'
+libdir='/Volumes/ExternalSSD/Projects/vimr/third-party/libxz/x86_64/lib'

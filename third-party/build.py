@@ -3,7 +3,7 @@ import pathlib
 import shutil
 
 from builder import Builder
-from config import Config
+from config import Config, Target
 from deps import ag, pcre, xz
 from deps.ag import AgBuilder
 
@@ -15,15 +15,35 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--xz-version", action="store", dest="xz_version", type=str, required=True,
+        "--xz-version",
+        action="store",
+        dest="xz_version",
+        type=str,
+        required=True,
     )
 
     parser.add_argument(
-        "--pcre-version", action="store", dest="pcre_version", type=str, required=True,
+        "--pcre-version",
+        action="store",
+        dest="pcre_version",
+        type=str,
+        required=True,
     )
 
     parser.add_argument(
-        "--ag-version", action="store", dest="ag_version", type=str, required=True,
+        "--ag-version",
+        action="store",
+        dest="ag_version",
+        type=str,
+        required=True,
+    )
+
+    parser.add_argument(
+        "--target",
+        action="store",
+        dest="target",
+        type=Target,
+        required=True,
     )
 
     parser.add_argument(
@@ -52,10 +72,11 @@ if __name__ == "__main__":
     cwd = pathlib.Path(__file__).parent.resolve()
     install_path = cwd.joinpath(PACKAGE_NAME)
     install_path_lib = install_path.joinpath("lib")
-    install_path_include= install_path.joinpath("include")
+    install_path_include = install_path.joinpath("include")
 
     xz_config = Config(
         version=args.xz_version,
+        target=args.target,
         arm64_deployment_target=arm64_deployment_target,
         x86_64_deployment_target=x86_64_deployment_target,
         default_cflags="-g -O2",
@@ -66,6 +87,7 @@ if __name__ == "__main__":
     )
     pcre_config = Config(
         version=args.pcre_version,
+        target=args.target,
         arm64_deployment_target=arm64_deployment_target,
         x86_64_deployment_target=x86_64_deployment_target,
         default_cflags="-D_THREAD_SAFE -pthread -g -O2",
@@ -90,6 +112,7 @@ if __name__ == "__main__":
         "ag": AgBuilder(
             Config(
                 version=args.ag_version,
+                target=args.target,
                 arm64_deployment_target=arm64_deployment_target,
                 x86_64_deployment_target=x86_64_deployment_target,
                 default_cflags="-g -O2 -D_THREAD_SAFE -pthread",

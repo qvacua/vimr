@@ -20,9 +20,9 @@ class Builder:
     def make(self):
         cmd = self.make_command.substitute(
             dict(
-                cflags=self.config.x86_64_full_cflags,
-                deployment_target=self.config.x86_64_deployment_target,
-                install_path=self.config.x86_64_install_path,
+                cflags=self.config.target_specific_full_cflags,
+                deployment_target=self.config.target_specific_deployment_target,
+                install_path=self.config.target_specific_install_path,
             )
         )
         print(cmd)
@@ -31,7 +31,7 @@ class Builder:
     def copy_to_install_path(self):
         cmd = self.copy_command.substitute(
             dict(
-                target_specific_install_path=self.config.x86_64_install_path,
+                target_specific_install_path=self.config.target_specific_install_path,
                 install_include_path=self.config.install_path_include,
                 install_lib_path=self.config.install_path_lib,
             )

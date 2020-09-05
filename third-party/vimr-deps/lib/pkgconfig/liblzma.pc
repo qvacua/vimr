@@ -5,10 +5,10 @@
 # You can do whatever you want with this file.
 #
 
-prefix=/Users/hat/Projects/vimr/third-party/libxz/x86_64
-exec_prefix=/Users/hat/Projects/vimr/third-party/libxz/x86_64
-libdir=/Users/hat/Projects/vimr/third-party/libxz/x86_64/lib
-includedir=/Users/hat/Projects/vimr/third-party/libxz/x86_64/include
+prefix=/Volumes/ExternalSSD/Projects/vimr/third-party/libxz/x86_64
+exec_prefix=/Volumes/ExternalSSD/Projects/vimr/third-party/libxz/x86_64
+libdir=/Volumes/ExternalSSD/Projects/vimr/third-party/libxz/x86_64/lib
+includedir=/Volumes/ExternalSSD/Projects/vimr/third-party/libxz/x86_64/include
 
 Name: liblzma
 Description: General purpose data compression library

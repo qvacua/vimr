@@ -1,6 +1,12 @@
 import shutil
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
+
+
+class Target(Enum):
+    arm64 = "arm64"
+    x86_64 = "x86_64"
 
 
 @dataclass(frozen=True)
@@ -8,6 +14,7 @@ class Config:
     """The working_directory should be set for the particular library, e.g. ./.deps/xz"""
 
     version: str
+    target: Target
 
     arm64_deployment_target: str
     x86_64_deployment_target: str
@@ -18,6 +25,33 @@ class Config:
     install_path_include: Path
     install_path_lib: Path
     working_directory: Path
+
+    @property
+    def target_specific_deployment_target(self) -> str:
+        if self.target is Target.arm64:
+            return self.arm64_deployment_target
+        elif self.target is Target.x86_64:
+            return self.x86_64_deployment_target
+        else:
+            raise ValueError
+
+    @property
+    def target_specific_full_cflags(self) -> str:
+        if self.target is Target.arm64:
+            return self.arm64_full_cflags
+        elif self.target is Target.x86_64:
+            return self.x86_64_full_cflags
+        else:
+            raise ValueError
+
+    @property
+    def target_specific_install_path(self) -> Path:
+        if self.target is Target.arm64:
+            return self.arm64_install_path
+        elif self.target is Target.x86_64:
+            return self.x86_64_install_path
+        else:
+            raise ValueError
 
     @property
     def arm64_full_cflags(self) -> str:

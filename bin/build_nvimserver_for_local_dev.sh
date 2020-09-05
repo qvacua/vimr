@@ -4,7 +4,7 @@ set -Eeuo pipefail
 
 readonly clean=${clean:?"true or false: when true, xcodebuild clean for NvimServer and make distclean for libnvim"}
 readonly build_deps=${build_deps:?"true or false: when true, eg libintl will be built"}
-readonly target=${target:?"amr64 or x86_64"}
+readonly target=${target:?"arm64 or x86_64"}
 
 readonly build_dir_name="build"
 readonly build_dir_path="./${build_dir_name}"

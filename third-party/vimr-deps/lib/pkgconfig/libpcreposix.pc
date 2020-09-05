@@ -1,6 +1,6 @@
 # Package Information for pkg-config
 
-prefix=/Users/hat/Projects/vimr/third-party/libpcre/x86_64
+prefix=/Volumes/ExternalSSD/Projects/vimr/third-party/libpcre/x86_64
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
