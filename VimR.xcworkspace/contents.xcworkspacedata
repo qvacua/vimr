@@ -20,6 +20,9 @@
       location = "group:RxPack/Support/RxPackSupport.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:NvimServer/NvimServer.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:NvimView/Support/NvimViewSupport.xcodeproj">
    </FileRef>
    <FileRef
