@@ -3,8 +3,8 @@
 set -Eeuo pipefail
 
 readonly clean=${clean:?"true or false: when true, xcodebuild clean for NvimServer and make distclean for libnvim"}
+readonly build_libnvim=${build_libnvim:?"true or false: when true, libnvim will be built"}
 readonly build_deps=${build_deps:?"true or false: when true, eg libintl will be built"}
-readonly target=${target:?"arm64 or x86_64"}
 
 readonly build_dir_name="build"
 readonly build_dir_path="./${build_dir_name}"
@@ -15,12 +15,11 @@ build_for_local_dev() {
 
   pushd ${nvimserver_path} >/dev/null
     if ${clean} ; then
-      xcodebuild -derivedDataPath ${build_dir_path} -configuration Release -scheme NvimServer clean
-      make distclean
+      ./NvimServer/bin/clean_all.sh
     fi
 
-    ./NvimServer/bin/build_libnvim.sh
-    xcodebuild -derivedDataPath ${build_dir_path} -configuration Release -scheme NvimServer build
+    local -r -x build_dir="${build_dir_path}"
+    ./NvimServer/bin/build_nvimserver.sh
   popd >/dev/null
 
   cp -r "./NvimServer/runtime" ${nvimview_dir_path}
