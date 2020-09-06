@@ -3,9 +3,10 @@ import pathlib
 import shutil
 
 from builder import Builder
-from config import Config, Target
+from config import Config
 from deps import ag, pcre, xz
 from deps.ag import AgBuilder
+from deps.pcre import PcreBuilder
 
 DEPS_FILE_NAME = ".deps"
 PACKAGE_NAME = "vimr-deps"
@@ -39,14 +40,6 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "--target",
-        action="store",
-        dest="target",
-        type=Target,
-        required=True,
-    )
-
-    parser.add_argument(
         "--arm64-deployment-target",
         action="store",
         dest="arm64_deployment_target",
@@ -69,14 +62,17 @@ if __name__ == "__main__":
     arm64_deployment_target = args.arm64_deployment_target
     x86_64_deployment_target = args.x86_64_deployment_target
 
-    cwd = pathlib.Path(__file__).parent.resolve()
-    install_path = cwd.joinpath(PACKAGE_NAME)
+    cwd = pathlib.Path(__file__).parent.resolve().joinpath("build")
+    shutil.rmtree(cwd, ignore_errors=True)
+    cwd.mkdir(parents=True, exist_ok=True)
+
+    install_path = cwd.parent.joinpath(PACKAGE_NAME)
+    shutil.rmtree(install_path, ignore_errors=True)
     install_path_lib = install_path.joinpath("lib")
     install_path_include = install_path.joinpath("include")
 
     xz_config = Config(
         version=args.xz_version,
-        target=args.target,
         arm64_deployment_target=arm64_deployment_target,
         x86_64_deployment_target=x86_64_deployment_target,
         default_cflags="-g -O2",
@@ -87,7 +83,6 @@ if __name__ == "__main__":
     )
     pcre_config = Config(
         version=args.pcre_version,
-        target=args.target,
         arm64_deployment_target=arm64_deployment_target,
         x86_64_deployment_target=x86_64_deployment_target,
         default_cflags="-D_THREAD_SAFE -pthread -g -O2",
@@ -96,41 +91,40 @@ if __name__ == "__main__":
         install_path_include=install_path_include,
         working_directory=cwd.joinpath(DEPS_FILE_NAME),
     )
+    ag_config = Config(
+        version=args.ag_version,
+        arm64_deployment_target=arm64_deployment_target,
+        x86_64_deployment_target=x86_64_deployment_target,
+        default_cflags="-g -O2 -D_THREAD_SAFE -pthread",
+        target_install_path_parent=cwd.joinpath("libag"),
+        install_path_lib=install_path_lib,
+        install_path_include=install_path_include,
+        working_directory=cwd.joinpath(DEPS_FILE_NAME),
+    )
     builders = {
         "xz": Builder(
             xz_config,
             download_command=xz.download_command,
+            extract_command=xz.extract_command,
             make_command=xz.make_command,
-            copy_command=xz.copy_command,
+            build_universal_and_install_command=xz.build_universal_and_install_command,
         ),
-        "pcre": Builder(
+        "pcre": PcreBuilder(
             pcre_config,
             download_command=pcre.download_command,
             make_command=pcre.make_command,
-            copy_command=pcre.copy_command,
+            extract_command=pcre.extract_command,
+            build_universal_and_install_command=pcre.build_universal_and_install_command,
         ),
         "ag": AgBuilder(
-            Config(
-                version=args.ag_version,
-                target=args.target,
-                arm64_deployment_target=arm64_deployment_target,
-                x86_64_deployment_target=x86_64_deployment_target,
-                default_cflags="-g -O2 -D_THREAD_SAFE -pthread",
-                target_install_path_parent=cwd.joinpath("libag"),
-                install_path_lib=install_path_lib,
-                install_path_include=install_path_include,
-                working_directory=cwd.joinpath(DEPS_FILE_NAME),
-            ),
+            ag_config,
             download_command=ag.download_command,
             make_command=ag.make_command,
-            copy_command=ag.copy_command,
             deps=[xz_config, pcre_config],
+            extract_command=ag.extract_command,
+            build_universal_and_install_command=ag.build_universal_and_install_command,
         ),
     }
-
-    shutil.rmtree(install_path, ignore_errors=True)
-    shutil.rmtree(install_path_lib, ignore_errors=True)
-    shutil.rmtree(install_path_include, ignore_errors=True)
 
     builders["xz"].build()
     builders["pcre"].build()

@@ -1,7 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-readonly target=${target:?"arm64 or x86_64"}
 readonly clean=${clean:?"true or false: when true, xcodebuild clean will be performed"}
 
 main() {
@@ -18,7 +17,6 @@ main() {
       -configuration Release \
       -scheme VimR -xcconfig \
       ./VimR/Dev.xcconfig \
-      ARCHS="${target}" \
       ${cmd}
   popd >/dev/null
 }

@@ -6,5 +6,5 @@ setuptools.setup(
     author="Tae Won Ha",
     description="Scripts for building dependencies of VimR",
     packages=setuptools.find_packages(),
-    python_requires='>=3.8',
+    python_requires=">=3.8",
 )
