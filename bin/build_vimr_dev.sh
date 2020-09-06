@@ -15,8 +15,8 @@ main() {
       -workspace VimR.xcworkspace \
       -derivedDataPath ./build \
       -configuration Release \
-      -scheme VimR -xcconfig \
-      ./VimR/Dev.xcconfig \
+      -scheme VimR \
+      -xcconfig ./VimR/Dev.xcconfig \
       ${cmd}
   popd >/dev/null
 }
