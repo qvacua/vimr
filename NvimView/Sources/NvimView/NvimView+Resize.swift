@@ -60,7 +60,9 @@ extension NvimView {
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
-      .subscribe()
+      .subscribe(onError: { [weak self] error in
+        self?.log.error("Error in \(#function): \(error)")
+      })
       .disposed(by: self.disposeBag)
   }
 

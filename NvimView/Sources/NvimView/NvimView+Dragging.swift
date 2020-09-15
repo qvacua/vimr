@@ -29,8 +29,8 @@ extension NvimView {
 
     self.open(urls: urls)
       .subscribeOn(self.scheduler)
-      .subscribe(onError: { error in
-        self.eventsSubject.onNext(
+      .subscribe(onError: { [weak self] error in
+        self?.eventsSubject.onNext(
           .apiError(msg: "\(urls) could not be opened.", cause: error)
         )
       })

@@ -63,10 +63,10 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     self
       .allTabs()
       .observeOn(MainScheduler.instance)
-      .subscribe(onSuccess: {
-        self.tabsCache = $0
+      .subscribe(onSuccess: { [weak self] in
+        self?.tabsCache = $0
 
-        guard let tabsControl = self.getTabsControl() else {
+        guard let tabsControl = self?.getTabsControl() else {
           return
         }
 
@@ -74,9 +74,9 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
 
         let scrubberProportionalLayout = tabsControl.scrubberLayout as! NSScrubberProportionalLayout
         scrubberProportionalLayout.numberOfVisibleItems = tabsControl.numberOfItems > 0 ? tabsControl.numberOfItems : 1
-        tabsControl.selectedIndex = self.selectedTabIndex()
-      }, onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not get all tabpages.", cause: error))
+        tabsControl.selectedIndex = self?.selectedTabIndex() ?? tabsControl.selectedIndex
+      }, onError: { [weak self] error in
+        self?.eventsSubject.onNext(.apiError(msg: "Could not get all tabpages.", cause: error))
       })
       .disposed(by: self.disposeBag)
   }
@@ -85,15 +85,15 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     self
       .allTabs()
       .observeOn(MainScheduler.instance)
-      .subscribe(onSuccess: {
-        self.tabsCache = $0
+      .subscribe(onSuccess: { [weak self] in
+        self?.tabsCache = $0
 
-        guard let tabsControl = self.getTabsControl() else {
+        guard let tabsControl = self?.getTabsControl() else {
           return
         }
 
         tabsControl.reloadData()
-        tabsControl.selectedIndex = self.selectedTabIndex()
+        tabsControl.selectedIndex = self?.selectedTabIndex() ?? tabsControl.selectedIndex
       }, onError: { error in
         self.eventsSubject.onNext(.apiError(msg: "Could not get all tabpages.", cause: error))
       })
@@ -130,8 +130,8 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     self.api
       .setCurrentWin(window: RxNeovimApi.Window(window.handle))
       .subscribeOn(self.scheduler)
-      .subscribe(onError: { error in
-        self.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))
+      .subscribe(onError: { [weak self] error in
+        self?.eventsSubject.onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))
       })
       .disposed(by: self.disposeBag)
   }

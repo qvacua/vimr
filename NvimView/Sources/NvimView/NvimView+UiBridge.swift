@@ -157,9 +157,9 @@ extension NvimView {
         return Disposables.create()
       })
       .andThen(self.bridge.quit())
-      .subscribe(onCompleted: {
-        self.bridgeLogger.info("Successfully stopped the bridge.")
-        self.nvimExitedCondition.broadcast()
+      .subscribe(onCompleted: { [weak self] in
+        self?.bridgeLogger.info("Successfully stopped the bridge.")
+        self?.nvimExitedCondition.broadcast()
       }, onError: {
         self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
       })
@@ -207,8 +207,8 @@ extension NvimView {
           }()
         )
         .andThen(self.bridge.notifyReadinessForRpcEvents())
-        .subscribe(onCompleted: {
-          self.log.debug("Notified the NvimServer to fire GUIEnter")
+        .subscribe(onCompleted: { [weak self] in
+          self?.log.debug("Notified the NvimServer to fire GUIEnter")
         })
         .disposed(by: self.disposeBag)
 
@@ -579,12 +579,12 @@ extension NvimView {
           for: RxNeovimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
-      .subscribe(onSuccess: {
-        self.eventsSubject.onNext(.bufferWritten($0))
-        self.updateTouchBarTab()
-      }, onError: { error in
-        self.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
-        self.eventsSubject.onNext(
+      .subscribe(onSuccess: { [weak self] in
+        self?.eventsSubject.onNext(.bufferWritten($0))
+        self?.updateTouchBarTab()
+      }, onError: { [weak self] error in
+        self?.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
+        self?.eventsSubject.onNext(
           .apiError(msg: "Could not get the buffer \(handle).", cause: error)
         )
       })
@@ -595,12 +595,12 @@ extension NvimView {
     self
       .currentBuffer()
       .filter { $0.apiBuffer.handle == handle }
-      .subscribe(onSuccess: {
-        self.eventsSubject.onNext(.newCurrentBuffer($0))
-        self.updateTouchBarTab()
-      }, onError: { error in
-        self.bridgeLogger.error("Could not get the current buffer: \(error)")
-        self.eventsSubject.onNext(
+      .subscribe(onSuccess: { [weak self] in
+        self?.eventsSubject.onNext(.newCurrentBuffer($0))
+        self?.updateTouchBarTab()
+      }, onError: { [weak self] error in
+        self?.bridgeLogger.error("Could not get the current buffer: \(error)")
+        self?.eventsSubject.onNext(
           .apiError(msg: "Could not get the current buffer.", cause: error)
         )
       })

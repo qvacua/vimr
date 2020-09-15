@@ -38,7 +38,9 @@ extension NvimView {
         .andThen(
           self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable()
         )
-        .subscribe()
+        .subscribe(onError: { [weak self] error in
+          self?.log.error("Error in \(#function): \(error)")
+        })
         .disposed(by: self.disposeBag)
 
       return
@@ -51,7 +53,9 @@ extension NvimView {
     let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
     self.bridge
       .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
-      .subscribe()
+      .subscribe(onError: { [weak self] error in
+        self?.log.error("Error in \(#function): \(error)")
+      })
       .disposed(by: self.disposeBag)
   }
 
@@ -121,7 +125,9 @@ extension NvimView {
 
     self.api
       .input(keys: result, errWhenBlocked: false)
-      .subscribe()
+      .subscribe(onError: { [weak self] error in
+        self?.log.error("Error in \(#function): \(error)")
+      })
       .disposed(by: self.disposeBag)
   }
 
