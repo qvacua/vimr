@@ -1347,6 +1347,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1367,6 +1368,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				INFOPLIST_FILE = VimRTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

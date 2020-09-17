@@ -18,25 +18,29 @@ class RxMsgpackRpcTests: XCTestCase {
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim --headless $SOMEFILE
     self.connection = RxMsgpackRpc()
     self.connection.stream
-      .subscribe(onNext: { msg in
-        switch msg {
-        case let .notification(method, params):
-          print("NOTIFICATION: \(method): array of \(params.count) elements")
-        case let .error(value, msg):
-          print("ERROR: \(msg) with \(value)")
-        default:
-          print("???")
-        }
-      }, onError: { print("ERROR: \($0)") })
+      .subscribe(
+        onNext: { msg in
+          switch msg {
+          case let .notification(method, params):
+            print("NOTIFICATION: \(method): array of \(params.count) elements")
+          case let .error(value, msg):
+            print("ERROR: \(msg) with \(value)")
+          default:
+            print("???")
+          }
+        },
+        onError: { print("ERROR: \($0)") },
+        onCompleted: { print("COMPLETED!") }
+      )
       .disposed(by: self.disposeBag)
 
-    _ = self.connection.run(at: "/tmp/nvim.sock")
-      .andThen(self.connection.request(
-        method: "nvim_ui_attach",
-        params: [.int(40), .int(40), .map([:])],
-        expectsReturnValue: true
-      ))
-      .syncValue()
+    _ = try? self.connection.run(at: "/tmp/nvim.sock").wait()
+//      .andThen(self.connection.request(
+//        method: "nvim_ui_attach",
+//        params: [.int(40), .int(40), .map([:])],
+//        expectsReturnValue: true
+//      ))
+//      .syncValue()
   }
 
   override func tearDown() {
@@ -80,6 +84,6 @@ class RxMsgpackRpcTests: XCTestCase {
         .disposed(by: disposeBag)
     }
 
-    sleep(1)
+    sleep(30)
   }
 }

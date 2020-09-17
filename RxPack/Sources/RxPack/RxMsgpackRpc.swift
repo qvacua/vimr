@@ -94,9 +94,7 @@ public final class RxMsgpackRpc {
   public func stop() -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.streamSubject.onCompleted()
         self.cleanUpAndCloseSocket()
-
         completable(.completed)
       }
 
@@ -188,6 +186,8 @@ public final class RxMsgpackRpc {
   }
 
   private func cleanUpAndCloseSocket() {
+    self.streamSubject.onCompleted()
+
     self.singles.forEach { msgid, single in single(.success(self.nilResponse(with: msgid))) }
     self.singles.removeAll()
 
@@ -207,6 +207,13 @@ public final class RxMsgpackRpc {
           if readBytes > 0 {
             let values = try unpackAll(readData)
             values.forEach(self.processMessage)
+          } else if readBytes == 0 {
+            if socket.remoteConnectionClosed {
+              self.queue.async { self.cleanUpAndCloseSocket() }
+              return
+            }
+
+            continue
           }
         } catch let error as Socket.Error {
           self.streamSubject.onError(Error(msg: "Could not read from socket", cause: error))
@@ -216,10 +223,12 @@ public final class RxMsgpackRpc {
           self.streamSubject.onNext(
             .error(value: .nil, msg: "Data from socket could not be unpacked")
           )
+          self.queue.async { self.cleanUpAndCloseSocket() }
           return
         }
       } while !self.stopped
     }
+
     self.thread?.start()
   }
 
