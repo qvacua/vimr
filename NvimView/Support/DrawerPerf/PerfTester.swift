@@ -12,14 +12,13 @@ import GameKit
 import os
 
 class PerfTester {
-
   init() {
     self.cellSize = FontUtils.cellSize(of: self.font, linespacing: 1.25, characterspacing: 1)
 
     for name in ["0", "1", "2"] {
       guard let fileUrl = Bundle(for: PerfTester.self)
         .url(forResource: name, withExtension: "json")
-        else {
+      else {
         preconditionFailure("Could not find \(name).json")
       }
 
@@ -39,9 +38,11 @@ class PerfTester {
     precondition((0...2).contains(index), "Wrong index!")
 
     let ugrid = self.ugrids[index]
-    let runs = self.runs(index,
-                         forRowRange: 0...ugrid.size.height - 1,
-                         columnRange: 0...ugrid.size.width - 1)
+    let runs = self.runs(
+      index,
+      forRowRange: 0...ugrid.size.height - 1,
+      columnRange: 0...ugrid.size.width - 1
+    )
 
     return runs.parallelMap(chunkSize: 50) { run in
       let font = FontUtils.font(
@@ -53,7 +54,8 @@ class PerfTester {
         startColumn: run.cells.startIndex,
         offset: .zero,
         font: font,
-        cellWidth: 20)
+        cellWidth: 20
+      )
     }
   }
 
@@ -68,35 +70,37 @@ class PerfTester {
     forRowRange rowRange: CountableClosedRange<Int>,
     columnRange: CountableClosedRange<Int>
   ) -> [AttributesRun] {
-    precondition(0 <= index && index <= 2, "Wrong index!")
+    precondition(index >= 0 && index <= 2, "Wrong index!")
 
     let ugrid = self.ugrids[index]
     return rowRange.map { row in
-        ugrid.cells[row][columnRange]
-          .groupedRanges(with: { _, cell in cell.attrId })
-          .compactMap { range in
-            let cells = ugrid.cells[row][range]
+      ugrid.cells[row][columnRange]
+        .groupedRanges(with: { _, cell in cell.attrId })
+        .compactMap { range in
+          let cells = ugrid.cells[row][range]
 
-            guard let firstCell = cells.first,
-                  let attrs = self.cellAttrsCollection.attributes(
-                    of: firstCell.attrId
-                  )
-              else {
-              // GH-666: FIXME: correct error handling
-              self.log.error("row: \(row), range: \(range): " +
-                             "Could not get CellAttributes with ID " +
-                             "\(String(describing: cells.first?.attrId))")
-              return nil
-            }
-
-            return AttributesRun(
-              location: CGPoint.zero,
-              cells: ugrid.cells[row][range],
-              attrs: attrs
+          guard let firstCell = cells.first,
+            let attrs = self.cellAttrsCollection.attributes(
+              of: firstCell.attrId
             )
+          else {
+            // GH-666: FIXME: correct error handling
+            self.log.error(
+              "row: \(row), range: \(range): " +
+                "Could not get CellAttributes with ID " +
+                "\(String(describing: cells.first?.attrId))"
+            )
+            return nil
           }
-      }
-      .flatMap { $0 }
+
+          return AttributesRun(
+            location: CGPoint.zero,
+            cells: ugrid.cells[row][range],
+            attrs: attrs
+          )
+        }
+    }
+    .flatMap { $0 }
   }
 
   private let fontTraitRd = GKRandomDistribution(
@@ -108,7 +112,7 @@ class PerfTester {
   private let intColorRd = GKRandomDistribution(
     randomSource: randomSource,
     lowestValue: 0,
-    highestValue: 16777215
+    highestValue: 16_777_215
   )
 
   private let attrsRunRd = GKRandomDistribution(
@@ -117,21 +121,25 @@ class PerfTester {
     highestValue: 10
   )
 
-  private let log = OSLog(subsystem: "com.qvacua.DrawerPerf",
-                          category: "perf-tester")
+  private let log = OSLog(
+    subsystem: "com.qvacua.DrawerPerf",
+    category: "perf-tester"
+  )
 
   private func initAttrs() {
-    for i in (1..<200) {
+    for i in 1..<200 {
       self.cellAttrsCollection.set(attributes: self.randomCellAttrs(), for: i)
     }
   }
 
   private func randomCellAttrs() -> CellAttributes {
-    return CellAttributes(fontTrait: self.randomFontTrait(),
-                          foreground: self.intColorRd.nextInt(),
-                          background: self.intColorRd.nextInt(),
-                          special: self.intColorRd.nextInt(),
-                          reverse: false)
+    CellAttributes(
+      fontTrait: self.randomFontTrait(),
+      foreground: self.intColorRd.nextInt(),
+      background: self.intColorRd.nextInt(),
+      special: self.intColorRd.nextInt(),
+      reverse: false
+    )
   }
 
   private func randomFontTrait() -> FontTrait {
@@ -148,4 +156,4 @@ class PerfTester {
   }
 }
 
-private let randomSource = GKMersenneTwisterRandomSource(seed: 95749272934)
+private let randomSource = GKMersenneTwisterRandomSource(seed: 95_749_272_934)

@@ -9,7 +9,6 @@ import PureLayout
 import RxSwift
 
 class Document: NSDocument, NSWindowDelegate {
-
   private var nvimView = NvimView(forAutoLayout: ())
   private let disposeBag = DisposeBag()
 
@@ -17,20 +16,18 @@ class Document: NSDocument, NSWindowDelegate {
     super.init()
 
     self.nvimView.font = NSFont(name: "Fira Code", size: 13)
-                         ?? NSFont.userFixedPitchFont(ofSize: 13)!
+      ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
     self.nvimView.drawsParallel = true
 
-    nvimView
+    self.nvimView
       .events
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { event in
         switch event {
-
         case .neoVimStopped: self.close()
 
         default: break
-
         }
       })
       .disposed(by: self.disposeBag)
@@ -41,7 +38,7 @@ class Document: NSDocument, NSWindowDelegate {
     self.nvimView.waitTillNvimExits()
   }
 
-  func windowShouldClose(_ sender: NSWindow) -> Bool {
+  func windowShouldClose(_: NSWindow) -> Bool {
     self.quitWithoutSaving()
     return false
   }
@@ -60,16 +57,16 @@ class Document: NSDocument, NSWindowDelegate {
   override var windowNibName: NSNib.Name? {
     // Returns the nib file name of the document
     // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this property and override -makeWindowControllers instead.
-    return NSNib.Name("Document")
+    NSNib.Name("Document")
   }
 
-  override func data(ofType typeName: String) throws -> Data {
+  override func data(ofType _: String) throws -> Data {
     // Insert code here to write your document to data of the specified type, throwing an error in case of failure.
     // Alternatively, you could remove this method and override fileWrapper(ofType:), write(to:ofType:), or write(to:ofType:for:originalContentsURL:) instead.
     throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
   }
 
-  override func read(from data: Data, ofType typeName: String) throws {
+  override func read(from _: Data, ofType _: String) throws {
     // Insert code here to read your document from the given data of the specified type, throwing an error in case of failure.
     // Alternatively, you could remove this method and override read(from:ofType:) instead.
     // If you do, you should also override isEntireFileLoaded to return false if the contents are lazily loaded.
