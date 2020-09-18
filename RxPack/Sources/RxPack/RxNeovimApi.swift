@@ -78,7 +78,7 @@ public final class RxNeovimApi {
         return response.result
       }
   }
-  
+
   public init() {}
 
   private let msgpackRpc = RxMsgpackRpc(queueQos: .userInitiated)

@@ -69,7 +69,7 @@ class RxMsgpackRpcTests: XCTestCase {
 
     let formatter = DateFormatter()
     formatter.dateFormat = "mm:ss.SSS"
-    for i in 0 ... 100 {
+    for i in 0...100 {
       let date = Date()
       connection
         .request(

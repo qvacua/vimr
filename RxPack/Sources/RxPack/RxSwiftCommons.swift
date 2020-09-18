@@ -4,8 +4,8 @@
  */
 
 import Foundation
-import RxSwift
 import os
+import RxSwift
 
 public extension ObservableType {
   func compactMap<R>(_ transform: @escaping (Element) throws -> R?) -> Observable<R> {

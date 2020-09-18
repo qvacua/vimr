@@ -4,8 +4,8 @@
  */
 
 import Cocoa
-import RxSwift
 import RxPack
+import RxSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {

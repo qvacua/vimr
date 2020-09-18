@@ -10,8 +10,16 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "5.1.1")),
-    .package(name: "MessagePack", url: "https://github.com/a2/MessagePack.swift", .upToNextMinor(from: "4.0.0")),
-    .package(name: "Socket", url: "https://github.com/IBM-Swift/BlueSocket", .upToNextMinor(from: "1.0.52")),
+    .package(
+      name: "MessagePack",
+      url: "https://github.com/a2/MessagePack.swift",
+      .upToNextMinor(from: "4.0.0")
+    ),
+    .package(
+      name: "Socket",
+      url: "https://github.com/IBM-Swift/BlueSocket",
+      .upToNextMinor(from: "1.0.52")
+    ),
     .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
   ],
   targets: [

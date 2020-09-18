@@ -9,7 +9,6 @@ import XCTest
 
 @testable import RxPack
 
-
 class NvimMsgPackTests: XCTestCase {
   var nvim = RxNeovimApi()
   let disposeBag = DisposeBag()
@@ -87,7 +86,7 @@ class NvimMsgPackTests: XCTestCase {
     formatter.timeStyle = .full
     let now = Date()
     let dispose = DisposeBag()
-    for i in 0 ... 5 {
+    for i in 0...5 {
       self.nvim
         .command(
           command: "echo '\(formatter.string(from: now)) \(i)'"
