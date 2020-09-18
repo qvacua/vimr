@@ -4,13 +4,12 @@
  */
 
 import Cocoa
-import XCTest
 import Nimble
+import XCTest
 
 @testable import NvimView
 
 class TypesetterWithoutLigaturesTest: XCTestCase {
-
   // GH-709
   func testHindi() {
     let runs = typesetter.fontGlyphRunsWithoutLigatures(
@@ -49,8 +48,10 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       }
     ))
 
-    self.assertEmojiMarker(run: runs[3],
-                           xPosition: offset.x + 18 * defaultWidth)
+    self.assertEmojiMarker(
+      run: runs[3],
+      xPosition: offset.x + 18 * defaultWidth
+    )
   }
 
   func testSimpleAsciiChars() {
@@ -72,8 +73,10 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       }
     ))
 
-    self.assertEmojiMarker(run: runs[1],
-                           xPosition: offset.x + 13 * defaultWidth)
+    self.assertEmojiMarker(
+      run: runs[1],
+      xPosition: offset.x + 13 * defaultWidth
+    )
   }
 
   func testAccentedChars() {
@@ -95,8 +98,10 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       }
     ))
 
-    self.assertEmojiMarker(run: runs[1],
-                           xPosition: offset.x + 23 * defaultWidth)
+    self.assertEmojiMarker(
+      run: runs[1],
+      xPosition: offset.x + 23 * defaultWidth
+    )
   }
 
   func testCombiningChars() {
@@ -116,7 +121,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: offset.x + 10 * defaultWidth, y: offset.y)
+        CGPoint(x: offset.x + 10 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -157,8 +162,10 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
       ]
     ))
 
-    self.assertEmojiMarker(run: runs[5],
-                           xPosition: offset.x + 16 * defaultWidth)
+    self.assertEmojiMarker(
+      run: runs[5],
+      xPosition: offset.x + 16 * defaultWidth
+    )
   }
 
   func testSimpleEmojis() {
@@ -306,7 +313,7 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
     expect(run.glyphs).to(haveCount(1))
     expect(run.positions).to(equal(
       [
-        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)
+        CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y),
       ]
     ))
 
@@ -365,7 +372,6 @@ class TypesetterWithoutLigaturesTest: XCTestCase {
 }
 
 class TypesetterWithLigaturesTest: XCTestCase {
-
   func testSimpleAsciiChars() {
     let runs = typesetter.fontGlyphRunsWithLigatures(
       nvimUtf16Cells: emojiMarked(Array(repeating: "a", count: 20)),
@@ -385,8 +391,10 @@ class TypesetterWithLigaturesTest: XCTestCase {
       }
     ))
 
-    self.assertEmojiMarker(run: runs[1],
-                           xPosition: offset.x + 21 * defaultWidth)
+    self.assertEmojiMarker(
+      run: runs[1],
+      xPosition: offset.x + 21 * defaultWidth
+    )
   }
 
   func testAccentedChars() {
@@ -668,13 +676,13 @@ private let offset = CGPoint(x: 7, y: 8)
 private let typesetter = Typesetter()
 
 private func asciiMarked(_ strings: [String]) -> [[Unicode.UTF16.CodeUnit]] {
-  return utf16Chars(strings + ["a"])
+  utf16Chars(strings + ["a"])
 }
 
 private func emojiMarked(_ strings: [String]) -> [[Unicode.UTF16.CodeUnit]] {
-  return utf16Chars(strings + ["\u{1F600}"])
+  utf16Chars(strings + ["\u{1F600}"])
 }
 
 private func utf16Chars(_ array: [String]) -> [[Unicode.UTF16.CodeUnit]] {
-  return array.map { Array($0.utf16) }
+  array.map { Array($0.utf16) }
 }

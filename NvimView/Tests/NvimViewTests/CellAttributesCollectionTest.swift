@@ -4,13 +4,12 @@
  */
 
 import Cocoa
-import XCTest
 import Nimble
+import XCTest
 
 @testable import NvimView
 
 class CellAttributesCollectionTest: XCTestCase {
-
   func testSetDefaultAttributes() {
     let attrs = CellAttributes(
       fontTrait: [], foreground: 1, background: 2, special: 3, reverse: true

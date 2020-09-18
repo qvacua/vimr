@@ -3,13 +3,12 @@
  * See LICENSE
  */
 
-import XCTest
 import Nimble
 import RxSwift
 import RxTest
+import XCTest
 
 class RxSwiftCommonsTest: XCTestCase {
-
   func testMapOmittingNil() {
     let scheduler = TestScheduler(initialClock: 0)
 
@@ -21,7 +20,7 @@ class RxSwiftCommonsTest: XCTestCase {
         next(230, 4),
         next(240, 5),
         next(260, 6),
-        completed(300)
+        completed(300),
       ]
     )
 
@@ -31,7 +30,7 @@ class RxSwiftCommonsTest: XCTestCase {
       next(210, 2),
       next(230, 4),
       next(260, 6),
-      completed(300)
+      completed(300),
     ]
 
     XCTAssertEqual(res.events, correctMessages)
