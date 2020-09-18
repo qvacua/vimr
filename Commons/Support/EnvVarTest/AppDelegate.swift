@@ -8,15 +8,14 @@ import Commons
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
+  @IBOutlet var window: NSWindow!
+  @IBOutlet var textView: NSTextView!
 
-  @IBOutlet weak var window: NSWindow!
-  @IBOutlet weak var textView: NSTextView!
-
-  func applicationDidFinishLaunching(_ aNotification: Notification) {
+  func applicationDidFinishLaunching(_: Notification) {
     let selfEnv = ProcessInfo.processInfo.environment
     let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
     let env = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: false)
-    
+
     for (k, v) in env {
       let str = NSAttributedString(string: "\(k): \(v)\n")
       print(str)

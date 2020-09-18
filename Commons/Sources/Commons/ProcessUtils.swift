@@ -7,7 +7,6 @@ import Foundation
 import os
 
 public final class ProcessUtils {
-
   public static func envVars(
     of shellPath: URL, usingInteractiveMode: Bool
   ) -> [String: String] {
@@ -57,12 +56,16 @@ public final class ProcessUtils {
       .trimmingCharacters(in: .whitespacesAndNewlines)
       .split(separator: "\n")
       .reduce(into: [:]) { result, entry in
-        let split = entry.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false).map { String($0) }
+        let split = entry
+          .split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
+          .map { String($0) }
         guard split.count > 1 else { return }
         result[split[0]] = split[1]
       }
   }
 
-  private static let logger = OSLog(subsystem: Defs.loggerSubsystem,
-                                    category: Defs.LoggerCategory.general)
+  private static let logger = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.general
+  )
 }

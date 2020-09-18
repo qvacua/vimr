@@ -6,7 +6,6 @@
 import AppKit
 
 public extension NSAttributedString {
-  
   func draw(at point: CGPoint, angle: CGFloat) {
     var translation = AffineTransform.identity
     var rotation = AffineTransform.identity
@@ -30,7 +29,6 @@ public extension NSAttributedString {
 }
 
 public extension NSColor {
-
   static var random: NSColor {
     NSColor(
       calibratedRed: .random(in: 0...1),
@@ -56,9 +54,9 @@ public extension NSColor {
 
   convenience init(rgb: Int) {
     // @formatter:off
-    let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
-    let green = ((rgb >>  8) & 0xFF).cgf / 255.0;
-    let blue =  ((rgb      ) & 0xFF).cgf / 255.0;
+    let red = ((rgb >> 16) & 0xFF).cgf / 255.0
+    let green = ((rgb >> 8) & 0xFF).cgf / 255.0
+    let blue = (rgb & 0xFF).cgf / 255.0
     // @formatter:on
 
     self.init(srgbRed: red, green: green, blue: blue, alpha: 1.0)
@@ -88,7 +86,6 @@ public extension NSColor {
 }
 
 public extension NSImage {
-
   func tinting(with color: NSColor) -> NSImage {
     let result = self.copy() as! NSImage
 
@@ -102,7 +99,6 @@ public extension NSImage {
 }
 
 public extension NSButton {
-
   var boolState: Bool {
     get { self.state == .on ? true : false }
     set { self.state = newValue ? .on : .off }
@@ -110,7 +106,6 @@ public extension NSButton {
 }
 
 public extension NSMenuItem {
-
   var boolState: Bool {
     get { self.state == .on ? true : false }
     set { self.state = newValue ? .on : .off }
@@ -118,17 +113,16 @@ public extension NSMenuItem {
 }
 
 public extension NSView {
-
   func removeAllSubviews() { self.subviews.forEach { $0.removeFromSuperview() } }
 
   func removeAllConstraints() { self.removeConstraints(self.constraints) }
 
   func beFirstResponder() { self.window?.makeFirstResponder(self) }
-  
+
   /// - Returns: Rects currently being drawn
   /// - Warning: Call only in drawRect()
   func rectsBeingDrawn() -> [CGRect] {
-    var rectsPtr: UnsafePointer<CGRect>? = nil
+    var rectsPtr: UnsafePointer<CGRect>?
     var count: Int = 0
     self.getRectsBeingDrawn(&rectsPtr, count: &count)
 
@@ -137,16 +131,15 @@ public extension NSView {
 }
 
 public extension NSEvent.ModifierFlags {
-
   // Values are from https://github.com/SFML/SFML/blob/master/src/SFML/Window/OSX/SFKeyboardModifiersHelper.mm
   // @formatter:off
-  static let rightShift   = NSEvent.ModifierFlags(rawValue: 0x020004)
-  static let leftShift    = NSEvent.ModifierFlags(rawValue: 0x020002)
+  static let rightShift = NSEvent.ModifierFlags(rawValue: 0x020004)
+  static let leftShift = NSEvent.ModifierFlags(rawValue: 0x020002)
   static let rightCommand = NSEvent.ModifierFlags(rawValue: 0x100010)
-  static let leftCommand  = NSEvent.ModifierFlags(rawValue: 0x100008)
-  static let rightOption  = NSEvent.ModifierFlags(rawValue: 0x080040)
-  static let leftOption   = NSEvent.ModifierFlags(rawValue: 0x080020)
+  static let leftCommand = NSEvent.ModifierFlags(rawValue: 0x100008)
+  static let rightOption = NSEvent.ModifierFlags(rawValue: 0x080040)
+  static let leftOption = NSEvent.ModifierFlags(rawValue: 0x080020)
   static let rightControl = NSEvent.ModifierFlags(rawValue: 0x042000)
-  static let leftControl  = NSEvent.ModifierFlags(rawValue: 0x040001)
+  static let leftControl = NSEvent.ModifierFlags(rawValue: 0x040001)
   // @formatter:on
 }

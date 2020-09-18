@@ -3,11 +3,10 @@
  * See LICENSE
  */
 
-import XCTest
 import Nimble
+import XCTest
 
 class UrlCommonsTest: XCTestCase {
-
   func testIsDirectParent() {
     let parent = URL(fileURLWithPath: "/some/path")
     let child = URL(fileURLWithPath: "/some/path/text.txt")
@@ -47,12 +46,17 @@ class UrlCommonsTest: XCTestCase {
 
   func testParent() {
     expect(URL(fileURLWithPath: "/some/path/").parent).to(equal(URL(fileURLWithPath: "/some/")))
-    expect(URL(fileURLWithPath: "/some/path/text.txt").parent).to(equal(URL(fileURLWithPath: "/some/path/")))
+    expect(URL(fileURLWithPath: "/some/path/text.txt").parent)
+      .to(equal(URL(fileURLWithPath: "/some/path/")))
     expect(URL(fileURLWithPath: "/").parent).to(equal(URL(fileURLWithPath: "/")))
   }
 
   func testIsDir() {
-    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
+    let resourceUrl = Bundle.module.url(
+      forResource: "UrlCommonsTest",
+      withExtension: "",
+      subdirectory: "Resources"
+    )!
     let hidden = resourceUrl.appendingPathComponent(".dot-hidden-file")
 
     expect(resourceUrl.isDir).to(beTrue())
@@ -60,7 +64,11 @@ class UrlCommonsTest: XCTestCase {
   }
 
   func testIsHidden() {
-    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
+    let resourceUrl = Bundle.module.url(
+      forResource: "UrlCommonsTest",
+      withExtension: "",
+      subdirectory: "Resources"
+    )!
     let hidden = resourceUrl.appendingPathComponent(".dot-hidden-file")
 
     expect(hidden.isHidden).to(beTrue())
@@ -68,7 +76,11 @@ class UrlCommonsTest: XCTestCase {
   }
 
   func testIsPackage() {
-    let resourceUrl = Bundle.module.url(forResource: "UrlCommonsTest", withExtension: "", subdirectory: "Resources")!
+    let resourceUrl = Bundle.module.url(
+      forResource: "UrlCommonsTest",
+      withExtension: "",
+      subdirectory: "Resources"
+    )!
     let package = resourceUrl.appendingPathComponent("dummy.rtfd")
 
     expect(package.isPackage).to(beTrue())

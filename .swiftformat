@@ -1,4 +1,4 @@
---swiftversion 5.2
+--swiftversion 5.3
 
 --exclude Carthage,third-party,**/*.generated.swift
 
@@ -7,3 +7,4 @@
 
 --self insert
 --wraparguments before-first
+--ranges no-space

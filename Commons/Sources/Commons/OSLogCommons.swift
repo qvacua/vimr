@@ -7,7 +7,6 @@ import Foundation
 import os
 
 public extension OSLog {
-
   func trace<T>(
     file: String = #file,
     function: String = #function,
@@ -15,11 +14,11 @@ public extension OSLog {
     _ msg: T
   ) {
     #if TRACE
-    self.log(
-      type: .debug,
-      msg: "%{public}@",
-      "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE] \(msg)"
-    )
+      self.log(
+        type: .debug,
+        msg: "%{public}@",
+        "[\((file as NSString).lastPathComponent) - \(function):\(line)] [TRACE] \(msg)"
+      )
     #endif
   }
 
@@ -29,11 +28,11 @@ public extension OSLog {
     line: Int = #line
   ) {
     #if DEBUG
-    self.log(
-      type: .debug,
-      msg: "%{public}@",
-      "[\((file as NSString).lastPathComponent) - \(function):\(line)]"
-    )
+      self.log(
+        type: .debug,
+        msg: "%{public}@",
+        "[\((file as NSString).lastPathComponent) - \(function):\(line)]"
+      )
     #endif
   }
 
@@ -44,11 +43,11 @@ public extension OSLog {
     _ msg: T
   ) {
     #if DEBUG
-    self.log(
-      type: .debug,
-      msg: "%{public}@",
-      "[\((file as NSString).lastPathComponent) - \(function):\(line)] \(msg)"
-    )
+      self.log(
+        type: .debug,
+        msg: "%{public}@",
+        "[\((file as NSString).lastPathComponent) - \(function):\(line)] \(msg)"
+      )
     #endif
   }
 

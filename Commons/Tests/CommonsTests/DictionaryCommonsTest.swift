@@ -3,22 +3,21 @@
  * See LICENSE
  */
 
-import XCTest
 import Nimble
+import XCTest
 
 class DictionaryCommonsTest: XCTestCase {
-
   func testMapToDict() {
     let dict = [
       1: "a",
       2: "b",
-      3: "c"
+      3: "c",
     ]
-    expect(dict.mapToDict { (k, v) in (v, "\(k)-\(v)") }).to(equal(
+    expect(dict.mapToDict { k, v in (v, "\(k)-\(v)") }).to(equal(
       [
         "a": "1-a",
         "b": "2-b",
-        "c": "3-c"
+        "c": "3-c",
       ]
     ))
   }
@@ -27,9 +26,9 @@ class DictionaryCommonsTest: XCTestCase {
     let dict = [
       1: "a",
       2: "b",
-      3: "c"
+      3: "c",
     ]
-    expect(dict.flatMapToDict { (k, v) in
+    expect(dict.flatMapToDict { k, v in
       if k == 2 {
         return nil
       }
@@ -38,7 +37,7 @@ class DictionaryCommonsTest: XCTestCase {
     }).to(equal(
       [
         "a": "1-a",
-        "c": "3-c"
+        "c": "3-c",
       ]
     ))
   }

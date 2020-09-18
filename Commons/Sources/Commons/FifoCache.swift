@@ -6,7 +6,6 @@
 import Foundation
 
 public final class FifoCache<Key: Hashable, Value> {
-
   public init(count: Int, queueQos: DispatchQoS) {
     self.count = count
     self.keyWriteIndex = 0
@@ -35,9 +34,9 @@ public final class FifoCache<Key: Hashable, Value> {
   public func valueForKey(_ key: Key) -> Value? { self.queue.sync { self.storage[key] } }
 
   private let count: Int
-  private var keys: Array<Key?>
+  private var keys: [Key?]
   private var keyWriteIndex: Int
-  private var storage: Dictionary<Key, Value>
+  private var storage: [Key: Value]
 
   private let queue: DispatchQueue
 }

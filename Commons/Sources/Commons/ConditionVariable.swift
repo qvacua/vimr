@@ -6,14 +6,13 @@
 import Foundation
 
 public final class ConditionVariable {
-
   private(set) var posted: Bool
 
   public init(posted: Bool = false) {
     self.posted = posted
   }
 
-  public func wait(`for` seconds: TimeInterval, then fn: (() -> Void)? = nil) {
+  public func wait(for seconds: TimeInterval, then fn: (() -> Void)? = nil) {
     self.condition.lock()
     defer { self.condition.unlock() }
 

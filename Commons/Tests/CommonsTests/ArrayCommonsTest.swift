@@ -3,19 +3,18 @@
  * See LICENSE
  */
 
-import XCTest
 import Nimble
+import XCTest
 
 @testable import Commons
 
-fileprivate class DummyToken: Comparable {
-
-  static func ==(left: DummyToken, right: DummyToken) -> Bool {
-    return left.value == right.value
+private class DummyToken: Comparable {
+  static func == (left: DummyToken, right: DummyToken) -> Bool {
+    left.value == right.value
   }
 
-  static func <(left: DummyToken, right: DummyToken) -> Bool {
-    return left.value < right.value
+  static func < (left: DummyToken, right: DummyToken) -> Bool {
+    left.value < right.value
   }
 
   let value: String
@@ -26,18 +25,17 @@ fileprivate class DummyToken: Comparable {
 }
 
 class ArrayCommonsTest: XCTestCase {
-
   func testTuplesToDict() {
     let tuples = [
       (1, "1"),
       (2, "2"),
-      (3, "3")
+      (3, "3"),
     ]
     expect(tuplesToDict(tuples)).to(equal(
       [
         1: "1",
         2: "2",
-        3: "3"
+        3: "3",
       ]
     ))
   }
@@ -49,7 +47,7 @@ class ArrayCommonsTest: XCTestCase {
         [
           1: "1",
           2: "2",
-          3: "3"
+          3: "3",
         ]
       ))
   }
@@ -63,7 +61,7 @@ class ArrayCommonsTest: XCTestCase {
     let substitute = [
       DummyToken("a0"),
       DummyToken("a1"),
-      DummyToken("a2")
+      DummyToken("a2"),
     ]
 
     let array = [
@@ -88,7 +86,7 @@ class ArrayCommonsTest: XCTestCase {
     let substitute = [
       DummyToken("a0"),
       DummyToken("a1"),
-      DummyToken("a2")
+      DummyToken("a2"),
     ]
 
     let array = [
@@ -113,7 +111,7 @@ class ArrayCommonsTest: XCTestCase {
     let substitute = [
       DummyToken("a0"),
       DummyToken("a1"),
-      DummyToken("a2")
+      DummyToken("a2"),
     ]
 
     let array = [
@@ -138,7 +136,7 @@ class ArrayCommonsTest: XCTestCase {
     let substitute = [
       DummyToken("a0"),
       DummyToken("a1"),
-      DummyToken("a2")
+      DummyToken("a2"),
     ]
 
     let array = [

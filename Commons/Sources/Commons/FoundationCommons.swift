@@ -7,7 +7,6 @@ import Foundation
 import os
 
 public extension Array where Element: Hashable {
-
   // From https://stackoverflow.com/a/46354989/9850227
   func uniqued() -> [Element] {
     var seen = Set<Element>()
@@ -16,14 +15,12 @@ public extension Array where Element: Hashable {
 }
 
 public extension Array {
-
   func data() -> Data {
-    return self.withUnsafeBufferPointer(Data.init)
+    self.withUnsafeBufferPointer(Data.init)
   }
 }
 
 public extension RandomAccessCollection where Index == Int {
-
   func parallelMap<T>(
     chunkSize: Int = 1,
     _ transform: @escaping (Element) -> T
@@ -31,7 +28,7 @@ public extension RandomAccessCollection where Index == Int {
     let count = self.count
     guard count > chunkSize else { return self.map(transform) }
 
-    var result = Array<T?>(repeating: nil, count: count)
+    var result = [T?](repeating: nil, count: count)
 
     // If we don't use Array.withUnsafeMutableBufferPointer,
     // then we get crashes.
@@ -97,16 +94,14 @@ public extension RandomAccessCollection where Index == Int {
 }
 
 public extension NSRange {
-
   static let notFound = NSRange(location: NSNotFound, length: 0)
 
   var inclusiveEndIndex: Int { self.location + self.length - 1 }
 }
 
 public extension URL {
-
   func isDirectParent(of url: URL) -> Bool {
-    guard self.isFileURL && url.isFileURL else { return false }
+    guard self.isFileURL, url.isFileURL else { return false }
 
     let myPathComps = self.pathComponents
     let targetPathComps = url.pathComponents
@@ -117,7 +112,7 @@ public extension URL {
   }
 
   func isParent(of url: URL) -> Bool {
-    guard self.isFileURL && url.isFileURL else { return false }
+    guard self.isFileURL, url.isFileURL else { return false }
 
     let myPathComps = self.pathComponents
     let targetPathComps = url.pathComponents
@@ -165,7 +160,7 @@ public extension URL {
     do {
       try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
     } catch let error as NSError {
-      // FIXME error handling
+      // FIXME: error handling
       log.error("ERROR while getting \(key): \(error)")
       return false
     }
@@ -177,7 +172,6 @@ public extension URL {
 }
 
 public extension ValueTransformer {
-
   static var keyedUnarchiveFromDataTransformer
     = ValueTransformer(forName: .keyedUnarchiveFromDataTransformerName)!
 }

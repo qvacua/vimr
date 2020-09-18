@@ -4,19 +4,17 @@
  */
 
 import Cocoa
-import XCTest
 import Nimble
+import XCTest
 
 @testable import Commons
 
 struct Dummy {
-
   var value: Int
   var marker: Bool
 }
 
 class ArraySliceTest: XCTestCase {
-
   func testArraySliceGroup1() {
     let grouped = [
       Dummy(value: 0, marker: true),
@@ -26,7 +24,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 2, marker: false),
 
       Dummy(value: 3, marker: false),
-    ][1...3].groupedRanges { i, element in element.marker }
+    ][1...3].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -45,7 +43,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 3, marker: true),
 
       Dummy(value: 3, marker: true),
-    ][1...3].groupedRanges { i, element in element.marker }
+    ][1...3].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -63,11 +61,11 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 2, marker: true),
 
       Dummy(value: 3, marker: true),
-    ][1...2].groupedRanges { i, element in element.marker }
+    ][1...2].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
-        1...2
+        1...2,
       ]
     ))
   }
@@ -83,7 +81,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 1, marker: true),
 
       Dummy(value: 1, marker: true),
-    ][1...5].groupedRanges { i, element in element.marker }
+    ][1...5].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -105,7 +103,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 1, marker: true),
 
       Dummy(value: 1, marker: true),
-    ][1...5].groupedRanges { i, element in element.marker }
+    ][1...5].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -123,25 +121,24 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 0, marker: true),
 
       Dummy(value: 0, marker: true),
-    ][1...1].groupedRanges { i, element in element.marker }
+    ][1...1].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
-        1...1
+        1...1,
       ]
     ))
   }
 }
 
 class SwiftCommonsTest: XCTestCase {
-
   func testArrayGroup1() {
     let grouped = [
       Dummy(value: 0, marker: true),
       Dummy(value: 1, marker: false),
       Dummy(value: 2, marker: false),
       Dummy(value: 3, marker: false),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -157,7 +154,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: false),
       Dummy(value: 2, marker: false),
       Dummy(value: 3, marker: true),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -171,11 +168,11 @@ class SwiftCommonsTest: XCTestCase {
     let grouped = [
       Dummy(value: 0, marker: true),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
-        0...1
+        0...1,
       ]
     ))
   }
@@ -187,7 +184,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: false),
       Dummy(value: 1, marker: true),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -205,7 +202,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: true),
       Dummy(value: 1, marker: false),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -219,11 +216,11 @@ class SwiftCommonsTest: XCTestCase {
   func testArrayGroup6() {
     let grouped = [
       Dummy(value: 0, marker: true),
-    ].groupedRanges { i, element in element.marker }
+    ].groupedRanges { _, element in element.marker }
 
     expect(grouped).to(equal(
       [
-        0...0
+        0...0,
       ]
     ))
   }

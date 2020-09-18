@@ -45,6 +45,6 @@ public struct ModeInfo: CustomStringConvertible {
   }
 
   public var description: String {
-    return "ModeInfo<\(name) (\(shortName)) shape: \(cursorShape) attr_id:\(attrId)>"
+    return "ModeInfo<\(name) (\(shortName)) shape: \(cursorShape) attr_id:\(String(describing: attrId))>"
   }
 }

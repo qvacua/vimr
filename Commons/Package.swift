@@ -15,7 +15,7 @@ let package = Package(
       name: "CommonsTests",
       dependencies: ["Commons", "Nimble"],
       resources: [
-        .copy("Resources")
+        .copy("Resources"),
       ]
     ),
   ]

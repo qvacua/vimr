@@ -8,21 +8,18 @@ import Foundation
 public func identity<T>(_ input: T) -> T { input }
 
 public extension BinaryFloatingPoint {
-
   @inlinable
   @inline(__always)
   var cgf: CGFloat { CGFloat(self) }
 }
 
 public extension FixedWidthInteger {
-
   @inlinable
   @inline(__always)
   var cgf: CGFloat { CGFloat(self) }
 }
 
 public extension String {
-
   func without(prefix: String) -> String {
     guard self.hasPrefix(prefix) else { return self }
 
@@ -32,7 +29,6 @@ public extension String {
 }
 
 public extension Array where Element: Equatable {
-
   func removingDuplicatesPreservingFromBeginning() -> [Element] {
     var result = [Element]()
 
@@ -62,9 +58,8 @@ public extension Array where Element: Equatable {
 }
 
 public extension Array where Element: Hashable {
-
-  func toDict<V>(by mapper: @escaping (Element) -> V) -> Dictionary<Element, V> {
-    var result = Dictionary<Element, V>(minimumCapacity: self.count)
+  func toDict<V>(by mapper: @escaping (Element) -> V) -> [Element: V] {
+    var result = [Element: V](minimumCapacity: self.count)
     self.forEach { result[$0] = mapper($0) }
 
     return result
@@ -78,8 +73,9 @@ public extension Array where Element: Hashable {
 }
 
 func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
-    -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
-  var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
+  -> [K: V] where S.Iterator.Element == (K, V)
+{
+  var result = [K: V](minimumCapacity: sequence.underestimatedCount)
 
   for (key, value) in sequence { result[key] = value }
 
@@ -87,22 +83,22 @@ func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
 }
 
 public extension Dictionary {
-
   func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows
-      -> Dictionary<K, V> {
+    -> [K: V]
+  {
     let array = try self.map(transform)
     return tuplesToDict(array)
   }
 
   func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows
-      -> Dictionary<K, V> {
+    -> [K: V]
+  {
     let array = try self.compactMap(transform)
     return tuplesToDict(array)
   }
 }
 
 public extension Sequence {
-
   @discardableResult
   func log() -> Self {
     self.forEach { Swift.print($0) }

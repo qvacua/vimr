@@ -43,7 +43,7 @@ final class Typesetter {
         var columnPosition = 0.cgf
         var deltaX = 0.cgf
 
-        _ = positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
+        positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
           for i in 0..<positionsPtr.count {
             let newColumn = cellIndices[indices[i]] + startColumn
             if newColumn != column {
@@ -160,8 +160,6 @@ final class Typesetter {
     font: NSFont
   ) -> [NvimUtf16CellsRun] {
     if nvimUtf16Cells.isEmpty { return [] }
-
-    let utf16Chars = self.utf16Chars(from: nvimUtf16Cells)
 
     let hasMoreThanTwoCells = nvimUtf16Cells.count >= 2
     let firstCharHasSingleUnichar = nvimUtf16Cells[0].count == 1
