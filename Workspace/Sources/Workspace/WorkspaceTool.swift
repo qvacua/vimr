@@ -6,16 +6,15 @@
 import Cocoa
 import PureLayout
 
-protocol WorkspaceToolDelegate: class {
-
+protocol WorkspaceToolDelegate: AnyObject {
   func toggle(_ tool: WorkspaceTool)
 }
 
 public class WorkspaceTool: NSView {
-
   public var dimension: CGFloat
 
   // MARK: - Public
+
   override public var hash: Int { self.uuid.hashValue }
 
   /**
@@ -42,7 +41,6 @@ public class WorkspaceTool: NSView {
   }
 
   public struct Config {
-
     let title: String
     let view: NSView
     let minimumDimension: CGFloat
@@ -57,7 +55,8 @@ public class WorkspaceTool: NSView {
                 minimumDimension: CGFloat = 50,
                 withInnerToolbar: Bool = true,
                 customToolbar: CustomToolBar? = nil,
-                customMenuItems: [NSMenuItem] = []) {
+                customMenuItems: [NSMenuItem] = [])
+    {
       self.title = title
       self.view = view
       self.minimumDimension = minimumDimension
@@ -73,16 +72,19 @@ public class WorkspaceTool: NSView {
     self.title = config.title
     self.view = config.view
     self.minimumDimension = config.minimumDimension
-    self.dimension = minimumDimension
+    self.dimension = self.minimumDimension
 
-    self.button = WorkspaceToolButton(title: title)
+    self.button = WorkspaceToolButton(title: self.title)
 
     super.init(frame: .zero)
     self.configureForAutoLayout()
 
     self.button.tool = self
     if config.isWithInnerToolbar {
-      self.innerToolbar = InnerToolBar(customToolbar: config.customToolbar, customMenuItems: config.customMenuItems)
+      self.innerToolbar = InnerToolBar(
+        customToolbar: config.customToolbar,
+        customMenuItems: config.customMenuItems
+      )
       self.innerToolbar?.tool = self
     }
 
@@ -95,30 +97,32 @@ public class WorkspaceTool: NSView {
   }
 
   // MARK: - Internal and private
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private var innerToolbar: InnerToolBar?
 
-  static func ==(left: WorkspaceTool, right: WorkspaceTool) -> Bool {
-    return left.uuid == right.uuid
+  static func == (left: WorkspaceTool, right: WorkspaceTool) -> Bool {
+    left.uuid == right.uuid
   }
 
   var theme: Workspace.Theme {
-    return self.bar?.theme ?? Workspace.Theme.default
+    self.bar?.theme ?? Workspace.Theme.default
   }
 
   weak var delegate: WorkspaceToolDelegate?
   weak var bar: WorkspaceBar?
 
   var workspace: Workspace? {
-    return self.bar?.workspace
+    self.bar?.workspace
   }
 
   let minimumDimension: CGFloat
 
   var customInnerToolbar: CustomToolBar? {
     get {
-      return self.innerToolbar?.customToolbar
+      self.innerToolbar?.customToolbar
     }
 
     set {
@@ -127,9 +131,10 @@ public class WorkspaceTool: NSView {
       }
     }
   }
+
   var customInnerMenuItems: [NSMenuItem]? {
     get {
-      return self.innerToolbar?.customMenuItems
+      self.innerToolbar?.customMenuItems
     }
 
     set {

@@ -4,12 +4,11 @@
  */
 
 import Cocoa
-import PureLayout
 import MaterialIcons
+import PureLayout
 
 open class CustomToolBar: NSView {
-
-  open func repaint(with: Workspace.Theme) {
+  open func repaint(with _: Workspace.Theme) {
     // please implement
   }
 }
@@ -20,8 +19,8 @@ open class CustomToolBar: NSView {
  - Cog button: not shown when there's no menu
  */
 public class InnerToolBar: NSView, NSUserInterfaceValidations {
-
   // MARK: - Public
+
   public static let iconDimension = 16.cgf
   public static let itemPadding = 4.cgf
 
@@ -62,7 +61,7 @@ public class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   override public var intrinsicContentSize: CGSize {
-    return CGSize(width: NSView.noIntrinsicMetric, height: InnerToolBar.height)
+    CGSize(width: NSView.noIntrinsicMetric, height: InnerToolBar.height)
   }
 
   override public func draw(_ dirtyRect: NSRect) {
@@ -76,6 +75,7 @@ public class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   // MARK: - NSUserInterfaceValidations
+
   public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     guard let loc = self.tool?.location else { return true }
     if item.action == self.locToSelector[loc] { return false }
@@ -84,7 +84,9 @@ public class InnerToolBar: NSView, NSUserInterfaceValidations {
   }
 
   // MARK: - Internal and private
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   var customMenuItems: [NSMenuItem]? {
     didSet {
@@ -129,7 +131,6 @@ public class InnerToolBar: NSView, NSUserInterfaceValidations {
 }
 
 extension InnerToolBar {
-
   func repaint() {
     self.layer!.backgroundColor = self.theme.toolbarBackground.cgColor
 
@@ -186,21 +187,29 @@ extension InnerToolBar {
     cog.target = self
 
     let moveToMenu = NSMenu()
-    let topMenuItem = NSMenuItem(title: "Top",
-                                 action: #selector(InnerToolBar.moveToTopAction),
-                                 keyEquivalent: "")
+    let topMenuItem = NSMenuItem(
+      title: "Top",
+      action: #selector(InnerToolBar.moveToTopAction),
+      keyEquivalent: ""
+    )
     topMenuItem.target = self
-    let rightMenuItem = NSMenuItem(title: "Right",
-                                   action: #selector(InnerToolBar.moveToRightAction),
-                                   keyEquivalent: "")
+    let rightMenuItem = NSMenuItem(
+      title: "Right",
+      action: #selector(InnerToolBar.moveToRightAction),
+      keyEquivalent: ""
+    )
     rightMenuItem.target = self
-    let bottomMenuItem = NSMenuItem(title: "Bottom",
-                                    action: #selector(InnerToolBar.moveToBottomAction),
-                                    keyEquivalent: "")
+    let bottomMenuItem = NSMenuItem(
+      title: "Bottom",
+      action: #selector(InnerToolBar.moveToBottomAction),
+      keyEquivalent: ""
+    )
     bottomMenuItem.target = self
-    let leftMenuItem = NSMenuItem(title: "Left",
-                                  action: #selector(InnerToolBar.moveToLeftAction),
-                                  keyEquivalent: "")
+    let leftMenuItem = NSMenuItem(
+      title: "Left",
+      action: #selector(InnerToolBar.moveToLeftAction),
+      keyEquivalent: ""
+    )
     leftMenuItem.target = self
 
     moveToMenu.addItem(leftMenuItem)
@@ -216,11 +225,11 @@ extension InnerToolBar {
     moveToMenuItem.submenu = moveToMenu
 
     if self.customMenuItems?.isEmpty == false {
-      self.customMenuItems?.forEach(cogMenu.addItem)
-      cogMenu.addItem(NSMenuItem.separator())
+      self.customMenuItems?.forEach(self.cogMenu.addItem)
+      self.cogMenu.addItem(NSMenuItem.separator())
     }
 
-    cogMenu.addItem(moveToMenuItem)
+    self.cogMenu.addItem(moveToMenuItem)
 
     if let customToolbar = self.customToolbar {
       customToolbar.configureForAutoLayout()
@@ -267,23 +276,30 @@ extension InnerToolBar {
 
   private func bottomSeparatorRect() -> CGRect {
     let bounds = self.bounds
-    return CGRect(x: bounds.minX, y: bounds.minY, width: bounds.width, height: InnerToolBar.separatorThickness)
+    return CGRect(
+      x: bounds.minX,
+      y: bounds.minY,
+      width: bounds.width,
+      height: InnerToolBar.separatorThickness
+    )
   }
 
   private func innerSeparatorRect() -> CGRect {
     let cogBounds = self.cogButton.frame
     let bounds = self.bounds
-    return CGRect(x: cogBounds.minX - InnerToolBar.itemPadding,
-                  y: bounds.minY + 4,
-                  width: 1,
-                  height: bounds.height - 4 - 4)
+    return CGRect(
+      x: cogBounds.minX - InnerToolBar.itemPadding,
+      y: bounds.minY + 4,
+      width: 1,
+      height: bounds.height - 4 - 4
+    )
   }
 }
 
 // MARK: - Actions
-extension InnerToolBar {
 
-  @objc func closeAction(_ sender: Any?) {
+extension InnerToolBar {
+  @objc func closeAction(_: Any?) {
     self.tool?.toggle()
   }
 
@@ -293,19 +309,19 @@ extension InnerToolBar {
     NSMenu.popUpContextMenu(self.cogMenu, with: event, for: sender)
   }
 
-  @objc func moveToTopAction(_ sender: Any?) {
+  @objc func moveToTopAction(_: Any?) {
     self.move(to: .top)
   }
 
-  @objc func moveToRightAction(_ sender: Any?) {
+  @objc func moveToRightAction(_: Any?) {
     self.move(to: .right)
   }
 
-  @objc func moveToBottomAction(_ sender: Any?) {
+  @objc func moveToBottomAction(_: Any?) {
     self.move(to: .bottom)
   }
 
-  @objc func moveToLeftAction(_ sender: Any?) {
+  @objc func moveToLeftAction(_: Any?) {
     self.move(to: .left)
   }
 

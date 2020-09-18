@@ -10,10 +10,10 @@ import PureLayout
  This class is used to display the placeholder bar when a tool is drag & dropped to a location with no existing tools.
  */
 class ProxyWorkspaceBar: NSView {
-
   var theme = Workspace.Theme.default
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -31,7 +31,7 @@ class ProxyWorkspaceBar: NSView {
     self.needsDisplay = true
   }
 
-  override func draw(_ dirtyRect: NSRect) {
+  override func draw(_: NSRect) {
     let path = NSBezierPath(rect: self.bounds)
     path.lineWidth = 4
     self.theme.barFocusRing.set()

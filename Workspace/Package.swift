@@ -9,8 +9,16 @@ let package = Package(
     .library(name: "Workspace", targets: ["Workspace"]),
   ],
   dependencies: [
-    .package(name: "PureLayout", url: "https://github.com/PureLayout/PureLayout", .upToNextMinor(from: "3.1.6")),
-    .package(name: "MaterialIcons", url: "https://github.com/qvacua/material-icons", .upToNextMinor(from: "0.1.0")),
+    .package(
+      name: "PureLayout",
+      url: "https://github.com/PureLayout/PureLayout",
+      .upToNextMinor(from: "3.1.6")
+    ),
+    .package(
+      name: "MaterialIcons",
+      url: "https://github.com/qvacua/material-icons",
+      .upToNextMinor(from: "0.1.0")
+    ),
     .package(path: "../Commons"),
   ],
   targets: [

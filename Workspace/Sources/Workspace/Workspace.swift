@@ -7,15 +7,13 @@ import Cocoa
 import PureLayout
 
 public enum WorkspaceBarLocation: String, Codable, CaseIterable {
-
-  case top = "top"
-  case right = "right"
-  case bottom = "bottom"
-  case left = "left"
+  case top
+  case right
+  case bottom
+  case left
 }
 
-public protocol WorkspaceDelegate: class {
-
+public protocol WorkspaceDelegate: AnyObject {
   func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?)
   func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?)
 
@@ -24,17 +22,15 @@ public protocol WorkspaceDelegate: class {
 }
 
 public class Workspace: NSView, WorkspaceBarDelegate {
-
   // MARK: - Public
-  public struct Config {
 
+  public struct Config {
     public let mainViewMinimumSize: CGSize
-    
+
     public init(mainViewMinimumSize: CGSize) { self.mainViewMinimumSize = mainViewMinimumSize }
   }
 
   public struct Theme {
-
     public static let `default` = Workspace.Theme()
 
     public var foreground = NSColor.black
@@ -50,19 +46,20 @@ public class Workspace: NSView, WorkspaceBarDelegate {
 
     public var toolbarForeground = NSColor.darkGray
     public var toolbarBackground = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)
-    
+
     public init() {}
   }
 
   public private(set) var isAllToolsVisible = true {
     didSet { self.relayout() }
   }
+
   public private(set) var isToolButtonsVisible = true {
     didSet { self.bars.values.forEach { $0.isButtonVisible = !$0.isButtonVisible } }
   }
 
   public var orderedTools: [WorkspaceTool] {
-    return self.bars.values.reduce([]) { [$0, $1.tools].flatMap { $0 } }
+    self.bars.values.reduce([]) { [$0, $1.tools].flatMap { $0 } }
   }
 
   public let mainView: NSView
@@ -74,7 +71,10 @@ public class Workspace: NSView, WorkspaceBarDelegate {
 
   public weak var delegate: WorkspaceDelegate?
 
-  public init(mainView: NSView, config: Config = Config(mainViewMinimumSize: CGSize(width: 100, height: 100))) {
+  public init(
+    mainView: NSView,
+    config: Config = Config(mainViewMinimumSize: CGSize(width: 100, height: 100))
+  ) {
     self.config = config
     self.mainView = mainView
 
@@ -82,7 +82,7 @@ public class Workspace: NSView, WorkspaceBarDelegate {
       .top: WorkspaceBar(location: .top),
       .right: WorkspaceBar(location: .right),
       .bottom: WorkspaceBar(location: .bottom),
-      .left: WorkspaceBar(location: .left)
+      .left: WorkspaceBar(location: .left),
     ]
 
     super.init(frame: .zero)
@@ -146,7 +146,9 @@ public class Workspace: NSView, WorkspaceBarDelegate {
   }
 
   // MARK: - Internal and private
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   let bars: [WorkspaceBarLocation: WorkspaceBar]
 
@@ -157,9 +159,9 @@ public class Workspace: NSView, WorkspaceBarDelegate {
 }
 
 // MARK: - NSDraggingDestination
-public extension Workspace {
 
-  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+public extension Workspace {
+  override func draggingEntered(_: NSDraggingInfo) -> NSDragOperation {
     self.isDragOngoing = true
     return .move
   }
@@ -177,11 +179,11 @@ public extension Workspace {
     return .move
   }
 
-  override func draggingExited(_ sender: NSDraggingInfo?) {
+  override func draggingExited(_: NSDraggingInfo?) {
     self.endDrag()
   }
 
-  override func draggingEnded(_ sender: NSDraggingInfo) {
+  override func draggingEnded(_: NSDraggingInfo) {
     self.endDrag()
   }
 
@@ -212,7 +214,7 @@ public extension Workspace {
 
   private func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {
     for barLoc in WorkspaceBarLocation.allCases {
-      if rect(forBar: barLoc).contains(loc) {
+      if self.rect(forBar: barLoc).contains(loc) {
         return barLoc
       }
     }
@@ -239,13 +241,13 @@ public extension Workspace {
 }
 
 // MARK: - WorkspaceBarDelegate
-extension Workspace {
 
-  func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?) {
+extension Workspace {
+  func resizeWillStart(workspaceBar _: WorkspaceBar, tool: WorkspaceTool?) {
     self.delegate?.resizeWillStart(workspace: self, tool: tool)
   }
 
-  func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?) {
+  func resizeDidEnd(workspaceBar _: WorkspaceBar, tool: WorkspaceTool?) {
     self.delegate?.resizeDidEnd(workspace: self, tool: tool)
   }
 
@@ -259,8 +261,8 @@ extension Workspace {
 }
 
 // MARK: - Layout
-private extension Workspace {
 
+private extension Workspace {
   private func repaint() {
     self.bars.values.forEach { $0.repaint() }
     self.proxyBar.repaint()
@@ -276,8 +278,16 @@ private extension Workspace {
     let mainView = self.mainView
     self.addSubview(mainView)
 
-    mainView.autoSetDimension(.width, toSize: self.config.mainViewMinimumSize.width, relation: .greaterThanOrEqual)
-    mainView.autoSetDimension(.height, toSize: self.config.mainViewMinimumSize.height, relation: .greaterThanOrEqual)
+    mainView.autoSetDimension(
+      .width,
+      toSize: self.config.mainViewMinimumSize.width,
+      relation: .greaterThanOrEqual
+    )
+    mainView.autoSetDimension(
+      .height,
+      toSize: self.config.mainViewMinimumSize.height,
+      relation: .greaterThanOrEqual
+    )
 
     guard self.isAllToolsVisible else {
       mainView.autoPinEdgesToSuperviewEdges()
@@ -330,7 +340,6 @@ private extension Workspace {
 
       let barRect = self.rect(forBar: barLoc)
       switch barLoc {
-
       case .top:
         proxyBar.autoPinEdge(toSuperviewEdge: .top)
         proxyBar.autoPinEdge(toSuperviewEdge: .right)
@@ -354,7 +363,6 @@ private extension Workspace {
         proxyBar.autoPinEdge(toSuperviewEdge: .left)
         proxyBar.autoPinEdge(.bottom, to: .top, of: bottomBar)
         proxyBar.autoSetDimension(.width, toSize: barRect.width)
-
       }
     }
 

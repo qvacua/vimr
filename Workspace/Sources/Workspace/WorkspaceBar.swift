@@ -4,11 +4,10 @@
  */
 
 import Cocoa
-import PureLayout
 import os
+import PureLayout
 
-protocol WorkspaceBarDelegate: class {
-
+protocol WorkspaceBarDelegate: AnyObject {
   func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
 
   func resizeDidEnd(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
@@ -24,15 +23,15 @@ protocol WorkspaceBarDelegate: class {
  */
 
 private class ProxyBar: NSView {
-
   fileprivate var draggedOnToolIdx: Int?
-  
+
   private var isDragOngoing = false
   private var buttonFrames: [CGRect] = []
 
   fileprivate weak var container: WorkspaceBar?
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -47,11 +46,10 @@ private class ProxyBar: NSView {
 }
 
 class WorkspaceBar: NSView, WorkspaceToolDelegate {
-
-  static private let separatorThickness = 1.cgf
+  private static let separatorThickness = 1.cgf
 
   fileprivate(set) var tools = [WorkspaceTool]()
-  
+
   private weak var selectedTool: WorkspaceTool?
 
   private var isMouseDownOngoing = false
@@ -61,11 +59,13 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 
   private let proxyBar = ProxyBar()
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   // MARK: - API
+
   static let minimumDimension = 50.cgf
 
   let location: WorkspaceBarLocation
@@ -74,13 +74,15 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       self.relayout()
     }
   }
+
   var isOpen: Bool {
-    return self.selectedTool != nil
+    self.selectedTool != nil
   }
+
   var dimensionConstraint = NSLayoutConstraint()
 
   var theme: Workspace.Theme {
-    return self.workspace?.theme ?? Workspace.Theme.default
+    self.workspace?.theme ?? Workspace.Theme.default
   }
 
   weak var delegate: WorkspaceBarDelegate?
@@ -168,7 +170,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     let proxyBar = self.proxyBar
     self.addSubview(proxyBar)
     switch self.location {
-
     case .top:
       proxyBar.autoPinEdge(toSuperviewEdge: .top)
       proxyBar.autoPinEdge(toSuperviewEdge: .right)
@@ -192,7 +193,6 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
       proxyBar.autoPinEdge(toSuperviewEdge: .bottom)
       proxyBar.autoPinEdge(toSuperviewEdge: .left)
       proxyBar.autoSetDimension(.width, toSize: self.barDimensionWithButtonsWithoutTool())
-
     }
   }
 
@@ -237,7 +237,7 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
     tool.delegate = nil
     self.tools.remove(at: idx)
 
-    if self.isOpen && self.selectedTool == tool {
+    if self.isOpen, self.selectedTool == tool {
       self.selectedTool = self.tools.first
     }
 
@@ -248,11 +248,12 @@ class WorkspaceBar: NSView, WorkspaceToolDelegate {
 // MARK: - NSDraggingDestination
 
 extension ProxyBar {
-
   private func isTool(atIndex idx: Int, beingDragged info: NSDraggingInfo) -> Bool {
     let pasteboard = info.draggingPasteboard
 
-    guard let uuid = pasteboard.string(forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)) else {
+    guard let uuid = pasteboard
+      .string(forType: NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti))
+    else {
       return false
     }
 
@@ -260,9 +261,9 @@ extension ProxyBar {
     return self.container!.tools.first { $0.uuid == uuid } == tool
   }
 
-  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+  override func draggingEntered(_: NSDraggingInfo) -> NSDragOperation {
     self.buttonFrames.removeAll()
-    self.buttonFrames = self.container!.tools.map { $0.button.frame }
+    self.buttonFrames = self.container!.tools.map(\.button.frame)
 
     self.isDragOngoing = true
     return .move
@@ -298,11 +299,11 @@ extension ProxyBar {
     return .move
   }
 
-  override func draggingEnded(_ sender: NSDraggingInfo) {
+  override func draggingEnded(_: NSDraggingInfo) {
     self.endDrag()
   }
 
-  override func draggingExited(_ sender: NSDraggingInfo?) {
+  override func draggingExited(_: NSDraggingInfo?) {
     self.endDrag()
   }
 
@@ -333,8 +334,9 @@ extension ProxyBar {
       let locInProxy = self.convert(sender.draggingLocation, from: nil)
       let locInBar = self.convert(locInProxy, to: self.container)
 
-      if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty
-         && self.container!.barFrame().contains(locInBar) {
+      if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty,
+        self.container!.barFrame().contains(locInBar)
+      {
         self.container!.tools.remove(at: toolIdx)
         self.container!.tools.append(tool)
         self.container?.delegate?.moved(tool: tool)
@@ -379,7 +381,6 @@ extension ProxyBar {
 // MARK: - NSView
 
 extension WorkspaceBar {
-
   override func draw(_ dirtyRect: NSRect) {
 //    super.draw(dirtyRect)
 
@@ -418,24 +419,30 @@ extension WorkspaceBar {
     let initialMouseLoc = self.convert(event.locationInWindow, from: nil)
     let mouseInResizeRect = NSMouseInRect(initialMouseLoc, self.resizeRect(), self.isFlipped)
 
-    guard mouseInResizeRect && event.type == .leftMouseDown else {
+    guard mouseInResizeRect, event.type == .leftMouseDown else {
       super.mouseDown(with: event)
       return
     }
 
     self.isMouseDownOngoing = true
     self.delegate?.resizeWillStart(workspaceBar: self, tool: self.selectedTool)
-    self.dimensionConstraint.priority = NSLayoutConstraint.Priority(NSLayoutConstraint.Priority.RawValue(Int(NSLayoutConstraint.Priority.dragThatCannotResizeWindow.rawValue) - 1))
+    self.dimensionConstraint.priority = NSLayoutConstraint
+      .Priority(
+        NSLayoutConstraint.Priority
+          .RawValue(Int(NSLayoutConstraint.Priority.dragThatCannotResizeWindow.rawValue) - 1)
+      )
 
     var dragged = false
     var curEvent = event
     let nextEventMask: NSEvent.EventTypeMask = [.leftMouseDragged, .leftMouseDown, .leftMouseUp]
 
     while curEvent.type != .leftMouseUp {
-      let nextEvent = NSApp.nextEvent(matching: nextEventMask,
-                                      until: .distantFuture,
-                                      inMode: .eventTracking,
-                                      dequeue: true)
+      let nextEvent = NSApp.nextEvent(
+        matching: nextEventMask,
+        until: .distantFuture,
+        inMode: .eventTracking,
+        dequeue: true
+      )
       guard nextEvent != nil else {
         break
       }
@@ -447,7 +454,8 @@ extension WorkspaceBar {
       }
 
       let curMouseLoc = self.convert(curEvent.locationInWindow, from: nil)
-      let distance = sq(initialMouseLoc.x - curMouseLoc.x) + sq(initialMouseLoc.y - curMouseLoc.y)
+      let distance = self.sq(initialMouseLoc.x - curMouseLoc.x) + self
+        .sq(initialMouseLoc.y - curMouseLoc.y)
 
       guard dragged || distance >= 1 else {
         continue
@@ -512,9 +520,19 @@ extension WorkspaceBar {
 
     switch self.location {
     case .top:
-      return CGRect(x: 0, y: bounds.height - bar.height - thickness, width: bounds.width, height: thickness)
+      return CGRect(
+        x: 0,
+        y: bounds.height - bar.height - thickness,
+        width: bounds.width,
+        height: thickness
+      )
     case .right:
-      return CGRect(x: bounds.width - bar.width - thickness, y: 0, width: thickness, height: bounds.height)
+      return CGRect(
+        x: bounds.width - bar.width - thickness,
+        y: 0,
+        width: thickness,
+        height: bounds.height
+      )
     case .bottom:
       return CGRect(x: 0, y: bar.height, width: bounds.width, height: thickness)
     case .left:
@@ -543,7 +561,7 @@ extension WorkspaceBar {
   }
 
   private func sq(_ number: CGFloat) -> CGFloat {
-    return number * number
+    number * number
   }
 
   private func outerSeparatorRect() -> CGRect {
@@ -555,9 +573,19 @@ extension WorkspaceBar {
     case .right:
       return CGRect(x: 0, y: 0, width: thickness, height: self.bounds.height)
     case .bottom:
-      return CGRect(x: 0, y: self.bounds.height - thickness, width: self.bounds.width, height: thickness)
+      return CGRect(
+        x: 0,
+        y: self.bounds.height - thickness,
+        width: self.bounds.width,
+        height: thickness
+      )
     case .left:
-      return CGRect(x: self.bounds.width - thickness, y: 0, width: thickness, height: self.bounds.height)
+      return CGRect(
+        x: self.bounds.width - thickness,
+        y: 0,
+        width: thickness,
+        height: self.bounds.height
+      )
     }
   }
 
@@ -610,13 +638,12 @@ extension WorkspaceBar {
 // MARK: - Layout
 
 extension WorkspaceBar {
-
   private func isEmpty() -> Bool {
-    return self.tools.isEmpty
+    self.tools.isEmpty
   }
 
   private func hasTools() -> Bool {
-    return !self.isEmpty()
+    !self.isEmpty()
   }
 
   private func layoutWithoutButtons(_ tool: WorkspaceTool) {
@@ -632,7 +659,11 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom, withInset: thickness),
         view.autoPinEdge(toSuperviewEdge: .left),
 
-        view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(
+          .height,
+          toSize: tool.minimumDimension,
+          relation: .greaterThanOrEqual
+        ),
       ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
@@ -641,7 +672,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(toSuperviewEdge: .left, withInset: thickness),
 
-        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual),
       ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
@@ -650,7 +681,11 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(toSuperviewEdge: .left),
 
-        view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(
+          .height,
+          toSize: tool.minimumDimension,
+          relation: .greaterThanOrEqual
+        ),
       ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
@@ -659,7 +694,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(toSuperviewEdge: .left),
 
-        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual),
       ])
     }
   }
@@ -679,25 +714,35 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom, withInset: thickness),
         view.autoPinEdge(toSuperviewEdge: .left),
 
-        view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(
+          .height,
+          toSize: tool.minimumDimension,
+          relation: .greaterThanOrEqual
+        ),
       ])
     case .right:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top),
-        view.autoPinEdge(.right, to: .left, of: button, withOffset: -thickness), // Offset is count l -> r,
+        view.autoPinEdge(.right, to: .left, of: button, withOffset: -thickness),
+        // Offset is count l -> r,
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(toSuperviewEdge: .left, withInset: thickness),
 
-        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual),
       ])
     case .bottom:
       self.layoutConstraints.append(contentsOf: [
         view.autoPinEdge(toSuperviewEdge: .top, withInset: thickness),
         view.autoPinEdge(toSuperviewEdge: .right),
-        view.autoPinEdge(.bottom, to: .top, of: button, withOffset: -thickness), // Offset is count t -> b,
+        view.autoPinEdge(.bottom, to: .top, of: button, withOffset: -thickness),
+        // Offset is count t -> b,
         view.autoPinEdge(toSuperviewEdge: .left),
 
-        view.autoSetDimension(.height, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(
+          .height,
+          toSize: tool.minimumDimension,
+          relation: .greaterThanOrEqual
+        ),
       ])
     case .left:
       self.layoutConstraints.append(contentsOf: [
@@ -706,7 +751,7 @@ extension WorkspaceBar {
         view.autoPinEdge(toSuperviewEdge: .bottom),
         view.autoPinEdge(.left, to: .right, of: button, withOffset: thickness),
 
-        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual)
+        view.autoSetDimension(.width, toSize: tool.minimumDimension, relation: .greaterThanOrEqual),
       ])
     }
   }
@@ -742,7 +787,7 @@ extension WorkspaceBar {
     }
 
     self.tools
-      .map { $0.button }
+      .map(\.button)
       .forEach(self.addSubview)
 
     let dimensionForDraggedButton = self.draggedButtonDimension()
@@ -774,9 +819,9 @@ extension WorkspaceBar {
 
     var lastButton = firstButton
     self.tools
-      .map({ $0.button })
+      .map(\.button)
       .enumerated()
-      .forEach { (idx, button) in
+      .forEach { idx, button in
         // self.tools.first is already done above
         guard idx > 0 else {
           return
@@ -820,16 +865,17 @@ extension WorkspaceBar {
   }
 
   private func barDimensionWithoutButtons(withToolDimension toolDimension: CGFloat) -> CGFloat {
-    return toolDimension + WorkspaceBar.separatorThickness
+    toolDimension + WorkspaceBar.separatorThickness
   }
 
   private func barDimension(withToolDimension toolDimension: CGFloat) -> CGFloat {
-    return self.barDimensionWithButtonsWithoutTool() + toolDimension + WorkspaceBar.separatorThickness
+    self.barDimensionWithButtonsWithoutTool() + toolDimension + WorkspaceBar.separatorThickness
   }
 
   private func toolDimension(fromBarDimension barDimension: CGFloat) -> CGFloat {
     if self.isButtonVisible {
-      return barDimension - WorkspaceBar.separatorThickness - barDimensionWithButtonsWithoutTool()
+      return barDimension - WorkspaceBar.separatorThickness - self
+        .barDimensionWithButtonsWithoutTool()
     }
 
     return barDimension - WorkspaceBar.separatorThickness
@@ -839,7 +885,6 @@ extension WorkspaceBar {
 // MARK: - WorkspaceToolDelegate
 
 extension WorkspaceBar {
-
   func toggle(_ tool: WorkspaceTool) {
     self.delegate?.resizeWillStart(workspaceBar: self, tool: self.selectedTool)
 
