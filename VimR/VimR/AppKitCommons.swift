@@ -16,7 +16,6 @@ extension NSView {
 extension NSAttributedString {
 
   static func infoLabel(markdown: String) -> NSAttributedString {
-    let size = NSFont.smallSystemFontSize
     let down = Down(markdownString: markdown)
     guard let result = try? down.toAttributedString(styler: downStyler) else {
       preconditionFailure("Wrong markdown: \(markdown)")

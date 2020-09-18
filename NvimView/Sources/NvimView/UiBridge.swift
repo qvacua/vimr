@@ -104,7 +104,7 @@ class UiBridge {
     var data = Data(capacity: MemoryLayout<Int>.size + strData.count)
 
     var c = count
-    data.append(UnsafeBufferPointer(start: &c, count: 1))
+    withUnsafeBytes(of: &c) { data.append(contentsOf: $0) }
     data.append(strData)
 
     return self.sendMessage(msgId: .deleteInput, data: data)
