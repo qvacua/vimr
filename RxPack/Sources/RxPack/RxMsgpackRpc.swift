@@ -226,7 +226,7 @@ public final class RxMsgpackRpc {
           self.queue.async { self.cleanUpAndCloseSocket() }
           return
         }
-      } while !self.stopped
+      } while !self.queue.sync { self.stopped }
     }
 
     self.thread?.start()
