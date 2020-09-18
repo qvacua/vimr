@@ -14,12 +14,13 @@ public final class FifoCache<Key: Hashable, Value> {
     self.storage = Dictionary(minimumCapacity: count)
     self.queue = DispatchQueue(
       label: "\(String(reflecting: FifoCache.self))-\(UUID().uuidString)",
-      qos: queueQos
+      qos: queueQos,
+      attributes: [.concurrent]
     )
   }
 
   public func set(_ value: Value, forKey key: Key) {
-    self.queue.sync {
+    self.queue.async(flags: .barrier) {
       self.keyWriteIndex = (self.keyWriteIndex + 1) % self.count
 
       if let keyToDel = self.keys[self.keyWriteIndex] { self.storage.removeValue(forKey: keyToDel) }
