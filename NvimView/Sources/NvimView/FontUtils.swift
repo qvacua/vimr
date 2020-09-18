@@ -77,5 +77,8 @@ final class FontUtils {
   }
 }
 
-private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100)
-private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(count: 100)
+private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100, queueQos: .userInteractive)
+private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(
+  count: 100,
+  queueQos: .userInteractive
+)

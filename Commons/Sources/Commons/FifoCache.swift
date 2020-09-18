@@ -7,11 +7,15 @@ import Foundation
 
 public final class FifoCache<Key: Hashable, Value> {
 
-  public init(count: Int) {
+  public init(count: Int, queueQos: DispatchQoS) {
     self.count = count
     self.keyWriteIndex = 0
     self.keys = Array(repeating: nil, count: count)
     self.storage = Dictionary(minimumCapacity: count)
+    self.queue = DispatchQueue(
+      label: "\(String(reflecting: FifoCache.self))-\(UUID().uuidString)",
+      qos: queueQos
+    )
   }
 
   public func set(_ value: Value, forKey key: Key) {
@@ -32,5 +36,5 @@ public final class FifoCache<Key: Hashable, Value> {
   private var keyWriteIndex: Int
   private var storage: Dictionary<Key, Value>
 
-  private let queue = DispatchQueue(label: "FifoCache-\(UUID().uuidString)", qos: .userInteractive)
+  private let queue: DispatchQueue
 }
