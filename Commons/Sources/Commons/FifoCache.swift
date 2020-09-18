@@ -21,12 +21,14 @@ public final class FifoCache<Key: Hashable, Value> {
 
   public func set(_ value: Value, forKey key: Key) {
     self.queue.async(flags: .barrier) {
-      self.keyWriteIndex = (self.keyWriteIndex + 1) % self.count
-
+      // We could remove value from the storage only when key != keyToDel, but the comparison is
+      // much more expensive than unconditional removal from the storage.
       if let keyToDel = self.keys[self.keyWriteIndex] { self.storage.removeValue(forKey: keyToDel) }
 
       self.keys[self.keyWriteIndex] = key
       self.storage[key] = value
+
+      self.keyWriteIndex = (self.keyWriteIndex + 1) % self.count
     }
   }
 
