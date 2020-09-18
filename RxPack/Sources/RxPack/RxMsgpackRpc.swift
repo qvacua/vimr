@@ -55,10 +55,10 @@ public final class RxMsgpackRpc {
 
   public let uuid = UUID()
 
-  public init() {
+  public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMsgpackRpc.self))-\(self.uuid.uuidString)",
-      qos: .userInitiated
+      qos: queueQos
     )
   }
 

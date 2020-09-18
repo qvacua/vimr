@@ -329,8 +329,8 @@ class UiBridge {
   private let nvimArgs: [String]
   private let envDict: [String: String]
 
-  private let server = RxMessagePortServer()
-  private let client = RxMessagePortClient()
+  private let server = RxMessagePortServer(queueQos: .userInteractive)
+  private let client = RxMessagePortClient(queueQos: .userInteractive)
 
   private var nvimServerProc: Process?
 

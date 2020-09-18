@@ -42,10 +42,10 @@ public final class RxMessagePortClient {
   public let uuid = UUID()
   public var timeout = RxMessagePortClient.defaultTimeout
 
-  public init() {
+  public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
-      qos: .userInitiated
+      qos: queueQos
     )
   }
 
@@ -155,10 +155,10 @@ public final class RxMessagePortServer {
 
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
-  public init() {
+  public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
-      qos: .userInitiated
+      qos: queueQos
     )
     self.messageHandler = MessageHandler(subject: self.streamSubject)
   }
