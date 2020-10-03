@@ -7,7 +7,6 @@ import Foundation
 import RxSwift
 
 protocol ReduxContextType {
-
   /**
    Type that holds the global app state
 
@@ -17,8 +16,8 @@ protocol ReduxContextType {
   associatedtype StateType
 
   /**
-   "The greatest common divisor" for all actions used in the app: Assuming it is set to `ReduxTypes.ActionType` type,
-   the following must be true for any action
+   "The greatest common divisor" for all actions used in the app:
+   Assuming it is set to `ReduxTypes.ActionType` type, the following must be true for any action
    ```
    assert(someAction is ReduxTypes.ActionType) // which means
    let actionWithMinimumType: ReduxTypes.ActionType = anyAction
@@ -37,22 +36,23 @@ protocol ReduxContextType {
 /**
  `typealias` `StateType` and `ActionType` either within the class definition or in an extension.
  */
-class ReduxTypes: ReduxContextType {
-}
+class ReduxTypes: ReduxContextType {}
 
 protocol ReducerType {
-
   associatedtype StateType
   associatedtype ActionType
 
   typealias ReduceTuple = (state: StateType, action: ActionType, modified: Bool)
-  typealias ActionTypeErasedReduceTuple = (state: StateType, action: ReduxTypes.ActionType, modified: Bool)
+  typealias ActionTypeErasedReduceTuple = (
+    state: StateType,
+    action: ReduxTypes.ActionType,
+    modified: Bool
+  )
 
   func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple
 }
 
 extension ReducerType {
-
   func reduce(_ tuple: ActionTypeErasedReduceTuple) -> ActionTypeErasedReduceTuple {
     guard let typedTuple = tuple as? ReduceTuple else {
       return tuple
@@ -64,30 +64,33 @@ extension ReducerType {
 }
 
 protocol MiddlewareType {
-
   associatedtype StateType
   associatedtype ActionType
 
   typealias ReduceTuple = (state: StateType, action: ActionType, modified: Bool)
-  typealias ActionTypeErasedReduceTuple = (state: StateType, action: ReduxTypes.ActionType, modified: Bool)
+  typealias ActionTypeErasedReduceTuple = (
+    state: StateType,
+    action: ReduxTypes.ActionType,
+    modified: Bool
+  )
 
   typealias TypedActionReduceFunction = (ReduceTuple) -> ActionTypeErasedReduceTuple
-  typealias ActionTypeErasedReduceFunction = (ActionTypeErasedReduceTuple) -> ActionTypeErasedReduceTuple
+  typealias ActionTypeErasedReduceFunction = (ActionTypeErasedReduceTuple)
+    -> ActionTypeErasedReduceTuple
 
   func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction
 }
 
 extension MiddlewareType {
-
   func apply(_ reduce: @escaping ActionTypeErasedReduceFunction) -> ActionTypeErasedReduceFunction {
-    return { tuple in
+    { tuple in
       guard let typedTuple = tuple as? ReduceTuple else {
         return reduce(tuple)
       }
 
       let typedReduce: (ReduceTuple) -> ActionTypeErasedReduceTuple = { typedTuple in
         // We know that we can cast the typed action to ReduxTypes.ActionType
-        return reduce((state: typedTuple.state, action: typedTuple.action, modified: typedTuple.modified))
+        reduce((state: typedTuple.state, action: typedTuple.action, modified: typedTuple.modified))
       }
 
       return self.typedApply(typedReduce)(typedTuple)
@@ -96,54 +99,46 @@ extension MiddlewareType {
 }
 
 protocol EpicType: MiddlewareType {
-
   associatedtype EmitActionType
 
   init(emitter: ActionEmitter)
 }
 
 protocol UiComponent {
-
   associatedtype StateType
 
   init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
 }
 
 class ActionEmitter {
-
   let observable: Observable<ReduxTypes.ActionType>
 
   init() {
-    self.observable = self.subject.asObservable().observeOn(scheduler)
+    self.observable = self.subject.asObservable().observeOn(self.scheduler)
   }
 
-  func typedEmit<T>() -> ((T) -> Void) {
-    return { (action: T) in
-      self.subject.onNext(action)
-    }
+  func typedEmit<T>() -> (T) -> Void {
+    { (action: T) in self.subject.onNext(action) }
   }
 
-  func terminate() {
-    self.subject.onCompleted()
-  }
+  func terminate() { self.subject.onCompleted() }
 
-  deinit {
-    self.subject.onCompleted()
-  }
+  deinit { self.subject.onCompleted() }
 
   private let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
   private let subject = PublishSubject<ReduxTypes.ActionType>()
 }
 
 class ReduxContext {
-
   let actionEmitter = ActionEmitter()
   let stateSource: Observable<ReduxTypes.StateType>
 
-  convenience init(initialState: ReduxTypes.StateType,
-                   reducers: [ReduxTypes.ReduceFunction],
-                   middlewares: [(@escaping ReduxTypes.ReduceFunction) -> ReduxTypes.ReduceFunction] = []) {
-
+  convenience init(
+    initialState: ReduxTypes.StateType,
+    reducers: [ReduxTypes.ReduceFunction],
+    middlewares: [(@escaping ReduxTypes.ReduceFunction) -> ReduxTypes
+      .ReduceFunction] = []
+  ) {
     self.init(initialState: initialState)
 
     self.actionEmitter.observable
@@ -176,17 +171,11 @@ class ReduxContext {
 }
 
 extension Observable {
-
-  func completableSubject() -> CompletableSubject<Element> {
-    return CompletableSubject(source: self)
-  }
+  func completableSubject() -> CompletableSubject<Element> { CompletableSubject(source: self) }
 }
 
 class CompletableSubject<T> {
-
-  func asObservable() -> Observable<T> {
-    return self.subject.asObservable()
-  }
+  func asObservable() -> Observable<T> { self.subject.asObservable() }
 
   init(source: Observable<T>) {
     let subject = PublishSubject<T>()
@@ -204,16 +193,12 @@ class CompletableSubject<T> {
 }
 
 extension Observable {
-
   func reduce(
     by reducers: [(Element) -> Element],
     middlewares: [(@escaping (Element) -> Element) -> (Element) -> Element]
   ) -> Observable<Element> {
-
     let dispatch = { pair in
-      return reducers.reduce(pair) { result, reduceBody in
-        return reduceBody(result)
-      }
+      reducers.reduce(pair) { result, reduceBody in reduceBody(result) }
     }
 
     let next = middlewares.reversed().reduce(dispatch) { result, middleware in middleware(result) }
