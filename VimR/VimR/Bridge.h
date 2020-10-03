@@ -3,7 +3,6 @@
  * See LICENSE
  */
 
-#import "NetUtils.h"
 #import "FuzzyMatcher.h"
 #import "FoundationCommons.h"
 #import "ScoredUrl.h"

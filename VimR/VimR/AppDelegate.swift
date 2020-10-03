@@ -10,6 +10,7 @@ import Sparkle
 import DictionaryCoding
 import os
 import Commons
+import CommonsObjC
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
