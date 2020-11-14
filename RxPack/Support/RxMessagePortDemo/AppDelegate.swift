@@ -16,8 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var serverTextView: NSTextView!
   @IBOutlet var clientTextView: NSTextView!
 
-  private let server = RxMessagePortServer()
-  private let client = RxMessagePortClient()
+  private let server = RxMessagePortServer(queueQos: .default)
+  private let client = RxMessagePortClient(queueQos: .default)
 
   private var msgid = Int32(0)
 
