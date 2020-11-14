@@ -1,46 +1,43 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-echo "### Building VimR target"
-pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
-
-readonly deployment_target_file="./resources/x86_64_deployment_target.txt"
-readonly deployment_target=$(cat ${deployment_target_file})
 readonly code_sign=${code_sign:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
-readonly build_path="./build"
 
-# Carthage often crashes => do it at the beginning.
-echo "### Updating carthage"
-if [[ ${use_carthage_cache} == true ]]; then
+main () {
+  pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
+  echo "### Building VimR target"
+
+  local -r build_path="./build"
+
+  # Carthage often crashes => do it at the beginning.
+  echo "### Updating carthage"
+  if [[ "${use_carthage_cache}" == true ]]; then
     carthage update --cache-builds --platform macos
-else
+  else
     carthage update --platform macos
-fi
+  fi
 
-./bin/download_nvimserver.sh
+  ./bin/download_nvimserver.sh
 
-echo "### Xcodebuilding"
+  echo "### Xcodebuilding"
+  rm -rf ${build_path}
 
-rm -rf ${build_path}
+  if [[ "${code_sign}" == true ]]; then
+      xcodebuild -configuration Release -derivedDataPath ./build \
+        -workspace VimR.xcworkspace -scheme VimR \
+        clean build
 
-if [[ ${code_sign} == true ]] ; then
-    identity="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
-    entitlements_path=$(realpath Carthage/Build/Mac/NvimServer/NvimServer.entitlements)
+      local -r -x vimr_app_path="${build_path}/Build/Products/Release/VimR.app"
+      ./bin/sign_vimr.sh
+  else
+      xcodebuild -configuration Release -derivedDataPath ${build_path} \
+        -scheme VimR -workspace VimR.xcworkspace \
+        clean build
+  fi
 
-    xcodebuild -configuration Release -derivedDataPath ./build -workspace VimR.xcworkspace -scheme VimR clean build
+  echo "### Built VimR target"
+  popd >/dev/null
+}
 
-    pushd ${build_path}/Build/Products/Release > /dev/null
-        codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app
-        codesign --verbose --force -s "${identity}" --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A
-        codesign --verbose --force -s "${identity}" --timestamp --options=runtime --entitlements="${entitlements_path}" \
-            VimR.app/Contents/Resources/NvimView_NvimView.bundle/Contents/Resources/NvimServer
-
-        codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime VimR.app
-    popd > /dev/null
-else
-    xcodebuild -configuration Release -scheme VimR -workspace VimR.xcworkspace -derivedDataPath ${build_path} clean build
-fi
-
-popd > /dev/null
-echo "### Built VimR target"
+main
