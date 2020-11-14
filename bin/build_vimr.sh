@@ -4,7 +4,7 @@ set -Eeuo pipefail
 echo "### Building VimR target"
 pushd "$( dirname "${BASH_SOURCE[0]}" )/.." > /dev/null
 
-readonly deployment_target_file="./resources/x86_deployment_target.txt"
+readonly deployment_target_file="./resources/x86_64_deployment_target.txt"
 readonly deployment_target=$(cat ${deployment_target_file})
 readonly code_sign=${code_sign:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
@@ -33,7 +33,7 @@ if [[ ${code_sign} == true ]] ; then
     pushd ${build_path}/Build/Products/Release > /dev/null
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app
         codesign --force -s "${identity}" --timestamp --options=runtime --entitlements="${entitlements_path}" \
-            VimR.app/Contents/Frameworks/NvimView.framework/Versions/A/NvimServer
+            VimR.app/Contents/Resources/NvimView_NvimView.bundle/Contents/Resources/NvimServer
         codesign --force -s "${identity}" --timestamp --options=runtime VimR.app/Contents/Frameworks/NvimView.framework/Versions/A
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app
         codesign --force -s "${identity}" --deep --timestamp --options=runtime VimR.app/Contents/Frameworks/Sparkle.framework/Versions/A
