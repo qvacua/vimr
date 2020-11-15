@@ -6,7 +6,9 @@ readonly nvimserver_dir_path="${target_dir_path}/NvimServer"
 
 download_nvimserver() {
   echo "### Downloading NvimServer"
-  local -r version=$(cat ./resources/nvimserver_version.txt)
+  local version
+  version=$(cat ./resources/nvimserver_version.txt)
+  readonly version
 
   echo "#### Downloading ${version}"
 
@@ -29,7 +31,7 @@ download_nvimserver() {
 
 main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." > /dev/null
-  download_nvimserver
+    download_nvimserver
   popd >/dev/null
 }
 

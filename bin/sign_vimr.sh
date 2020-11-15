@@ -7,7 +7,9 @@ readonly identity="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
 main () {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
     echo "### Signing VimR"
-    local -r entitlements_path=$(realpath ./Carthage/Build/Mac/NvimServer/NvimServer.entitlements)
+    local entitlements_path
+    entitlements_path=$(realpath ./Carthage/Build/Mac/NvimServer/NvimServer.entitlements)
+    readonly entitlements_path
 
     codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime \
       "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app"
@@ -20,6 +22,7 @@ main () {
 
     codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime \
       "${vimr_app_path}"
+
     echo "### Signed VimR"
     echo "### Use 'spctl -a -vvvv ${vimr_app_path}' to verify the signing."
   popd >/dev/null

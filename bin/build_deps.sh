@@ -3,8 +3,13 @@ set -Eeuo pipefail
 
 main () {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." > /dev/null
-    local -r x86_64_deployment_target=$(cat ./resources/x86_64_deployment_target.txt)
-    local -r arm64_deployment_target=$(cat ./resources/arm64_deployment_target.txt)
+    local x86_64_deployment_target
+    x86_64_deployment_target=$(cat ./resources/x86_64_deployment_target.txt)
+    readonly x86_64_deployment_target
+
+    local arm64_deployment_target
+    arm64_deployment_target=$(cat ./resources/arm64_deployment_target.txt)
+    readonly arm64_deployment_target
 
     local -r pcre_version="8.43"
     local -r xz_version="5.2.4"

@@ -14,7 +14,7 @@ build_for_local_dev() {
   local -r nvimserver_path="./NvimServer"
 
   pushd ${nvimserver_path} >/dev/null
-    if [[ ${clean} == true ]]; then
+    if [[ "${clean}" == true ]]; then
       local -r -x clean_deps=false
       ./NvimServer/bin/clean_all.sh
     fi

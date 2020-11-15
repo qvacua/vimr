@@ -4,7 +4,7 @@ set -Eeuo pipefail
 readonly clean=${clean:?"true or false: when true, xcodebuild clean will be performed"}
 
 main() {
-  if "${clean}" ; then
+  if [[ "${clean}" == true ]]; then
     local -r cmd="clean build"
   else
     local -r cmd="build"
