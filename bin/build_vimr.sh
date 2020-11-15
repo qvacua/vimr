@@ -23,17 +23,13 @@ main () {
   echo "### Xcodebuilding"
   rm -rf ${build_path}
 
-  if [[ "${code_sign}" == true ]]; then
-      xcodebuild -configuration Release -derivedDataPath ./build \
-        -workspace VimR.xcworkspace -scheme VimR \
-        clean build
+  xcodebuild -configuration Release -derivedDataPath ${build_path} \
+    -workspace VimR.xcworkspace -scheme VimR \
+    clean build
 
+  if [[ "${code_sign}" == true ]]; then
       local -r -x vimr_app_path="${build_path}/Build/Products/Release/VimR.app"
       ./bin/sign_vimr.sh
-  else
-      xcodebuild -configuration Release -derivedDataPath ${build_path} \
-        -scheme VimR -workspace VimR.xcworkspace \
-        clean build
   fi
 
   echo "### Built VimR target"
