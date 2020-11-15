@@ -1415,7 +1415,7 @@
 			repositoryURL = "https://github.com/httpswift/swifter";
 			requirement = {
 				kind = exactVersion;
-				version = 1.4.7;
+				version = 1.5.0;
 			};
 		};
 		4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */ = {
@@ -1431,7 +1431,7 @@
 			repositoryURL = "https://github.com/iwasrobbed/Down";
 			requirement = {
 				kind = exactVersion;
-				version = 0.9.3;
+				version = 0.9.4;
 			};
 		};
 		4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {

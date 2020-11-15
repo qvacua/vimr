@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/iwasrobbed/Down",
         "state": {
           "branch": null,
-          "revision": "427aec0a0ab342246ec02369dea398597b61174a",
-          "version": "0.9.3"
+          "revision": "731f6bbab24ab208ea2d6a944e3f8a8a9d5273c7",
+          "version": "0.9.4"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/httpswift/swifter",
         "state": {
           "branch": null,
-          "revision": "8b5afb48ae64d4f729f0489ddcfe09c62b9c3687",
-          "version": "1.4.7"
+          "revision": "9483a5d459b45c3ffd059f7b55f9638e268632fd",
+          "version": "1.5.0"
         }
       }
     ]
