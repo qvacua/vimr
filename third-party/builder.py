@@ -36,6 +36,7 @@ class Builder:
                 cflags=self.config.target_specific_full_cflags(target),
                 deployment_target=self.config.target_specific_deployment_target(target),
                 install_path=self.config.target_specific_install_path(target),
+                host=self.config.target_specific_host(target),
             )
         )
         print(cmd)

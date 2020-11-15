@@ -6,7 +6,6 @@ from builder import Builder
 from config import Config
 from deps import ag, pcre, xz
 from deps.ag import AgBuilder
-from deps.pcre import PcreBuilder
 
 DEPS_FILE_NAME = ".deps"
 PACKAGE_NAME = "vimr-deps"
@@ -109,7 +108,7 @@ if __name__ == "__main__":
             make_command=xz.make_command,
             build_universal_and_install_command=xz.build_universal_and_install_command,
         ),
-        "pcre": PcreBuilder(
+        "pcre": Builder(
             pcre_config,
             download_command=pcre.download_command,
             make_command=pcre.make_command,

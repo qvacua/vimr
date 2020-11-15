@@ -52,18 +52,3 @@ lipo -create -output "${install_lib_path}/libpcre.a" "${arm64_lib_path}/libpcre.
 cp -r "${arm64_include_path}"/* "${install_include_path}"
 """
 )
-
-
-class PcreBuilder(Builder):
-    def make(self, target: Target):
-        cmd = self.make_command.substitute(
-            dict(
-                target=target.value,
-                cflags=self.config.target_specific_full_cflags(target),
-                deployment_target=self.config.target_specific_deployment_target(target),
-                install_path=self.config.target_specific_install_path(target),
-                host=self.config.target_specific_host(target),
-            )
-        )
-        print(cmd)
-        shell(cmd, cwd=self.config.working_directory)

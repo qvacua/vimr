@@ -34,6 +34,7 @@ pushd ./xz-${target} >/dev/null
     --disable-lzma-links \
     --disable-scripts \
     --disable-doc \
+    --host="${host}" \
     --prefix="${install_path}"
 make MACOSX_DEPLOYMENT_TARGET="${deployment_target}" install
 popd >/dev/null
