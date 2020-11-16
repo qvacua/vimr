@@ -80,15 +80,15 @@ extension NvimView {
     if cursorRegion.top < 0
        || cursorRegion.bottom > self.ugrid.size.height - 1
        || cursorRegion.left < 0
-       || cursorRegion.right > self.ugrid.size.width - 1 {
+       || cursorRegion.right > self.ugrid.size.width - 1
+    {
       self.log.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
     }
     guard let cellAtCursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     ) else {
-      self.log.error("Could not get the attributes" +
-                     " at cursor: \(cursorPosition)")
+      self.log.error("Could not get the attributes at cursor: \(cursorPosition)")
       return
     }
 
@@ -103,8 +103,7 @@ extension NvimView {
         of: cursorAttrId,
         withDefaults: cellAtCursorAttrs
       ) else {
-        self.log.error("Could not get the attributes" +
-          " for cursor in mode: \(mode) \(modeInfo)")
+        self.log.error("Could not get the attributes for cursor in mode: \(mode) \(modeInfo)")
         return
     }
 
@@ -131,24 +130,18 @@ extension NvimView {
       foreground: cursorTextColor,
       background: cursorShapeAttrs.effectiveBackground,
       special: cellAtCursorAttrs.special,
-      reverse: false)
+      reverse: true
+    )
 
     context.saveGState()
     // clip to cursor rect to support shapes like "ver25" and "hor50"
     context.clip(to: cursorRect)
     let attrsRun = AttributesRun(
-      location: self.pointInView(
-        forRow: cursorPosition.row, column: cursorPosition.column
-      ),
+      location: self.pointInView(forRow: cursorPosition.row, column: cursorPosition.column),
       cells: self.ugrid.cells[cursorPosition.row][cursorRegion.columnRange],
       attrs: cursorAttrs
     )
-    self.drawer.draw(
-      [attrsRun],
-      defaultAttributes: defaultAttrs,
-      offset: self.offset,
-      in: context
-    )
+    self.drawer.draw([attrsRun], defaultAttributes: defaultAttrs, offset: self.offset, in: context)
     context.restoreGState()
   }
 
