@@ -19,12 +19,14 @@ main() {
     echo "#### Uploaded"
     echo "Use 'xcrun altool --notarization-history 0 -u hataewon@gmail.com -p @keychain:dev-notar' or"
     echo "'xcrun altool --notarization-info ${request_uuid} -u hataewon@gmail.com -p @keychain:dev-notar'"
+  popd >/dev/null
 
-    pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
-      echo "#### Waiting for notarization ${request_uuid} to finish"
-      ./bin/wait_for_notarization.py
-    popd >/dev/null
+  pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
+    echo "#### Waiting for notarization ${request_uuid} to finish"
+    ./bin/wait_for_notarization.py
+  popd </dev/null
 
+  pushd "${vimr_app_path}/.." >/dev/null
     xcrun stapler staple VimR.app
     echo "### Notarization finished"
   popd >/dev/null
