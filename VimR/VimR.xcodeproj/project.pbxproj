@@ -145,9 +145,8 @@
 		4B9BC42524EB2E45000209B5 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42424EB2E45000209B5 /* RxRelay */; };
 		4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42624EB2E51000209B5 /* NvimView */; };
 		4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */; };
+		4BA284B2256471ED00CFDF7F /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4BA284B1256471ED00CFDF7F /* Sparkle */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
-		4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; };
-		4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4BD5657324E842E900D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
 		4BD5657424E842E900D52809 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
 		4BD5657524E842E900D52809 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5656024E8311400D52809 /* Down */; };
@@ -182,17 +181,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4B2A2BF01D02261F0074CE9A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4BC97BC82273B27600B68997 /* Sparkle.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B6A709B1D65079600E12030 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,9 +369,9 @@
 				4B9BC42324EB2E45000209B5 /* RxSwift in Frameworks */,
 				4B9BC41E24EB2E22000209B5 /* MessagePack in Frameworks */,
 				4B69B31D24EDC9F100B1E5EB /* Workspace in Frameworks */,
+				4BA284B2256471ED00CFDF7F /* Sparkle in Frameworks */,
 				4B69B31B24EDBAF000B1E5EB /* MaterialIcons in Frameworks */,
 				4BD5657324E842E900D52809 /* Swifter in Frameworks */,
-				4BC97BC72273B27500B68997 /* Sparkle.framework in Frameworks */,
 				4BD5657424E842E900D52809 /* PureLayout in Frameworks */,
 				4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */,
 				4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */,
@@ -774,7 +762,6 @@
 				4BEBA5011CFF374B00673FDF /* Sources */,
 				4BEBA5021CFF374B00673FDF /* Frameworks */,
 				4BEBA5031CFF374B00673FDF /* Resources */,
-				4B2A2BF01D02261F0074CE9A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -797,6 +784,7 @@
 				4BD67C7A24EC765900147C51 /* Commons */,
 				4B69B31A24EDBAF000B1E5EB /* MaterialIcons */,
 				4B69B31C24EDC9F100B1E5EB /* Workspace */,
+				4BA284B1256471ED00CFDF7F /* Sparkle */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
@@ -867,6 +855,7 @@
 				4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
 				4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */,
 				4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */,
+				4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1251,6 +1240,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 300;
 				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1280,6 +1270,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 300;
 				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1410,6 +1401,14 @@
 				version = 3.3.0;
 			};
 		};
+		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = "1.24.0-spm";
+			};
+		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
@@ -1498,6 +1497,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */;
 			productName = ShortcutRecorder;
+		};
+		4BA284B1256471ED00CFDF7F /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
