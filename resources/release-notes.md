@@ -1,6 +1,7 @@
 # Next
 
-* Neovim 0.5-dev (neovim/neovim@94b7ff730a1914c14f347f5dc75175dc34a4b3f5)
+* Universal binary!
+* Neovim 0.5-dev (neovim/neovim@0798ad3a3a071db1b647df5aecd7698ed9aff7d9)
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
 * Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
 
