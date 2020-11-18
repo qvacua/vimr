@@ -60,6 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     self.useSnapshot = initialAppState.useSnapshotUpdate
 
     super.init()
+
+    NSUserNotificationCenter.default.delegate = self
   }
 
   override func awakeFromNib() {

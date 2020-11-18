@@ -91,8 +91,8 @@ public class NvimView: NSView,
     }
 
     set {
-      guard newValue.isFixedPitch else {
-        return
+      if !newValue.fontDescriptor.symbolicTraits.contains(.monoSpace) {
+        self.log.info("\(newValue) is not monospaced.")
       }
 
       let size = newValue.pointSize

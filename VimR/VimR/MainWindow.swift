@@ -503,6 +503,7 @@ class MainWindow: NSObject,
 
   private func showInitError() {
     let notification = NSUserNotification()
+    notification.identifier = UUID().uuidString
     notification.title = "Error during initialization"
     notification.informativeText =
     """
