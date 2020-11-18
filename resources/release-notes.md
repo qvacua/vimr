@@ -3,6 +3,7 @@
 * Universal binary!
 * Neovim 0.5-dev (neovim/neovim@0798ad3a3a071db1b647df5aecd7698ed9aff7d9)
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
+* GH-812: Allow all fonts, but warn when variable width font is selected.
 * Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
 * Replace FontAwesome with [Material Icons](https://github.com/qvacua/material-icons).
 * Dependencies updates:
