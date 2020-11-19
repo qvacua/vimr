@@ -141,6 +141,11 @@ in the file browser and the buffer list, you can turn them off.
     fontPanelButton.target = self
     fontPanelButton.action = #selector(AppearancePref.showFontPanel(_:))
 
+    let fontInfo = self.infoTextField(markdown: #"""
+The font panel will show variable width fonts, but VimR does not support them.\
+If you select a variable width font, the rendering will be ... well ... questionable.
+"""#)
+
     let linespacingTitle = self.titleTextField(title: "Line Spacing:")
     let linespacingField = self.linespacingField
 
@@ -192,6 +197,7 @@ in the file browser and the buffer list, you can turn them off.
     self.addSubview(fileIconInfo)
     self.addSubview(fontTitle)
     self.addSubview(fontPanelButton)
+    self.addSubview(fontInfo)
     self.addSubview(linespacingTitle)
     self.addSubview(linespacingField)
     self.addSubview(characterspacingTitle)
@@ -221,6 +227,9 @@ in the file browser and the buffer list, you can turn them off.
     fontPanelButton.autoPinEdge(.top, to: .bottom, of: fileIconInfo, withOffset: 18)
     fontPanelButton.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
+    fontInfo.autoPinEdge(.top, to: .bottom, of: fontPanelButton, withOffset: 5)
+    fontInfo.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
+
     linespacingTitle.autoPinEdge(
       toSuperviewEdge: .left,
       withInset: 18,
@@ -229,14 +238,14 @@ in the file browser and the buffer list, you can turn them off.
     linespacingTitle.autoPinEdge(.right, to: .right, of: fontTitle)
     linespacingTitle.autoAlignAxis(.baseline, toSameAxisOf: linespacingField)
 
-    linespacingField.autoPinEdge(.top, to: .bottom, of: fontPanelButton, withOffset: 18)
+    linespacingField.autoPinEdge(.top, to: .bottom, of: fontInfo, withOffset: 18)
     linespacingField.autoPinEdge(.left, to: .right, of: linespacingTitle, withOffset: 5)
     linespacingField.autoSetDimension(.width, toSize: 60)
     NotificationCenter.default.addObserver(
       forName: NSControl.textDidEndEditingNotification,
       object: linespacingField,
       queue: nil
-    ) { [unowned self] _ in self.linespacingAction() }
+    ) { [weak self] _ in self?.linespacingAction() }
 
     characterspacingTitle.autoPinEdge(
       toSuperviewEdge: .left,
@@ -253,7 +262,7 @@ in the file browser and the buffer list, you can turn them off.
       forName: NSControl.textDidEndEditingNotification,
       object: characterspacingField,
       queue: nil
-    ) { [unowned self] _ in self.characterspacingAction() }
+    ) { [weak self] _ in self?.characterspacingAction() }
 
     characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
     characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
