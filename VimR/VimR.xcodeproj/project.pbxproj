@@ -333,7 +333,7 @@
 		4B97E2CD1D33F53D00FC0660 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		4BB409E61DD68CCC005F39A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FileBrowserMenu.xib; sourceTree = "<group>"; };
 		4BDF50181D77540900D8FBC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OpenQuicklyWindow.xib; sourceTree = "<group>"; };
-		4BEBA5051CFF374B00673FDF /* VimR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VimR.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BEBA5051CFF374B00673FDF /* VimR-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VimR-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA5081CFF374B00673FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BEBA50A1CFF374B00673FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BEBA50D1CFF374B00673FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -688,7 +688,7 @@
 		4BEBA5061CFF374B00673FDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4BEBA5051CFF374B00673FDF /* VimR.app */,
+				4BEBA5051CFF374B00673FDF /* VimR-dev.app */,
 				4BEBA5141CFF374B00673FDF /* VimRTests.xctest */,
 			);
 			name = Products;
@@ -787,7 +787,7 @@
 				4BA284B1256471ED00CFDF7F /* Sparkle */,
 			);
 			productName = VimR;
-			productReference = 4BEBA5051CFF374B00673FDF /* VimR.app */;
+			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
 			productType = "com.apple.product-type.application";
 		};
 		4BEBA5131CFF374B00673FDF /* VimRTests */ = {
@@ -1247,6 +1247,7 @@
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
+				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1259,7 +1260,8 @@
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
-				PRODUCT_NAME = VimR;
+				PRODUCT_MODULE_NAME = VimR;
+				PRODUCT_NAME = "$(VIMR_DISPLAY_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
 			name = Debug;
@@ -1277,6 +1279,7 @@
 					"$(PROJECT_DIR)/../Carthage/Build/Mac",
 				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
+				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1289,7 +1292,8 @@
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
-				PRODUCT_NAME = VimR;
+				PRODUCT_MODULE_NAME = VimR;
+				PRODUCT_NAME = "$(VIMR_DISPLAY_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = VimR/Bridge.h;
 			};
 			name = Release;
