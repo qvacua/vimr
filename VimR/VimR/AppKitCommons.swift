@@ -6,15 +6,11 @@
 import Cocoa
 import Down
 
-
 extension NSView {
-  
   @objc var isFirstResponder: Bool { self.window?.firstResponder == self }
 }
 
-
 extension NSAttributedString {
-
   static func infoLabel(markdown: String) -> NSAttributedString {
     let down = Down(markdownString: markdown)
     guard let result = try? down.toAttributedString(styler: downStyler) else {
@@ -26,7 +22,6 @@ extension NSAttributedString {
 }
 
 extension NSTableView {
-
   static func standardTableView() -> NSTableView {
     let tableView = NSTableView(frame: CGRect.zero)
 
@@ -53,7 +48,6 @@ extension NSTableView {
 }
 
 extension NSOutlineView {
-
   static func standardOutlineView() -> NSOutlineView {
     let outlineView = NSOutlineView(frame: CGRect.zero)
     NSOutlineView.configure(toStandard: outlineView)
@@ -99,18 +93,16 @@ extension NSOutlineView {
 }
 
 extension NSTextField {
-
   static func defaultTitleTextField() -> NSTextField {
     let field = NSTextField(forAutoLayout: ())
-    field.backgroundColor = NSColor.clear;
-    field.isEditable = false;
-    field.isBordered = false;
+    field.backgroundColor = NSColor.clear
+    field.isEditable = false
+    field.isBordered = false
     return field
   }
 }
 
 extension NSScrollView {
-
   static func standardScrollView() -> NSScrollView {
     let scrollView = NSScrollView(frame: CGRect.zero)
 
@@ -124,8 +116,7 @@ extension NSScrollView {
   }
 }
 
-private class AttributedStringMarkdownStyler {
-
+private enum AttributedStringMarkdownStyler {
   static func new() -> Styler {
     let fonts = StaticFontCollection(
       body: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
@@ -138,7 +129,6 @@ private class AttributedStringMarkdownStyler {
 }
 
 private struct ParagraphStyles: ParagraphStyleCollection {
-
   let heading1: NSParagraphStyle
   let heading2: NSParagraphStyle
   let heading3: NSParagraphStyle
@@ -170,7 +160,6 @@ private struct ParagraphStyles: ParagraphStyleCollection {
     self.code = codeStyle
   }
 }
-
 
 private let fontCollection = StaticFontCollection(
   body: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),

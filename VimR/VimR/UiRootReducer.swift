@@ -6,7 +6,6 @@
 import Foundation
 
 class UiRootReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = UiRoot.Action
 
@@ -16,17 +15,14 @@ class UiRootReducer: ReducerType {
     var appState = tuple.state
 
     switch tuple.action {
-
     case .quit:
       appState.quit = true
-
     }
 
     return (appState, tuple.action, true)
   }
 
   class MainWindowReducer: ReducerType {
-
     typealias StateType = AppState
     typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -35,7 +31,6 @@ class UiRootReducer: ReducerType {
       let uuid = tuple.action.uuid
 
       switch tuple.action.payload {
-
       case let .becomeKey(isFullScreen):
         appState.currentMainWindowUuid = uuid
 
@@ -49,7 +44,7 @@ class UiRootReducer: ReducerType {
           isFullScreen: isFullScreen
         )
 
-      case let .frameChanged(to:frame):
+      case let .frameChanged(to: frame):
         if appState.mainWindows[uuid]?.isTemporarySession == true {
           break
         }
@@ -63,7 +58,7 @@ class UiRootReducer: ReducerType {
           break
         }
 
-        appState.mainWindowTemplate.orderedTools = tools.map { $0.0 }
+        appState.mainWindowTemplate.orderedTools = tools.map(\.0)
 
       case let .toggleAllTools(value):
         if appState.mainWindows[uuid]?.isTemporarySession == true {
@@ -90,8 +85,8 @@ class UiRootReducer: ReducerType {
         }
 
         if appState.currentMainWindowUuid == uuid,
-           let mainWindowToClose = appState.mainWindows[uuid] {
-
+           let mainWindowToClose = appState.mainWindows[uuid]
+        {
           appState.currentMainWindowUuid = nil
           appState.mainWindowTemplate = self.mainWindowTemplate(
             from: appState.mainWindowTemplate,
@@ -107,7 +102,6 @@ class UiRootReducer: ReducerType {
 
       default:
         return tuple
-
       }
 
       return (appState, tuple.action, true)
@@ -115,8 +109,8 @@ class UiRootReducer: ReducerType {
 
     private func mainWindowTemplate(from old: MainWindow.State,
                                     new: MainWindow.State,
-                                    isFullScreen: Bool) -> MainWindow.State {
-
+                                    isFullScreen: Bool) -> MainWindow.State
+    {
       var result = old
 
       if !isFullScreen {

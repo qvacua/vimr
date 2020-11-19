@@ -4,14 +4,14 @@
  */
 
 import Cocoa
-import RxSwift
 import NvimView
 import RxPack
+import RxSwift
 import Workspace
 
 // MARK: - NvimViewDelegate
-extension MainWindow {
 
+extension MainWindow {
   // Use only when Cmd-Q'ing
   func waitTillNvimExits() {
     self.neoVimView.waitTillNvimExits()
@@ -35,7 +35,9 @@ extension MainWindow {
       self.window.toggleFullScreen(nil)
     }
 
-    guard let cliPipePath = self.cliPipePath, FileManager.default.fileExists(atPath: cliPipePath) else {
+    guard let cliPipePath = self.cliPipePath,
+          FileManager.default.fileExists(atPath: cliPipePath)
+    else {
       return
     }
 
@@ -92,8 +94,10 @@ extension MainWindow {
     self
       .updateCssColors()
       .subscribe(onSuccess: { colors in
-        self.emit(self.uuidAction(
-          for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
+        self.emit(
+          self.uuidAction(
+            for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors))
+          )
         )
       })
       .disposed(by: self.disposeBag)
@@ -103,10 +107,12 @@ extension MainWindow {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")
     alert.messageText = "Sorry, an error occurred."
-    alert.informativeText = "VimR encountered an error from which it cannot recover. This window will now close.\n"
-                            + reason
+    alert
+      .informativeText =
+      "VimR encountered an error from which it cannot recover. This window will now close.\n"
+        + reason
     alert.alertStyle = .critical
-    alert.beginSheetModal(for: self.window) { response in
+    alert.beginSheetModal(for: self.window) { _ in
       self.windowController.close()
     }
   }
@@ -132,7 +138,7 @@ extension MainWindow {
       "CursorColumn", // code background and foreground
     ]
 
-    typealias HlResult = Dictionary<String, RxNeovimApi.Value>
+    typealias HlResult = [String: RxNeovimApi.Value]
     typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
     typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
 
@@ -164,7 +170,6 @@ extension MainWindow {
 // MARK: - NSWindowDelegate
 
 extension MainWindow {
-
   func windowWillEnterFullScreen(_: Notification) {
     self.unthemeTitlebar(dueFullScreen: true)
   }
@@ -175,20 +180,24 @@ extension MainWindow {
     }
   }
 
-  func windowDidBecomeMain(_ notification: Notification) {
-    self.emit(self.uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen))))
+  func windowDidBecomeMain(_: Notification) {
+    self
+      .emit(
+        self
+          .uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen)))
+      )
     self.neoVimView.didBecomeMain().subscribe().disposed(by: self.disposeBag)
   }
 
-  func windowDidResignMain(_ notification: Notification) {
+  func windowDidResignMain(_: Notification) {
     self.neoVimView.didResignMain().subscribe().disposed(by: self.disposeBag)
   }
 
-  func windowDidMove(_ notification: Notification) {
+  func windowDidMove(_: Notification) {
     self.emit(self.uuidAction(for: .frameChanged(to: self.window.frame)))
   }
 
-  func windowDidResize(_ notification: Notification) {
+  func windowDidResize(_: Notification) {
     if self.window.styleMask.contains(.fullScreen) {
       return
     }
@@ -199,7 +208,7 @@ extension MainWindow {
   func windowShouldClose(_: NSWindow) -> Bool {
     defer { self.closeWindow = false }
 
-    if (self.neoVimView.isBlocked().syncValue() ?? false) {
+    if self.neoVimView.isBlocked().syncValue() ?? false {
       let alert = NSAlert()
       alert.messageText = "Nvim is waiting for your input."
       alert.alertStyle = .informational
@@ -221,7 +230,7 @@ extension MainWindow {
       return false
     }
 
-    guard (self.neoVimView.isCurrentBufferDirty().syncValue() ?? false) else {
+    guard self.neoVimView.isCurrentBufferDirty().syncValue() ?? false else {
       try? self.neoVimView.closeCurrentTab().wait()
       return false
     }
@@ -249,13 +258,13 @@ extension MainWindow {
 }
 
 // MARK: - WorkspaceDelegate
-extension MainWindow {
 
-  func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?) {
+extension MainWindow {
+  func resizeWillStart(workspace _: Workspace, tool _: WorkspaceTool?) {
     self.neoVimView.enterResizeMode()
   }
 
-  func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?) {
+  func resizeDidEnd(workspace _: Workspace, tool: WorkspaceTool?) {
     self.neoVimView.exitResizeMode()
 
     if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
@@ -270,13 +279,14 @@ extension MainWindow {
   }
 
   func moved(tool: WorkspaceTool) {
-    let tools = self.workspace.orderedTools.compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
-      guard let toolId = self.toolIdentifier(for: tool) else {
-        return nil
-      }
+    let tools = self.workspace.orderedTools
+      .compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
+        guard let toolId = self.toolIdentifier(for: tool) else {
+          return nil
+        }
 
-      return (toolId, tool)
-    }
+        return (toolId, tool)
+      }
 
     self.emit(self.uuidAction(for: .setToolsState(tools)))
   }

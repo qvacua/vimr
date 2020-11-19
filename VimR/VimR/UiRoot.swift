@@ -7,11 +7,9 @@ import Cocoa
 import RxSwift
 
 class UiRoot: UiComponent {
-
   typealias StateType = AppState
 
   enum Action {
-
     case quit
   }
 
@@ -56,11 +54,9 @@ class UiRoot: UiComponent {
         guard self.mainWindows.isEmpty else { return }
 
         switch state.afterLastWindowAction {
-
         case .doNothing: return
         case .hide: NSApp.hide(self)
         case .quit: self.emit(.quit)
-
         }
       })
       .disposed(by: self.disposeBag)
@@ -108,9 +104,11 @@ class UiRoot: UiComponent {
       .completableSubject()
 
     self.subjectForMainWindows[state.uuid] = subject
-    return MainWindow(source: subject.asObservable(),
-                      emitter: self.emitter,
-                      state: state)
+    return MainWindow(
+      source: subject.asObservable(),
+      emitter: self.emitter,
+      state: state
+    )
   }
 
   private func removeMainWindow(with uuid: UUID) {

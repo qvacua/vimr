@@ -7,21 +7,22 @@ import Cocoa
 import NvimView
 
 class PrefUtils {
-
   static func value<T>(from dict: [String: Any], for key: String) -> T? {
-    return dict[key] as? T
+    dict[key] as? T
   }
 
   static func value<T>(from dict: [String: Any], for key: String, default defaultValue: T) -> T {
-    return dict[key] as? T ?? defaultValue
+    dict[key] as? T ?? defaultValue
   }
 
   static func dict(from dict: [String: Any], for key: String) -> [String: Any]? {
-    return dict[key] as? [String: Any]
+    dict[key] as? [String: Any]
   }
 
-  static func float(from dict: [String: Any], for key: String, default defaultValue: Float) -> Float {
-    return (dict[key] as? NSNumber)?.floatValue ?? defaultValue
+  static func float(from dict: [String: Any], for key: String,
+                    default defaultValue: Float) -> Float
+  {
+    (dict[key] as? NSNumber)?.floatValue ?? defaultValue
   }
 
   static func float(from dict: [String: Any], for key: String) -> Float? {
@@ -41,15 +42,17 @@ class PrefUtils {
   }
 
   static func bool(from dict: [String: Any], for key: String, default defaultValue: Bool) -> Bool {
-    return (dict[key] as? NSNumber)?.boolValue ?? defaultValue
+    (dict[key] as? NSNumber)?.boolValue ?? defaultValue
   }
 
   static func string(from dict: [String: Any], for key: String) -> String? {
-    return dict[key] as? String
+    dict[key] as? String
   }
 
-  static func string(from dict: [String: Any], for key: String, default defaultValue: String) -> String {
-    return dict[key] as? String ?? defaultValue
+  static func string(from dict: [String: Any], for key: String,
+                     default defaultValue: String) -> String
+  {
+    dict[key] as? String ?? defaultValue
   }
 
   static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
@@ -66,19 +69,19 @@ class PrefUtils {
 
   static func saneLinespacing(_ fLinespacing: Float) -> CGFloat {
     let linespacing = fLinespacing.cgf
-    guard linespacing >= NvimView.minLinespacing && linespacing <= NvimView.maxLinespacing else {
+    guard linespacing >= NvimView.minLinespacing, linespacing <= NvimView.maxLinespacing else {
       return NvimView.defaultLinespacing
     }
 
     return linespacing
   }
-  
+
   static func saneCharacterspacing(_ fCharacterspacing: Float) -> CGFloat {
     let characterspacing = fCharacterspacing.cgf
     guard characterspacing >= 0.0 else {
       return NvimView.defaultCharacterspacing
     }
-    
+
     return characterspacing
   }
 }

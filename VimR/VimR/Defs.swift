@@ -7,11 +7,9 @@ import Foundation
 import WebKit
 
 struct Defs {
-
   static let loggerSubsystem = Bundle.main.bundleIdentifier!
 
-  struct LoggerCategory {
-
+  enum LoggerCategory {
     static let general = "general"
 
     static let ui = "ui"

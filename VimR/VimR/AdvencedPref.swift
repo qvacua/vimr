@@ -8,11 +8,9 @@ import PureLayout
 import RxSwift
 
 class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
-
   typealias StateType = AppState
 
   enum Action {
-
     case setUseInteractiveZsh(Bool)
     case setUseSnapshotUpdate(Bool)
     case setTrackpadScrollResistance(Double)
@@ -21,11 +19,11 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   override var displayName: String {
-    return "Advanced"
+    "Advanced"
   }
 
   override var pinToContainer: Bool {
-    return true
+    true
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -46,10 +44,10 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
-           || self.useSnapshotUpdate != state.useSnapshotUpdate
-           || self.useLiveResize != state.mainWindowTemplate.useLiveResize
-           || self.drawsParallel != state.mainWindowTemplate.drawsParallel {
-
+          || self.useSnapshotUpdate != state.useSnapshotUpdate
+          || self.useLiveResize != state.mainWindowTemplate.useLiveResize
+          || self.drawsParallel != state.mainWindowTemplate.drawsParallel
+        {
           self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
           self.useSnapshotUpdate = state.useSnapshotUpdate
           self.useLiveResize = state.mainWindowTemplate.useLiveResize
@@ -76,7 +74,8 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
   private let sensitivitySlider = NSSlider(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -93,47 +92,55 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let paneTitle = self.paneTitleTextField(title: "Advanced")
 
     let useInteractiveZsh = self.useInteractiveZshCheckbox
-    self.configureCheckbox(button: useInteractiveZsh,
-                           title: "Use interactive mode for zsh",
-                           action: #selector(AdvancedPref.useInteractiveZshAction(_:)))
+    self.configureCheckbox(
+      button: useInteractiveZsh,
+      title: "Use interactive mode for zsh",
+      action: #selector(AdvancedPref.useInteractiveZshAction(_:))
+    )
 
     let useInteractiveZshInfo = self.infoTextField(markdown: #"""
-If your login shell is `zsh`, when checked, the `-i` option will be used to launch `zsh`.\
-Checking this option may break VimR if your `.zshrc` contains complex stuff.\
-It may be a good idea to put the `PATH`-settings in `.zshenv` and let this unchecked.\
-*Use with caution.*
-"""#)
+    If your login shell is `zsh`, when checked, the `-i` option will be used to launch `zsh`.\
+    Checking this option may break VimR if your `.zshrc` contains complex stuff.\
+    It may be a good idea to put the `PATH`-settings in `.zshenv` and let this unchecked.\
+    *Use with caution.*
+    """#)
 
     let useSnapshotUpdate = self.useSnapshotUpdateCheckbox
-    self.configureCheckbox(button: self.useSnapshotUpdateCheckbox,
-                           title: "Use Snapshot Update Channel",
-                           action: #selector(AdvancedPref.useSnapshotUpdateChannelAction(_:)))
+    self.configureCheckbox(
+      button: self.useSnapshotUpdateCheckbox,
+      title: "Use Snapshot Update Channel",
+      action: #selector(AdvancedPref.useSnapshotUpdateChannelAction(_:))
+    )
 
     let useSnapshotUpdateInfo = self.infoTextField(markdown: #"""
-If you are adventurous, check this. You'll be test driving the newest snapshot builds\
-of VimR in no time!
-"""#)
+    If you are adventurous, check this. You'll be test driving the newest snapshot builds\
+    of VimR in no time!
+    """#)
 
     let useLiveResize = self.useLiveResizeCheckbox
-    self.configureCheckbox(button: useLiveResize,
-                           title: "Use Live Window Resizing",
-                           action: #selector(AdvancedPref.useLiveResizeAction(_:)))
+    self.configureCheckbox(
+      button: useLiveResize,
+      title: "Use Live Window Resizing",
+      action: #selector(AdvancedPref.useLiveResizeAction(_:))
+    )
 
     let useLiveResizeInfo = self.infoTextField(markdown: #"""
-The Live Resizing is yet experimental. You may experience some issues.\
-If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
-"""#)
+    The Live Resizing is yet experimental. You may experience some issues.\
+    If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
+    """#)
 
     let drawsParallelBox = self.drawsParallelCheckbox
-    self.configureCheckbox(button: drawsParallelBox,
-                           title: "Use Concurrent Rendering",
-                           action: #selector(AdvancedPref.drawParallelAction(_:)))
+    self.configureCheckbox(
+      button: drawsParallelBox,
+      title: "Use Concurrent Rendering",
+      action: #selector(AdvancedPref.drawParallelAction(_:))
+    )
 
     let drawsParallelInfo = self.infoTextField(markdown: #"""
-VimR can compute the glyphs concurrently. This may result in faster rendering,\
-depending on the situation. It will definitely result in higher CPU usage, e.g.\
-when scrolling very fast.
-"""#)
+    VimR can compute the glyphs concurrently. This may result in faster rendering,\
+    depending on the situation. It will definitely result in higher CPU usage, e.g.\
+    when scrolling very fast.
+    """#)
 
     let sensitivityTitle = self.titleTextField(title: "Scroll Sensitivity:")
     let sensitivity = self.sensitivitySlider
@@ -142,9 +149,9 @@ when scrolling very fast.
     sensitivity.target = self
     sensitivity.action = #selector(sensitivitySliderAction)
     let sensitivityInfo = self.infoTextField(markdown: #"""
-Trackpad scroll sensitivity is yet experimental. You may experience some issues.\
-If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
-"""#)
+    Trackpad scroll sensitivity is yet experimental. You may experience some issues.\
+    If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
+    """#)
 
     // We set the value of the NSSlider only at the beginning.
     self.sensitivitySlider.doubleValue = self.sensitivity
@@ -156,7 +163,7 @@ If you do, please report them at [GitHub issue #572](https://github.com/qvacua/v
     self.addSubview(useInteractiveZsh)
     self.addSubview(useInteractiveZshInfo)
     self.addSubview(sensitivityTitle)
-    self.addSubview(sensitivitySlider)
+    self.addSubview(self.sensitivitySlider)
     self.addSubview(sensitivityInfo)
     self.addSubview(useLiveResize)
     self.addSubview(useLiveResizeInfo)
@@ -174,7 +181,7 @@ If you do, please report them at [GitHub issue #572](https://github.com/qvacua/v
     sensitivity.autoAlignAxis(.baseline, toSameAxisOf: sensitivityTitle)
     sensitivity.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
-    sensitivityInfo.autoPinEdge(.top, to: .bottom, of: sensitivitySlider, withOffset: 5)
+    sensitivityInfo.autoPinEdge(.top, to: .bottom, of: self.sensitivitySlider, withOffset: 5)
     sensitivityInfo.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
 
     useLiveResize.autoPinEdge(.top, to: .bottom, of: sensitivityInfo, withOffset: 18)
@@ -204,8 +211,8 @@ If you do, please report them at [GitHub issue #572](https://github.com/qvacua/v
 }
 
 // MARK: - Actions
-extension AdvancedPref {
 
+extension AdvancedPref {
   @objc func useLiveResizeAction(_ sender: NSButton) {
     self.emit(.setUseLiveResize(sender.boolState))
   }

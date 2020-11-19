@@ -3,22 +3,21 @@
  * See LICENSE
  */
 
-import Foundation
-import EonilFSEvents
-import os
 import Commons
+import EonilFSEvents
+import Foundation
+import os
 
 class FileMonitor {
-
   static let fileSystemEventsLatency = 1.0
 
   private(set) var urlToMonitor = FileUtils.userHomeUrl
 
-  func monitor(url: URL, eventHandler: (@escaping (URL) -> Void)) throws {
+  func monitor(url: URL, eventHandler: @escaping (URL) -> Void) throws {
     self.stopMonitor()
     self.urlToMonitor = url
     self.monitor = try EonilFSEventStream(
-      pathsToWatch: [urlToMonitor.path],
+      pathsToWatch: [self.urlToMonitor.path],
       sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
       latency: FileMonitor.fileSystemEventsLatency,
       flags: [],

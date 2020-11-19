@@ -4,18 +4,17 @@
  */
 
 import Cocoa
-import RxSwift
 import PureLayout
+import RxSwift
 
 class PrefWindow: NSObject,
-                  UiComponent,
-                  NSWindowDelegate,
-                  NSTableViewDataSource, NSTableViewDelegate {
-
+  UiComponent,
+  NSWindowDelegate,
+  NSTableViewDataSource, NSTableViewDelegate
+{
   typealias StateType = AppState
 
   enum Action {
-
     case close
   }
 
@@ -66,7 +65,7 @@ class PrefWindow: NSObject,
 
   private let windowController: NSWindowController
   private var window: NSWindow {
-    return self.windowController.window!
+    self.windowController.window!
   }
 
   private let categoryView = NSTableView.standardSourceListTableView()
@@ -76,7 +75,7 @@ class PrefWindow: NSObject,
   private let panes: [PrefPane]
   private var currentPane: PrefPane {
     get {
-      return self.paneContainer.documentView as! PrefPane
+      self.paneContainer.documentView as! PrefPane
     }
 
     set {
@@ -124,8 +123,8 @@ class PrefWindow: NSObject,
 }
 
 // MARK: - NSWindowDelegate
-extension PrefWindow {
 
+extension PrefWindow {
   func windowShouldClose(_: NSWindow) -> Bool {
     self.emit(.close)
 
@@ -138,20 +137,24 @@ extension PrefWindow {
 }
 
 // MARK: - NSTableViewDataSource
-extension PrefWindow {
 
+extension PrefWindow {
   @objc(numberOfRowsInTableView:) func numberOfRows(in _: NSTableView) -> Int {
-    return self.panes.count
+    self.panes.count
   }
 
-  @objc(tableView: objectValueForTableColumn:row:) func tableView(_: NSTableView, objectValueFor _: NSTableColumn?, row: Int) -> Any? {
-    return self.panes[row].displayName
+  @objc(tableView: objectValueForTableColumn:row:) func tableView(
+    _: NSTableView,
+    objectValueFor _: NSTableColumn?,
+    row: Int
+  ) -> Any? {
+    self.panes[row].displayName
   }
 }
 
 // MARK: - NSTableViewDelegate
-extension PrefWindow {
 
+extension PrefWindow {
   func tableViewSelectionDidChange(_: Notification) {
     let idx = self.categoryView.selectedRow
     self.panes[idx].paneWillAppear()

@@ -4,21 +4,19 @@
  */
 
 import Cocoa
-import RxSwift
-import PureLayout
-import Sparkle
-import DictionaryCoding
-import os
 import Commons
 import CommonsObjC
+import DictionaryCoding
+import os
+import PureLayout
+import RxSwift
+import Sparkle
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
-
   struct OpenConfig {
-
     var urls: [URL]
     var cwd: URL
 
@@ -29,7 +27,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
   }
 
   enum Action {
-
     case newMainWindow(config: OpenConfig)
     case openInKeyWindow(config: OpenConfig)
 
@@ -42,9 +39,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     var initialAppState: AppState
 
     let dictDecoder = DictionaryDecoder()
-    if let stateDict = UserDefaults.standard.value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any],
-       let state = try? dictDecoder.decode(AppState.self, from: stateDict) {
-
+    if let stateDict = UserDefaults.standard
+      .value(forKey: PrefMiddleware.compatibleVersion) as? [String: Any],
+      let state = try? dictDecoder.decode(AppState.self, from: stateDict)
+    {
       initialAppState = state
     } else {
       initialAppState = .default
@@ -113,8 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
   private var launching = true
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.general)
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
 
   private func setSparkleUrl(_ snapshot: Bool) {
     if snapshot {
@@ -130,27 +127,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 }
 
 // MARK: - NSApplicationDelegate
-extension AppDelegate {
 
+extension AppDelegate {
   func applicationWillFinishLaunching(_: Notification) {
     self.launching = true
 
     let appleEventManager = NSAppleEventManager.shared()
-    appleEventManager.setEventHandler(self,
-                                      andSelector: #selector(AppDelegate.handle(getUrlEvent:replyEvent:)),
-                                      forEventClass: UInt32(kInternetEventClass),
-                                      andEventID: UInt32(kAEGetURL))
+    appleEventManager.setEventHandler(
+      self,
+      andSelector: #selector(AppDelegate.handle(getUrlEvent:replyEvent:)),
+      forEventClass: UInt32(kInternetEventClass),
+      andEventID: UInt32(kAEGetURL)
+    )
   }
 
   func applicationDidFinishLaunching(_: Notification) {
     self.launching = false
 
     #if DEBUG
-    NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
+      NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
     #endif
   }
 
-  func applicationOpenUntitledFile(_ sender: NSApplication) -> Bool {
+  func applicationOpenUntitledFile(_: NSApplication) -> Bool {
     if self.launching {
       if self.openNewMainWindowOnLaunch {
         self.newDocument(self)
@@ -166,7 +165,7 @@ extension AppDelegate {
     return false
   }
 
-  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+  func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
     self.context.savePrefs()
 
     guard self.hasMainWindows else {
@@ -210,7 +209,8 @@ extension AppDelegate {
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
     let config = OpenConfig(
-      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil,
+      line: nil
     )
     self.emit(.newMainWindow(config: config))
 
@@ -226,37 +226,32 @@ extension AppDelegate {
 }
 
 // MARK: - AppleScript
+
 extension AppDelegate {
+  @objc func handle(
+    getUrlEvent event: NSAppleEventDescriptor,
+    replyEvent _: NSAppleEventDescriptor
+  ) {
+    guard let urlString = event.paramDescriptor(forKeyword: UInt32(keyDirectObject))?.stringValue
+    else { return }
 
-  @objc func handle(getUrlEvent event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
-    guard let urlString = event.paramDescriptor(forKeyword: UInt32(keyDirectObject))?.stringValue else {
-      return
-    }
+    guard let url = URL(string: urlString) else { return }
 
-    guard let url = URL(string: urlString) else {
-      return
-    }
+    guard url.scheme == "vimr" else { return }
 
-    guard url.scheme == "vimr" else {
-      return
-    }
+    guard let rawAction = url.host else { return }
 
-    guard let rawAction = url.host else {
-      return
-    }
-
-    guard let action = VimRUrlAction(rawValue: rawAction) else {
-      return
-    }
+    guard let action = VimRUrlAction(rawValue: rawAction) else { return }
 
     let rawParams = url.query?.components(separatedBy: "&") ?? []
 
-    guard let pipePath = queryParam(pipePathPrefix, from: rawParams, transforming: identity).first else {
+    guard let pipePath = queryParam(pipePathPrefix, from: rawParams, transforming: identity).first
+    else {
       let alert = NSAlert()
       alert.alertStyle = .informational
       alert.messageText = "Outdated Command Line Tool?"
       alert.informativeText = "It seems that the installed vimr command line tool is outdated." +
-                              "Please re-install it from the General Preferences."
+        "Please re-install it from the General Preferences."
       alert.runModal()
 
       return
@@ -275,7 +270,7 @@ extension AppDelegate {
 
     let envDict: [String: String]?
     if let envPath = queryParam(envPathPrefix, from: rawParams, transforming: identity).first {
-      envDict = stringDict(from: URL(fileURLWithPath: envPath))
+      envDict = self.stringDict(from: URL(fileURLWithPath: envPath))
       if FileManager.default.fileExists(atPath: envPath) {
         do {
           try FileManager.default.removeItem(atPath: envPath)
@@ -287,45 +282,79 @@ extension AppDelegate {
       envDict = nil
     }
 
-    let line = queryParam(linePrefix, from: rawParams, transforming: { Int($0) }).compactMap { $0 }.first
-    let urls = queryParam(filePrefix, from: rawParams, transforming: { URL(fileURLWithPath: $0) })
-    let cwd = queryParam(cwdPrefix,
-                         from: rawParams,
-                         transforming: { URL(fileURLWithPath: $0) }).first ?? FileUtils.userHomeUrl
-    let wait = queryParam(waitPrefix, from: rawParams, transforming: { $0 == "true" ? true : false }).first ?? false
+    let line = self.queryParam(linePrefix, from: rawParams, transforming: { Int($0) })
+      .compactMap { $0 }.first
+    let urls = self.queryParam(
+      filePrefix,
+      from: rawParams,
+      transforming: { URL(fileURLWithPath: $0) }
+    )
+    let cwd = self.queryParam(
+      cwdPrefix,
+      from: rawParams,
+      transforming: { URL(fileURLWithPath: $0) }
+    ).first ?? FileUtils.userHomeUrl
+    let wait = self.queryParam(
+      waitPrefix,
+      from: rawParams,
+      transforming: { $0 == "true" ? true : false }
+    ).first ?? false
 
-    if wait == false {
-      _ = Darwin.close(Darwin.open(pipePath, O_WRONLY))
-    }
+    if wait == false { _ = Darwin.close(Darwin.open(pipePath, O_WRONLY)) }
 
     // If we don't do this, the window is active, but not in front.
     NSApp.activate(ignoringOtherApps: true)
 
     switch action {
-
     case .activate, .newWindow:
-      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      let config = OpenConfig(
+        urls: urls,
+        cwd: cwd,
+        cliPipePath: pipePath,
+        nvimArgs: nil,
+        envDict: envDict,
+        line: line
+      )
       self.emit(.newMainWindow(config: config))
 
     case .open:
-      let config = OpenConfig(urls: urls, cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: envDict, line: line)
+      let config = OpenConfig(
+        urls: urls,
+        cwd: cwd,
+        cliPipePath: pipePath,
+        nvimArgs: nil,
+        envDict: envDict,
+        line: line
+      )
       self.emit(.openInKeyWindow(config: config))
 
     case .separateWindows:
       urls.forEach {
-        let config = OpenConfig(urls: [$0], cwd: cwd, cliPipePath: pipePath, nvimArgs: nil, envDict: nil, line: line)
+        let config = OpenConfig(
+          urls: [$0],
+          cwd: cwd,
+          cliPipePath: pipePath,
+          nvimArgs: nil,
+          envDict: nil,
+          line: line
+        )
         self.emit(.newMainWindow(config: config))
       }
 
     case .nvim:
-      let config = OpenConfig(urls: urls,
-                              cwd: cwd,
-                              cliPipePath: pipePath,
-                              nvimArgs: queryParam(nvimArgsPrefix, from: rawParams, transforming: identity),
-                              envDict: envDict,
-                              line: line)
+      let config = OpenConfig(
+        urls: urls,
+        cwd: cwd,
+        cliPipePath: pipePath,
+        nvimArgs: queryParam(
+          nvimArgsPrefix,
+          from: rawParams,
+          transforming: identity
+        ),
+        envDict: envDict,
+        line: line
+      )
       self.emit(.newMainWindow(config: config))
-
     }
   }
 
@@ -345,9 +374,9 @@ extension AppDelegate {
 
   private func queryParam<T>(_ prefix: String,
                              from rawParams: [String],
-                             transforming transform: (String) -> T) -> [T] {
-
-    return rawParams
+                             transforming transform: (String) -> T) -> [T]
+  {
+    rawParams
       .filter { $0.hasPrefix(prefix) }
       .compactMap { $0.without(prefix: prefix).removingPercentEncoding }
       .map(transform)
@@ -355,26 +384,22 @@ extension AppDelegate {
 }
 
 // MARK: - IBActions
-extension AppDelegate {
 
+extension AppDelegate {
   @IBAction func checkForUpdates(_ sender: Any?) {
     updater.checkForUpdates(sender)
   }
 
-  @IBAction func newDocument(_ sender: Any?) {
+  @IBAction func newDocument(_: Any?) {
     let config = OpenConfig(
       urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
     )
     self.emit(.newMainWindow(config: config))
   }
 
-  @IBAction func openInNewWindow(_ sender: Any?) {
-    self.openDocument(sender)
-  }
+  @IBAction func openInNewWindow(_ sender: Any?) { self.openDocument(sender) }
 
-  @IBAction func showPrefWindow(_ sender: Any?) {
-    self.emit(.preferences)
-  }
+  @IBAction func showPrefWindow(_: Any?) { self.emit(.preferences) }
 
   // Invoked when no main window is open.
   @IBAction func openDocument(_: Any?) {
@@ -382,9 +407,7 @@ extension AppDelegate {
     panel.canChooseDirectories = true
     panel.allowsMultipleSelection = true
     panel.begin { result in
-      guard result == .OK else {
-        return
-      }
+      guard result == .OK else { return }
 
       let urls = panel.urls
       let commonParentUrl = FileUtils.commonParent(of: urls)
@@ -398,20 +421,21 @@ extension AppDelegate {
 }
 
 // MARK: - NSUserNotificationCenterDelegate
-extension AppDelegate {
 
-  public func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
-    return true
-  }
+extension AppDelegate {
+  func userNotificationCenter(
+    _: NSUserNotificationCenter,
+    shouldPresent _: NSUserNotification
+  ) -> Bool { true }
 }
 
 // Keep the rawValues in sync with Action in the `vimr` Python script.
 private enum VimRUrlAction: String {
-  case activate = "activate"
-  case open = "open"
+  case activate
+  case open
   case newWindow = "open-in-new-window"
   case separateWindows = "open-in-separate-windows"
-  case nvim = "nvim"
+  case nvim
 }
 
 private let updater = SUUpdater()

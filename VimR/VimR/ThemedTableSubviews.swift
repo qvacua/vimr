@@ -7,14 +7,12 @@ import Cocoa
 import NvimView
 import PureLayout
 
-protocol ThemedView: class {
-
+protocol ThemedView: AnyObject {
   var theme: Theme { get }
   var lastThemeMark: Token { get }
 }
 
 class ThemedTableRow: NSTableRowView {
-
   weak var triangleView: NSButton?
   var themeToken: Token
 
@@ -34,11 +32,11 @@ class ThemedTableRow: NSTableRowView {
     }
   }
 
-  open override func drawBackground(in dirtyRect: NSRect) {
+  override open func drawBackground(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
       if cell.isDir {
         cell.textField?.textColor
-        = self.themedView?.theme.directoryForeground ?? Theme.default.directoryForeground
+          = self.themedView?.theme.directoryForeground ?? Theme.default.directoryForeground
       } else {
         cell.textField?.textColor = self.themedView?.theme.foreground ?? Theme.default.foreground
       }
@@ -51,7 +49,7 @@ class ThemedTableRow: NSTableRowView {
   override func drawSelection(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
       cell.textField?.textColor
-      = self.themedView?.theme.highlightForeground ?? Theme.default.highlightForeground
+        = self.themedView?.theme.highlightForeground ?? Theme.default.highlightForeground
     }
 
     self.themedView?.theme.highlightBackground.set()
@@ -60,12 +58,13 @@ class ThemedTableRow: NSTableRowView {
 
   private weak var themedView: ThemedView?
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
 class ThemedTableCell: NSTableCellView {
-
   // MARK: - API
+
   static let font = NSFont.systemFont(ofSize: 12)
   static let widthWithoutText = (2 + 16 + 4 + 2).cgf
 
@@ -166,5 +165,6 @@ class ThemedTableCell: NSTableCellView {
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }

@@ -8,9 +8,7 @@ import NvimView
 import Workspace
 
 extension MainWindow {
-
   enum Action {
-
     case cd(to: URL)
     case setBufferList([NvimView.Buffer])
 
@@ -46,7 +44,6 @@ extension MainWindow {
   }
 
   enum FocusableView {
-
     case neoVimView
     case fileBrowser
     case bufferList
@@ -55,13 +52,12 @@ extension MainWindow {
   }
 
   enum Tools: String, Codable {
-
     static let all = Set(
       [
         Tools.fileBrowser,
         Tools.buffersList,
         Tools.preview,
-        Tools.htmlPreview
+        Tools.htmlPreview,
       ]
     )
 
@@ -72,7 +68,6 @@ extension MainWindow {
   }
 
   enum OpenMode {
-
     case `default`
     case currentTab
     case newTab

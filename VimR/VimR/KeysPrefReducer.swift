@@ -6,7 +6,6 @@
 import Foundation
 
 class KeysPrefReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = KeysPref.Action
 
@@ -14,15 +13,13 @@ class KeysPrefReducer: ReducerType {
     var state = pair.state
 
     switch pair.action {
-
     case let .isLeftOptionMeta(value):
       state.mainWindowTemplate.isLeftOptionMeta = value
-      state.mainWindows.keys.forEach { state.mainWindows[$0]?.isLeftOptionMeta = value  }
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.isLeftOptionMeta = value }
 
     case let .isRightOptionMeta(value):
       state.mainWindowTemplate.isRightOptionMeta = value
-      state.mainWindows.keys.forEach { state.mainWindows[$0]?.isRightOptionMeta = value  }
-
+      state.mainWindows.keys.forEach { state.mainWindows[$0]?.isRightOptionMeta = value }
     }
 
     return (state, pair.action, true)

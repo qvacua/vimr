@@ -4,11 +4,10 @@
  */
 
 import Foundation
-import Swifter
 import os
+import Swifter
 
 class HttpServerMiddleware {
-
   let htmlPreviewTool: HtmlPreviewToolMiddleware
   let htmlPreviewMainWindow: HtmlPreviewMainWindowMiddleware
   let markdownPreview: MarkdownPreviewMiddleware
@@ -63,15 +62,18 @@ class HttpServerMiddleware {
     }
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.middleware)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.middleware
+  )
 
   class HtmlPreviewMainWindowMiddleware: MiddlewareType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL, htmlTemplates: HtmlTemplates) {
+    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL,
+                     htmlTemplates _: HtmlTemplates)
+    {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl
@@ -108,18 +110,21 @@ class HttpServerMiddleware {
     private let baseUrl: URL
     private let cssUrl: URL
 
-    private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                            category: Defs.LoggerCategory.middleware)
+    private let log = OSLog(
+      subsystem: Defs.loggerSubsystem,
+      category: Defs.LoggerCategory.middleware
+    )
 
     private func fullUrl(with path: String) -> URL { self.baseUrl.appendingPathComponent(path) }
   }
 
   class HtmlPreviewToolMiddleware: MiddlewareType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<HtmlPreviewTool.Action>
 
-    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL, htmlTemplates: HtmlTemplates) {
+    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL,
+                     htmlTemplates _: HtmlTemplates)
+    {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl
@@ -152,14 +157,15 @@ class HttpServerMiddleware {
     private let baseUrl: URL
     private let cssUrl: URL
 
-    private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                            category: Defs.LoggerCategory.middleware)
+    private let log = OSLog(
+      subsystem: Defs.loggerSubsystem,
+      category: Defs.LoggerCategory.middleware
+    )
 
     private func fullUrl(with path: String) -> URL { self.baseUrl.appendingPathComponent(path) }
   }
 
   class MarkdownPreviewMiddleware: MiddlewareType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -213,8 +219,10 @@ class HttpServerMiddleware {
     private let cssUrl: URL
     private let baseCssUrl: URL
 
-    private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                            category: Defs.LoggerCategory.middleware)
+    private let log = OSLog(
+      subsystem: Defs.loggerSubsystem,
+      category: Defs.LoggerCategory.middleware
+    )
 
     private func fullUrl(with path: String) -> URL { self.baseUrl.appendingPathComponent(path) }
   }

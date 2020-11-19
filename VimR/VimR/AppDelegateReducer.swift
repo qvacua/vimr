@@ -6,7 +6,6 @@
 import Foundation
 
 class AppDelegateReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = AppDelegate.Action
 
@@ -18,7 +17,6 @@ class AppDelegateReducer: ReducerType {
     var state = pair.state
 
     switch pair.action {
-
     case let .newMainWindow(config):
       let mainWindow = self.newMainWindow(with: state, config: config)
       state.mainWindows[mainWindow.uuid] = mainWindow
@@ -30,7 +28,7 @@ class AppDelegateReducer: ReducerType {
         break
       }
 
-      state.mainWindows[uuid]?.urlsToOpen = config.urls.toDict { url in MainWindow.OpenMode.default }
+      state.mainWindows[uuid]?.urlsToOpen = config.urls.toDict { _ in MainWindow.OpenMode.default }
       state.mainWindows[uuid]?.cwd = config.cwd
       if let line = config.line {
         state.mainWindows[uuid]?.goToLineFromCli = Marked(line)
@@ -38,7 +36,6 @@ class AppDelegateReducer: ReducerType {
 
     case .preferences:
       state.preferencesOpen = Marked(true)
-
     }
 
     return (state, pair.action, true)
@@ -46,8 +43,9 @@ class AppDelegateReducer: ReducerType {
 
   private let baseServerUrl: URL
 
-  private func newMainWindow(with state: AppState, config: AppDelegate.OpenConfig) -> MainWindow.State {
-
+  private func newMainWindow(with state: AppState, config: AppDelegate.OpenConfig) -> MainWindow
+    .State
+  {
     var mainWindow = state.mainWindowTemplate
 
     mainWindow.uuid = UUID()
@@ -77,7 +75,7 @@ class AppDelegateReducer: ReducerType {
   }
 
   private func frame(relativeTo refFrame: CGRect) -> CGRect {
-    return refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
+    refFrame.offsetBy(dx: cascadeX, dy: -cascadeY)
   }
 }
 

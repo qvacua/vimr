@@ -7,7 +7,6 @@ import Foundation
 import os
 
 class FuzzyMatcherPool {
-
   let pattern: String
 
   init(pattern: String, initialPoolSize: Int = 2) {
@@ -17,7 +16,7 @@ class FuzzyMatcherPool {
   }
 
   func request() -> FuzzyMatcher {
-    return self.lock.withLock {
+    self.lock.withLock {
       if self.matchers.isEmpty {
         let matcher = FuzzyMatcher(pattern: self.pattern)
         return matcher
@@ -45,7 +44,6 @@ class FuzzyMatcherPool {
 }
 
 private extension NSLocking {
-
   func withLock<T>(_ body: () -> T) -> T {
     self.lock()
     defer { self.unlock() }

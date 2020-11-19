@@ -6,7 +6,6 @@
 import Foundation
 
 class RpcAppearanceEpic: EpicType {
-
   typealias StateType = AppState
   typealias ActionType = UuidAction<MainWindow.Action>
   typealias EmitActionType = AppearancePref.Action
@@ -18,23 +17,21 @@ class RpcAppearanceEpic: EpicType {
   func typedApply(
     _ reduce: @escaping TypedActionReduceFunction
   ) -> TypedActionReduceFunction {
-    return { tuple in
+    { tuple in
       let result = reduce(tuple)
 
       switch tuple.action.payload {
-
-      case .setFont(let font):
+      case let .setFont(font):
         self.emit(.setFont(font))
 
-      case .setLinespacing(let linespacing):
+      case let .setLinespacing(linespacing):
         self.emit(.setLinespacing(linespacing))
-        
-      case .setCharacterspacing(let characterspacing):
+
+      case let .setCharacterspacing(characterspacing):
         self.emit(.setCharacterspacing(characterspacing))
 
       default:
         break
-
       }
 
       return result

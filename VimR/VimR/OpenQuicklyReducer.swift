@@ -7,7 +7,6 @@ import Foundation
 import RxSwift
 
 class OpenQuicklyReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = OpenQuicklyWindow.Action
 
@@ -17,7 +16,6 @@ class OpenQuicklyReducer: ReducerType {
     var appState = pair.state
 
     switch pair.action {
-
     case let .setUsesVcsIgnores(usesVcsIgnores):
       guard let uuid = appState.currentMainWindowUuid else { return pair }
       appState.mainWindows[uuid]?.usesVcsIgnores = usesVcsIgnores
@@ -29,21 +27,17 @@ class OpenQuicklyReducer: ReducerType {
 
     case .close:
       appState.openQuickly.open = false
-      break
-
     }
 
     return (appState, pair.action, true)
   }
 
   class MainWindowReducer: ReducerType {
-
     typealias StateType = AppState
     typealias ActionType = UuidAction<MainWindow.Action>
 
     func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
       switch pair.action.payload {
-
       case .openQuickly:
         var appState = pair.state
 
@@ -56,7 +50,6 @@ class OpenQuicklyReducer: ReducerType {
 
       default:
         return pair
-
       }
     }
   }

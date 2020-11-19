@@ -7,7 +7,6 @@ import Cocoa
 import Sparkle
 
 class Application: NSApplication {
-
   override init() {
     setPressAndHoldSetting()
     super.init()

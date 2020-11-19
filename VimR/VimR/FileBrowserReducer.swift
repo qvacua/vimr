@@ -6,7 +6,6 @@
 import Foundation
 
 class FileBrowserReducer: ReducerType {
-
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<FileBrowser.Action>
 
@@ -14,7 +13,6 @@ class FileBrowserReducer: ReducerType {
     var state = tuple.state
 
     switch tuple.action.payload {
-
     case let .open(url, mode):
       state.urlsToOpen[url] = mode
       state.viewToBeFocused = .neoVimView
@@ -27,7 +25,6 @@ class FileBrowserReducer: ReducerType {
 
     case .refresh:
       state.lastFileSystemUpdate = Marked(state.cwd)
-
     }
 
     return (state, tuple.action, true)

@@ -6,11 +6,10 @@
 import Foundation
 
 class HtmlPreviewReducer {
-
   static let basePath = "tools/html-preview"
 
   static func serverUrl(baseUrl: URL, uuid: UUID) -> URL {
-    baseUrl.appendingPathComponent("\(uuid)/\(basePath)/index.html")
+    baseUrl.appendingPathComponent("\(uuid)/\(self.basePath)/index.html")
   }
 
   let mainWindow: MainWindowReducer
@@ -22,7 +21,6 @@ class HtmlPreviewReducer {
   }
 
   class MainWindowReducer: ReducerType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -32,7 +30,6 @@ class HtmlPreviewReducer {
       var state = pair.state
 
       switch pair.action.payload {
-
       case .setTheme:
         guard state.htmlPreview.htmlFile == nil else { return pair }
         state.htmlPreview.server = Marked(
@@ -41,7 +38,6 @@ class HtmlPreviewReducer {
 
       default:
         return pair
-
       }
 
       return (state, pair.action, true)
@@ -51,7 +47,6 @@ class HtmlPreviewReducer {
   }
 
   class HtmlPreviewToolReducer: ReducerType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<HtmlPreviewTool.Action>
 
@@ -60,13 +55,11 @@ class HtmlPreviewReducer {
     func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
       var state = pair.state
       switch pair.action.payload {
-
-      case .selectHtmlFile(let url):
+      case let .selectHtmlFile(url):
         state.htmlPreview.htmlFile = url
         state.htmlPreview.server = Marked(
           HtmlPreviewReducer.serverUrl(baseUrl: self.baseServerUrl, uuid: state.uuid)
         )
-
       }
 
       return (state, pair.action, true)

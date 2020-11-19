@@ -8,11 +8,9 @@ import PureLayout
 import RxSwift
 
 class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
-
   typealias StateType = AppState
 
   enum Action {
-
     case setOpenOnLaunch(Bool)
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setOpenOnReactivation(Bool)
@@ -20,11 +18,11 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   }
 
   override var displayName: String {
-    return "General"
+    "General"
   }
 
   override var pinToContainer: Bool {
-    return true
+    true
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -39,7 +37,8 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
     self.lastWindowAction = state.afterLastWindowAction
-    self.afterLastWindowPopup.selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
+    self.afterLastWindowPopup
+      .selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
 
     source
       .observeOn(MainScheduler.instance)
@@ -73,7 +72,8 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -81,15 +81,21 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let paneTitle = self.paneTitleTextField(title: "General")
 
     let openUntitledWindowTitle = self.titleTextField(title: "Open Untitled Window:")
-    self.configureCheckbox(button: self.openWhenLaunchingCheckbox,
-                           title: "On launch",
-                           action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction))
-    self.configureCheckbox(button: self.openOnReactivationCheckbox,
-                           title: "On re-activation",
-                           action: #selector(GeneralPref.openUntitledWindowOnReactivationAction))
-    self.configureCheckbox(button: self.defaultUsesVcsIgnoresCheckbox,
-                           title: "Use VCS Ignores",
-                           action: #selector(GeneralPref.defaultUsesVcsIgnoresAction))
+    self.configureCheckbox(
+      button: self.openWhenLaunchingCheckbox,
+      title: "On launch",
+      action: #selector(GeneralPref.openUntitledWindowWhenLaunchingAction)
+    )
+    self.configureCheckbox(
+      button: self.openOnReactivationCheckbox,
+      title: "On re-activation",
+      action: #selector(GeneralPref.openUntitledWindowOnReactivationAction)
+    )
+    self.configureCheckbox(
+      button: self.defaultUsesVcsIgnoresCheckbox,
+      title: "Use VCS Ignores",
+      action: #selector(GeneralPref.defaultUsesVcsIgnoresAction)
+    )
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
@@ -107,12 +113,12 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
     let ignoreInfo =
       self.infoTextField(markdown: #"""
-When checked, the ignore files of VCSs, e.g. `gitignore`, will we used to ignore files.\
-This checkbox will set the initial value for each VimR window.\
-You can change this setting for each VimR window in the Open Quickly window.\
-The behavior should be almost identical to that of
-[The Silver Searcher](https://github.com/ggreer/the_silver_searcher).
-"""#)
+      When checked, the ignore files of VCSs, e.g. `gitignore`, will we used to ignore files.\
+      This checkbox will set the initial value for each VimR window.\
+      You can change this setting for each VimR window in the Open Quickly window.\
+      The behavior should be almost identical to that of
+      [The Silver Searcher](https://github.com/ggreer/the_silver_searcher).
+      """#)
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
@@ -150,7 +156,11 @@ The behavior should be almost identical to that of
 
     openUntitledWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: whenLaunching, withOffset: 0)
     openUntitledWindowTitle.autoPinEdge(.right, to: .right, of: afterLastWindowTitle)
-    openUntitledWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    openUntitledWindowTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
 
     whenLaunching.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
     whenLaunching.autoPinEdge(.left, to: .right, of: openUntitledWindowTitle, withOffset: 5)
@@ -158,7 +168,11 @@ The behavior should be almost identical to that of
 
     onReactivation.autoPinEdge(.top, to: .bottom, of: whenLaunching, withOffset: 5)
     onReactivation.autoPinEdge(.left, to: .left, of: whenLaunching)
-    onReactivation.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
+    onReactivation.autoPinEdge(
+      toSuperviewEdge: .right,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
 
     afterLastWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: lastWindow)
     afterLastWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -168,7 +182,11 @@ The behavior should be almost identical to that of
 
     ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: vcsIg)
     ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
-    ignoreListTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    ignoreListTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
 
     vcsIg.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
     vcsIg.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
@@ -192,9 +210,9 @@ The behavior should be almost identical to that of
 }
 
 // MARK: - Actions
-extension GeneralPref {
 
-  @objc func copyCliTool(_ sender: NSButton) {
+extension GeneralPref {
+  @objc func copyCliTool(_: NSButton) {
     let panel = NSOpenPanel()
     panel.canChooseFiles = false
     panel.canChooseDirectories = true
@@ -205,14 +223,18 @@ extension GeneralPref {
       }
 
       guard let vimrUrl = Bundle.main.url(forResource: "vimr", withExtension: nil) else {
-        self.alert(title: "Something Went Wrong.",
-                   info: "The CLI tool 'vimr' could not be found. Please re-download VimR and try again.")
+        self.alert(
+          title: "Something Went Wrong.",
+          info: "The CLI tool 'vimr' could not be found. Please re-download VimR and try again."
+        )
         return
       }
 
       guard let targetUrl = panel.url?.appendingPathComponent("vimr") else {
-        self.alert(title: "Something Went Wrong.",
-                   info: "The target directory could not be determined. Please try again with a different directory.")
+        self.alert(
+          title: "Something Went Wrong.",
+          info: "The target directory could not be determined. Please try again with a different directory."
+        )
         return
       }
 
@@ -228,18 +250,18 @@ extension GeneralPref {
     self.emit(.setDefaultUsesVcsIgnores(sender.boolState))
   }
 
-  @objc func openUntitledWindowWhenLaunchingAction(_ sender: NSButton) {
+  @objc func openUntitledWindowWhenLaunchingAction(_: NSButton) {
     self.emit(.setOpenOnLaunch(self.openWhenLaunchingCheckbox.boolState))
   }
 
-  @objc func openUntitledWindowOnReactivationAction(_ sender: NSButton) {
+  @objc func openUntitledWindowOnReactivationAction(_: NSButton) {
     self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
   }
 
   @objc func afterLastWindowAction(_ sender: NSPopUpButton) {
     let index = sender.indexOfSelectedItem
 
-    guard index >= 0 && index <= 2 else {
+    guard index >= 0, index <= 2 else {
       return
     }
 
@@ -256,4 +278,5 @@ extension GeneralPref {
   }
 }
 
-private let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide, .quit]
+private let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide,
+                                                                              .quit]

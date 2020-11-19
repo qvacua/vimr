@@ -4,12 +4,11 @@
  */
 
 import Cocoa
-import NvimView
 import Commons
+import NvimView
 
 class MarkdownPreviewReducer {
-
-  static private func previewState(
+  private static func previewState(
     for uuid: UUID,
     baseUrl: URL,
     buffer: NvimView.Buffer?,
@@ -58,7 +57,6 @@ class MarkdownPreviewReducer {
   }
 
   class PreviewToolReducer: ReducerType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MarkdownTool.Action>
 
@@ -66,7 +64,6 @@ class MarkdownPreviewReducer {
       var state = tuple.state
 
       switch tuple.action.payload {
-
       case .refreshNow:
         state.preview = MarkdownPreviewReducer.previewState(
           for: tuple.state.uuid,
@@ -77,20 +74,25 @@ class MarkdownPreviewReducer {
         )
         state.preview.lastSearch = .reload
 
-      case let .reverseSearch(to:position):
+      case let .reverseSearch(to: position):
         state.preview.previewPosition = Marked(position)
         state.preview.lastSearch = .reverse
 
-      case let .scroll(to:position):
+      case let .scroll(to: position):
         if state.preview.lastSearch == .reload {
           state.preview.lastSearch = .none
-          break;
+          break
         }
 
-        guard state.previewTool.isReverseSearchAutomatically && state.preview.lastSearch != .forward else {
+        guard state.previewTool.isReverseSearchAutomatically,
+              state.preview.lastSearch != .forward
+        else {
           state.preview.lastSearch = .none
-          state.preview.previewPosition = Marked(mark: state.preview.previewPosition.mark, payload: position)
-          break;
+          state.preview.previewPosition = Marked(
+            mark: state.preview.previewPosition.mark,
+            payload: position
+          )
+          break
         }
 
         state.preview.previewPosition = Marked(position)
@@ -98,7 +100,6 @@ class MarkdownPreviewReducer {
 
       default:
         return tuple
-
       }
 
       return (state, tuple.action, true)
@@ -110,7 +111,6 @@ class MarkdownPreviewReducer {
   }
 
   class BuffersListReducer: ReducerType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<BuffersList.Action>
 
@@ -118,7 +118,6 @@ class MarkdownPreviewReducer {
       var state = tuple.state
 
       switch tuple.action.payload {
-
       case let .open(buffer):
         state.preview = MarkdownPreviewReducer.previewState(
           for: tuple.state.uuid,
@@ -128,7 +127,6 @@ class MarkdownPreviewReducer {
           previewPosition: Marked(.beginning)
         )
         state.preview.lastSearch = .none
-
       }
 
       return (state, tuple.action, true)
@@ -140,7 +138,6 @@ class MarkdownPreviewReducer {
   }
 
   class MainWindowReducer: ReducerType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -148,7 +145,6 @@ class MarkdownPreviewReducer {
       var state = tuple.state
 
       switch tuple.action.payload {
-
       case let .newCurrentBuffer(buffer):
         state.preview = MarkdownPreviewReducer.previewState(
           for: tuple.state.uuid,
@@ -169,14 +165,15 @@ class MarkdownPreviewReducer {
         )
         state.preview.lastSearch = .reload
 
-      case let .setCursor(to:position):
+      case let .setCursor(to: position):
         if state.preview.lastSearch == .reload {
           state.preview.lastSearch = .none
           break
         }
 
         guard state.previewTool.isForwardSearchAutomatically,
-              state.preview.lastSearch != .reverse else {
+              state.preview.lastSearch != .reverse
+        else {
           state.preview.editorPosition = Marked(
             mark: state.preview.editorPosition.mark,
             payload: position.payload

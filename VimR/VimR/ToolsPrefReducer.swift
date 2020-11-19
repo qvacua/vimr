@@ -6,7 +6,6 @@
 import Foundation
 
 class ToolsPrefReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = ToolsPref.Action
 
@@ -14,10 +13,8 @@ class ToolsPrefReducer: ReducerType {
     var state = pair.state
 
     switch pair.action {
-
     case let .setActiveTools(tools):
       state.mainWindowTemplate.activeTools = tools
-
     }
 
     return (state, pair.action, true)

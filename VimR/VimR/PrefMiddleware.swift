@@ -8,7 +8,6 @@ import DictionaryCoding
 import os
 
 class PrefMiddleware: MiddlewareType {
-
   typealias StateType = AppState
   typealias ActionType = AnyAction
 
@@ -27,7 +26,7 @@ class PrefMiddleware: MiddlewareType {
   }
 
   func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
-    return { tuple in
+    { tuple in
       let result = reduce(tuple)
 
       guard result.modified else {
@@ -52,7 +51,7 @@ class PrefMiddleware: MiddlewareType {
           notification.identifier = UUID().uuidString
           notification.title = "No monospaced font"
           notification.informativeText = "The font you selected\(newFontNameText) does not seem "
-          + "to be a monospaced font. The rendering will most likely be broken."
+            + "to be a monospaced font. The rendering will most likely be broken."
           NSUserNotificationCenter.default.deliver(notification)
         }
       }
@@ -73,12 +72,11 @@ class PrefMiddleware: MiddlewareType {
   private var currentFont = NSFont.userFixedPitchFont(ofSize: 13)!
 
   class MainWindowMiddleware: MiddlewareType {
-
     typealias StateType = AppState
     typealias ActionType = UuidAction<MainWindow.Action>
 
     func typedApply(_ reduce: @escaping TypedActionReduceFunction) -> TypedActionReduceFunction {
-      return { tuple in
+      { tuple in
         let result = reduce(tuple)
 
         guard case .close = tuple.action.payload else {
@@ -96,8 +94,10 @@ class PrefMiddleware: MiddlewareType {
       }
     }
 
-    private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                            category: Defs.LoggerCategory.middleware)
+    private let log = OSLog(
+      subsystem: Defs.loggerSubsystem,
+      category: Defs.LoggerCategory.middleware
+    )
   }
 }
 

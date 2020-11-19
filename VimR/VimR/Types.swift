@@ -7,24 +7,21 @@ import Foundation
 import RxSwift
 
 struct StateActionPair<S, A> {
-
   var state: S
   var action: A
   var modified: Bool
 }
 
 protocol UuidTagged {
-
   var uuid: UUID { get }
 }
 
 class UuidAction<A>: UuidTagged, CustomStringConvertible {
-
   let uuid: UUID
   let payload: A
 
   var description: String {
-    return "UuidAction(uuid: \(uuid), payload: \(String(reflecting: payload)))"
+    "UuidAction(uuid: \(self.uuid), payload: \(String(reflecting: self.payload)))"
   }
 
   init(uuid: UUID, action: A) {
@@ -34,12 +31,11 @@ class UuidAction<A>: UuidTagged, CustomStringConvertible {
 }
 
 class UuidState<S>: UuidTagged, CustomStringConvertible {
-
   let uuid: UUID
   let payload: S
 
   var description: String {
-    return "UuidState(uuid: \(uuid), payload: \(String(reflecting: payload)))"
+    "UuidState(uuid: \(self.uuid), payload: \(String(reflecting: self.payload)))"
   }
 
   init(uuid: UUID, state: S) {
@@ -49,27 +45,25 @@ class UuidState<S>: UuidTagged, CustomStringConvertible {
 }
 
 class Token: Hashable, CustomStringConvertible {
-
   func hash(into hasher: inout Hasher) {
     hasher.combine(ObjectIdentifier(self))
   }
 
   var description: String {
-    return ObjectIdentifier(self).debugDescription
+    ObjectIdentifier(self).debugDescription
   }
 
   static func == (left: Token, right: Token) -> Bool {
-    return left === right
+    left === right
   }
 }
 
 class Marked<T>: CustomStringConvertible {
-
   let mark: Token
   let payload: T
 
   var description: String {
-    return "Marked<\(mark) -> \(self.payload)>"
+    "Marked<\(mark) -> \(self.payload)>"
   }
 
   convenience init(_ payload: T) {
@@ -82,21 +76,18 @@ class Marked<T>: CustomStringConvertible {
   }
 
   func hasDifferentMark(as other: Marked<T>) -> Bool {
-    return self.mark != other.mark
+    self.mark != other.mark
   }
 }
 
 class UiComponentTemplate: UiComponent {
-
   typealias StateType = State
 
   struct State {
-
     var someField: String
   }
 
   enum Action {
-
     case doSth
   }
 
@@ -115,7 +106,7 @@ class UiComponentTemplate: UiComponent {
     source
       .observeOn(MainScheduler.instance)
       .subscribe(
-        onNext: { state in
+        onNext: { _ in
           Swift.print("Hello, \(self.someField)")
         }
       )

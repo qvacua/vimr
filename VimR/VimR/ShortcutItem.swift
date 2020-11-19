@@ -6,8 +6,7 @@
 import Cocoa
 
 class ShortcutItem: NSObject, Comparable {
-
-  static func <(lhs: ShortcutItem, rhs: ShortcutItem) -> Bool { lhs.title < rhs.title }
+  static func < (lhs: ShortcutItem, rhs: ShortcutItem) -> Bool { lhs.title < rhs.title }
 
   @objc dynamic var title: String
   @objc dynamic var isLeaf: Bool
@@ -19,11 +18,11 @@ class ShortcutItem: NSObject, Comparable {
   var isContainer: Bool { !self.isLeaf }
 
   override var description: String {
-    "<ShortcutItem: \(title), " +
-    "id: '\(self.identifier ?? "")', " +
-    "isLeaf: \(self.isLeaf), " +
-    "childrenCount: \(self.children?.count ?? -1)" +
-    ">"
+    "<ShortcutItem: \(self.title), " +
+      "id: '\(self.identifier ?? "")', " +
+      "isLeaf: \(self.isLeaf), " +
+      "childrenCount: \(self.children?.count ?? -1)" +
+      ">"
   }
 
   let item: NSMenuItem?

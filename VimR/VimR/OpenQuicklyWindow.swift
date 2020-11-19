@@ -4,28 +4,27 @@
  */
 
 import Cocoa
-import RxSwift
-import RxCocoa
-import PureLayout
-import os
 import Commons
+import os
+import PureLayout
+import RxCocoa
+import RxSwift
 
 class OpenQuicklyWindow: NSObject,
-                         UiComponent,
-                         NSWindowDelegate,
-                         NSTextFieldDelegate,
-                         NSTableViewDelegate {
-
+  UiComponent,
+  NSWindowDelegate,
+  NSTextFieldDelegate,
+  NSTableViewDelegate
+{
   typealias StateType = AppState
 
   enum Action {
-
     case setUsesVcsIgnores(Bool)
     case open(URL)
     case close
   }
 
-  @objc dynamic private(set) var unsortedScoredUrls = [ScoredUrl]()
+  @objc private(set) dynamic var unsortedScoredUrls = [ScoredUrl]()
 
   // Call this only when quitting
   func cleanUp() {
@@ -62,6 +61,7 @@ class OpenQuicklyWindow: NSObject,
   }
 
   // MARK: - Private
+
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
@@ -83,8 +83,10 @@ class OpenQuicklyWindow: NSObject,
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.ui)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.ui
+  )
 
   private var window: NSWindow { self.windowController.window! }
 
@@ -108,7 +110,7 @@ class OpenQuicklyWindow: NSObject,
     let windowIsOpen = self.window.isKeyWindow
 
     // The window is open and the user changed the setting
-    if self.usesVcsIgnores != curWinState.usesVcsIgnores && windowIsOpen {
+    if self.usesVcsIgnores != curWinState.usesVcsIgnores, windowIsOpen {
       self.usesVcsIgnores = curWinState.usesVcsIgnores
       self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
@@ -190,7 +192,7 @@ class OpenQuicklyWindow: NSObject,
   }
 
   private func endProgress() {
-    DispatchQueue.main.async {self.progressIndicator.stopAnimation(self) }
+    DispatchQueue.main.async { self.progressIndicator.stopAnimation(self) }
   }
 
   private func updateRootUrls(state: AppState) {
@@ -298,10 +300,10 @@ class OpenQuicklyWindow: NSObject,
 }
 
 // MARK: - NSTableViewDelegate
-extension OpenQuicklyWindow {
 
-  func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-    return OpenQuicklyFileViewRow()
+extension OpenQuicklyWindow {
+  func tableView(_: NSTableView, rowViewForRow _: Int) -> NSTableRowView? {
+    OpenQuicklyFileViewRow()
   }
 
   func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
@@ -313,7 +315,7 @@ extension OpenQuicklyWindow {
     )?.reset()
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
-    guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+    guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? [ScoredUrl] else {
       self.log.error("Could not convert arranged objects to [ScoredUrl].")
       return nil
     }
@@ -351,27 +353,26 @@ extension OpenQuicklyWindow {
 }
 
 // MARK: - NSTextFieldDelegate
-extension OpenQuicklyWindow {
 
+extension OpenQuicklyWindow {
   func control(
-    _ control: NSControl,
-    textView: NSTextView,
+    _: NSControl,
+    textView _: NSTextView,
     doCommandBy commandSelector: Selector
   ) -> Bool {
     switch commandSelector {
-
     case NSSelectorFromString("cancelOperation:"):
       self.window.performClose(self)
       return true
 
     case NSSelectorFromString("insertNewline:"):
-      guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? Array<ScoredUrl> else {
+      guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? [ScoredUrl] else {
         self.log.error("Could not convert arranged objects to [ScoredUrl].")
         return true
       }
 
       let selectedRow = self.fileView.selectedRow
-      guard selectedRow >= 0 && selectedRow < sortedUrls.count else { return false }
+      guard selectedRow >= 0, selectedRow < sortedUrls.count else { return false }
 
       self.emit(.open(sortedUrls[selectedRow].url))
       self.window.performClose(self)
@@ -387,7 +388,6 @@ extension OpenQuicklyWindow {
 
     default:
       return false
-
     }
   }
 
@@ -410,8 +410,8 @@ extension OpenQuicklyWindow {
 }
 
 // MARK: - NSWindowDelegate
-extension OpenQuicklyWindow {
 
+extension OpenQuicklyWindow {
   func windowShouldClose(_: NSWindow) -> Bool {
     self.emit(.close)
 

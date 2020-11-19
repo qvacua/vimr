@@ -7,9 +7,9 @@ import Cocoa
 import PureLayout
 
 // MARK: - Custom title
-extension MainWindow {
 
-  func themeTitlebar(grow: Bool) {
+extension MainWindow {
+  func themeTitlebar(grow _: Bool) {
     if self.window.styleMask.contains(.fullScreen) {
       return
     }
@@ -100,7 +100,8 @@ extension MainWindow {
     self.titleView = title
 
     if let button = self.window.standardWindowButton(.documentIconButton) {
-      button.removeFromSuperview() // remove the rep icon from the original superview and add it to content view
+      button
+        .removeFromSuperview() // remove the rep icon from the original superview and add it to content view
       contentView.addSubview(button)
       button.autoSetDimension(.width, toSize: 16)
       button.autoSetDimension(.height, toSize: 16)
@@ -110,11 +111,15 @@ extension MainWindow {
       // rightView.left = leftView.right + gap
       // rightView.right = parentView.centerX + (leftView.width + gap + rightView.width) / 2 - 4
       // The (-4) at the end is an empirical value...
-      contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .left,
-                                                   relatedBy: .equal,
-                                                   toItem: button, attribute: .right,
-                                                   multiplier: 1,
-                                                   constant: repIconToTitleGap))
+      contentView.addConstraint(NSLayoutConstraint(
+        item: title,
+        attribute: .left,
+        relatedBy: .equal,
+        toItem: button,
+        attribute: .right,
+        multiplier: 1,
+        constant: repIconToTitleGap
+      ))
       contentView.addConstraint(
         // Here we use title.intrinsicContentSize instead of title.frame because title.frame is still zero.
         NSLayoutConstraint(
@@ -122,7 +127,8 @@ extension MainWindow {
           relatedBy: .equal,
           toItem: contentView, attribute: .centerX,
           multiplier: 1,
-          constant: -4 + (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
+          constant: -4 +
+            (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
         )
       )
 
@@ -149,4 +155,4 @@ extension MainWindow {
   }
 }
 
-private let repIconToTitleGap = (4.0).cgf
+private let repIconToTitleGap = 4.0.cgf

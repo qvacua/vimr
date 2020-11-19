@@ -6,7 +6,6 @@
 import Foundation
 
 class MarkdownToolReducer: ReducerType {
-
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<MarkdownTool.Action>
 
@@ -18,19 +17,17 @@ class MarkdownToolReducer: ReducerType {
     var state = tuple.state
 
     switch tuple.action.payload {
-
-    case let .setAutomaticReverseSearch(to:value):
+    case let .setAutomaticReverseSearch(to: value):
       state.previewTool.isReverseSearchAutomatically = value
 
-    case let .setAutomaticForwardSearch(to:value):
+    case let .setAutomaticForwardSearch(to: value):
       state.previewTool.isForwardSearchAutomatically = value
 
-    case let .setRefreshOnWrite(to:value):
+    case let .setRefreshOnWrite(to: value):
       state.previewTool.isRefreshOnWrite = value
 
     default:
       return tuple
-
     }
 
     return (state, tuple.action, true)

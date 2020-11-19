@@ -8,21 +8,19 @@ import PureLayout
 import RxSwift
 
 class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
-
   typealias StateType = AppState
 
   enum Action {
-
     case isLeftOptionMeta(Bool)
     case isRightOptionMeta(Bool)
   }
 
   override var displayName: String {
-    return "Keys"
+    "Keys"
   }
 
   override var pinToContainer: Bool {
-    return true
+    true
   }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
@@ -40,7 +38,7 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.isLeftOptionMeta != state.mainWindowTemplate.isLeftOptionMeta
-        || self.isRightOptionMeta != state.mainWindowTemplate.isRightOptionMeta
+          || self.isRightOptionMeta != state.mainWindowTemplate.isRightOptionMeta
         {
           self.isLeftOptionMeta = state.mainWindowTemplate.isLeftOptionMeta
           self.isRightOptionMeta = state.mainWindowTemplate.isRightOptionMeta
@@ -60,7 +58,8 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let isLeftOptionMetaCheckbox = NSButton(forAutoLayout: ())
   private let isRightOptionMetaCheckbox = NSButton(forAutoLayout: ())
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -73,14 +72,18 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let paneTitle = self.paneTitleTextField(title: "Keys")
 
     let isLeftOptionMeta = self.isLeftOptionMetaCheckbox
-    self.configureCheckbox(button: isLeftOptionMeta,
-                           title: "Use Left Option as Meta",
-                           action: #selector(KeysPref.isLeftOptionMetaAction(_:)))
+    self.configureCheckbox(
+      button: isLeftOptionMeta,
+      title: "Use Left Option as Meta",
+      action: #selector(KeysPref.isLeftOptionMetaAction(_:))
+    )
 
     let isRightOptionMeta = self.isRightOptionMetaCheckbox
-    self.configureCheckbox(button: isRightOptionMeta,
-                           title: "Use Right Option as Meta",
-                           action: #selector(KeysPref.isRightOptionMetaAction(_:)))
+    self.configureCheckbox(
+      button: isRightOptionMeta,
+      title: "Use Right Option as Meta",
+      action: #selector(KeysPref.isRightOptionMetaAction(_:))
+    )
 
     let metaInfo = self.infoTextField(markdown: #"""
     When an Option key is set to Meta, then every input containing the corresponding Option key will\
@@ -111,8 +114,8 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
 }
 
 // MARK: - Actions
-extension KeysPref {
 
+extension KeysPref {
   @objc func isLeftOptionMetaAction(_ sender: NSButton) {
     self.emit(.isLeftOptionMeta(sender.boolState))
   }

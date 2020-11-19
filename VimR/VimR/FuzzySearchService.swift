@@ -3,13 +3,12 @@
  * See LICENSE
  */
 
-import Foundation
-import CoreData
-import os
 import Commons
+import CoreData
+import Foundation
+import os
 
 class FuzzySearchService {
-
   typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void
 
   var root: URL {
@@ -101,7 +100,7 @@ class FuzzySearchService {
     fetchReq.predicate = predicate
 
     let chunkCount = Int(ceil(Double(count) / Double(coreDataBatchSize)))
-    for chunkIndex in (0..<chunkCount) {
+    for chunkIndex in 0..<chunkCount {
       if self.shouldStop({ context.reset() }) { return }
 
       let start = Swift.min(chunkIndex * coreDataBatchSize, count)
@@ -123,7 +122,7 @@ class FuzzySearchService {
   private func scanScoreFilesNeedScanning(
     matcherPool: FuzzyMatcherPool,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> ()
+    callback: ([ScoredUrl]) -> Void
   ) {
     let req = self.fileFetchRequest("needsScanChildren == TRUE AND direntType == %d", [DT_DIR])
     do {
@@ -147,7 +146,7 @@ class FuzzySearchService {
     matcherPool: FuzzyMatcherPool,
     folderId: NSManagedObjectID,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> ()
+    callback: ([ScoredUrl]) -> Void
   ) {
     var saveCounter = 1
     var counter = 1
@@ -180,7 +179,9 @@ class FuzzySearchService {
 
         let childFiles = childUrls
           .filter { !$0.isPackage }
-          .map { url -> FileItem in self.file(fromUrl: url, pathStart: baton.pathStart, in: context) }
+          .map { url -> FileItem in
+            self.file(fromUrl: url, pathStart: baton.pathStart, in: context)
+          }
         saveCounter += childFiles.count
         counter += childFiles.count
 
@@ -209,9 +210,9 @@ class FuzzySearchService {
           // We have to re-fetch the Files in stack to get the parent-children relationship right.
           // Since objectID survives NSManagedObjectContext.reset(), we can re-populate (re-fetch)
           // stack using the objectIDs.
-          let ids = stack.map { $0.1.objectID }
+          let ids = stack.map(\.1.objectID)
           stack = Array(zip(
-            stack.map { $0.0 },
+            stack.map(\.0),
             ids.map { context.object(with: $0) as! FileItem }
           ))
         }
@@ -249,7 +250,7 @@ class FuzzySearchService {
   private func scoreAllRegisteredFiles(
     matcherPool: FuzzyMatcherPool,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> ()
+    callback: ([ScoredUrl]) -> Void
   ) {
     let files = context.registeredObjects
       .compactMap { $0 as? FileItem }
@@ -338,7 +339,7 @@ class FuzzySearchService {
         } catch {
           self.log.error(
             "Could not fetch File with url \(folderUrl) "
-            + "or could not save after setting needsScanChildren: \(error)"
+              + "or could not save after setting needsScanChildren: \(error)"
           )
         }
 
@@ -417,7 +418,7 @@ class FuzzySearchService {
   }
 
   func debug() {
-    let req = self.fileFetchRequest("needsScanChildren == TRUE AND direntType == %d", [DT_DIR]);
+    let req = self.fileFetchRequest("needsScanChildren == TRUE AND direntType == %d", [DT_DIR])
 
     self.queue.async {
       let moc = self.writeContext

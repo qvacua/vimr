@@ -4,16 +4,14 @@
  */
 
 import Cocoa
-import RxSwift
-import PureLayout
-import WebKit
-import os
 import NvimView
+import os
+import PureLayout
+import RxSwift
+import WebKit
 
 class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
-
   enum Action {
-
     case refreshNow
     case reverseSearch(to: Position)
 
@@ -84,7 +82,8 @@ class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.viewToBeFocused != nil,
-           case .markdownPreview = state.viewToBeFocused! {
+           case .markdownPreview = state.viewToBeFocused!
+        {
           self.beFirstResponder()
         }
 
@@ -92,9 +91,10 @@ class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
         self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
         self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
-        if state.preview.status == .markdown
-           && state.previewTool.isForwardSearchAutomatically
-           && state.preview.editorPosition.hasDifferentMark(as: self.editorPosition) {
+        if state.preview.status == .markdown,
+           state.previewTool.isForwardSearchAutomatically,
+           state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
+        {
           self.forwardSearch(position: state.preview.editorPosition.payload)
         }
 
@@ -133,18 +133,23 @@ class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
 
   private func addViews() {
     self.webview.navigationDelegate = self
-    self.userContentController.add(webviewMessageHandler, name: "com_vimr_tools_preview_markdown")
+    self.userContentController.add(
+      self.webviewMessageHandler,
+      name: "com_vimr_tools_preview_markdown"
+    )
     self.webview.configureForAutoLayout()
 
     self.addSubview(self.webview)
     self.webview.autoPinEdgesToSuperviewEdges()
   }
 
-  func webView(_: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+  func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation!,
+               withError error: Error)
+  {
     self.log.error("ERROR preview component's webview: \(error)")
   }
 
-  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+  func webView(_: WKWebView, didFinish _: WKNavigation!) {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 
@@ -165,33 +170,45 @@ class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
   private let userContentController = WKUserContentController()
   private let webviewMessageHandler = WebviewMessageHandler()
 
-  private let automaticForwardMenuItem = NSMenuItem(title: "Automatic Forward Search",
-                                                    action: nil,
-                                                    keyEquivalent: "")
-  private let automaticReverseMenuItem = NSMenuItem(title: "Automatic Reverse Search",
-                                                    action: nil,
-                                                    keyEquivalent: "")
-  private let refreshOnWriteMenuItem = NSMenuItem(title: "Refresh on Write", action: nil, keyEquivalent: "")
+  private let automaticForwardMenuItem = NSMenuItem(
+    title: "Automatic Forward Search",
+    action: nil,
+    keyEquivalent: ""
+  )
+  private let automaticReverseMenuItem = NSMenuItem(
+    title: "Automatic Reverse Search",
+    action: nil,
+    keyEquivalent: ""
+  )
+  private let refreshOnWriteMenuItem = NSMenuItem(
+    title: "Refresh on Write",
+    action: nil,
+    keyEquivalent: ""
+  )
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.ui)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.ui
+  )
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   private func forwardSearch(position: Position) {
-    self.webview.evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));") { result, error in
-      if let scrollTop = result as? Int {
-        self.scrollTop = scrollTop
+    self.webview
+      .evaluateJavaScript("scrollToPosition(\(position.row), \(position.column));") { result, _ in
+        if let scrollTop = result as? Int {
+          self.scrollTop = scrollTop
+        }
       }
-    }
   }
 }
 
 // MARK: - Actions
-extension MarkdownTool {
 
+extension MarkdownTool {
   @objc func refreshNowAction(_: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .refreshNow))
   }
@@ -205,11 +222,13 @@ extension MarkdownTool {
   }
 
   @objc func automaticForwardSearchAction(_ sender: NSMenuItem) {
-    self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticForwardSearch(to: !sender.boolState)))
+    self
+      .emit(UuidAction(uuid: self.uuid, action: .setAutomaticForwardSearch(to: !sender.boolState)))
   }
 
   @objc func automaticReverseSearchAction(_ sender: NSMenuItem) {
-    self.emit(UuidAction(uuid: self.uuid, action: .setAutomaticReverseSearch(to: !sender.boolState)))
+    self
+      .emit(UuidAction(uuid: self.uuid, action: .setAutomaticReverseSearch(to: !sender.boolState)))
   }
 
   @objc func refreshOnWriteAction(_ sender: NSMenuItem) {
@@ -218,9 +237,8 @@ extension MarkdownTool {
 }
 
 private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
-
   var source: Observable<(Position, Int)> {
-    return self.subject.asObservable()
+    self.subject.asObservable()
   }
 
   deinit {
@@ -235,7 +253,7 @@ private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
     guard let lineBegin = msgBody["lineBegin"],
           let columnBegin = msgBody["columnBegin"],
           let scrollTop = msgBody["scrollTop"]
-      else {
+    else {
       return
     }
 

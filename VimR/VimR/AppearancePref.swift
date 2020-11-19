@@ -4,16 +4,14 @@
  */
 
 import Cocoa
+import NvimView
 import PureLayout
 import RxSwift
-import NvimView
 
 class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate, NSFontChanging {
-
   typealias StateType = AppState
 
   enum Action {
-
     case setUsesColorscheme(Bool)
     case setShowsFileIcon(Bool)
     case setUsesLigatures(Bool)
@@ -58,12 +56,12 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
         let appearance = state.mainWindowTemplate.appearance
 
         guard self.font != appearance.font
-              || self.linespacing != appearance.linespacing
-              || self.characterspacing != appearance.characterspacing
-              || self.usesLigatures != appearance.usesLigatures
-              || self.usesColorscheme != appearance.usesTheme
-              || self.showsFileIcon != appearance.showsFileIcon
-          else { return }
+          || self.linespacing != appearance.linespacing
+          || self.characterspacing != appearance.characterspacing
+          || self.usesLigatures != appearance.usesLigatures
+          || self.usesColorscheme != appearance.usesTheme
+          || self.showsFileIcon != appearance.showsFileIcon
+        else { return }
 
         self.font = appearance.font
         self.linespacing = appearance.linespacing
@@ -96,15 +94,16 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private let previewArea = NSTextView(frame: .zero)
 
   private let exampleText = #"""
-abcdefghijklmnopqrstuvwxyz
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-0123456789 -~ - ~
-(){}[] +-*/= .,;:!?#&$%@|^
-<- -> => >> << >>= =<< .. 
-:: -< >- -<< >>- ++ /= ==
-"""#
+  abcdefghijklmnopqrstuvwxyz
+  ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  0123456789 -~ - ~
+  (){}[] +-*/= .,;:!?#&$%@|^
+  <- -> => >> << >>= =<< .. 
+  :: -< >- -<< >>- ++ /= ==
+  """#
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
@@ -117,9 +116,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ
     )
 
     let useColorschemeInfo = self.infoTextField(markdown: #"""
-If checked, the colors of the selected `colorscheme` will be used to render tools,\
-for example the file browser.
-"""#)
+    If checked, the colors of the selected `colorscheme` will be used to render tools,\
+    for example the file browser.
+    """#)
 
     let fileIcon = self.fileIconCheckbox
     self.configureCheckbox(
@@ -129,9 +128,9 @@ for example the file browser.
     )
 
     let fileIconInfo = self.infoTextField(markdown: #"""
-In case the selected `colorscheme` does not play well with the file icons\
-in the file browser and the buffer list, you can turn them off.
-"""#)
+    In case the selected `colorscheme` does not play well with the file icons\
+    in the file browser and the buffer list, you can turn them off.
+    """#)
 
     let fontTitle = self.titleTextField(title: "Default Font:")
     let fontPanelButton = self.fontPanelButton
@@ -142,9 +141,9 @@ in the file browser and the buffer list, you can turn them off.
     fontPanelButton.action = #selector(AppearancePref.showFontPanel(_:))
 
     let fontInfo = self.infoTextField(markdown: #"""
-The font panel will show variable width fonts, but VimR does not support them.\
-If you select a variable width font, the rendering will be ... well ... questionable.
-"""#)
+    The font panel will show variable width fonts, but VimR does not support them.\
+    If you select a variable width font, the rendering will be ... well ... questionable.
+    """#)
 
     let linespacingTitle = self.titleTextField(title: "Line Spacing:")
     let linespacingField = self.linespacingField
@@ -278,8 +277,9 @@ If you select a variable width font, the rendering will be ... well ... question
   }
 
   private func updateViews() {
-    sharedFontPanel.setPanelFont(font, isMultiple: false)
-    self.fontPanelButton.title = font.displayName.map { "\($0) \(font.pointSize)" } ?? "Show fonts..."
+    sharedFontPanel.setPanelFont(self.font, isMultiple: false)
+    self.fontPanelButton.title = self.font.displayName
+      .map { "\($0) \(font.pointSize)" } ?? "Show fonts..."
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
@@ -296,6 +296,7 @@ If you select a variable width font, the rendering will be ... well ... question
 }
 
 // MARK: - NSFontChanging
+
 extension AppearancePref {
   func changeFont(_ sender: NSFontManager?) {
     guard let fontManager = sender else { return }
@@ -306,8 +307,8 @@ extension AppearancePref {
 }
 
 // MARK: - Actions
-extension AppearancePref {
 
+extension AppearancePref {
   @objc func usesColorschemeAction(_ sender: NSButton) {
     self.emit(.setUsesColorscheme(sender.boolState))
   }
@@ -350,7 +351,6 @@ extension AppearancePref {
 
     return cgfCharacterspacing
   }
-
 
   private func cappedFontSize(_ size: Int) -> CGFloat {
     let cgfSize = size.cgf

@@ -7,11 +7,11 @@ import Cocoa
 import PureLayout
 
 class ImageAndTextTableCell: NSTableCellView {
-
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 
   // MARK: - API
+
   static let font = NSFont.systemFont(ofSize: 12)
   static let widthWithoutText = (2 + 16 + 4 + 2).cgf
 
@@ -86,5 +86,6 @@ class ImageAndTextTableCell: NSTableCellView {
     return self
   }
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }

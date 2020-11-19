@@ -4,20 +4,20 @@
  */
 
 import Cocoa
-import RxSwift
-import MessagePack
 import Commons
+import MessagePack
+import RxSwift
 import Workspace
 
 // MARK: - RpcEvent Actions
-extension MainWindow {
 
+extension MainWindow {
   func rpcEventAction(params rawParams: [MessagePackValue]) {
     guard rawParams.count > 0 else { return }
 
     guard let strEvent = rawParams[0].stringValue,
           let event = RpcEvent(rawValue: "\(RpcEvent.prefix).\(strEvent)")
-      else {
+    else {
       return
     }
     let params = Array(rawParams.suffix(from: 1))
@@ -64,7 +64,7 @@ extension MainWindow {
       guard let fontName = params[0].stringValue,
             let fontSize = params[1].int64Value,
             let font = NSFont(name: fontName, size: fontSize.cgf)
-        else {
+      else {
         return
       }
 
@@ -79,9 +79,8 @@ extension MainWindow {
     case .setCharacterspacing:
       guard params.count == 1 else { return }
       guard let characterspacing = params[0].floatValue else { return }
-      
-      self.emit(self.uuidAction(for: .setCharacterspacing(characterspacing.cgf)))
 
+      self.emit(self.uuidAction(for: .setCharacterspacing(characterspacing.cgf)))
     }
   }
 
@@ -119,16 +118,16 @@ extension MainWindow {
 }
 
 // MARK: - File Menu Item Actions
-extension MainWindow {
 
-  @IBAction func newTab(_ sender: Any?) {
+extension MainWindow {
+  @IBAction func newTab(_: Any?) {
     self.neoVimView
       .newTab()
       .subscribe()
       .disposed(by: self.disposeBag)
   }
 
-  @IBAction func openDocument(_ sender: Any?) {
+  @IBAction func openDocument(_: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.allowsMultipleSelection = true
@@ -155,16 +154,16 @@ extension MainWindow {
     }
   }
 
-  @IBAction func openQuickly(_ sender: Any?) {
+  @IBAction func openQuickly(_: Any?) {
     self.emit(self.uuidAction(for: .openQuickly))
   }
 
-  @IBAction func closeWindow(_ sender: Any?) {
+  @IBAction func closeWindow(_: Any?) {
     self.closeWindow = true
     self.window.performClose(nil)
   }
 
-  @IBAction func saveDocument(_ sender: Any?) {
+  @IBAction func saveDocument(_: Any?) {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
@@ -185,7 +184,7 @@ extension MainWindow {
       .disposed(by: self.disposeBag)
   }
 
-  @IBAction func saveDocumentAs(_ sender: Any?) {
+  @IBAction func saveDocumentAs(_: Any?) {
     self.neoVimView
       .currentBuffer()
       .observeOn(MainScheduler.instance)
@@ -194,7 +193,8 @@ extension MainWindow {
           self.neoVimView
             .saveCurrentTab(url: url)
             .andThen(
-              curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView.openInCurrentTab(url: url)
+              curBuf.isDirty ? self.neoVimView.openInNewTab(urls: [url]) : self.neoVimView
+                .openInCurrentTab(url: url)
             )
             .subscribe()
             .disposed(by: self.disposeBag)
@@ -214,7 +214,9 @@ extension MainWindow {
         let alert = NSAlert()
         alert.addButton(withTitle: "OK")
         alert.messageText = "Invalid File Name"
-        alert.informativeText = "The file name you have entered cannot be used. Please use a different name."
+        alert
+          .informativeText =
+          "The file name you have entered cannot be used. Please use a different name."
         alert.alertStyle = .warning
 
         alert.runModal()
@@ -231,36 +233,36 @@ extension MainWindow {
 }
 
 // MARK: - Tools Menu Item Actions
-extension MainWindow {
 
-  @IBAction func toggleAllTools(_ sender: Any?) {
+extension MainWindow {
+  @IBAction func toggleAllTools(_: Any?) {
     self.workspace.toggleAllTools()
     self.focusNvimView(self)
 
     self.emit(self.uuidAction(for: .toggleAllTools(self.workspace.isAllToolsVisible)))
   }
 
-  @IBAction func toggleToolButtons(_ sender: Any?) {
+  @IBAction func toggleToolButtons(_: Any?) {
     self.workspace.toggleToolButtons()
     self.emit(self.uuidAction(for: .toggleToolButtons(self.workspace.isToolButtonsVisible)))
   }
 
-  @IBAction func toggleFileBrowser(_ sender: Any?) {
+  @IBAction func toggleFileBrowser(_: Any?) {
     guard let fileBrowser = self.fileBrowserContainer else { return }
     self.toggle(tool: fileBrowser, toolType: .fileBrowser)
   }
 
-  @IBAction func toggleBufferList(_ sender: Any?) {
+  @IBAction func toggleBufferList(_: Any?) {
     guard let bufferList = self.buffersListContainer else { return }
     self.toggle(tool: bufferList, toolType: .bufferList)
   }
 
-  @IBAction func toggleMarkdownPreview(_ sender: Any?) {
+  @IBAction func toggleMarkdownPreview(_: Any?) {
     guard let markdownPreview = self.previewContainer else { return }
     self.toggle(tool: markdownPreview, toolType: .markdownPreview)
   }
 
-  @IBAction func toggleHtmlPreview(_ sender: Any?) {
+  @IBAction func toggleHtmlPreview(_: Any?) {
     guard let htmlPreview = self.htmlPreviewContainer else { return }
     self.toggle(tool: htmlPreview, toolType: .htmlPreview)
   }
@@ -287,8 +289,8 @@ extension MainWindow {
 }
 
 // MARK: - NSUserInterfaceValidationsProtocol
-extension MainWindow {
 
+extension MainWindow {
   func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     let canSave = self.neoVimView.currentBuffer().syncValue()?.type == ""
     let canSaveAs = canSave
@@ -303,31 +305,29 @@ extension MainWindow {
     }
 
     switch action {
-
-    case #selector(toggleAllTools(_:)), #selector(toggleToolButtons(_:)):
+    case #selector(self.toggleAllTools(_:)), #selector(self.toggleToolButtons(_:)):
       return canToggleTools
 
-    case #selector(toggleFileBrowser(_:)):
+    case #selector(self.toggleFileBrowser(_:)):
       return canToggleFileBrowser
 
-    case #selector(focusNvimView(_:)):
+    case #selector(self.focusNvimView(_:)):
       return canFocusNvimView
 
-    case #selector(openDocument(_:)):
+    case #selector(self.openDocument(_:)):
       return canOpen
 
-    case #selector(openQuickly(_:)):
+    case #selector(self.openQuickly(_:)):
       return canOpenQuickly
 
-    case #selector(saveDocument(_:)):
+    case #selector(self.saveDocument(_:)):
       return canSave
 
-    case #selector(saveDocumentAs(_:)):
+    case #selector(self.saveDocumentAs(_:)):
       return canSaveAs
 
     default:
       return true
-
     }
   }
 }

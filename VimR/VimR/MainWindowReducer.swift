@@ -6,7 +6,6 @@
 import Foundation
 
 class MainWindowReducer: ReducerType {
-
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -14,11 +13,10 @@ class MainWindowReducer: ReducerType {
     var state = tuple.state
 
     switch tuple.action.payload {
-
-    case let .frameChanged(to:frame):
+    case let .frameChanged(to: frame):
       state.frame = frame
 
-    case let .cd(to:cwd):
+    case let .cd(to: cwd):
       if state.cwd != cwd {
         state.cwd = cwd
       }
@@ -41,9 +39,11 @@ class MainWindowReducer: ReducerType {
       state.viewToBeFocused = view
 
     case let .setState(for: tool, with: workspaceTool):
-      state.tools[tool] = WorkspaceToolState(location: workspaceTool.location,
-                                             dimension: workspaceTool.dimension,
-                                             open: workspaceTool.isSelected)
+      state.tools[tool] = WorkspaceToolState(
+        location: workspaceTool.location,
+        dimension: workspaceTool.dimension,
+        open: workspaceTool.isSelected
+      )
       if workspaceTool.isSelected {
         state.tools
           .filter { $0 != tool && $1.location == workspaceTool.location }
@@ -56,9 +56,11 @@ class MainWindowReducer: ReducerType {
         let toolId = toolPair.0
         let tool = toolPair.1
 
-        state.tools[toolId] = WorkspaceToolState(location: tool.location,
-                                                 dimension: tool.dimension,
-                                                 open: tool.isSelected)
+        state.tools[toolId] = WorkspaceToolState(
+          location: tool.location,
+          dimension: tool.dimension,
+          open: tool.isSelected
+        )
 
         if tool.isSelected {
           state.tools
@@ -83,7 +85,6 @@ class MainWindowReducer: ReducerType {
 
     default:
       return tuple
-
     }
 
     return (state, tuple.action, true)

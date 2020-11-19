@@ -4,18 +4,18 @@
  */
 
 import Cocoa
-import RxSwift
 import NvimView
-import PureLayout
 import os
+import PureLayout
+import RxSwift
 import Workspace
 
 class MainWindow: NSObject,
-                  UiComponent,
-                  NSWindowDelegate,
-                  NSUserInterfaceValidations,
-                  WorkspaceDelegate {
-
+  UiComponent,
+  NSWindowDelegate,
+  NSUserInterfaceValidations,
+  WorkspaceDelegate
+{
   typealias StateType = State
 
   let disposeBag = DisposeBag()
@@ -67,7 +67,8 @@ class MainWindow: NSObject,
 
     var sourceFileUrls = [URL]()
     if let sourceFileUrl = Bundle(for: MainWindow.self)
-      .url(forResource: "com.qvacua.VimR", withExtension: "vim") {
+      .url(forResource: "com.qvacua.VimR", withExtension: "vim")
+    {
       sourceFileUrls.append(sourceFileUrl)
     }
 
@@ -97,9 +98,11 @@ class MainWindow: NSObject,
     }
 
     if state.activeTools[.htmlPreview] == true {
-      self.htmlPreview = HtmlPreviewTool(source: source,
-                                         emitter: emitter,
-                                         state: state)
+      self.htmlPreview = HtmlPreviewTool(
+        source: source,
+        emitter: emitter,
+        state: state
+      )
       let htmlPreviewConfig = WorkspaceTool.Config(
         title: "HTML",
         view: self.htmlPreview!,
@@ -107,7 +110,7 @@ class MainWindow: NSObject,
       )
       self.htmlPreviewContainer = WorkspaceTool(htmlPreviewConfig)
       self.htmlPreviewContainer!.dimension = state.tools[.htmlPreview]?
-                                               .dimension ?? 250
+        .dimension ?? 250
       tools[.htmlPreview] = self.htmlPreviewContainer
     }
 
@@ -123,8 +126,8 @@ class MainWindow: NSObject,
       )
       self.fileBrowserContainer = WorkspaceTool(fileBrowserConfig)
       self.fileBrowserContainer!.dimension = state
-                                               .tools[.fileBrowser]?
-                                               .dimension ?? 200
+        .tools[.fileBrowser]?
+        .dimension ?? 200
       tools[.fileBrowser] = self.fileBrowserContainer
     }
 
@@ -132,12 +135,14 @@ class MainWindow: NSObject,
       self.buffersList = BuffersList(
         source: source, emitter: emitter, state: state
       )
-      let buffersListConfig = WorkspaceTool.Config(title: "Buffers",
-                                                   view: self.buffersList!)
+      let buffersListConfig = WorkspaceTool.Config(
+        title: "Buffers",
+        view: self.buffersList!
+      )
       self.buffersListContainer = WorkspaceTool(buffersListConfig)
       self.buffersListContainer!.dimension = state
-                                               .tools[.buffersList]?
-                                               .dimension ?? 200
+        .tools[.buffersList]?
+        .dimension ?? 200
       tools[.buffersList] = self.buffersListContainer
     }
 
@@ -163,11 +168,13 @@ class MainWindow: NSObject,
         return
       }
 
-      self.workspace.append(tool: tool,
-                            location: state.tools[toolId]?.location ?? .left)
+      self.workspace.append(
+        tool: tool,
+        location: state.tools[toolId]?.location ?? .left
+      )
     }
 
-    self.tools.forEach { (toolId, toolContainer) in
+    self.tools.forEach { toolId, toolContainer in
       if state.tools[toolId]?.open == true {
         toolContainer.toggle()
       }
@@ -204,7 +211,7 @@ class MainWindow: NSObject,
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
-    return UuidAction(uuid: self.uuid, action: action)
+    UuidAction(uuid: self.uuid, action: action)
   }
 
   func show() {
@@ -213,7 +220,7 @@ class MainWindow: NSObject,
 
   // The following should only be used when Cmd-Q'ing
   func quitNeoVimWithoutSaving() -> Completable {
-    return self.neoVimView.quitNeoVimWithoutSaving()
+    self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   @IBAction func debug2(_: Any?) {
@@ -222,10 +229,11 @@ class MainWindow: NSObject,
     theme.background = .yellow
     theme.highlightForeground = .orange
     theme.highlightBackground = .red
-    self.emit(uuidAction(for: .setTheme(theme)))
+    self.emit(self.uuidAction(for: .setTheme(theme)))
   }
 
   // MARK: - Private
+
   private var currentBuffer: NvimView.Buffer?
 
   private var goToLineFromCli: Marked<Int>?
@@ -246,8 +254,10 @@ class MainWindow: NSObject,
   private var usesTheme = true
   private var lastThemeMark = Token()
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.ui)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.ui
+  )
 
   private func setupScrollAndCursorDebouncers() {
     Observable
@@ -265,12 +275,11 @@ class MainWindow: NSObject,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { [weak self] event in
         switch event {
-
         case .neoVimStopped: self?.neoVimStopped()
 
-        case .setTitle(let title): self?.set(title: title)
+        case let .setTitle(title): self?.set(title: title)
 
-        case .setDirtyStatus(let dirty): self?.set(dirtyStatus: dirty)
+        case let .setDirtyStatus(dirty): self?.set(dirtyStatus: dirty)
 
         case .cwdChanged: self?.cwdChanged()
 
@@ -278,32 +287,30 @@ class MainWindow: NSObject,
 
         case .tabChanged: self?.tabChanged()
 
-        case .newCurrentBuffer(let curBuf): self?.newCurrentBuffer(curBuf)
+        case let .newCurrentBuffer(curBuf): self?.newCurrentBuffer(curBuf)
 
-        case .bufferWritten(let buf): self?.bufferWritten(buf)
+        case let .bufferWritten(buf): self?.bufferWritten(buf)
 
-        case .colorschemeChanged(let theme): self?.colorschemeChanged(to: theme)
+        case let .colorschemeChanged(theme): self?.colorschemeChanged(to: theme)
 
-
-        case .ipcBecameInvalid(let reason):
+        case let .ipcBecameInvalid(reason):
           self?.ipcBecameInvalid(reason: reason)
 
         case .scroll: self?.scroll()
 
-        case .cursor(let position): self?.cursor(to: position)
+        case let .cursor(position): self?.cursor(to: position)
 
         case .initVimError: self?.showInitError()
 
-        case .apiError(let error, let msg):
+        case let .apiError(error, msg):
           self?.log.error("Got api error with msg '\(msg)' and error: \(error)")
 
-        case .rpcEvent(let params): self?.rpcEventAction(params: params)
+        case let .rpcEvent(params): self?.rpcEventAction(params: params)
 
         case .rpcEventSubscribed: break
-
         }
       }, onError: { error in
-        // FIXME call onError
+        // FIXME: call onError
         self.log.error(error)
       })
       .disposed(by: self.disposeBag)
@@ -318,7 +325,8 @@ class MainWindow: NSObject,
         }
 
         if state.viewToBeFocused != nil,
-           case .neoVimView = state.viewToBeFocused! {
+           case .neoVimView = state.viewToBeFocused!
+        {
           self.window.makeFirstResponder(self.neoVimView)
         }
 
@@ -331,11 +339,11 @@ class MainWindow: NSObject,
         Completable
           .empty()
           .andThen {
-            if state.preview.status == .markdown
-               && state.previewTool.isReverseSearchAutomatically
-               && state.preview.previewPosition
-                 .hasDifferentMark(as: self.previewPosition) {
-
+            if state.preview.status == .markdown,
+               state.previewTool.isReverseSearchAutomatically,
+               state.preview.previewPosition
+               .hasDifferentMark(as: self.previewPosition)
+            {
               self.previewPosition = state.preview.previewPosition
               return self.neoVimView.cursorGo(
                 to: state.preview.previewPosition.payload
@@ -389,7 +397,8 @@ class MainWindow: NSObject,
             self.unthemeTitlebar(dueFullScreen: false)
             self.window.backgroundColor = .windowBackgroundColor
             self.workspace.theme = .default
-          })
+          }
+        )
 
         self.usesTheme = state.appearance.usesTheme
         self.currentBuffer = state.currentBuffer
@@ -404,7 +413,8 @@ class MainWindow: NSObject,
         self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
 
         if self.neoVimView.trackpadScrollResistance
-           != state.trackpadScrollResistance.cgf {
+          != state.trackpadScrollResistance.cgf
+        {
           self.neoVimView.trackpadScrollResistance = CGFloat(
             state.trackpadScrollResistance
           )
@@ -420,9 +430,10 @@ class MainWindow: NSObject,
         }
 
         if self.defaultFont != state.appearance.font
-           || self.linespacing != state.appearance.linespacing
-           || self.characterspacing != state.appearance.characterspacing
-           || self.usesLigatures != state.appearance.usesLigatures {
+          || self.linespacing != state.appearance.linespacing
+          || self.characterspacing != state.appearance.characterspacing
+          || self.usesLigatures != state.appearance.usesLigatures
+        {
           self.defaultFont = state.appearance.font
           self.linespacing = state.appearance.linespacing
           self.characterspacing = state.appearance.characterspacing
@@ -506,10 +517,10 @@ class MainWindow: NSObject,
     notification.identifier = UUID().uuidString
     notification.title = "Error during initialization"
     notification.informativeText =
-    """
-    There was an error during the initialization of NeoVim.
-    Use :messages to view the error messages.
-    """
+      """
+      There was an error during the initialization of NeoVim.
+      Use :messages to view the error messages.
+      """
 
     NSUserNotificationCenter.default.deliver(notification)
   }

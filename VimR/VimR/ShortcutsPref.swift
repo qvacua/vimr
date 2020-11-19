@@ -9,10 +9,10 @@ import RxSwift
 import ShortcutRecorder
 
 class ShortcutsPref: PrefPane,
-                     UiComponent,
-                     NSOutlineViewDelegate,
-                     RecorderControlDelegate {
-
+  UiComponent,
+  NSOutlineViewDelegate,
+  RecorderControlDelegate
+{
   typealias StateType = AppState
 
   @objc dynamic var content = [ShortcutItem]()
@@ -21,7 +21,7 @@ class ShortcutsPref: PrefPane,
 
   override var pinToContainer: Bool { true }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(source _: Observable<StateType>, emitter _: ActionEmitter, state _: StateType) {
     // We know that the identifier is not empty.
     let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
     self.shortcutsUserDefaults = UserDefaults(suiteName: shortcutSuiteName)
@@ -33,14 +33,15 @@ class ShortcutsPref: PrefPane,
     super.init(frame: .zero)
 
     if let version = self.shortcutsUserDefaults?.integer(forKey: defaultsVersionKey),
-       version > defaultsVersion {
+       version > defaultsVersion
+    {
       let alert = NSAlert()
       alert.alertStyle = .warning
       alert.messageText = "Incompatible Defaults for Shortcuts"
       alert.informativeText = "The stored defaults for shortcuts are not compatible with "
-                              + "this version of VimR. You can delete the stored defaults "
-                              + "by executing 'defaults delete com.qvacua.VimR.menuitems' "
-                              + "in Terminal."
+        + "this version of VimR. You can delete the stored defaults "
+        + "by executing 'defaults delete com.qvacua.VimR.menuitems' "
+        + "in Terminal."
       alert.runModal()
       return
     }
@@ -59,7 +60,8 @@ class ShortcutsPref: PrefPane,
     self.shortcutList.expandItem(nil, expandChildren: true)
   }
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private let shortcutList = NSOutlineView.standardOutlineView()
   private let shortcutScrollView = NSScrollView.standardScrollView()
@@ -126,7 +128,7 @@ class ShortcutsPref: PrefPane,
 
   private func traverseMenuItems(with fn: (String, NSMenuItem) -> Void) {
     var queue = self.shortcutItemsRoot.children ?? []
-    while (!queue.isEmpty) {
+    while !queue.isEmpty {
       guard let item = queue.popLast() else { break }
       if item.isContainer, let children = item.children {
         queue.append(contentsOf: children)
@@ -168,18 +170,18 @@ class ShortcutsPref: PrefPane,
         shortcutItem: ShortcutItem(title: $0.title, isLeaf: false, item: $0)
       )
     }
-    while (!queue.isEmpty) {
+    while !queue.isEmpty {
       guard let entry = queue.popLast() else { break }
 
       if !entry.shortcutItem.isLeaf
-         || entry.shortcutItem.identifier?.hasPrefix("com.qvacua.vimr.menuitems.") == true {
-
+        || entry.shortcutItem.identifier?.hasPrefix("com.qvacua.vimr.menuitems.") == true
+      {
         entry.parent.children?.append(entry.shortcutItem)
       }
 
       if entry.shortcutItem.isContainer,
-         let childMenuItems = entry.shortcutItem.item?.submenu?.items {
-
+         let childMenuItems = entry.shortcutItem.item?.submenu?.items
+      {
         let shortcutChildItems = childMenuItems
           .filter { !$0.title.isEmpty }
           .map { menuItem in
@@ -233,9 +235,9 @@ class ShortcutsPref: PrefPane,
 }
 
 // MARK: - Actions
-extension ShortcutsPref {
 
-  @objc func resetToDefault(_ sender: NSButton) {
+extension ShortcutsPref {
+  @objc func resetToDefault(_: NSButton) {
     guard let window = self.window else { return }
 
     let alert = NSAlert()
@@ -260,8 +262,8 @@ extension ShortcutsPref {
 }
 
 // MARK: - NSOutlineViewDelegate
-extension ShortcutsPref {
 
+extension ShortcutsPref {
   private func isUppercase(_ str: String) -> Bool {
     for c in str.unicodeScalars {
       if !CharacterSet.uppercaseLetters.contains(c) { return false }
@@ -270,7 +272,7 @@ extension ShortcutsPref {
     return true
   }
 
-  func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+  func outlineView(_: NSOutlineView, rowViewForItem _: Any) -> NSTableRowView? {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
       owner: self
@@ -279,7 +281,7 @@ extension ShortcutsPref {
     return view
   }
 
-  func outlineView(_: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+  func outlineView(_: NSOutlineView, viewFor _: NSTableColumn?, item: Any) -> NSView? {
     let cellView = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-cell-view"),
       owner: self
@@ -306,7 +308,7 @@ extension ShortcutsPref {
     return cellView
   }
 
-  func outlineView(_: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat { 28 }
+  func outlineView(_: NSOutlineView, heightOfRowByItem _: Any) -> CGFloat { 28 }
 
   private func areShortcutsEqual(_ identifier: String) -> Bool {
     guard let dataFromDefaults = self.shortcutsDefaultsController.value(
@@ -324,9 +326,9 @@ extension ShortcutsPref {
 }
 
 // MARK: - SRRecorderControlDelegate
-extension ShortcutsPref {
 
-  func recorderControlDidEndRecording(_ sender: RecorderControl) {
+extension ShortcutsPref {
+  func recorderControlDidEndRecording(_: RecorderControl) {
     self.treeController.rearrangeObjects()
   }
 }
@@ -335,7 +337,6 @@ private let defaultsVersionKey = "version"
 private let defaultsVersion = 337
 
 private class DataToKeyEquivalentTransformer: ValueTransformer {
-
   override func transformedValue(_ value: Any?) -> Any? {
     guard let shortcut = ValueTransformer
       .keyedUnarchiveFromDataTransformer
@@ -346,7 +347,6 @@ private class DataToKeyEquivalentTransformer: ValueTransformer {
 }
 
 private class DataToKeyEquivalentModifierMaskTransformer: ValueTransformer {
-
   override func transformedValue(_ value: Any?) -> Any? {
     guard let shortcut = ValueTransformer
       .keyedUnarchiveFromDataTransformer

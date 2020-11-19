@@ -6,10 +6,9 @@
 import Cocoa
 
 class PrefPane: NSView {
-
   // Return true to place this to the upper left corner when the scroll view is bigger than this view.
   override var isFlipped: Bool {
-    return true
+    true
   }
 
   var displayName: String {
@@ -17,7 +16,7 @@ class PrefPane: NSView {
   }
 
   var pinToContainer: Bool {
-    return false
+    false
   }
 
   func paneWillAppear() {
@@ -30,19 +29,19 @@ class PrefPane: NSView {
 }
 
 // MARK: - Control Utils
-extension PrefPane {
 
+extension PrefPane {
   func paneTitleTextField(title: String) -> NSTextField {
     let field = NSTextField.defaultTitleTextField()
     field.font = NSFont.boldSystemFont(ofSize: 16)
-    field.alignment = .left;
+    field.alignment = .left
     field.stringValue = title
     return field
   }
 
   func titleTextField(title: String) -> NSTextField {
     let field = NSTextField.defaultTitleTextField()
-    field.alignment = .right;
+    field.alignment = .right
     field.stringValue = title
     return field
   }

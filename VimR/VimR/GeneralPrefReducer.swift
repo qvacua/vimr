@@ -6,7 +6,6 @@
 import Foundation
 
 class GeneralPrefReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = GeneralPref.Action
 
@@ -14,7 +13,6 @@ class GeneralPrefReducer: ReducerType {
     var state = pair.state
 
     switch pair.action {
-
     case let .setOpenOnLaunch(value):
       state.openNewMainWindowOnLaunch = value
 
@@ -26,7 +24,6 @@ class GeneralPrefReducer: ReducerType {
 
     case let .setDefaultUsesVcsIgnores(value):
       state.openQuickly.defaultUsesVcsIgnores = value
-
     }
 
     return (state, pair.action, true)

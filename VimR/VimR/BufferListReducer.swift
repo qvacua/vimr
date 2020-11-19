@@ -6,7 +6,6 @@
 import Foundation
 
 class BuffersListReducer: ReducerType {
-
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<BuffersList.Action>
 
@@ -14,10 +13,8 @@ class BuffersListReducer: ReducerType {
     var state = tuple.state
 
     switch tuple.action.payload {
-
     case let .open(buffer):
       state.currentBufferToSet = buffer
-
     }
 
     return (state, tuple.action, true)

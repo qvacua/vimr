@@ -4,23 +4,23 @@
  */
 
 import Cocoa
-import NvimView
 import Commons
+import NvimView
 
 func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
-                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool {
-
-  if themePrefChanged && usesTheme {
+                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool
+{
+  if themePrefChanged, usesTheme {
     forTheme()
     return true
   }
 
-  if themePrefChanged && !usesTheme {
+  if themePrefChanged, !usesTheme {
     forDefaultTheme()
     return true
   }
 
-  if !themePrefChanged && themeChanged && usesTheme {
+  if !themePrefChanged, themeChanged, usesTheme {
     forTheme()
     return true
   }
@@ -29,7 +29,6 @@ func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
 }
 
 struct Theme: CustomStringConvertible {
-
   static let `default` = Theme()
 
   var foreground = NSColor.textColor
@@ -53,11 +52,11 @@ struct Theme: CustomStringConvertible {
   var cssCodeBackgroundColor = NSColor(hex: "1b1f23")!
 
   public var description: String {
-    return "Theme<" +
-           "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-           "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex)" +
-           "dir-fg: \(self.directoryForeground.hex)" +
-           ">"
+    "Theme<" +
+      "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
+      "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex)" +
+      "dir-fg: \(self.directoryForeground.hex)" +
+      ">"
   }
 
   init() {}

@@ -4,21 +4,19 @@
  */
 
 import Cocoa
-import RxSwift
-import PureLayout
-import WebKit
 import EonilFSEvents
 import MaterialIcons
 import os
+import PureLayout
+import RxSwift
+import WebKit
 import Workspace
 
 private let fileSystemEventsLatency = 1.0
 private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
-
   enum Action {
-
     case selectHtmlFile(URL)
   }
 
@@ -70,9 +68,10 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
             sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
             latency: fileSystemEventsLatency,
             flags: [.fileEvents],
-            handler: { [weak self] event in
+            handler: { [weak self] _ in
               self?.reloadWebview(with: serverUrl.payload)
-            })
+            }
+          )
           self.monitor?.setDispatchQueue(monitorDispatchQueue)
           try self.monitor?.start()
         } catch {
@@ -92,7 +91,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
 
   private func reloadWebview(with url: URL) {
     DispatchQueue.main.async {
-      self.webview.evaluateJavaScript("document.body.scrollTop") { (result, error) in
+      self.webview.evaluateJavaScript("document.body.scrollTop") { result, _ in
         self.scrollTop = result as? Int ?? 0
       }
     }
@@ -117,12 +116,15 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private var monitor: EonilFSEventStream?
 
   private let disposeBag = DisposeBag()
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.ui)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.ui
+  )
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  @objc func selectHtmlFile(sender: Any?) {
+  @objc func selectHtmlFile(sender _: Any?) {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = false
     panel.allowsMultipleSelection = false
@@ -136,15 +138,13 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     }
   }
 
-  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+  func webView(_: WKWebView, didFinish _: WKNavigation!) {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 }
 
 extension HtmlPreviewTool {
-
   class InnerCustomToolbar: CustomToolBar {
-
     fileprivate weak var htmlPreviewTool: HtmlPreviewTool? {
       didSet { self.selectHtmlFile.target = self.htmlPreviewTool }
     }
@@ -182,6 +182,7 @@ extension HtmlPreviewTool {
       selectHtmlFile.autoPinEdge(toSuperviewEdge: .right, withInset: InnerToolBar.itemPadding)
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
   }
 }

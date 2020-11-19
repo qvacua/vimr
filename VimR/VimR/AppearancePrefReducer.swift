@@ -6,7 +6,6 @@
 import Foundation
 
 class AppearancePrefReducer: ReducerType {
-
   typealias StateType = AppState
   typealias ActionType = AppearancePref.Action
 
@@ -15,7 +14,6 @@ class AppearancePrefReducer: ReducerType {
     var appearance = state.mainWindowTemplate.appearance
 
     switch pair.action {
-
     case let .setUsesColorscheme(value):
       appearance.usesTheme = value
 
@@ -30,10 +28,9 @@ class AppearancePrefReducer: ReducerType {
 
     case let .setLinespacing(linespacing):
       appearance.linespacing = linespacing
-      
+
     case let .setCharacterspacing(characterspacing):
       appearance.characterspacing = characterspacing
-
     }
 
     self.modify(state: &state, with: appearance)

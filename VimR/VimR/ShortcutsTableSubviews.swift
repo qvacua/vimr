@@ -7,19 +7,18 @@ import Cocoa
 import ShortcutRecorder
 
 class ShortcutTableRow: NSTableRowView {
-
   init(withIdentifier identifier: String) {
     super.init(frame: .zero)
     self.identifier = NSUserInterfaceItemIdentifier(identifier)
   }
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 }
 
 class ShortcutTableCell: NSTableCellView {
-
   static let font = NSFont.systemFont(ofSize: 13)
   static let boldFont = NSFont.boldSystemFont(ofSize: 13)
 
@@ -117,6 +116,6 @@ class ShortcutTableCell: NSTableCellView {
   private let shortcutRecorder = RecorderControl(forAutoLayout: ())
   private let _textField = NSTextField(forAutoLayout: ())
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
-

@@ -3,15 +3,13 @@
  * See LICENSE
  */
 
-import Foundation
-import CoreData
-import os
 import Commons
+import CoreData
+import Foundation
+import os
 
 class CoreDataStack {
-
   enum Error: Swift.Error {
-
     case noCacheFolder
     case pathDoesNotExit
     case pathNotFolder
@@ -20,7 +18,6 @@ class CoreDataStack {
   }
 
   enum StoreLocation {
-
     case temp(String)
     case cache(String)
     case path(String)
@@ -45,15 +42,14 @@ class CoreDataStack {
     let fileManager = FileManager.default
     let url: URL
     switch storeLocation {
-
-    case .temp(let folderName):
+    case let .temp(folderName):
       let parentUrl = fileManager
         .temporaryDirectory
         .appendingPathComponent(folderName)
       try fileManager.createDirectory(at: parentUrl, withIntermediateDirectories: true)
       url = parentUrl.appendingPathComponent(modelName)
 
-    case .cache(let folderName):
+    case let .cache(folderName):
       guard let cacheUrl = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
         throw Error.noCacheFolder
       }
@@ -62,14 +58,13 @@ class CoreDataStack {
 
       url = parentUrl.appendingPathComponent(modelName)
 
-    case .path(let path):
+    case let .path(path):
       guard fileManager.fileExists(atPath: path) else { throw Error.pathDoesNotExit }
 
       let parentFolder = URL(fileURLWithPath: path)
       guard parentFolder.isDir else { throw Error.pathNotFolder }
 
       url = parentFolder.appendingPathComponent(modelName)
-
     }
 
     self.container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: url)]

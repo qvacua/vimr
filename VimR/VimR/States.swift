@@ -4,24 +4,21 @@
  */
 
 import Cocoa
+import Commons
 import NvimView
 import RxSwift
-import Commons
 import Workspace
 
 struct AppState: Codable {
-
   enum AfterLastWindowAction: String, Codable {
-
     case doNothing = "do-nothing"
-    case hide = "hide"
-    case quit = "quit"
+    case hide
+    case quit
   }
 
   static let `default` = AppState()
 
   enum CodingKeys: String, CodingKey {
-
     case openNewMainWindowOnLaunch = "open-new-window-when-launching"
     case openNewMainWindowOnReactivation = "open-new-window-on-reactivation"
     case afterLastWindowAction = "after-last-window-action"
@@ -56,33 +53,44 @@ struct AppState: Codable {
   init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
-    self.openNewMainWindowOnLaunch = try container.decode(forKey: .openNewMainWindowOnLaunch,
-                                                          default: AppState.default.openNewMainWindowOnLaunch)
-    self.openNewMainWindowOnReactivation = try container.decode(
-      forKey: .openNewMainWindowOnReactivation, default: AppState.default.openNewMainWindowOnReactivation
+    self.openNewMainWindowOnLaunch = try container.decode(
+      forKey: .openNewMainWindowOnLaunch,
+      default: AppState.default
+        .openNewMainWindowOnLaunch
     )
-    self.afterLastWindowAction = try container.decode(forKey: .afterLastWindowAction, default: .doNothing)
-    self.useSnapshotUpdate = try container.decode(forKey: .useSnapshotUpdate,
-                                                  default: AppState.default.useSnapshotUpdate)
+    self.openNewMainWindowOnReactivation = try container.decode(
+      forKey: .openNewMainWindowOnReactivation,
+      default: AppState.default.openNewMainWindowOnReactivation
+    )
+    self.afterLastWindowAction = try container.decode(
+      forKey: .afterLastWindowAction,
+      default: .doNothing
+    )
+    self.useSnapshotUpdate = try container.decode(
+      forKey: .useSnapshotUpdate,
+      default: AppState.default.useSnapshotUpdate
+    )
 
-    self.openQuickly = try container.decode(forKey: .openQuickly, default: OpenQuicklyWindow.State.default)
-    self.mainWindowTemplate = try container.decode(forKey: .mainWindowTemplate, default: MainWindow.State.default)
+    self.openQuickly = try container.decode(
+      forKey: .openQuickly,
+      default: OpenQuicklyWindow.State.default
+    )
+    self.mainWindowTemplate = try container.decode(
+      forKey: .mainWindowTemplate,
+      default: MainWindow.State.default
+    )
   }
 
   // Use generated encode(to:)
 
-  private init() {
-  }
+  private init() {}
 }
 
 extension OpenQuicklyWindow {
-
   struct State: Codable {
-
     static let `default` = State()
 
     enum CodingKeys: String, CodingKey {
-
       case defaultUsesVcsIgnore = "default-uses-vcs-ignores"
     }
 
@@ -103,17 +111,14 @@ extension OpenQuicklyWindow {
       try container.encode(self.defaultUsesVcsIgnores, forKey: .defaultUsesVcsIgnore)
     }
 
-    private init() {
-    }
+    private init() {}
   }
 }
 
 struct PreviewState {
-
   static let `default` = PreviewState()
 
   enum Status {
-
     case none
     case notSaved
     case error
@@ -121,7 +126,6 @@ struct PreviewState {
   }
 
   enum SearchAction {
-
     case none
     case forward
     case reverse
@@ -160,7 +164,6 @@ struct PreviewState {
 }
 
 struct HtmlPreviewState {
-
   static let `default` = HtmlPreviewState()
 
   var htmlFile: URL?
@@ -168,11 +171,9 @@ struct HtmlPreviewState {
 }
 
 struct AppearanceState: Codable {
-
   static let `default` = AppearanceState()
 
   enum CodingKeys: String, CodingKey {
-
     case usesTheme = "uses-theme"
     case showsFileIcon = "shows-file-icon"
     case editorFontName = "editor-font-name"
@@ -196,15 +197,23 @@ struct AppearanceState: Codable {
 
     if let fontName = try container.decodeIfPresent(String.self, forKey: .editorFontName),
        let fontSize = try container.decodeIfPresent(Float.self, forKey: .editorFontSize),
-       let font = NSFont(name: fontName, size: fontSize.cgf) {
+       let font = NSFont(name: fontName, size: fontSize.cgf)
+    {
       self.font = font
     } else {
       self.font = NvimView.defaultFont
     }
 
-    self.linespacing = (try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0).cgf
-    self.characterspacing = (try container.decodeIfPresent(Float.self, forKey: .editorCharacterspacing) ?? 1.0).cgf
-    self.usesLigatures = try container.decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
+    self
+      .linespacing = (try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0)
+      .cgf
+    self
+      .characterspacing = (
+        try container
+          .decodeIfPresent(Float.self, forKey: .editorCharacterspacing) ?? 1.0
+      ).cgf
+    self.usesLigatures = try container
+      .decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
 
     self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
     self.showsFileIcon = try container.decodeIfPresent(Bool.self, forKey: .showsFileIcon) ?? true
@@ -222,14 +231,11 @@ struct AppearanceState: Codable {
     try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
   }
 
-  private init() {
-  }
+  private init() {}
 }
 
 extension MainWindow {
-
   struct State: Codable {
-
     static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
 
     static let defaultTools: [MainWindow.Tools: WorkspaceToolState] = [
@@ -239,7 +245,8 @@ extension MainWindow {
       .htmlPreview: WorkspaceToolState(location: .right, dimension: 500, open: false),
     ]
 
-    static let orderedDefault: [MainWindow.Tools] = [.fileBrowser, .buffersList, .preview, .htmlPreview]
+    static let orderedDefault: [MainWindow.Tools] = [.fileBrowser, .buffersList, .preview,
+                                                     .htmlPreview]
 
     var isAllToolsVisible = true
     var isToolButtonsVisible = true
@@ -303,12 +310,11 @@ extension MainWindow {
     }
 
     enum CodingKeys: String, CodingKey {
-
       case allToolsVisible = "is-all-tools-visible"
       case toolButtonsVisible = "is-tool-buttons-visible"
       case orderedTools = "ordered-tools"
       case activeTools = "active-tools"
-      case frame = "frame"
+      case frame
 
       case isLeftOptionMeta = "is-left-option-meta"
       case isRightOptionMeta = "is-right-option-meta"
@@ -319,7 +325,7 @@ extension MainWindow {
       case drawsParallel = "draws-parallel"
       case isShowHidden = "is-show-hidden"
 
-      case appearance = "appearance"
+      case appearance
       case workspaceTools = "workspace-tool"
       case previewTool = "preview-tool"
     }
@@ -327,34 +333,58 @@ extension MainWindow {
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
 
-      self.isLeftOptionMeta = try container.decode(forKey: .isLeftOptionMeta, default: State.default.isLeftOptionMeta)
-      self.isRightOptionMeta = try container.decode(forKey: .isRightOptionMeta,
-                                                    default: State.default.isRightOptionMeta)
-      self.useInteractiveZsh = try container.decode(forKey: .useInteractiveZsh,
-                                                    default: State.default.useInteractiveZsh)
-      self.trackpadScrollResistance = try container.decode(forKey: .trackpadScrollResistance,
-                                                           default: State.default.trackpadScrollResistance)
-      self.useLiveResize = try container.decode(forKey: .useLiveResize, default: State.default.useLiveResize)
-      self.drawsParallel = try container.decode(forKey: .drawsParallel, default: State.default.drawsParallel)
+      self.isLeftOptionMeta = try container.decode(
+        forKey: .isLeftOptionMeta,
+        default: State.default.isLeftOptionMeta
+      )
+      self.isRightOptionMeta = try container.decode(
+        forKey: .isRightOptionMeta,
+        default: State.default.isRightOptionMeta
+      )
+      self.useInteractiveZsh = try container.decode(
+        forKey: .useInteractiveZsh,
+        default: State.default.useInteractiveZsh
+      )
+      self.trackpadScrollResistance = try container.decode(
+        forKey: .trackpadScrollResistance,
+        default: State.default
+          .trackpadScrollResistance
+      )
+      self.useLiveResize = try container.decode(
+        forKey: .useLiveResize,
+        default: State.default.useLiveResize
+      )
+      self.drawsParallel = try container.decode(
+        forKey: .drawsParallel,
+        default: State.default.drawsParallel
+      )
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
       } else {
         self.frame = CGRect(x: 100, y: 100, width: 600, height: 400)
       }
 
-      self.isAllToolsVisible = try container.decode(forKey: .allToolsVisible, default: State.default.isAllToolsVisible)
-      self.isToolButtonsVisible = try container.decode(forKey: .toolButtonsVisible,
-                                                       default: State.default.isToolButtonsVisible)
+      self.isAllToolsVisible = try container.decode(
+        forKey: .allToolsVisible,
+        default: State.default.isAllToolsVisible
+      )
+      self.isToolButtonsVisible = try container.decode(
+        forKey: .toolButtonsVisible,
+        default: State.default.isToolButtonsVisible
+      )
 
       self.appearance = try container.decode(forKey: .appearance, default: State.default.appearance)
 
-      self.orderedTools = try container.decode(forKey: .orderedTools, default: State.default.orderedTools)
+      self.orderedTools = try container.decode(
+        forKey: .orderedTools,
+        default: State.default.orderedTools
+      )
       let missingOrderedTools = MainWindow.Tools.all.subtracting(self.orderedTools)
       self.orderedTools.append(contentsOf: missingOrderedTools)
 
       // See [1]
       let rawActiveTools: [String: Bool] = try container.decode(forKey: .activeTools, default: [:])
-      self.activeTools = rawActiveTools.flatMapToDict { (key, value) in
+      self.activeTools = rawActiveTools.flatMapToDict { key, value in
         guard let toolId = MainWindow.Tools(rawValue: key) else {
           return nil
         }
@@ -364,8 +394,9 @@ extension MainWindow {
       let missingActiveTools = MainWindow.Tools.all.subtracting(self.activeTools.keys)
       missingActiveTools.forEach { self.activeTools[$0] = true }
 
-      let rawTools: [String: WorkspaceToolState] = try container.decode(forKey: .workspaceTools, default: [:])
-      self.tools = rawTools.flatMapToDict { (key, value) in
+      let rawTools: [String: WorkspaceToolState] = try container
+        .decode(forKey: .workspaceTools, default: [:])
+      self.tools = rawTools.flatMapToDict { key, value in
         guard let tool = MainWindow.Tools(rawValue: key) else {
           return nil
         }
@@ -377,9 +408,15 @@ extension MainWindow {
         self.tools[missingTool] = MainWindow.State.defaultTools[missingTool]!
       }
 
-      self.previewTool = try container.decode(forKey: .previewTool, default: State.default.previewTool)
-      self.fileBrowserShowHidden = try container.decode(forKey: .isShowHidden,
-                                                        default: State.default.fileBrowserShowHidden)
+      self.previewTool = try container.decode(
+        forKey: .previewTool,
+        default: State.default.previewTool
+      )
+      self.fileBrowserShowHidden = try container.decode(
+        forKey: .isShowHidden,
+        default: State.default
+          .fileBrowserShowHidden
+      )
     }
 
     func encode(to encoder: Encoder) throws {
@@ -397,10 +434,14 @@ extension MainWindow {
       try container.encode(self.fileBrowserShowHidden, forKey: .isShowHidden)
 
       // See [1]
-      try container.encode(Dictionary(uniqueKeysWithValues: self.tools.map { k, v in (k.rawValue, v) }),
-                           forKey: .workspaceTools)
-      try container.encode(Dictionary(uniqueKeysWithValues: self.activeTools.map { k, v in (k.rawValue, v) }),
-                           forKey: .activeTools)
+      try container.encode(
+        Dictionary(uniqueKeysWithValues: self.tools.map { k, v in (k.rawValue, v) }),
+        forKey: .workspaceTools
+      )
+      try container.encode(
+        Dictionary(uniqueKeysWithValues: self.activeTools.map { k, v in (k.rawValue, v) }),
+        forKey: .activeTools
+      )
 
       try container.encode(self.appearance, forKey: .appearance)
       try container.encode(self.orderedTools, forKey: .orderedTools)
@@ -410,14 +451,12 @@ extension MainWindow {
 }
 
 struct WorkspaceToolState: Codable {
-
   static let `default` = WorkspaceToolState()
 
   enum CodingKeys: String, CodingKey {
-
-    case location = "location"
-    case `open` = "is-visible"
-    case dimension = "dimension"
+    case location
+    case open = "is-visible"
+    case dimension
   }
 
   var location = WorkspaceBarLocation.left
@@ -443,8 +482,7 @@ struct WorkspaceToolState: Codable {
 
   // Use generated encode(to:)
 
-  private init() {
-  }
+  private init() {}
 
   init(location: WorkspaceBarLocation, dimension: CGFloat, open: Bool) {
     self.location = location
@@ -454,13 +492,10 @@ struct WorkspaceToolState: Codable {
 }
 
 extension MarkdownTool {
-
   struct State: Codable {
-
     static let `default` = State()
 
     enum CodingKeys: String, CodingKey {
-
       case forwardSearchAutomatically = "is-forward-search-automatically"
       case reverseSearchAutomatically = "is-reverse-search-automatically"
       case refreshOnWrite = "is-refresh-on-write"
@@ -470,17 +505,25 @@ extension MarkdownTool {
     var isReverseSearchAutomatically = false
     var isRefreshOnWrite = true
 
-    private init() {
-    }
+    private init() {}
 
     init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
 
-      self.isForwardSearchAutomatically = try container.decode(forKey: .forwardSearchAutomatically,
-                                                               default: State.default.isForwardSearchAutomatically)
-      self.isReverseSearchAutomatically = try container.decode(forKey: .reverseSearchAutomatically,
-                                                               default: State.default.isReverseSearchAutomatically)
-      self.isRefreshOnWrite = try container.decode(forKey: .refreshOnWrite, default: State.default.isRefreshOnWrite)
+      self.isForwardSearchAutomatically = try container.decode(
+        forKey: .forwardSearchAutomatically,
+        default: State.default
+          .isForwardSearchAutomatically
+      )
+      self.isReverseSearchAutomatically = try container.decode(
+        forKey: .reverseSearchAutomatically,
+        default: State.default
+          .isReverseSearchAutomatically
+      )
+      self.isRefreshOnWrite = try container.decode(
+        forKey: .refreshOnWrite,
+        default: State.default.isRefreshOnWrite
+      )
     }
 
     func encode(to encoder: Encoder) throws {
@@ -493,10 +536,9 @@ extension MarkdownTool {
   }
 }
 
-fileprivate extension KeyedDecodingContainer where K: CodingKey {
-
-  func decode<T: Decodable>(forKey key: K, `default`: T) throws -> T {
-    return try self.decodeIfPresent(T.self, forKey: key) ?? `default`
+private extension KeyedDecodingContainer where K: CodingKey {
+  func decode<T: Decodable>(forKey key: K, default: T) throws -> T {
+    try self.decodeIfPresent(T.self, forKey: key) ?? `default`
   }
 }
 

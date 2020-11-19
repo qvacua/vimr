@@ -3,12 +3,11 @@
  * See LICENSE
  */
 
-import Foundation
 import Down
+import Foundation
 import os
 
 class MarkdownPreviewMiddleware {
-
   let markdownTool: MarkdownToolMiddleware
   let mainWindow: MainWindowMiddleware
 
@@ -19,7 +18,6 @@ class MarkdownPreviewMiddleware {
   }
 
   class PreviewGenerator {
-
     init() {
       // We know that the files are there!
       self.template = try! String(contentsOf: Resources.markdownTemplateUrl)
@@ -39,10 +37,9 @@ class MarkdownPreviewMiddleware {
       }
 
       self.removePreviewHtmlFile(uuid: uuid)
-      guard let htmlUrl = preview.html else {return }
+      guard let htmlUrl = preview.html else { return }
 
       switch preview.status {
-
       case .none:
         self.writePage(html: self.emptyHtml, uuid: uuid, url: htmlUrl)
 
@@ -63,7 +60,6 @@ class MarkdownPreviewMiddleware {
           self.log.error("error while rendering \(buffer) to \(htmlUrl): \(error)")
           return
         }
-
       }
     }
 
@@ -101,15 +97,17 @@ class MarkdownPreviewMiddleware {
     private let template: String
     private var previewFiles = [UUID: URL]()
 
-    private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                            category: Defs.LoggerCategory.middleware)
+    private let log = OSLog(
+      subsystem: Defs.loggerSubsystem,
+      category: Defs.LoggerCategory.middleware
+    )
 
     private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
       let md = try String(contentsOf: bufferUrl)
       let down = Down(markdownString: md)
       let body = try down.toHTML(DownOptions.sourcePos)
 
-      let html = filledTemplate(body: body, title: bufferUrl.lastPathComponent)
+      let html = self.filledTemplate(body: body, title: bufferUrl.lastPathComponent)
       let htmlFilePath = htmlUrl.path
 
       try html.write(toFile: htmlFilePath, atomically: true, encoding: .utf8)
@@ -128,7 +126,6 @@ class MarkdownPreviewMiddleware {
   }
 
   class MarkdownToolMiddleware: MiddlewareType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MarkdownTool.Action>
 
@@ -150,7 +147,6 @@ class MarkdownPreviewMiddleware {
   }
 
   class MainWindowMiddleware: MiddlewareType {
-
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
@@ -162,14 +158,12 @@ class MarkdownPreviewMiddleware {
 
         let uuidAction = tuple.action
         switch uuidAction.payload {
-
         case .newCurrentBuffer: fallthrough
         case .bufferWritten: fallthrough
         case .setTheme:
           self.generator.apply(result.state, uuid: uuidAction.uuid)
 
         default: return result
-
         }
 
         return result

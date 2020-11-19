@@ -4,21 +4,20 @@
  */
 
 import Cocoa
-import RxSwift
-import PureLayout
-import NvimView
 import Commons
+import NvimView
+import PureLayout
+import RxSwift
 
 class BuffersList: NSView,
-                   UiComponent,
-                   NSTableViewDataSource,
-                   NSTableViewDelegate,
-                   ThemedView {
-
+  UiComponent,
+  NSTableViewDataSource,
+  NSTableViewDelegate,
+  ThemedView
+{
   typealias StateType = MainWindow.State
 
   enum Action {
-
     case open(NvimView.Buffer)
   }
 
@@ -50,7 +49,8 @@ class BuffersList: NSView,
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.viewToBeFocused != nil,
-           case .bufferList = state.viewToBeFocused! {
+           case .bufferList = state.viewToBeFocused!
+        {
           self.beFirstResponder()
         }
 
@@ -59,13 +59,15 @@ class BuffersList: NSView,
           themeChanged: state.appearance.theme.mark != self.lastThemeMark,
           usesTheme: state.appearance.usesTheme,
           forTheme: { self.updateTheme(state.appearance.theme) },
-          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) })
+          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
+        )
 
         self.usesTheme = state.appearance.usesTheme
 
-        if self.buffers == state.buffers
-           && !themeChanged
-           && self.showsFileIcon == state.appearance.showsFileIcon {
+        if self.buffers == state.buffers,
+           !themeChanged,
+           self.showsFileIcon == state.appearance.showsFileIcon
+        {
           return
         }
 
@@ -87,7 +89,8 @@ class BuffersList: NSView,
 
   private var buffers = [NvimView.Buffer]()
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -109,11 +112,11 @@ class BuffersList: NSView,
 }
 
 // MARK: - Actions
-extension BuffersList {
 
-  @objc func doubleClickAction(_ sender: Any?) {
+extension BuffersList {
+  @objc func doubleClickAction(_: Any?) {
     let clickedRow = self.bufferList.clickedRow
-    guard clickedRow >= 0 && clickedRow < self.buffers.count else {
+    guard clickedRow >= 0, clickedRow < self.buffers.count else {
       return
     }
 
@@ -122,31 +125,33 @@ extension BuffersList {
 }
 
 // MARK: - NSTableViewDataSource
-extension BuffersList {
 
+extension BuffersList {
   @objc(numberOfRowsInTableView:)
-  func numberOfRows(in tableView: NSTableView) -> Int {
-    return self.buffers.count
+  func numberOfRows(in _: NSTableView) -> Int {
+    self.buffers.count
   }
 }
 
 // MARK: - NSTableViewDelegate
-extension BuffersList {
 
+extension BuffersList {
   public func tableView(
     _ tableView: NSTableView,
-    rowViewForRow row: Int
+    rowViewForRow _: Int
   ) -> NSTableRowView? {
-    return tableView.makeView(
+    tableView.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("buffer-row-view"),
       owner: self
-    ) as? ThemedTableRow ?? ThemedTableRow(withIdentifier: "buffer-row-view",
-                                           themedView: self)
+    ) as? ThemedTableRow ?? ThemedTableRow(
+      withIdentifier: "buffer-row-view",
+      themedView: self
+    )
   }
 
   func tableView(
     _ tableView: NSTableView,
-    viewFor tableColumn: NSTableColumn?,
+    viewFor _: NSTableColumn?,
     row: Int
   ) -> NSView? {
     let cachedCell = (tableView.makeView(
@@ -169,13 +174,13 @@ extension BuffersList {
   }
 
   func tableView(
-    _ tableView: NSTableView,
+    _: NSTableView,
     didAdd rowView: NSTableRowView,
-    forRow row: Int
+    forRow _: Int
   ) {
     guard let cellWidth = (rowView.view(atColumn: 0) as? NSTableCellView)?
       .fittingSize.width
-      else {
+    else {
       return
     }
 
@@ -194,15 +199,17 @@ extension BuffersList {
     }
 
     let pathInfo = url.pathComponents
-                     .dropFirst()
-                     .dropLast()
-                     .reversed()
-                     .joined(separator: " / ") + " /"
+      .dropFirst()
+      .dropLast()
+      .reversed()
+      .joined(separator: " / ") + " /"
     let rowText = NSMutableAttributedString(string: "\(name) — \(pathInfo)")
 
-    rowText.addAttribute(NSAttributedString.Key.foregroundColor,
-                         value: self.theme.foreground,
-                         range: NSRange(location: 0, length: name.count))
+    rowText.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: self.theme.foreground,
+      range: NSRange(location: 0, length: name.count)
+    )
 
     rowText.addAttribute(
       NSAttributedString.Key.foregroundColor,

@@ -4,19 +4,18 @@
  */
 
 import Cocoa
-import RxSwift
-import PureLayout
-import MaterialIcons
 import Commons
+import MaterialIcons
+import PureLayout
+import RxSwift
 import Workspace
 
 class FileBrowser: NSView,
-                   UiComponent {
-
+  UiComponent
+{
   typealias StateType = MainWindow.State
 
   enum Action {
-
     case open(url: URL, mode: MainWindow.OpenMode)
     case setAsWorkingDirectory(URL)
     case setShowHidden(Bool)
@@ -41,8 +40,8 @@ class FileBrowser: NSView,
       action: #selector(FileBrowser.showHiddenAction),
       keyEquivalent: ""
     )
-    showHiddenMenuItem.boolState = state.fileBrowserShowHidden
-    self.menuItems = [showHiddenMenuItem]
+    self.showHiddenMenuItem.boolState = state.fileBrowserShowHidden
+    self.menuItems = [self.showHiddenMenuItem]
 
     super.init(frame: .zero)
 
@@ -78,7 +77,8 @@ class FileBrowser: NSView,
 
   private var cwd: URL
 
-  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
     let scrollView = NSScrollView.standardScrollView()
@@ -91,9 +91,7 @@ class FileBrowser: NSView,
 }
 
 extension FileBrowser {
-
   class InnerCustomToolbar: CustomToolBar {
-
     let goToParentButton = NSButton(forAutoLayout: ())
     let scrollToSourceButton = NSButton(forAutoLayout: ())
     let refreshButton = NSButton(forAutoLayout: ())
@@ -174,30 +172,31 @@ extension FileBrowser {
       )
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
   }
 }
 
 // MARK: - Actions
-extension FileBrowser {
 
+extension FileBrowser {
   @objc func showHiddenAction(_ sender: Any?) {
     guard let menuItem = sender as? NSMenuItem else { return }
 
     self.emit(UuidAction(uuid: self.uuid, action: .setShowHidden(!menuItem.boolState)))
   }
 
-  @objc func goToParentAction(_ sender: Any?) {
+  @objc func goToParentAction(_: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(self.cwd.parent)))
   }
 
-  @objc func scrollToSourceAction(_ sender: Any?) {
+  @objc func scrollToSourceAction(_: Any?) {
     guard let url = self.currentBufferUrl else { return }
 
     self.fileView.select(url)
   }
 
-  @objc func refreshAction(_ sender: Any?) {
+  @objc func refreshAction(_: Any?) {
     self.emit(UuidAction(uuid: self.uuid, action: .refresh))
   }
 }

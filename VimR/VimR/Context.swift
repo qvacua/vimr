@@ -8,13 +8,11 @@ import RxSwift
 
 typealias AnyAction = Any
 extension ReduxTypes {
-
   typealias StateType = AppState
   typealias ActionType = AnyAction
 }
 
 class Context: ReduxContext {
-
   // The following should only be used when Cmd-Q'ing
   func savePrefs() { self.prefMiddleware.applyPref(from: self.state) }
 
@@ -24,7 +22,7 @@ class Context: ReduxContext {
     let markdownPreviewMiddleware = MarkdownPreviewMiddleware()
     let markdownPreviewReducer = MarkdownPreviewReducer(baseServerUrl: baseServerUrl)
     let htmlPreviewReducer = HtmlPreviewReducer(baseServerUrl: baseServerUrl)
-    let httpMiddleware: HttpServerMiddleware = HttpServerMiddleware(port: baseServerUrl.port!)
+    let httpMiddleware = HttpServerMiddleware(port: baseServerUrl.port!)
     let uiRootReducer = UiRootReducer()
     let openQuicklyReducer = OpenQuicklyReducer()
     let rpcEpic = RpcAppearanceEpic(emitter: self.actionEmitter)
@@ -52,7 +50,8 @@ class Context: ReduxContext {
           self.prefMiddleware.mainWindow.apply,
           self.prefMiddleware.apply,
           rpcEpic.apply,
-        ])
+        ]
+      )
       .filter { $0.modified }
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
