@@ -1242,10 +1242,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 300;
 				DEFINES_MODULE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/../Carthage/Build/Mac",
-				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
@@ -1274,10 +1270,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 300;
 				DEFINES_MODULE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/../Carthage/Build/Mac",
-				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
