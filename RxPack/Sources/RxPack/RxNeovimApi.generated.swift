@@ -607,6 +607,30 @@ extension RxNeovimApi {
       .map(transform)
   }
 
+  public func bufDelete(
+    buffer: RxNeovimApi.Buffer,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_delete", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_buf_delete", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
   public func bufIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
@@ -673,6 +697,7 @@ extension RxNeovimApi {
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
 
@@ -680,6 +705,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
         .int(Int64(ns_id)),
         .int(Int64(id)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
     func transform(_ value: Value) throws -> [Int] {
@@ -744,7 +770,6 @@ extension RxNeovimApi {
   public func bufSetExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
-    id: Int,
     line: Int,
     col: Int,
     opts: Dictionary<String, RxNeovimApi.Value>,
@@ -754,7 +779,6 @@ extension RxNeovimApi {
     let params: [RxNeovimApi.Value] = [
         .int(Int64(buffer.handle)),
         .int(Int64(ns_id)),
-        .int(Int64(id)),
         .int(Int64(line)),
         .int(Int64(col)),
         .map(opts.mapToDict({ (Value.string($0), $1) })),
@@ -949,15 +973,15 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetVirtualText(
+  public func bufCall(
     buffer: RxNeovimApi.Buffer,
-    line: Int,
+    fun: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
 
     let params: [RxNeovimApi.Value] = [
         .int(Int64(buffer.handle)),
-        .int(Int64(line)),
+        fun,
     ]
 
     func transform(_ value: Value) throws -> RxNeovimApi.Value {
@@ -971,13 +995,13 @@ extension RxNeovimApi {
     if errWhenBlocked {
       return self
         .checkBlocked(
-          self.rpc(method: "nvim_buf_get_virtual_text", params: params, expectsReturnValue: true)
+          self.rpc(method: "nvim_buf_call", params: params, expectsReturnValue: true)
         )
         .map(transform)
     }
 
     return self
-      .rpc(method: "nvim_buf_get_virtual_text", params: params, expectsReturnValue: true)
+      .rpc(method: "nvim_buf_call", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
@@ -1500,6 +1524,54 @@ extension RxNeovimApi {
     return self
       .rpc(method: "nvim_get_hl_id_by_name", params: params, expectsReturnValue: true)
       .map(transform)
+  }
+
+  public func setHl(
+    ns_id: Int,
+    name: String,
+    val: Dictionary<String, RxNeovimApi.Value>,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(ns_id)),
+        .string(name),
+        .map(val.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_set_hl", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_set_hl", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  public func setHlNs(
+    ns_id: Int,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(ns_id)),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_set_hl_ns", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_set_hl_ns", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
   }
 
   public func feedkeys(
@@ -3204,6 +3276,30 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_select_popupmenu_item", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  public func setDecorationProvider(
+    ns_id: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(ns_id)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_set_decoration_provider", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_set_decoration_provider", params: params, expectsReturnValue: expectsReturnValue)
       .asCompletable()
   }
 
