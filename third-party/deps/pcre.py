@@ -36,7 +36,7 @@ pushd pcre-${target} >/dev/null
     --enable-unicode-properties \
     --enable-pcregrep-libz \
     --enable-pcregrep-libbz2 \
-    --enable-jit \
+    --enable-jit=no \
     --disable-shared \
     --host="${host}" \
     --prefix="${install_path}"

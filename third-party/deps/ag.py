@@ -58,10 +58,8 @@ class AgBuilder(Builder):
     deps: [Config]
 
     def make(self, target: Target):
-        include_flags = " ".join(
-            [f'-I{c.install_path_include}' for c in self.deps]
-        )
-        ldflags = " ".join([f'-L{c.install_path_lib}' for c in self.deps])
+        include_flags = f"-I{self.config.install_path_include}"
+        ldflags = f"-L{self.config.install_path_lib}"
         cmd = self.make_command.substitute(
             dict(
                 target=target.value,
