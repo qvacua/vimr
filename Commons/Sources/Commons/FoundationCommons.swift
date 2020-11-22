@@ -7,7 +7,7 @@ import Foundation
 import os
 
 public extension Array where Element: Hashable {
-  // From https://stackoverflow.com/a/46354989/9850227
+  // From https://stackoverflow.com/a/46354989
   func uniqued() -> [Element] {
     var seen = Set<Element>()
     return self.filter { seen.insert($0).inserted }

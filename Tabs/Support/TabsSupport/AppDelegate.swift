@@ -6,18 +6,30 @@
 //
 
 import Cocoa
+import PureLayout
 import Tabs
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var window: NSWindow!
 
+  override init() {
+    self.tabBar = TabBar()
+    super.init()
+  }
+
   func applicationDidFinishLaunching(_: Notification) {
-    // Insert code here to initialize your application
-    Tabs()
+    let contentView = self.window.contentView!
+    contentView.addSubview(self.tabBar)
+    self.tabBar.autoPinEdge(toSuperviewEdge: .top)
+    self.tabBar.autoPinEdge(toSuperviewEdge: .left)
+    self.tabBar.autoPinEdge(toSuperviewEdge: .right)
+    self.tabBar.autoSetDimension(.height, toSize: Dimensions.tabBarHeight)
   }
 
   func applicationWillTerminate(_: Notification) {
     // Insert code here to tear down your application
   }
+
+  private let tabBar: TabBar
 }
