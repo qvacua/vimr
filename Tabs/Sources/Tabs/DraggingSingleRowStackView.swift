@@ -12,34 +12,10 @@
 import Cocoa
 
 class DraggingSingleRowStackView: NSStackView {
-  var isEnabled = true
-
-  var update: (NSStackView, [NSView]) -> Void = { stack, views in
-    stack.views.forEach {
-      stack.removeView($0)
-    }
-
-    views.forEach {
-      stack.addView($0, in: .leading)
-
-      /* The following is not needed since tabs have fixed height.
-       switch stack.orientation {
-       case .horizontal:
-         $0.topAnchor.constraint(equalTo: stack.topAnchor).isActive = true
-         $0.bottomAnchor.constraint(equalTo: stack.bottomAnchor).isActive = true
-
-       case .vertical:
-         $0.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
-         $0.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
-       @unknown default:
-         break
-       }
-       */
-    }
-  }
+  var isDraggingEnabled = true
 
   override func mouseDragged(with event: NSEvent) {
-    guard self.isEnabled else {
+    guard self.isDraggingEnabled else {
       super.mouseDragged(with: event)
       return
     }
@@ -48,6 +24,11 @@ class DraggingSingleRowStackView: NSStackView {
     if let dragged = views.first(where: { $0.hitTest(location) != nil }) {
       self.reorder(view: dragged, event: event)
     }
+  }
+
+  func update(views: [NSView]) {
+    self.views.forEach { self.removeView($0) }
+    views.forEach { self.addView($0, in: .leading) }
   }
 
   private func reorder(view: NSView, event: NSEvent) {
@@ -118,7 +99,7 @@ class DraggingSingleRowStackView: NSStackView {
         let prevIndex = self.views.firstIndex(of: view)!
 
         if nextIndex != prevIndex {
-          self.update(self, reordered)
+          self.update(views: reordered)
           self.layoutSubtreeIfNeeded()
 
           CATransaction.begin()
