@@ -44,14 +44,14 @@ public class TabBar: NSView {
     self.stackView.autoPinEdge(toSuperviewEdge: .left)
     self.stackView.autoPinEdge(toSuperviewEdge: .bottom)
     
-    self.stackView.spacing = Dimensions.tabPadding
+    self.stackView.spacing = Defs.tabPadding
   }
 
   private func addTestTabs() {
-    let tab1 = Tab()
-    let tab2 = Tab()
-    let tab3 = Tab()
-    let tab4 = Tab()
+    let tab1 = Tab(withTitle: "Test 1")
+    let tab2 = Tab(withTitle: "Test 2")
+    let tab3 = Tab(withTitle: "Test 3")
+    let tab4 = Tab(withTitle: "Test 4")
     
     tab1.layer?.backgroundColor = NSColor.red.cgColor
     tab2.layer?.backgroundColor = NSColor.blue.cgColor

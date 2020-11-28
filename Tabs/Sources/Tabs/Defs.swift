@@ -3,12 +3,13 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 
-public enum Dimensions {
+public enum Defs {
   public static let tabHeight = CGFloat(28)
   public static let tabMinWidth = CGFloat(100)
   public static let tabMaxWidth = CGFloat(400)
+  public static let tabTitleFont = NSFont.systemFont(ofSize: 11)
 
   public static let tabPadding = CGFloat(0)
   

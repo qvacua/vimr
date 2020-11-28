@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.tabBar.autoPinEdge(toSuperviewEdge: .top)
     self.tabBar.autoPinEdge(toSuperviewEdge: .left)
     self.tabBar.autoPinEdge(toSuperviewEdge: .right)
-    self.tabBar.autoSetDimension(.height, toSize: Dimensions.tabBarHeight)
+    self.tabBar.autoSetDimension(.height, toSize: Defs.tabBarHeight)
   }
 
   func applicationWillTerminate(_: Notification) {
