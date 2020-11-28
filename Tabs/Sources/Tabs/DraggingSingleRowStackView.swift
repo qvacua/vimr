@@ -13,6 +13,7 @@ import Cocoa
 
 class DraggingSingleRowStackView: NSStackView {
   var isDraggingEnabled = true
+  var postDraggingAction: ((NSStackView) -> Void)?
 
   override func mouseDragged(with event: NSEvent) {
     guard self.isDraggingEnabled else {
@@ -23,6 +24,7 @@ class DraggingSingleRowStackView: NSStackView {
     let location = convert(event.locationInWindow, from: nil)
     if let dragged = views.first(where: { $0.hitTest(location) != nil }) {
       self.reorder(view: dragged, event: event)
+      self.postDraggingAction?(self)
     }
   }
 

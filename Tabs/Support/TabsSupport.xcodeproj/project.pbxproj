@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B2A75652572869C0002D722 /* Tabs in Frameworks */ = {isa = PBXBuildFile; productRef = 4B2A75642572869C0002D722 /* Tabs */; };
 		4BEBD4BA256A76BB002218F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBD4B9256A76BB002218F8 /* AppDelegate.swift */; };
 		4BEBD4BC256A76BB002218F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBD4BB256A76BB002218F8 /* Assets.xcassets */; };
 		4BEBD4BF256A76BB002218F8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBD4BD256A76BB002218F8 /* MainMenu.xib */; };
-		4BEBD4CC256A7740002218F8 /* Tabs in Frameworks */ = {isa = PBXBuildFile; productRef = 4BEBD4CB256A7740002218F8 /* Tabs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,7 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BEBD4CC256A7740002218F8 /* Tabs in Frameworks */,
+				4B2A75652572869C0002D722 /* Tabs in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +85,7 @@
 			);
 			name = TabsSupport;
 			packageProductDependencies = (
-				4BEBD4CB256A7740002218F8 /* Tabs */,
+				4B2A75642572869C0002D722 /* Tabs */,
 			);
 			productName = TabsSupport;
 			productReference = 4BEBD4B6256A76BB002218F8 /* TabsSupport.app */;
@@ -339,7 +339,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4BEBD4CB256A7740002218F8 /* Tabs */ = {
+		4B2A75642572869C0002D722 /* Tabs */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Tabs;
 		};

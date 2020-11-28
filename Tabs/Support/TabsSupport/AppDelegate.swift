@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var window: NSWindow!
 
   override init() {
-    self.tabBar = TabBar()
+    self.tabBar = TabBar(withTheme: .default)
     super.init()
   }
 
@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.tabBar.autoPinEdge(toSuperviewEdge: .top)
     self.tabBar.autoPinEdge(toSuperviewEdge: .left)
     self.tabBar.autoPinEdge(toSuperviewEdge: .right)
-    self.tabBar.autoSetDimension(.height, toSize: Defs.tabBarHeight)
+    self.tabBar.autoSetDimension(.height, toSize: Theme().tabBarHeight)
   }
 
   func applicationWillTerminate(_: Notification) {

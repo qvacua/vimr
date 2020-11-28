@@ -4,42 +4,159 @@
  */
 
 import Cocoa
+import MaterialIcons
 
-public class Tab: NSView {
+protocol TabDelegate: AnyObject {
+  func select(tab: Tab)
+}
 
-  public var title: String
-  
-  public init(withTitle title: String) {
+class Tab: NSView {
+  enum Position {
+    case first
+    case inBetween
+    case last
+  }
+
+  var title: String {
+    didSet {
+      self.titleView.stringValue = self.title
+      self.adjustWidth()
+    }
+  }
+
+  init(withTitle title: String, in tabBar: TabBar) {
     self.title = title
-    self.attributedTitle = NSAttributedString(string: title, attributes: [
-      .font: Defs.tabTitleFont
-    ])
+    self.theme = tabBar.theme
     super.init(frame: .zero)
 
     self.configureForAutoLayout()
     self.wantsLayer = true
 
-    #if DEBUG
-      self.layer?.backgroundColor = NSColor.cyan.cgColor
-    #endif
-    
-    self.autoSetDimensions(to: CGSize(width: 200, height: Defs.tabHeight))
+    self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
+    self.autoSetDimension(.height, toSize: self.theme.tabHeight)
+    self.titleView.stringValue = title
+
+    self.addViews()
+    self.adjustWidth()
   }
 
-  public override func mouseDown(with event: NSEvent) {
-    Swift.print("mouse down in tab")
+  override func mouseUp(with _: NSEvent) {
+    self.delegate?.select(tab: self)
   }
 
-  public override func mouseUp(with event: NSEvent) {
-    Swift.print("mouse up in tab")
-  }
-
-  public override func draw(_ dirtyRect: NSRect) {
-    self.attributedTitle.draw(in: self.bounds)
+  override func draw(_: NSRect) {
+    self.drawSeparators()
+    self.drawSelectionIndicator()
   }
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  private var attributedTitle: NSAttributedString
+  var isSelected: Bool = false {
+    didSet { self.needsDisplay = true }
+  }
+
+  weak var delegate: TabDelegate?
+  var position = Position.inBetween {
+    didSet { self.needsDisplay = true }
+  }
+
+  private let closeButton = NSButton(forAutoLayout: ())
+  private let iconView = NSImageView(forAutoLayout: ())
+  private let titleView = NSTextField(forAutoLayout: ())
+
+  private var theme: Theme
+}
+
+extension Tab {
+  private func adjustWidth() {
+    let idealWidth = 4 * self.theme.tabHorizontalPadding + 2 * self.theme.iconDimension.width
+      + self.titleView.intrinsicContentSize.width
+    let targetWidth = min(max(self.theme.tabMinWidth, idealWidth), self.theme.tabMaxWidth)
+    self.autoSetDimension(.width, toSize: targetWidth)
+  }
+
+  private func addViews() {
+    let close = self.closeButton
+    let icon = self.iconView
+    let title = self.titleView
+
+    self.addSubview(close)
+    self.addSubview(icon)
+    self.addSubview(title)
+
+    close.imagePosition = .imageOnly
+    close.image = Icon.close.asImage(
+      dimension: self.theme.iconDimension.width,
+      color: self.theme.foregroundColor
+    )
+    close.isBordered = false
+    (close.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
+
+    icon.image = NSImage(named: NSImage.actionTemplateName)
+
+    title.drawsBackground = false
+    title.font = self.theme.titleFont
+    title.textColor = self.theme.foregroundColor
+    title.isEditable = false
+    title.isBordered = false
+    title.isSelectable = false
+    title.usesSingleLineMode = true
+    title.lineBreakMode = .byTruncatingTail
+
+    close.autoSetDimensions(to: self.theme.iconDimension)
+    close.autoPinEdge(toSuperviewEdge: .left, withInset: self.theme.tabHorizontalPadding)
+    close.autoAlignAxis(toSuperviewAxis: .horizontal)
+
+    icon.autoSetDimensions(to: self.theme.iconDimension)
+    icon.autoPinEdge(.left, to: .right, of: close, withOffset: self.theme.tabHorizontalPadding)
+    icon.autoAlignAxis(toSuperviewAxis: .horizontal)
+
+    title.autoPinEdge(.left, to: .right, of: icon, withOffset: self.theme.tabHorizontalPadding)
+    title.autoPinEdge(toSuperviewEdge: .right, withInset: self.theme.tabHorizontalPadding)
+    title.autoAlignAxis(toSuperviewAxis: .horizontal)
+  }
+
+  private func drawSeparators() {
+    let b = self.bounds
+    let left = CGRect(x: 0, y: 0, width: self.theme.separatorThickness, height: b.height)
+    let right = CGRect(x: b.maxX - 1, y: 0, width: self.theme.separatorThickness, height: b.height)
+    let bottom = CGRect(
+      x: 0,
+      y: 0,
+      width: b.width,
+      height: self.theme.separatorThickness
+    )
+
+    guard let context = NSGraphicsContext.current?.cgContext else { return }
+    context.saveGState()
+    defer { context.restoreGState() }
+    self.theme.separatorColor.set()
+
+    switch self.position {
+    case .first:
+      right.fill()
+    case .inBetween:
+      left.fill()
+      right.fill()
+    case .last:
+      left.fill()
+    }
+
+    if !self.isSelected { bottom.fill() }
+  }
+
+  private func drawSelectionIndicator() {
+    guard self.isSelected else { return }
+
+    let b = self.bounds
+    let rect = CGRect(x: 0, y: 0, width: b.width, height: self.theme.tabSelectionIndicatorThickness)
+
+    guard let context = NSGraphicsContext.current?.cgContext else { return }
+    context.saveGState()
+    defer { context.restoreGState() }
+    self.theme.tabSelectedIndicatorColor.set()
+
+    rect.fill()
+  }
 }
