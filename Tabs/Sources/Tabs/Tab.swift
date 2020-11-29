@@ -53,7 +53,10 @@ class Tab: NSView {
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   var isSelected: Bool = false {
-    didSet { self.needsDisplay = true }
+    didSet {
+      self.adjustToSelectionChange()
+      self.needsDisplay = true
+    }
   }
 
   weak var delegate: TabDelegate?
@@ -69,6 +72,16 @@ class Tab: NSView {
 }
 
 extension Tab {
+  private func adjustToSelectionChange() {
+    if self.isSelected {
+      self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
+      self.titleView.textColor = self.theme.selectedForegroundColor
+    } else {
+      self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
+      self.titleView.textColor = self.theme.foregroundColor
+    }
+  }
+
   private func adjustWidth() {
     let idealWidth = 4 * self.theme.tabHorizontalPadding + 2 * self.theme.iconDimension.width
       + self.titleView.intrinsicContentSize.width
@@ -143,14 +156,19 @@ extension Tab {
       left.fill()
     }
 
-    if !self.isSelected { bottom.fill() }
+    bottom.fill()
   }
 
   private func drawSelectionIndicator() {
     guard self.isSelected else { return }
 
     let b = self.bounds
-    let rect = CGRect(x: 0, y: 0, width: b.width, height: self.theme.tabSelectionIndicatorThickness)
+    let rect = CGRect(
+      x: self.theme.separatorThickness,
+      y: self.theme.separatorThickness,
+      width: b.width,
+      height: self.theme.tabSelectionIndicatorThickness
+    )
 
     guard let context = NSGraphicsContext.current?.cgContext else { return }
     context.saveGState()

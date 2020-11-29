@@ -12,7 +12,10 @@ public struct Theme {
   public var backgroundColor = NSColor.controlBackgroundColor
   public var separatorColor = NSColor.controlShadowColor
 
-  public var tabSelectedIndicatorColor = NSColor.selectedControlColor
+  public var selectedForegroundColor = NSColor.textColor
+  public var selectedBackgroundColor = NSColor.selectedControlColor
+
+  public var tabSelectedIndicatorColor = NSColor.blue
 
   public var titleFont = NSFont.systemFont(ofSize: 11)
 
