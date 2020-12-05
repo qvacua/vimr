@@ -1,5 +1,11 @@
 # Next
 
+## Since SNAPSHOT-20201121.103800
+
+* `language`-command works again.
+
+## Since 0.34.0
+
 * Universal binary!
 * Neovim 0.5-dev (neovim/neovim@0798ad3a3a071db1b647df5aecd7698ed9aff7d9)
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
@@ -9,7 +15,7 @@
 * Dependencies updates:
     - httpswift/swifter@1.5.0
 
-# 0.34.0-???
+# 0.34.0-355
 
 * Neovim 0.4.4
 * Improved pasting.
