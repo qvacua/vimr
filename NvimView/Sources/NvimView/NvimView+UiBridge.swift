@@ -594,10 +594,10 @@ extension NvimView {
             let tabpageValue = dict[.string("tab")],
             let tabpage = RxNeovimApi.Tabpage(tabpageValue) else { return nil }
 
-      return TabEntry(title: name, tabpage: tabpage, isSelected: tabpage.handle == curTab.handle)
+      return TabEntry(title: name, isSelected: tabpage.handle == curTab.handle, tabpage: tabpage)
     }
 
-    Swift.print("!!!!!!!!!!!! all tabs: \(tabEntries)")
+    gui.async { self.tabBar?.update(tabRepresentatives: tabEntries) }
   }
 
   private func bufferWritten(_ handle: Int) {

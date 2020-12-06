@@ -6,8 +6,9 @@
 import Cocoa
 import PureLayout
 
-public protocol TabRepresentative: Hashable, Equatable {
+public protocol TabRepresentative: Hashable {
   var title: String { get }
+  var isSelected: Bool { get }
 }
 
 public class TabBar<Entry: TabRepresentative>: NSView {
@@ -24,7 +25,24 @@ public class TabBar<Entry: TabRepresentative>: NSView {
     self.addViews()
   }
 
-//  public func update(tabRepresentatives _: [Entry]) {}
+  public func update(tabRepresentatives entries: [Entry]) {
+    var result = [Tab<Entry>]()
+    entries.forEach { entry in
+      if let existingTab = self.tabs.first(where: { $0.tabRepresentative == entry }) {
+        existingTab.tabRepresentative = entry
+        result.append(existingTab)
+      } else {
+        result.append(Tab(withTabRepresentative: entry, in: self))
+      }
+    }
+
+    result.forEach { $0.position = .inBetween }
+    result.first?.position = .first
+    result.last?.position = .last
+
+    self.tabs = result
+    self.stackView.update(views: self.tabs)
+  }
 
   override public func draw(_: NSRect) {
     self.drawSeparator()
@@ -41,9 +59,9 @@ public class TabBar<Entry: TabRepresentative>: NSView {
 }
 
 extension TabBar {
-  func select(tab: Tab<Entry>) {
-    self.stackView.arrangedSubviews.forEach { ($0 as? Tab<Entry>)?.isSelected = false }
-    tab.isSelected = true
+  func select(tab _: Tab<Entry>) {
+//    self.stackView.arrangedSubviews.forEach { ($0 as? Tab<Entry>)?.isSelected = false }
+//    tab.isSelected = true
   }
 }
 

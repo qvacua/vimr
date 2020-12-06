@@ -25,6 +25,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.tabBar.autoPinEdge(toSuperviewEdge: .left)
     self.tabBar.autoPinEdge(toSuperviewEdge: .right)
     self.tabBar.autoSetDimension(.height, toSize: Theme().tabBarHeight)
+
+    self.tabBar.update(tabRepresentatives: [
+      DummyTabEntry(title: "Test 1"),
+      DummyTabEntry(title: "Test 2"),
+      DummyTabEntry(title: "Test 3"),
+      DummyTabEntry(title: "Very long long long title, and some more text!"),
+    ])
   }
 
   func applicationWillTerminate(_: Notification) {
@@ -34,6 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private let tabBar: TabBar<DummyTabEntry>
 }
 
-struct DummyTabEntry: Hashable, Equatable, TabRepresentative {
+struct DummyTabEntry: Hashable, TabRepresentative {
   var title: String
+  var isSelected = false
 }

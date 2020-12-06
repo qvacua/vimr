@@ -29,7 +29,7 @@ public class NvimView: NSView,
   public static let maxLinespacing = 8.cgf
   
   public let usesCustomTabBar: Bool
-  public private(set) var tabBar: TabBar?
+  public let tabBar: TabBar<TabEntry>?
 
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
@@ -157,7 +157,8 @@ public class NvimView: NSView,
     self.sourceFileUrls = config.sourceFiles
     
     self.usesCustomTabBar = config.usesCustomTabBar
-    if self.usesCustomTabBar { self.tabBar = TabBar(withTheme: .default) }
+    if self.usesCustomTabBar { self.tabBar = TabBar<TabEntry>(withTheme: .default) }
+    else { self.tabBar = nil }
 
     super.init(frame: .zero)
     self.bridge.consumer = self

@@ -10,10 +10,13 @@ import Tabs
 
 extension NvimView {
 
-  struct TabEntry: Equatable, Hashable, TabRepresentative {
-    var title: String
-    var tabpage: RxNeovimApi.Tabpage
-    var isSelected = false
+  public struct TabEntry: Hashable, TabRepresentative {
+    public static func ==(lhs: TabEntry, rhs: TabEntry) -> Bool { lhs.tabpage == rhs.tabpage }
+
+    public var title: String
+    public var isSelected = false
+
+    public var tabpage: RxNeovimApi.Tabpage
   }
 
   public struct Config {

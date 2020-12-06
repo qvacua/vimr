@@ -52,14 +52,9 @@ class Tab<Entry: TabRepresentative>: NSView {
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  var isSelected: Bool = false {
-    didSet {
-      self.adjustToSelectionChange()
-      self.needsDisplay = true
-    }
-  }
+  var isSelected: Bool { self.tabRepresentative.isSelected }
 
-  weak private(set) var tabBar: TabBar<Entry>?
+  private(set) weak var tabBar: TabBar<Entry>?
   var position = Position.inBetween {
     didSet { self.needsDisplay = true }
   }
