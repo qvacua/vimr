@@ -4,19 +4,20 @@
  */
 
 import Cocoa
-import RxSwift
+import Commons
 import MessagePack
 import os
 import RxPack
-import Commons
+import RxSwift
 import Tabs
 
 public class NvimView: NSView,
-                       UiBridgeConsumer,
-                       NSUserInterfaceValidations,
-                       NSTextInputClient {
-
+  UiBridgeConsumer,
+  NSUserInterfaceValidations,
+  NSTextInputClient
+{
   // MARK: - Public
+
   public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.cgf
@@ -25,7 +26,7 @@ public class NvimView: NSView,
   public static let defaultLinespacing = 1.cgf
   public static let defaultCharacterspacing = 1.cgf
 
-  public static let minLinespacing = (0.5).cgf
+  public static let minLinespacing = 0.5.cgf
   public static let maxLinespacing = 8.cgf
 
   public let usesCustomTabBar: Bool
@@ -61,11 +62,11 @@ public class NvimView: NSView,
 
   public var linespacing: CGFloat {
     get {
-      return self._linespacing
+      self._linespacing
     }
 
     set {
-      guard newValue >= NvimView.minLinespacing && newValue <= NvimView.maxLinespacing else {
+      guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else {
         return
       }
 
@@ -76,7 +77,7 @@ public class NvimView: NSView,
 
   public var characterspacing: CGFloat {
     get {
-      return self._characterspacing
+      self._characterspacing
     }
 
     set {
@@ -91,7 +92,7 @@ public class NvimView: NSView,
 
   public var font: NSFont {
     get {
-      return self._font
+      self._font
     }
 
     set {
@@ -100,7 +101,7 @@ public class NvimView: NSView,
       }
 
       let size = newValue.pointSize
-      guard size >= NvimView.minFontSize && size <= NvimView.maxFontSize else {
+      guard size >= NvimView.minFontSize, size <= NvimView.maxFontSize else {
         return
       }
 
@@ -111,7 +112,7 @@ public class NvimView: NSView,
 
   public var cwd: URL {
     get {
-      return self._cwd
+      self._cwd
     }
 
     set {
@@ -119,7 +120,8 @@ public class NvimView: NSView,
         .setCurrentDir(dir: newValue.path)
         .subscribeOn(self.scheduler)
         .subscribe(onError: { [weak self] error in
-          self?.eventsSubject.onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
+          self?.eventsSubject
+            .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
         .disposed(by: self.disposeBag)
     }
@@ -130,7 +132,7 @@ public class NvimView: NSView,
   }
 
   override public var acceptsFirstResponder: Bool {
-    return true
+    true
   }
 
   public let scheduler: SerialDispatchQueueScheduler
@@ -138,10 +140,10 @@ public class NvimView: NSView,
   public internal(set) var currentPosition = Position.beginning
 
   public var events: Observable<Event> {
-    return self.eventsSubject.asObservable()
+    self.eventsSubject.asObservable()
   }
 
-  public init(frame rect: NSRect, config: Config) {
+  public init(frame _: NSRect, config: Config) {
     self.drawer = AttributesRunDrawer(
       baseFont: self._font,
       linespacing: self._linespacing,
@@ -162,7 +164,7 @@ public class NvimView: NSView,
 
     super.init(frame: .zero)
 
-    self.tabBar?.selectHandler = { [weak self] (index, tabEntry) in
+    self.tabBar?.selectHandler = { [weak self] index, tabEntry in
       Swift.print("tab \(index): \(tabEntry) selected")
     }
 
@@ -175,7 +177,7 @@ public class NvimView: NSView,
     )
   }
 
-  convenience override public init(frame rect: NSRect) {
+  override public convenience init(frame rect: NSRect) {
     self.init(
       frame: rect,
       config: Config(
@@ -189,17 +191,19 @@ public class NvimView: NSView,
     )
   }
 
-  required public init?(coder: NSCoder) {
+  @available(*, unavailable)
+  public required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @IBAction public func debug1(_ sender: Any?) {
+  @IBAction public func debug1(_: Any?) {
     #if DEBUG
-    do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
+      do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
     #endif
   }
 
   // MARK: - Internal
+
   let queue = DispatchQueue(label: String(reflecting: NvimView.self), qos: .userInteractive)
 
   let bridge: UiBridge
@@ -253,6 +257,7 @@ public class NvimView: NSView,
   let nvimExitedCondition = ConditionVariable()
 
   // MARK: - Private
+
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
 }
