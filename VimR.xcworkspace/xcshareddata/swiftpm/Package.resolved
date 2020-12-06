@@ -56,15 +56,6 @@
         }
       },
       {
-        "package": "NvimServerTypes",
-        "repositoryURL": "https://github.com/qvacua/neovim",
-        "state": {
-          "branch": null,
-          "revision": "246da2521cdf3720b11a5045720d2ae1497a9268",
-          "version": "0.1.0-types"
-        }
-      },
-      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble",
         "state": {

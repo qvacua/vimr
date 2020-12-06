@@ -25,7 +25,6 @@
 		4B0225FA224AAE270052362B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225F9224AAE270052362B /* Assets.xcassets */; };
 		4B0225FD224AAE270052362B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225FB224AAE270052362B /* MainMenu.xib */; };
 		4BD67C9924ECF53E00147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7C24ECF35300147C51 /* Commons */; };
-		4BD67C9A24ECF53E00147C51 /* NvimServerTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C9324ECF47000147C51 /* NvimServerTypes */; };
 		4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C9624ECF4B300147C51 /* MessagePack */; };
 		4BD67CA524ED037000147C51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD67CA424ED037000147C51 /* AppDelegate.swift */; };
 		4BD67CA724ED037100147C51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BD67CA624ED037100147C51 /* Assets.xcassets */; };
@@ -40,7 +39,6 @@
 		4BD67CBF24ED03F800147C51 /* Runs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC404D40D77F35EA10BB /* Runs.swift */; };
 		4BD67CC024ED03F800147C51 /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEB34345F348237FE0E4 /* UGrid.swift */; };
 		4BD67CC124ED040100147C51 /* CellAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDFF7AC6A198BDC64B14 /* CellAttributes.swift */; };
-		4BD67CC324ED040700147C51 /* NvimServerTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CC224ED040700147C51 /* NvimServerTypes */; };
 		4BD67CC424ED040E00147C51 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B51A7E7A07A38C8497FF /* ColorUtils.swift */; };
 		4BD67CC524ED041400147C51 /* CellAttributesCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEA272F8FBB77C464EB9 /* CellAttributesCollection.swift */; };
 		4BD67CC624ED041A00147C51 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AC87B65FDA23239EA7 /* FontUtils.swift */; };
@@ -121,7 +119,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67CBB24ED03BF00147C51 /* Commons in Frameworks */,
-				4BD67CC324ED040700147C51 /* NvimServerTypes in Frameworks */,
 				4BD67CCA24ED042F00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,7 +128,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67C9924ECF53E00147C51 /* Commons in Frameworks */,
-				4BD67C9A24ECF53E00147C51 /* NvimServerTypes in Frameworks */,
 				4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,7 +256,6 @@
 			name = DrawerPerf;
 			packageProductDependencies = (
 				4BD67CBA24ED03BF00147C51 /* Commons */,
-				4BD67CC224ED040700147C51 /* NvimServerTypes */,
 				4BD67CC924ED042F00147C51 /* MessagePack */,
 			);
 			productName = DrawerPerf;
@@ -282,7 +277,6 @@
 			name = DrawerDev;
 			packageProductDependencies = (
 				4BD67C7C24ECF35300147C51 /* Commons */,
-				4BD67C9324ECF47000147C51 /* NvimServerTypes */,
 				4BD67C9624ECF4B300147C51 /* MessagePack */,
 			);
 			productName = DrawerDev;
@@ -322,7 +316,6 @@
 			);
 			mainGroup = 4B90EFFA1FD2AF59008A39E0;
 			packageReferences = (
-				4BD67C9224ECF46900147C51 /* XCRemoteSwiftPackageReference "neovim" */,
 				4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */,
 				4BD67CCF24ED08CB00147C51 /* XCRemoteSwiftPackageReference "PureLayout" */,
 			);
@@ -742,14 +735,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4BD67C9224ECF46900147C51 /* XCRemoteSwiftPackageReference "neovim" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/qvacua/neovim";
-			requirement = {
-				kind = exactVersion;
-				version = "0.1.0-types";
-			};
-		};
 		4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/a2/MessagePack.swift";
@@ -773,11 +758,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
 		};
-		4BD67C9324ECF47000147C51 /* NvimServerTypes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BD67C9224ECF46900147C51 /* XCRemoteSwiftPackageReference "neovim" */;
-			productName = NvimServerTypes;
-		};
 		4BD67C9624ECF4B300147C51 /* MessagePack */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */;
@@ -786,11 +766,6 @@
 		4BD67CBA24ED03BF00147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
-		};
-		4BD67CC224ED040700147C51 /* NvimServerTypes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BD67C9224ECF46900147C51 /* XCRemoteSwiftPackageReference "neovim" */;
-			productName = NvimServerTypes;
 		};
 		4BD67CC924ED042F00147C51 /* MessagePack */ = {
 			isa = XCSwiftPackageProductDependency;

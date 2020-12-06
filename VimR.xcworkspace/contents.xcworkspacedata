@@ -11,6 +11,9 @@
       location = "group:RxPack">
    </FileRef>
    <FileRef
+      location = "group:NvimServer/NvimServerTypes">
+   </FileRef>
+   <FileRef
       location = "group:NvimView">
    </FileRef>
    <FileRef
