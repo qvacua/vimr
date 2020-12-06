@@ -3,16 +3,15 @@
  * See LICENSE
  */
 
-import Foundation
-import RxSwift
-import MessagePack
-import os
-import NvimServerTypes
-import RxPack
 import Commons
+import Foundation
+import MessagePack
+import NvimServerTypes
+import os
+import RxPack
+import RxSwift
 
-protocol UiBridgeConsumer: class {
-
+protocol UiBridgeConsumer: AnyObject {
   func initVimError()
   func resize(_ value: MessagePackValue)
   func clear()
@@ -43,7 +42,6 @@ protocol UiBridgeConsumer: class {
 }
 
 class UiBridge {
-
   weak var consumer: UiBridgeConsumer?
 
   init(uuid: UUID, config: NvimView.Config) {
@@ -61,13 +59,14 @@ class UiBridge {
       let selfEnv = ProcessInfo.processInfo.environment
       let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
       self.log.debug("Using SHELL: \(shellUrl)")
-      let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config.useInteractiveZsh ? false : true
+      let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config
+        .useInteractiveZsh ? false : true
       self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
       self.log.debug("Using ENVs from login shell: \(self.envDict)")
     }
 
     self.scheduler = SerialDispatchQueueScheduler(
-      queue: queue,
+      queue: self.queue,
       internalSerialQueueName: String(reflecting: UiBridge.self)
     )
 
@@ -98,7 +97,8 @@ class UiBridge {
   }
 
   func deleteCharacters(_ count: Int, andInputEscapedString string: String)
-      -> Completable {
+    -> Completable
+  {
     guard let strData = string.data(using: .utf8) else {
       return .empty()
     }
@@ -113,23 +113,26 @@ class UiBridge {
   }
 
   func resize(width: Int, height: Int) -> Completable {
-    return self.sendMessage(msgId: .resize, data: [width, height].data())
+    self.sendMessage(msgId: .resize, data: [width, height].data())
   }
 
   func notifyReadinessForRpcEvents() -> Completable {
-    return self.sendMessage(msgId: .readyForRpcEvents, data: nil)
+    self.sendMessage(msgId: .readyForRpcEvents, data: nil)
   }
 
   func focusGained(_ gained: Bool) -> Completable {
-    return self.sendMessage(msgId: .focusGained, data: [gained].data())
+    self.sendMessage(msgId: .focusGained, data: [gained].data())
   }
 
   func scroll(horizontal: Int, vertical: Int, at position: Position) -> Completable {
-    return self.sendMessage(msgId: .scroll, data: [horizontal, vertical, position.row, position.column].data())
+    self.sendMessage(
+      msgId: .scroll,
+      data: [horizontal, vertical, position.row, position.column].data()
+    )
   }
 
   func quit() -> Completable {
-    return self.quit {
+    self.quit {
       self.nvimServerProc?.waitUntilExit()
       self.log.info("NvimServer \(self.uuid) exited successfully.")
     }
@@ -145,7 +148,7 @@ class UiBridge {
   }
 
   func debug() -> Completable {
-    return self.sendMessage(msgId: .debug1, data: nil)
+    self.sendMessage(msgId: .debug1, data: nil)
   }
 
   private func handleMessage(msgId: Int32, data: Data?) {
@@ -154,7 +157,6 @@ class UiBridge {
     }
 
     switch msg {
-
     case .serverReady:
       self
         .establishNvimConnection()
@@ -167,7 +169,8 @@ class UiBridge {
       self.runLocalServerAndNvimCompletable?(.completed)
       self.runLocalServerAndNvimCompletable = nil
 
-      let isInitErrorPresent = MessagePackUtils.value(from: data, conversion: { $0.boolValue }) ?? false
+      let isInitErrorPresent = MessagePackUtils
+        .value(from: data, conversion: { $0.boolValue }) ?? false
       if isInitErrorPresent {
         self.consumer?.initVimError()
       }
@@ -236,11 +239,11 @@ class UiBridge {
     case .autoCommandEvent:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.consumer?.autoCommandEvent(v)
-    
+
     case .event:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.consumer?.event(v)
-      
+
     case .debug1:
       break
 
@@ -256,18 +259,17 @@ class UiBridge {
 
     @unknown default:
       self.log.error("Unkonwn msg type from NvimServer")
-
     }
   }
 
   private func closePorts() -> Completable {
-    return self.client
+    self.client
       .stop()
       .andThen(self.server.stop())
   }
 
   private func quit(using body: @escaping () -> Void) -> Completable {
-    return self
+    self
       .closePorts()
       .andThen(Completable.create { completable in
         body()
@@ -278,13 +280,16 @@ class UiBridge {
   }
 
   private func establishNvimConnection() -> Completable {
-    return self.client
+    self.client
       .connect(to: self.remoteServerName)
-      .andThen(self.sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data()))
+      .andThen(
+        self
+          .sendMessage(msgId: .agentReady, data: [self.initialWidth, self.initialHeight].data())
+      )
   }
 
   private func sendMessage(msgId: NvimBridgeMsgId, data: Data?) -> Completable {
-    return self.client
+    self.client
       .send(msgid: Int32(msgId.rawValue), data: data, expectsReply: false)
       .asCompletable()
   }
@@ -295,7 +300,8 @@ class UiBridge {
   }
 
   private func launchNvimUsingLoginShellEnv() {
-    let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vimr_\(self.uuid).sock")
+    let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory())
+      .appendingPathComponent("vimr_\(self.uuid).sock")
     var env = self.envDict
     env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
     env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
@@ -303,7 +309,7 @@ class UiBridge {
     self.log.debug("Socket: \(listenAddress.path)")
 
     let usesCustomTabBarArg = self.usesCustomTabBar ? "1" : "0"
-    
+
     let outPipe = Pipe()
     let errorPipe = Pipe()
     let process = Process()
@@ -312,7 +318,9 @@ class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
-    process.arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] + ["--headless"] + self.nvimArgs
+    process
+      .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
+      ["--headless"] + self.nvimArgs
     self.log.debug(
       "Launching NvimServer with args: \(String(describing: process.arguments))"
     )
@@ -327,8 +335,10 @@ class UiBridge {
       .path
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem,
-                          category: Defs.LoggerCategory.bridge)
+  private let log = OSLog(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.bridge
+  )
 
   private let uuid: UUID
 
@@ -357,11 +367,11 @@ class UiBridge {
   private let disposeBag = DisposeBag()
 
   private var localServerName: String {
-    return "com.qvacua.NvimView.\(self.uuid)"
+    "com.qvacua.NvimView.\(self.uuid)"
   }
 
   private var remoteServerName: String {
-    return "com.qvacua.NvimView.NvimServer.\(self.uuid)"
+    "com.qvacua.NvimView.NvimServer.\(self.uuid)"
   }
 }
 

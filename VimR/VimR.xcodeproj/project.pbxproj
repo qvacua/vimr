@@ -76,8 +76,6 @@
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
-		4B69B31B24EDBAF000B1E5EB /* MaterialIcons in Frameworks */ = {isa = PBXBuildFile; productRef = 4B69B31A24EDBAF000B1E5EB /* MaterialIcons */; };
-		4B69B31D24EDC9F100B1E5EB /* Workspace in Frameworks */ = {isa = PBXBuildFile; productRef = 4B69B31C24EDC9F100B1E5EB /* Workspace */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
 		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
@@ -139,23 +137,7 @@
 		4B94341520B95EC7005807BA /* MacVim-ps.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DA20B95EC6005807BA /* MacVim-ps.icns */; };
 		4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
-		4B9BC41E24EB2E22000209B5 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC41D24EB2E22000209B5 /* MessagePack */; };
-		4B9BC42124EB2E45000209B5 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42024EB2E45000209B5 /* RxCocoa */; };
-		4B9BC42324EB2E45000209B5 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42224EB2E45000209B5 /* RxSwift */; };
-		4B9BC42524EB2E45000209B5 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42424EB2E45000209B5 /* RxRelay */; };
-		4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42624EB2E51000209B5 /* NvimView */; };
-		4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */; };
-		4BA284B2256471ED00CFDF7F /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4BA284B1256471ED00CFDF7F /* Sparkle */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
-		4BD5657324E842E900D52809 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
-		4BD5657424E842E900D52809 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
-		4BD5657524E842E900D52809 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5656024E8311400D52809 /* Down */; };
-		4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
-		4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
-		4BD67C7824EC488200147C51 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7724EC488200147C51 /* RxPack */; };
-		4BD67C7B24EC765900147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7A24EC765900147C51 /* Commons */; };
-		4BD67CDC24EE45E900147C51 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CDB24EE45E900147C51 /* Nimble */; };
-		4BD67CE024EE465B00147C51 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CDF24EE465B00147C51 /* RxTest */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
@@ -360,22 +342,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD67C7B24EC765900147C51 /* Commons in Frameworks */,
-				4B9BC42124EB2E45000209B5 /* RxCocoa in Frameworks */,
-				4BD67C7824EC488200147C51 /* RxPack in Frameworks */,
-				4B9BC42724EB2E51000209B5 /* NvimView in Frameworks */,
-				4B9BC42A24EB2E6D000209B5 /* ShortcutRecorder in Frameworks */,
-				4BD5657524E842E900D52809 /* Down in Frameworks */,
-				4B9BC42324EB2E45000209B5 /* RxSwift in Frameworks */,
-				4B9BC41E24EB2E22000209B5 /* MessagePack in Frameworks */,
-				4B69B31D24EDC9F100B1E5EB /* Workspace in Frameworks */,
-				4BA284B2256471ED00CFDF7F /* Sparkle in Frameworks */,
-				4B69B31B24EDBAF000B1E5EB /* MaterialIcons in Frameworks */,
-				4BD5657324E842E900D52809 /* Swifter in Frameworks */,
-				4BD5657424E842E900D52809 /* PureLayout in Frameworks */,
-				4BD5657B24E8448300D52809 /* EonilFSEvents in Frameworks */,
-				4BD5657824E8443300D52809 /* DictionaryCoding in Frameworks */,
-				4B9BC42524EB2E45000209B5 /* RxRelay in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,8 +349,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BD67CDC24EE45E900147C51 /* Nimble in Frameworks */,
-				4BD67CE024EE465B00147C51 /* RxTest in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,22 +733,22 @@
 			);
 			name = VimR;
 			packageProductDependencies = (
-				4BD5655224E8014100D52809 /* Swifter */,
-				4BD5655824E8040E00D52809 /* PureLayout */,
-				4BD5656024E8311400D52809 /* Down */,
-				4BD5657724E8443300D52809 /* DictionaryCoding */,
-				4BD5657A24E8448300D52809 /* EonilFSEvents */,
-				4B9BC41D24EB2E22000209B5 /* MessagePack */,
-				4B9BC42024EB2E45000209B5 /* RxCocoa */,
-				4B9BC42224EB2E45000209B5 /* RxSwift */,
-				4B9BC42424EB2E45000209B5 /* RxRelay */,
-				4B9BC42624EB2E51000209B5 /* NvimView */,
-				4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */,
-				4BD67C7724EC488200147C51 /* RxPack */,
-				4BD67C7A24EC765900147C51 /* Commons */,
-				4B69B31A24EDBAF000B1E5EB /* MaterialIcons */,
-				4B69B31C24EDC9F100B1E5EB /* Workspace */,
-				4BA284B1256471ED00CFDF7F /* Sparkle */,
+				4BD5655224E8014100D52809,
+				4BD5655824E8040E00D52809,
+				4BD5656024E8311400D52809,
+				4BD5657724E8443300D52809,
+				4BD5657A24E8448300D52809,
+				4B9BC41D24EB2E22000209B5,
+				4B9BC42024EB2E45000209B5,
+				4B9BC42224EB2E45000209B5,
+				4B9BC42424EB2E45000209B5,
+				4B9BC42624EB2E51000209B5,
+				4B9BC42924EB2E6D000209B5,
+				4BD67C7724EC488200147C51,
+				4BD67C7A24EC765900147C51,
+				4B69B31A24EDBAF000B1E5EB,
+				4B69B31C24EDC9F100B1E5EB,
+				4BA284B1256471ED00CFDF7F,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -806,8 +770,8 @@
 			);
 			name = VimRTests;
 			packageProductDependencies = (
-				4BD67CDB24EE45E900147C51 /* Nimble */,
-				4BD67CDF24EE465B00147C51 /* RxTest */,
+				4BD67CDB24EE45E900147C51,
+				4BD67CDF24EE465B00147C51,
 			);
 			productName = VimRTests;
 			productReference = 4BEBA5141CFF374B00673FDF /* VimRTests.xctest */;
@@ -845,17 +809,17 @@
 			);
 			mainGroup = 4BEBA4FC1CFF374B00673FDF;
 			packageReferences = (
-				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
-				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
-				4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */,
-				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
-				4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */,
-				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */,
-				4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
-				4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */,
-				4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */,
-				4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */,
+				4BD5655124E8014100D52809,
+				4BD5655724E8040E00D52809,
+				4BD5655F24E8311400D52809,
+				4BD5657624E8443300D52809,
+				4BD5657924E8448300D52809,
+				4B9BC41C24EB2E22000209B5,
+				4B9BC41F24EB2E45000209B5,
+				4B9BC42824EB2E6D000209B5,
+				4B69B31924EDBAF000B1E5EB,
+				4BD67CD824EE45CA00147C51,
+				4BA284B0256471ED00CFDF7F,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1365,7 +1329,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */ = {
+		4B69B31924EDBAF000B1E5EB = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/qvacua/material-icons";
 			requirement = {
@@ -1373,7 +1337,7 @@
 				version = 0.1.0;
 			};
 		};
-		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
+		4B9BC41C24EB2E22000209B5 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/a2/MessagePack.swift";
 			requirement = {
@@ -1381,7 +1345,7 @@
 				version = 4.0.0;
 			};
 		};
-		4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		4B9BC41F24EB2E45000209B5 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
@@ -1389,7 +1353,7 @@
 				version = 5.1.1;
 			};
 		};
-		4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */ = {
+		4B9BC42824EB2E6D000209B5 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Kentzo/ShortcutRecorder";
 			requirement = {
@@ -1397,7 +1361,7 @@
 				version = 3.3.0;
 			};
 		};
-		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+		4BA284B0256471ED00CFDF7F = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
@@ -1405,7 +1369,7 @@
 				version = "1.24.0-spm";
 			};
 		};
-		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
+		4BD5655124E8014100D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
 			requirement = {
@@ -1413,7 +1377,7 @@
 				version = 1.5.0;
 			};
 		};
-		4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */ = {
+		4BD5655724E8040E00D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
 			requirement = {
@@ -1421,7 +1385,7 @@
 				version = 3.1.6;
 			};
 		};
-		4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */ = {
+		4BD5655F24E8311400D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iwasrobbed/Down";
 			requirement = {
@@ -1429,7 +1393,7 @@
 				version = 0.9.4;
 			};
 		};
-		4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
+		4BD5657624E8443300D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding";
 			requirement = {
@@ -1437,7 +1401,7 @@
 				version = 1.0.9;
 			};
 		};
-		4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
+		4BD5657924E8448300D52809 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eonil/FSEvents";
 			requirement = {
@@ -1445,7 +1409,7 @@
 				version = 0.1.7;
 			};
 		};
-		4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */ = {
+		4BD67CD824EE45CA00147C51 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
@@ -1456,90 +1420,90 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4B69B31A24EDBAF000B1E5EB /* MaterialIcons */ = {
+		4B69B31A24EDBAF000B1E5EB = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */;
+			package = 4B69B31924EDBAF000B1E5EB;
 			productName = MaterialIcons;
 		};
-		4B69B31C24EDC9F100B1E5EB /* Workspace */ = {
+		4B69B31C24EDC9F100B1E5EB = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Workspace;
 		};
-		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
+		4B9BC41D24EB2E22000209B5 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
+			package = 4B9BC41C24EB2E22000209B5;
 			productName = MessagePack;
 		};
-		4B9BC42024EB2E45000209B5 /* RxCocoa */ = {
+		4B9BC42024EB2E45000209B5 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4B9BC41F24EB2E45000209B5;
 			productName = RxCocoa;
 		};
-		4B9BC42224EB2E45000209B5 /* RxSwift */ = {
+		4B9BC42224EB2E45000209B5 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4B9BC41F24EB2E45000209B5;
 			productName = RxSwift;
 		};
-		4B9BC42424EB2E45000209B5 /* RxRelay */ = {
+		4B9BC42424EB2E45000209B5 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4B9BC41F24EB2E45000209B5;
 			productName = RxRelay;
 		};
-		4B9BC42624EB2E51000209B5 /* NvimView */ = {
+		4B9BC42624EB2E51000209B5 = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NvimView;
 		};
-		4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */ = {
+		4B9BC42924EB2E6D000209B5 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */;
+			package = 4B9BC42824EB2E6D000209B5;
 			productName = ShortcutRecorder;
 		};
-		4BA284B1256471ED00CFDF7F /* Sparkle */ = {
+		4BA284B1256471ED00CFDF7F = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */;
+			package = 4BA284B0256471ED00CFDF7F;
 			productName = Sparkle;
 		};
-		4BD5655224E8014100D52809 /* Swifter */ = {
+		4BD5655224E8014100D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */;
+			package = 4BD5655124E8014100D52809;
 			productName = Swifter;
 		};
-		4BD5655824E8040E00D52809 /* PureLayout */ = {
+		4BD5655824E8040E00D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */;
+			package = 4BD5655724E8040E00D52809;
 			productName = PureLayout;
 		};
-		4BD5656024E8311400D52809 /* Down */ = {
+		4BD5656024E8311400D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */;
+			package = 4BD5655F24E8311400D52809;
 			productName = Down;
 		};
-		4BD5657724E8443300D52809 /* DictionaryCoding */ = {
+		4BD5657724E8443300D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
+			package = 4BD5657624E8443300D52809;
 			productName = DictionaryCoding;
 		};
-		4BD5657A24E8448300D52809 /* EonilFSEvents */ = {
+		4BD5657A24E8448300D52809 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */;
+			package = 4BD5657924E8448300D52809;
 			productName = EonilFSEvents;
 		};
-		4BD67C7724EC488200147C51 /* RxPack */ = {
+		4BD67C7724EC488200147C51 = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RxPack;
 		};
-		4BD67C7A24EC765900147C51 /* Commons */ = {
+		4BD67C7A24EC765900147C51 = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
 		};
-		4BD67CDB24EE45E900147C51 /* Nimble */ = {
+		4BD67CDB24EE45E900147C51 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */;
+			package = 4BD67CD824EE45CA00147C51;
 			productName = Nimble;
 		};
-		4BD67CDF24EE465B00147C51 /* RxTest */ = {
+		4BD67CDF24EE465B00147C51 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 4B9BC41F24EB2E45000209B5;
 			productName = RxTest;
 		};
 /* End XCSwiftPackageProductDependency section */
