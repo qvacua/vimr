@@ -31,5 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Insert code here to tear down your application
   }
 
-  private let tabBar: TabBar
+  private let tabBar: TabBar<DummyTabEntry>
+}
+
+struct DummyTabEntry: Hashable, Equatable, TabRepresentative {
+  var title: String
 }

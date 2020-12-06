@@ -6,27 +6,27 @@
 import Cocoa
 import MaterialIcons
 
-protocol TabDelegate: AnyObject {
-  func select(tab: Tab)
-}
-
-class Tab: NSView {
+class Tab<Entry: TabRepresentative>: NSView {
   enum Position {
     case first
     case inBetween
     case last
   }
 
-  var title: String {
+  var title: String { self.tabRepresentative.title }
+
+  var tabRepresentative: Entry {
     didSet {
       self.titleView.stringValue = self.title
       self.adjustWidth()
     }
   }
 
-  init(withTitle title: String, in tabBar: TabBar) {
-    self.title = title
+  init(withTabRepresentative tabRepresentative: Entry, in tabBar: TabBar<Entry>) {
+    self.tabBar = tabBar
     self.theme = tabBar.theme
+    self.tabRepresentative = tabRepresentative
+
     super.init(frame: .zero)
 
     self.configureForAutoLayout()
@@ -34,14 +34,14 @@ class Tab: NSView {
 
     self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
     self.autoSetDimension(.height, toSize: self.theme.tabHeight)
-    self.titleView.stringValue = title
+    self.titleView.stringValue = tabRepresentative.title
 
     self.addViews()
     self.adjustWidth()
   }
 
   override func mouseUp(with _: NSEvent) {
-    self.delegate?.select(tab: self)
+    self.tabBar?.select(tab: self)
   }
 
   override func draw(_: NSRect) {
@@ -59,7 +59,7 @@ class Tab: NSView {
     }
   }
 
-  weak var delegate: TabDelegate?
+  weak private(set) var tabBar: TabBar<Entry>?
   var position = Position.inBetween {
     didSet { self.needsDisplay = true }
   }

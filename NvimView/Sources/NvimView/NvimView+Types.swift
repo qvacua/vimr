@@ -5,8 +5,16 @@
 
 import Cocoa
 import MessagePack
+import RxPack
+import Tabs
 
 extension NvimView {
+
+  struct TabEntry: Equatable, Hashable, TabRepresentative {
+    var title: String
+    var tabpage: RxNeovimApi.Tabpage
+    var isSelected = false
+  }
 
   public struct Config {
 

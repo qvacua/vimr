@@ -11,27 +11,18 @@ public final class RxNeovimApi {
     case error(msg: String)
   }
 
-  public struct Buffer: Equatable {
-    public static func == (lhs: Buffer, rhs: Buffer) -> Bool { lhs.handle == rhs.handle }
-
+  public struct Buffer: Equatable, Hashable {
     public let handle: Int
-
     public init(_ handle: Int) { self.handle = handle }
   }
 
-  public struct Window: Equatable {
-    public static func == (lhs: Window, rhs: Window) -> Bool { lhs.handle == rhs.handle }
-
+  public struct Window: Equatable, Hashable {
     public let handle: Int
-
     public init(_ handle: Int) { self.handle = handle }
   }
 
-  public struct Tabpage: Equatable {
-    public static func == (lhs: Tabpage, rhs: Tabpage) -> Bool { lhs.handle == rhs.handle }
-
+  public struct Tabpage: Equatable, Hashable {
     public let handle: Int
-
     public init(_ handle: Int) { self.handle = handle }
   }
 
