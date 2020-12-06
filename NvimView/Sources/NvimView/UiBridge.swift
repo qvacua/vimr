@@ -234,6 +234,10 @@ class UiBridge {
     case .autoCommandEvent:
       guard let v = MessagePackUtils.value(from: data) else { return }
       self.consumer?.autoCommandEvent(v)
+    
+    case .event:
+      guard let v = MessagePackUtils.value(from: data) else { return }
+      Swift.print("got event with \(v)")
 
     case .debug1:
       break
