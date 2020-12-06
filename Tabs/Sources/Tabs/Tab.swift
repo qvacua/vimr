@@ -13,10 +13,10 @@ struct TabPosition: OptionSet {
   let rawValue: Int
 }
 
-class Tab<Entry: TabRepresentative>: NSView {
+class Tab<Rep: TabRepresentative>: NSView {
   var title: String { self.tabRepresentative.title }
 
-  var tabRepresentative: Entry {
+  var tabRepresentative: Rep {
     willSet {
       if self.isSelected == newValue.isSelected { return }
       self.adjustToSelectionChange()
@@ -29,7 +29,7 @@ class Tab<Entry: TabRepresentative>: NSView {
     }
   }
 
-  init(withTabRepresentative tabRepresentative: Entry, in tabBar: TabBar<Entry>) {
+  init(withTabRepresentative tabRepresentative: Rep, in tabBar: TabBar<Rep>) {
     self.tabBar = tabBar
     self.theme = tabBar.theme
     self.tabRepresentative = tabRepresentative
@@ -59,7 +59,7 @@ class Tab<Entry: TabRepresentative>: NSView {
 
   var isSelected: Bool { self.tabRepresentative.isSelected }
 
-  private(set) weak var tabBar: TabBar<Entry>?
+  private(set) weak var tabBar: TabBar<Rep>?
   var position: TabPosition = [] {
     willSet { self.needsDisplay = self.position != newValue }
   }

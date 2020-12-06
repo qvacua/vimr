@@ -11,10 +11,10 @@ public protocol TabRepresentative: Hashable {
   var isSelected: Bool { get }
 }
 
-public class TabBar<Entry: TabRepresentative>: NSView {
+public class TabBar<Rep: TabRepresentative>: NSView {
   public var theme: Theme { self._theme }
-  public var selectHandler: ((Int, Entry) -> Void)?
-  public var reorderHandler: ((Int, Entry, [Entry]) -> Void)?
+  public var selectHandler: ((Int, Rep) -> Void)?
+  public var reorderHandler: ((Int, Rep, [Rep]) -> Void)?
 
   public init(withTheme theme: Theme) {
     self._theme = theme
@@ -27,8 +27,8 @@ public class TabBar<Entry: TabRepresentative>: NSView {
     self.addViews()
   }
 
-  public func update(tabRepresentatives entries: [Entry]) {
-    var result = [Tab<Entry>]()
+  public func update(tabRepresentatives entries: [Rep]) {
+    var result = [Tab<Rep>]()
     entries.forEach { entry in
       if let existingTab = self.tabs.first(where: { $0.tabRepresentative == entry }) {
         existingTab.tabRepresentative = entry
@@ -53,7 +53,7 @@ public class TabBar<Entry: TabRepresentative>: NSView {
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  var tabs = [Tab<Entry>]()
+  var tabs = [Tab<Rep>]()
 
   private var _theme: Theme
   private let scrollView = HorizontalOnlyScrollView(forAutoLayout: ())
@@ -61,7 +61,7 @@ public class TabBar<Entry: TabRepresentative>: NSView {
 }
 
 extension TabBar {
-  func select(tab: Tab<Entry>) {
+  func select(tab: Tab<Rep>) {
     guard let index = self.tabs.firstIndex(where: { $0 == tab }) else { return }
     self.selectHandler?(index, tab.tabRepresentative)
   }
@@ -97,9 +97,9 @@ extension TabBar {
 
     stack.spacing = self._theme.tabSpacing
     stack.postDraggingHandler = { stackView, draggedView in
-      self.tabs = stackView.arrangedSubviews.compactMap { $0 as? Tab<Entry> }
+      self.tabs = stackView.arrangedSubviews.compactMap { $0 as? Tab<Rep> }
 
-      if let draggedTab = draggedView as? Tab<Entry>,
+      if let draggedTab = draggedView as? Tab<Rep>,
          let indexOfDraggedTab = self.tabs.firstIndex(where: { $0 == draggedTab })
       {
         self.reorderHandler?(
