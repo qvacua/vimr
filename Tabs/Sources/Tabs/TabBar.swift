@@ -95,7 +95,7 @@ extension TabBar {
     stack.autoPinEdge(toSuperviewEdge: .bottom)
 
     stack.spacing = self._theme.tabSpacing
-    stack.postDraggingAction = { stackView in
+    stack.postDraggingHandler = { stackView in
       let endIndex = stackView.arrangedSubviews.endIndex - 1
       stackView.arrangedSubviews.enumerated().forEach { index, view in
         guard let tab = view as? Tab<Entry> else { return }
