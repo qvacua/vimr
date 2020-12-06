@@ -10,7 +10,7 @@ public struct Theme {
 
   public var foregroundColor = NSColor.textColor
   public var backgroundColor = NSColor.controlBackgroundColor
-  public var separatorColor = NSColor.controlShadowColor
+  public var separatorColor = NSColor.white // NSColor.controlShadowColor
 
   public var selectedForegroundColor = NSColor.textColor
   public var selectedBackgroundColor = NSColor.selectedControlColor

@@ -36,12 +36,12 @@ public class TabBar<Entry: TabRepresentative>: NSView {
       }
     }
 
-    result.forEach { $0.position = .inBetween }
-    result.first?.position = .first
-    result.last?.position = .last
+    result.forEach { $0.position = [] }
+    result.first?.position.insert(.first)
+    result.last?.position.insert(.last)
 
+    self.stackView.update(views: result)
     self.tabs = result
-    self.stackView.update(views: self.tabs)
   }
 
   override public func draw(_: NSRect) {
@@ -99,9 +99,9 @@ extension TabBar {
       stackView.arrangedSubviews.enumerated().forEach { index, view in
         guard let tab = view as? Tab<Entry> else { return }
 
-        if index == 0 { tab.position = .first }
-        else if index == endIndex { tab.position = .last }
-        else { tab.position = .inBetween }
+        tab.position = []
+        if index == 0 { tab.position.insert(.first) }
+        if index == endIndex { tab.position.insert(.last) }
       }
     }
   }

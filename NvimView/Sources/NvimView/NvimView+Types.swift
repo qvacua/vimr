@@ -6,6 +6,7 @@
 import Cocoa
 import MessagePack
 import RxPack
+import PureLayout
 import Tabs
 
 extension NvimView {

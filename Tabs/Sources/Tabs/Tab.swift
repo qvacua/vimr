@@ -6,19 +6,23 @@
 import Cocoa
 import MaterialIcons
 
-class Tab<Entry: TabRepresentative>: NSView {
-  enum Position {
-    case first
-    case inBetween
-    case last
-  }
+struct TabPosition: OptionSet {
+  static let first = TabPosition(rawValue: 1 << 0)
+  static let last = TabPosition(rawValue: 1 << 1)
 
+  let rawValue: Int
+}
+
+class Tab<Entry: TabRepresentative>: NSView {
   var title: String { self.tabRepresentative.title }
 
   var tabRepresentative: Entry {
+    willSet { if self.isSelected != newValue.isSelected { self.needsDisplay = true } }
     didSet {
-      self.titleView.stringValue = self.title
-      self.adjustWidth()
+      if self.titleView.stringValue != self.title {
+        self.titleView.stringValue = self.title
+        self.adjustWidth()
+      }
     }
   }
 
@@ -34,8 +38,8 @@ class Tab<Entry: TabRepresentative>: NSView {
 
     self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
     self.autoSetDimension(.height, toSize: self.theme.tabHeight)
-    self.titleView.stringValue = tabRepresentative.title
 
+    self.titleView.stringValue = tabRepresentative.title
     self.addViews()
     self.adjustWidth()
   }
@@ -55,8 +59,8 @@ class Tab<Entry: TabRepresentative>: NSView {
   var isSelected: Bool { self.tabRepresentative.isSelected }
 
   private(set) weak var tabBar: TabBar<Entry>?
-  var position = Position.inBetween {
-    didSet { self.needsDisplay = true }
+  var position: TabPosition = [] {
+    willSet { self.needsDisplay = self.position != newValue }
   }
 
   private let closeButton = NSButton(forAutoLayout: ())
@@ -64,6 +68,7 @@ class Tab<Entry: TabRepresentative>: NSView {
   private let titleView = NSTextField(forAutoLayout: ())
 
   private var theme: Theme
+  private var widthConstraint: NSLayoutConstraint?
 }
 
 extension Tab {
@@ -81,7 +86,8 @@ extension Tab {
     let idealWidth = 4 * self.theme.tabHorizontalPadding + 2 * self.theme.iconDimension.width
       + self.titleView.intrinsicContentSize.width
     let targetWidth = min(max(self.theme.tabMinWidth, idealWidth), self.theme.tabMaxWidth)
-    self.autoSetDimension(.width, toSize: targetWidth)
+    if let c = self.widthConstraint { self.removeConstraint(c) }
+    self.widthConstraint = self.autoSetDimension(.width, toSize: targetWidth)
   }
 
   private func addViews() {
@@ -141,15 +147,13 @@ extension Tab {
     defer { context.restoreGState() }
     self.theme.separatorColor.set()
 
-    switch self.position {
-    case .first:
-      right.fill()
-    case .inBetween:
+    if self.position.isEmpty {
       left.fill()
       right.fill()
-    case .last:
-      left.fill()
     }
+
+    if self.position == .first { right.fill() }
+    if self.position == .last { left.fill() }
 
     bottom.fill()
   }
