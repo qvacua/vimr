@@ -44,6 +44,7 @@ extension MainWindow {
 
     self.window.titlebarAppearsTransparent = false
 
+    self.neoVimView.tabBar?.removeFromSuperview()
     self.workspace.removeFromSuperview()
 
     self.window.titleVisibility = .visible
@@ -51,8 +52,7 @@ extension MainWindow {
 
     self.set(repUrl: self.window.representedURL, themed: false)
 
-    contentView.addSubview(self.workspace)
-    self.workspace.autoPinEdgesToSuperviewEdges()
+    self.addViews(withTopInset: 0)
 
     if !dueFullScreen {
       self.window.setFrame(prevFrame, display: true, animate: false)

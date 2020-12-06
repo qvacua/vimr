@@ -485,12 +485,8 @@ extension NvimView {
     }
     
     switch event.stringValue {
-    case "tabline_update":
-      self.tablineUpdate(args)
-    case "win_viewport":
-      break
-    default:
-      break
+    case "tabline_update": self.tablineUpdate(args)
+    default: break
     }
   }
 
