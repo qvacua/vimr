@@ -17,12 +17,15 @@ class Tab<Entry: TabRepresentative>: NSView {
   var title: String { self.tabRepresentative.title }
 
   var tabRepresentative: Entry {
-    willSet { if self.isSelected != newValue.isSelected { self.needsDisplay = true } }
+    willSet {
+      if self.isSelected == newValue.isSelected { return }
+      self.adjustToSelectionChange()
+      self.needsDisplay = true
+    }
     didSet {
-      if self.titleView.stringValue != self.title {
-        self.titleView.stringValue = self.title
-        self.adjustWidth()
-      }
+      if self.titleView.stringValue == self.title { return }
+      self.titleView.stringValue = self.title
+      self.adjustWidth()
     }
   }
 
@@ -44,9 +47,7 @@ class Tab<Entry: TabRepresentative>: NSView {
     self.adjustWidth()
   }
 
-  override func mouseUp(with _: NSEvent) {
-    self.tabBar?.select(tab: self)
-  }
+  override func mouseUp(with _: NSEvent) { self.tabBar?.select(tab: self) }
 
   override func draw(_: NSRect) {
     self.drawSeparators()

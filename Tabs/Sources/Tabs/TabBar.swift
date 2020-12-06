@@ -14,7 +14,7 @@ public protocol TabRepresentative: Hashable {
 public class TabBar<Entry: TabRepresentative>: NSView {
   public var theme: Theme { self._theme }
   public var selectHandler: ((Int, Entry) -> Void)?
-  public var reorderHandler: ((Int, Entry) -> Void)?
+  public var reorderHandler: ((Int, Entry, [Entry]) -> Void)?
 
   public init(withTheme theme: Theme) {
     self._theme = theme
@@ -102,7 +102,11 @@ extension TabBar {
       if let draggedTab = draggedView as? Tab<Entry>,
          let indexOfDraggedTab = self.tabs.firstIndex(where: { $0 == draggedTab })
       {
-        self.reorderHandler?(indexOfDraggedTab, draggedTab.tabRepresentative)
+        self.reorderHandler?(
+          indexOfDraggedTab,
+          draggedTab.tabRepresentative,
+          self.tabs.map(\.tabRepresentative)
+        )
       }
 
       let endIndex = stackView.arrangedSubviews.endIndex - 1

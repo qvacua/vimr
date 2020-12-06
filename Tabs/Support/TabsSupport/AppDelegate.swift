@@ -21,18 +21,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_: Notification) {
     let contentView = self.window.contentView!
     contentView.addSubview(self.tabBar)
-    self.tabBar.autoPinEdge(toSuperviewEdge: .top)
-    self.tabBar.autoPinEdge(toSuperviewEdge: .left)
-    self.tabBar.autoPinEdge(toSuperviewEdge: .right)
-    self.tabBar.autoSetDimension(.height, toSize: Theme().tabBarHeight)
-    self.tabBar.selectHandler = { _, entry in Swift.print("selected \(entry)") }
 
-    self.tabBar.update(tabRepresentatives: [
+    let tb = self.tabBar
+    tb.autoPinEdge(toSuperviewEdge: .top)
+    tb.autoPinEdge(toSuperviewEdge: .left)
+    tb.autoPinEdge(toSuperviewEdge: .right)
+    tb.autoSetDimension(.height, toSize: Theme().tabBarHeight)
+    tb.selectHandler = { [weak self] _, selectedEntry in
+      self?.tabEntries.enumerated().forEach { index, entry in
+        self?.tabEntries[index].isSelected = (entry == selectedEntry)
+      }
+      DispatchQueue.main.async {
+        Swift.print("select: \(self!.tabEntries)")
+        self?.tabBar.update(tabRepresentatives: self?.tabEntries ?? [])
+      }
+    }
+    tb.reorderHandler = { [weak self] index, reorderedEntry, entries in
+      self?.tabEntries = entries
+      self?.tabEntries.enumerated().forEach { index, entry in
+        self?.tabEntries[index].isSelected = (entry == reorderedEntry)
+      }
+      DispatchQueue.main.async {
+        Swift.print("reorder: \(entries)")
+        self?.tabBar.update(tabRepresentatives: self?.tabEntries ?? [])
+      }
+    }
+
+    self.tabEntries = [
       DummyTabEntry(title: "Test 1"),
       DummyTabEntry(title: "Test 2"),
       DummyTabEntry(title: "Test 3"),
       DummyTabEntry(title: "Very long long long title, and some more text!"),
-    ])
+    ]
+    self.tabEntries[0].isSelected = true
+    self.tabBar.update(tabRepresentatives: self.tabEntries)
   }
 
   func applicationWillTerminate(_: Notification) {
@@ -40,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private let tabBar: TabBar<DummyTabEntry>
+  private var tabEntries = [DummyTabEntry]()
 }
 
 struct DummyTabEntry: Hashable, TabRepresentative {
