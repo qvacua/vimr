@@ -27,7 +27,7 @@ public class NvimView: NSView,
 
   public static let minLinespacing = (0.5).cgf
   public static let maxLinespacing = 8.cgf
-  
+
   public let usesCustomTabBar: Bool
   public let tabBar: TabBar<TabEntry>?
 
@@ -155,12 +155,17 @@ public class NvimView: NSView,
     )
 
     self.sourceFileUrls = config.sourceFiles
-    
+
     self.usesCustomTabBar = config.usesCustomTabBar
     if self.usesCustomTabBar { self.tabBar = TabBar<TabEntry>(withTheme: .default) }
     else { self.tabBar = nil }
 
     super.init(frame: .zero)
+
+    self.tabBar?.selectHandler = { [weak self] (index, tabEntry) in
+      Swift.print("tab \(index): \(tabEntry) selected")
+    }
+
     self.bridge.consumer = self
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
 

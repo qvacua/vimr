@@ -13,6 +13,7 @@ public protocol TabRepresentative: Hashable {
 
 public class TabBar<Entry: TabRepresentative>: NSView {
   public var theme: Theme { self._theme }
+  public var selectHandler: ((Int, Entry) -> Void)?
 
   public init(withTheme theme: Theme) {
     self._theme = theme
@@ -59,9 +60,9 @@ public class TabBar<Entry: TabRepresentative>: NSView {
 }
 
 extension TabBar {
-  func select(tab _: Tab<Entry>) {
-//    self.stackView.arrangedSubviews.forEach { ($0 as? Tab<Entry>)?.isSelected = false }
-//    tab.isSelected = true
+  func select(tab: Tab<Entry>) {
+    guard let index = self.tabs.firstIndex(where: { $0 == tab }) else { return }
+    self.selectHandler?(index, tab.tabRepresentative)
   }
 }
 
