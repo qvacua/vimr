@@ -588,7 +588,7 @@ extension NvimView {
           let curTab = RxNeovimApi.Tabpage(args[0]),
           let tabsValue = args[1].arrayValue else { return }
 
-    let tabEntries: [TabEntry] = tabsValue.compactMap { dictValue in
+    self.tabEntries = tabsValue.compactMap { dictValue in
       guard let dict = dictValue.dictionaryValue,
             let name = dict[.string("name")]?.stringValue,
             let tabpageValue = dict[.string("tab")],
@@ -597,7 +597,7 @@ extension NvimView {
       return TabEntry(title: name, isSelected: tabpage.handle == curTab.handle, tabpage: tabpage)
     }
 
-    gui.async { self.tabBar?.update(tabRepresentatives: tabEntries) }
+    gui.async { self.tabBar?.update(tabRepresentatives: self.tabEntries) }
   }
 
   private func bufferWritten(_ handle: Int) {

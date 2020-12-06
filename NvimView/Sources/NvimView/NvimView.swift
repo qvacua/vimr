@@ -164,8 +164,12 @@ public class NvimView: NSView,
 
     super.init(frame: .zero)
 
-    self.tabBar?.selectHandler = { [weak self] index, tabEntry in
-      Swift.print("tab \(index): \(tabEntry) selected")
+    let db = self.disposeBag
+    self.tabBar?.selectHandler = { [weak self] _, tabEntry in
+      self?.api
+        .setCurrentTabpage(tabpage: tabEntry.tabpage)
+        .subscribe()
+        .disposed(by: db)
     }
 
     self.bridge.consumer = self
@@ -255,6 +259,8 @@ public class NvimView: NSView,
 
   let rpcEventSubscriptionCondition = ConditionVariable()
   let nvimExitedCondition = ConditionVariable()
+
+  var tabEntries = [TabEntry]()
 
   // MARK: - Private
 
