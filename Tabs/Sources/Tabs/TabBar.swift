@@ -97,6 +97,8 @@ extension TabBar {
 
     stack.spacing = self._theme.tabSpacing
     stack.postDraggingHandler = { stackView, draggedView in
+      self.tabs = stackView.arrangedSubviews.compactMap { $0 as? Tab<Entry> }
+
       if let draggedTab = draggedView as? Tab<Entry>,
          let indexOfDraggedTab = self.tabs.firstIndex(where: { $0 == draggedTab })
       {
@@ -104,9 +106,7 @@ extension TabBar {
       }
 
       let endIndex = stackView.arrangedSubviews.endIndex - 1
-      stackView.arrangedSubviews.enumerated().forEach { index, view in
-        guard let tab = view as? Tab<Entry> else { return }
-
+      self.tabs.enumerated().forEach { index, tab in
         tab.position = []
         if index == 0 { tab.position.insert(.first) }
         if index == endIndex { tab.position.insert(.last) }

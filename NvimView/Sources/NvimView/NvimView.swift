@@ -171,7 +171,7 @@ public class NvimView: NSView,
         .subscribe()
         .disposed(by: db)
     }
-    self.tabBar?.reorderHandler = { [weak self] index, _ in
+    self.tabBar?.reorderHandler = { [weak self] index, entry in
       self?.api
         .command(command: "tabm \(index)")
         .subscribe()
