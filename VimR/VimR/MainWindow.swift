@@ -72,7 +72,9 @@ class MainWindow: NSObject,
       sourceFileUrls.append(sourceFileUrl)
     }
 
+    // FIXME GH-349: Make usesCustomTabBar configurable via pref
     let neoVimViewConfig = NvimView.Config(
+      usesCustomTabBar: true,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,

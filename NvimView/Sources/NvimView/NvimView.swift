@@ -9,6 +9,7 @@ import MessagePack
 import os
 import RxPack
 import Commons
+import Tabs
 
 public class NvimView: NSView,
                        UiBridgeConsumer,
@@ -26,6 +27,9 @@ public class NvimView: NSView,
 
   public static let minLinespacing = (0.5).cgf
   public static let maxLinespacing = 8.cgf
+  
+  public let usesCustomTabBar: Bool
+  public private(set) var tabBar: TabBar?
 
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
@@ -151,6 +155,9 @@ public class NvimView: NSView,
     )
 
     self.sourceFileUrls = config.sourceFiles
+    
+    self.usesCustomTabBar = config.usesCustomTabBar
+    if self.usesCustomTabBar { self.tabBar = TabBar(withTheme: .default) }
 
     super.init(frame: .zero)
     self.bridge.consumer = self
@@ -166,6 +173,7 @@ public class NvimView: NSView,
     self.init(
       frame: rect,
       config: Config(
+        usesCustomTabBar: true,
         useInteractiveZsh: false,
         cwd: URL(fileURLWithPath: NSHomeDirectory()),
         nvimArgs: nil,
@@ -186,10 +194,7 @@ public class NvimView: NSView,
   }
 
   // MARK: - Internal
-  let queue = DispatchQueue(
-    label: String(reflecting: NvimView.self),
-    qos: .userInteractive
-  )
+  let queue = DispatchQueue(label: String(reflecting: NvimView.self), qos: .userInteractive)
 
   let bridge: UiBridge
 
@@ -233,10 +238,8 @@ public class NvimView: NSView,
   var markedText: String?
   var markedPosition = Position.null
 
-  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem,
-                           category: Defs.LoggerCategory.bridge)
-  let log = OSLog(subsystem: Defs.loggerSubsystem,
-                  category: Defs.LoggerCategory.view)
+  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
+  let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   let sourceFileUrls: [URL]
 

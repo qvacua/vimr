@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "Components",
+  name: "Tabs",
   platforms: [.macOS(.v10_13)],
   products: [
     .library(name: "Tabs", targets: ["Tabs"]),

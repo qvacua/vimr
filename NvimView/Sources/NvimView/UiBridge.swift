@@ -49,6 +49,7 @@ class UiBridge {
   init(uuid: UUID, config: NvimView.Config) {
     self.uuid = uuid
 
+    self.usesCustomTabBar = config.usesCustomTabBar
     self.useInteractiveZsh = config.useInteractiveZsh
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
@@ -301,6 +302,8 @@ class UiBridge {
 
     self.log.debug("Socket: \(listenAddress.path)")
 
+    let usesCustomTabBarArg = self.usesCustomTabBar ? "1" : "0"
+    
     let outPipe = Pipe()
     let errorPipe = Pipe()
     let process = Process()
@@ -309,7 +312,7 @@ class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
     process.launchPath = self.nvimServerExecutablePath()
-    process.arguments = [self.localServerName, self.remoteServerName] + ["--headless"] + self.nvimArgs
+    process.arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] + ["--headless"] + self.nvimArgs
     self.log.debug(
       "Launching NvimServer with args: \(String(describing: process.arguments))"
     )
@@ -329,6 +332,7 @@ class UiBridge {
 
   private let uuid: UUID
 
+  private let usesCustomTabBar: Bool
   private let useInteractiveZsh: Bool
   private let cwd: URL
   private let nvimArgs: [String]

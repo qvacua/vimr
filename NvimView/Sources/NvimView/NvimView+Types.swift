@@ -10,6 +10,7 @@ extension NvimView {
 
   public struct Config {
 
+    var usesCustomTabBar: Bool
     var useInteractiveZsh: Bool
     var cwd: URL
     var nvimArgs: [String]?
@@ -17,12 +18,14 @@ extension NvimView {
     var sourceFiles: [URL]
 
     public init(
+      usesCustomTabBar: Bool,
       useInteractiveZsh: Bool,
       cwd: URL,
       nvimArgs: [String]?,
       envDict: [String: String]?,
       sourceFiles: [URL]
     ) {
+      self.usesCustomTabBar = usesCustomTabBar
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
       self.nvimArgs = nvimArgs
