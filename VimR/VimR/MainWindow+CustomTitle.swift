@@ -18,15 +18,12 @@ extension MainWindow {
 
     self.window.titlebarAppearsTransparent = true
 
+    self.neoVimView.tabBar?.removeFromSuperview()
     self.workspace.removeFromSuperview()
 
     self.set(repUrl: self.window.representedURL, themed: true)
 
-    self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.top, withInset: 22)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.right)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.bottom)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.left)
+    self.addViews(withTopInset: 22)
 
     self.titlebarThemed = true
 

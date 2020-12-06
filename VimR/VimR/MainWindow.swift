@@ -193,7 +193,7 @@ class MainWindow: NSObject,
     self.windowController.window?.delegate = self
     self.workspace.delegate = self
 
-    self.addViews()
+    self.addViews(withTopInset: 0)
 
     self.neoVimView.trackpadScrollResistance = CGFloat(
       state.trackpadScrollResistance
@@ -509,9 +509,43 @@ class MainWindow: NSObject,
     )
   }
 
-  private func addViews() {
-    self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdgesToSuperviewEdges()
+  func addViews(withTopInset topInset: CGFloat) {
+    if self.neoVimView.usesCustomTabBar {
+      self.addViewsWithTabBar(withTopInset: topInset)
+    } else {
+      self.addViewsWithoutTabBar(withTopInset: topInset)
+    }
+  }
+
+  private func addViewsWithTabBar(withTopInset topInset: CGFloat) {
+    guard let tabBar = self.neoVimView.tabBar else {
+      self.log.error("Could not get the TabBar from NvimView!")
+      self.addViewsWithoutTabBar(withTopInset: 0)
+      return
+    }
+    let ws = self.workspace
+
+    self.window.contentView?.addSubview(tabBar)
+    self.window.contentView?.addSubview(ws)
+    
+    tabBar.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
+    tabBar.autoPinEdge(toSuperviewEdge: .left)
+    tabBar.autoPinEdge(toSuperviewEdge: .right)
+    
+    ws.autoPinEdge(.top, to: .bottom, of: tabBar)
+    ws.autoPinEdge(toSuperviewEdge: .left)
+    ws.autoPinEdge(toSuperviewEdge: .right)
+    ws.autoPinEdge(toSuperviewEdge: .bottom)
+  }
+
+  private func addViewsWithoutTabBar(withTopInset topInset: CGFloat) {
+    let ws = self.workspace
+
+    self.window.contentView?.addSubview(ws)
+    ws.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
+    ws.autoPinEdge(toSuperviewEdge: .right)
+    ws.autoPinEdge(toSuperviewEdge: .bottom)
+    ws.autoPinEdge(toSuperviewEdge: .left)
   }
 
   private func showInitError() {
