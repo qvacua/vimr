@@ -475,6 +475,24 @@ extension NvimView {
       }
     }
   }
+  
+  final func event(_ value: MessagePackValue) {
+    guard let dict = value.dictionaryValue,
+          let event = dict.keys.first,
+          let args = dict[event]?.arrayValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
+    
+    switch event.stringValue {
+    case "tabline_update":
+      self.tablineUpdate(args)
+    case "win_viewport":
+      break
+    default:
+      break
+    }
+  }
 
   final func setAttr(with value: MessagePackValue) {
     guard let array = value.arrayValue else {
@@ -570,6 +588,9 @@ extension NvimView {
 }
 
 extension NvimView {
+  private func tablineUpdate(_ args: [MessagePackValue]) {
+    Swift.print("!!!!!!!!!!!! \(args)")
+  }
 
   private func bufferWritten(_ handle: Int) {
     self

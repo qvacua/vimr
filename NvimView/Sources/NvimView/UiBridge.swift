@@ -30,6 +30,7 @@ protocol UiBridgeConsumer: class {
   func optionSet(_ value: MessagePackValue)
   func setDirty(with value: MessagePackValue)
   func rpcEventSubscribed()
+  func event(_ value: MessagePackValue)
   func bridgeHasFatalError(_ value: MessagePackValue?)
   func setAttr(with value: MessagePackValue)
   func updateMenu()
@@ -237,8 +238,8 @@ class UiBridge {
     
     case .event:
       guard let v = MessagePackUtils.value(from: data) else { return }
-      Swift.print("got event with \(v)")
-
+      self.consumer?.event(v)
+      
     case .debug1:
       break
 
