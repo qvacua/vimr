@@ -25,6 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.tabBar.autoPinEdge(toSuperviewEdge: .left)
     self.tabBar.autoPinEdge(toSuperviewEdge: .right)
     self.tabBar.autoSetDimension(.height, toSize: Theme().tabBarHeight)
+    self.tabBar.selectHandler = { _, entry in Swift.print("selected \(entry)") }
 
     self.tabBar.update(tabRepresentatives: [
       DummyTabEntry(title: "Test 1"),

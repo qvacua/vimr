@@ -171,6 +171,12 @@ public class NvimView: NSView,
         .subscribe()
         .disposed(by: db)
     }
+    self.tabBar?.reorderHandler = { [weak self] index, _ in
+      self?.api
+        .command(command: "tabm \(index)")
+        .subscribe()
+        .disposed(by: db)
+    }
 
     self.bridge.consumer = self
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
