@@ -42,6 +42,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.usesLigatures = state.mainWindowTemplate.appearance.usesLigatures
     self.usesColorscheme = state.mainWindowTemplate.appearance.usesTheme
     self.showsFileIcon = state.mainWindowTemplate.appearance.showsFileIcon
+    self.usesCustomTab = state.mainWindowTemplate.appearance.usesCustomTab
 
     super.init(frame: .zero)
 
@@ -84,7 +85,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private var usesLigatures: Bool
   private var usesColorscheme: Bool
   private var showsFileIcon: Bool
+  private var usesCustomTab: Bool
 
+  private let customTabCheckbox = NSButton(forAutoLayout: ())
   private let colorschemeCheckbox = NSButton(forAutoLayout: ())
   private let fileIconCheckbox = NSButton(forAutoLayout: ())
   private let fontPanelButton = NSButton(forAutoLayout: ())
@@ -107,6 +110,13 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
   private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Appearance")
+
+    let useCustomTab = self.customTabCheckbox
+    self.configureCheckbox(
+      button: useCustomTab,
+      title: "Use custom tab implementation.",
+      action: #selector(AppearancePref.usesCustomTabAction(_:))
+    )
 
     let useColorscheme = self.colorschemeCheckbox
     self.configureCheckbox(
@@ -190,6 +200,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
 
     self.addSubview(paneTitle)
 
+    self.addSubview(useCustomTab)
     self.addSubview(useColorscheme)
     self.addSubview(useColorschemeInfo)
     self.addSubview(fileIcon)
@@ -208,8 +219,11 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
+    useCustomTab.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
+    useCustomTab.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+
     useColorscheme.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
-    useColorscheme.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    useColorscheme.autoPinEdge(.top, to: .bottom, of: useCustomTab, withOffset: 18)
 
     useColorschemeInfo.autoPinEdge(.top, to: .bottom, of: useColorscheme, withOffset: 5)
     useColorschemeInfo.autoPinEdge(.left, to: .left, of: useColorscheme)
@@ -284,6 +298,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
     self.previewArea.font = self.font
+    self.customTabCheckbox.boolState = self.usesCustomTab
     self.colorschemeCheckbox.boolState = self.usesColorscheme
     self.fileIconCheckbox.boolState = self.showsFileIcon
 
@@ -309,6 +324,8 @@ extension AppearancePref {
 // MARK: - Actions
 
 extension AppearancePref {
+  @objc func usesCustomTabAction(_: NSButton) {}
+
   @objc func usesColorschemeAction(_ sender: NSButton) {
     self.emit(.setUsesColorscheme(sender.boolState))
   }
