@@ -485,6 +485,7 @@ extension NvimView {
 
     switch event.stringValue {
     case "tabline_update": self.tablineUpdate(args)
+    case "win_viewport": self.winViewportUpdate(args)
     default: break
     }
   }
@@ -598,6 +599,9 @@ extension NvimView {
     }
 
     gui.async { self.tabBar?.update(tabRepresentatives: self.tabEntries) }
+  }
+
+  func winViewportUpdate(_ args: [MessagePackValue]) {
   }
 
   private func bufferWritten(_ handle: Int) {

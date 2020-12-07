@@ -171,9 +171,11 @@ public class NvimView: NSView,
         .subscribe()
         .disposed(by: db)
     }
-    self.tabBar?.reorderHandler = { [weak self] index, _, _ in
+    self.tabBar?.reorderHandler = { [weak self] index, _, entries in
+      // I don't know why, but `tabm ${last_index}` does not always work.
+      let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
       self?.api
-        .command(command: "tabm \(index)")
+        .command(command: command)
         .subscribe()
         .disposed(by: db)
     }
