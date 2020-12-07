@@ -30,7 +30,6 @@ class Tab<Rep: TabRepresentative>: NSView {
 
   init(withTabRepresentative tabRepresentative: Rep, in tabBar: TabBar<Rep>) {
     self.tabBar = tabBar
-    self.theme = tabBar.theme
     self.tabRepresentative = tabRepresentative
 
     super.init(frame: .zero)
@@ -43,8 +42,9 @@ class Tab<Rep: TabRepresentative>: NSView {
 
     self.titleView.stringValue = tabRepresentative.title
     self.addViews()
-    self.adjustWidth()
+
     self.adjustToSelectionChange(self.tabRepresentative.isSelected)
+    self.adjustWidth()
   }
 
   override func mouseUp(with _: NSEvent) { self.tabBar?.select(tab: self) }
@@ -57,22 +57,26 @@ class Tab<Rep: TabRepresentative>: NSView {
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  var isSelected: Bool { self.tabRepresentative.isSelected }
-
-  private(set) weak var tabBar: TabBar<Rep>?
   var position: TabPosition = [] {
     willSet { self.needsDisplay = self.position != newValue }
   }
+
+  private weak var tabBar: TabBar<Rep>?
 
   private let closeButton = NSButton(forAutoLayout: ())
   private let iconView = NSImageView(forAutoLayout: ())
   private let titleView = NSTextField(forAutoLayout: ())
 
-  private var theme: Theme
   private var widthConstraint: NSLayoutConstraint?
 }
 
 extension Tab {
+  private var isSelected: Bool { self.tabRepresentative.isSelected }
+  private var theme: Theme {
+    // We set tabBar in init, it's weak only because we want to avoid retain cycle.
+    self.tabBar!.theme
+  }
+
   // We need the arg since we are calling this function also in willSet.
   private func adjustToSelectionChange(_ newIsSelected: Bool) {
     if newIsSelected {
