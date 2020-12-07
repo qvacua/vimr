@@ -174,6 +174,7 @@ struct AppearanceState: Codable {
   static let `default` = AppearanceState()
 
   enum CodingKeys: String, CodingKey {
+    case usesCustomTab = "uses-custom-tab"
     case usesTheme = "uses-theme"
     case showsFileIcon = "shows-file-icon"
     case editorFontName = "editor-font-name"
@@ -188,6 +189,7 @@ struct AppearanceState: Codable {
   var characterspacing: CGFloat = 1
   var usesLigatures = true
 
+  var usesCustomTab = true
   var usesTheme = true
   var showsFileIcon = true
   var theme = Marked(Theme.default)
@@ -216,12 +218,14 @@ struct AppearanceState: Codable {
       .decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
 
     self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
+    self.usesCustomTab = try container.decodeIfPresent(Bool.self, forKey: .usesCustomTab) ?? true
     self.showsFileIcon = try container.decodeIfPresent(Bool.self, forKey: .showsFileIcon) ?? true
   }
 
   func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
 
+    try container.encode(self.usesCustomTab, forKey: .usesCustomTab)
     try container.encode(self.usesTheme, forKey: .usesTheme)
     try container.encode(self.showsFileIcon, forKey: .showsFileIcon)
     try container.encode(self.font.fontName, forKey: .editorFontName)
