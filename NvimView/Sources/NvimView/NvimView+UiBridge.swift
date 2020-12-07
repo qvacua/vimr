@@ -595,7 +595,7 @@ extension NvimView {
             let tabpageValue = dict[.string("tab")],
             let tabpage = RxNeovimApi.Tabpage(tabpageValue) else { return nil }
 
-      return TabEntry(title: name, isSelected: tabpage.handle == curTab.handle, tabpage: tabpage)
+      return TabEntry(title: name, isSelected: tabpage == curTab, tabpage: tabpage)
     }
 
     gui.async { self.tabBar?.update(tabRepresentatives: self.tabEntries) }

@@ -19,8 +19,7 @@ class Tab<Rep: TabRepresentative>: NSView {
   var tabRepresentative: Rep {
     willSet {
       if self.isSelected == newValue.isSelected { return }
-      self.adjustToSelectionChange()
-      self.needsDisplay = true
+      self.adjustToSelectionChange(newValue.isSelected)
     }
     didSet {
       if self.titleView.stringValue == self.title { return }
@@ -45,6 +44,7 @@ class Tab<Rep: TabRepresentative>: NSView {
     self.titleView.stringValue = tabRepresentative.title
     self.addViews()
     self.adjustWidth()
+    self.adjustToSelectionChange(self.tabRepresentative.isSelected)
   }
 
   override func mouseUp(with _: NSEvent) { self.tabBar?.select(tab: self) }
@@ -73,14 +73,17 @@ class Tab<Rep: TabRepresentative>: NSView {
 }
 
 extension Tab {
-  private func adjustToSelectionChange() {
-    if self.isSelected {
+  // We need the arg since we are calling this function also in willSet.
+  private func adjustToSelectionChange(_ newIsSelected: Bool) {
+    if newIsSelected {
       self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
       self.titleView.textColor = self.theme.selectedForegroundColor
     } else {
       self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
       self.titleView.textColor = self.theme.foregroundColor
     }
+
+    self.needsDisplay = true
   }
 
   private func adjustWidth() {
@@ -165,7 +168,7 @@ extension Tab {
     let b = self.bounds
     let rect = CGRect(
       x: self.theme.separatorThickness,
-      y: self.theme.separatorThickness,
+      y: 0,
       width: b.width,
       height: self.theme.tabSelectionIndicatorThickness
     )
