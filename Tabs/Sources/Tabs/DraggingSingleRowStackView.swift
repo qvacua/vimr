@@ -12,15 +12,9 @@
 import Cocoa
 
 class DraggingSingleRowStackView: NSStackView {
-  var isDraggingEnabled = true
   var postDraggingHandler: ((NSStackView, NSView) -> Void)?
 
   override func mouseDragged(with event: NSEvent) {
-    guard self.isDraggingEnabled else {
-      super.mouseDragged(with: event)
-      return
-    }
-
     let location = convert(event.locationInWindow, from: nil)
     if let dragged = views.first(where: { $0.hitTest(location) != nil }) {
       self.reorder(view: dragged, event: event)
@@ -80,14 +74,12 @@ class DraggingSingleRowStackView: NSStackView {
         CATransaction.commit()
 
         let reordered = self.views
-          .map {
-            (
-              view: $0,
-              position: $0 !== view
-                ? CGPoint(x: $0.frame.midX, y: $0.frame.midY)
-                : CGPoint(x: dragged.frame.midX, y: dragged.frame.midY)
-            )
-          }
+          .map { (
+            view: $0,
+            position: $0 !== view
+              ? CGPoint(x: $0.frame.midX, y: $0.frame.midY)
+              : CGPoint(x: dragged.frame.midX, y: dragged.frame.midY)
+          ) }
           .sorted {
             switch self.orientation {
             case .vertical: return $0.position.y > $1.position.y

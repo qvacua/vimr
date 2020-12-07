@@ -70,6 +70,8 @@ class Tab<Rep: TabRepresentative>: NSView {
   private var widthConstraint: NSLayoutConstraint?
 }
 
+// MARK: - Private
+
 extension Tab {
   private var isSelected: Bool { self.tabRepresentative.isSelected }
   private var theme: Theme {

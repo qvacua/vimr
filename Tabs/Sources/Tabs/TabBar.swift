@@ -46,9 +46,7 @@ public class TabBar<Rep: TabRepresentative>: NSView {
     self.tabs = result
   }
 
-  override public func draw(_: NSRect) {
-    self.drawSeparator()
-  }
+  override public func draw(_: NSRect) { self.drawSeparator() }
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -60,12 +58,16 @@ public class TabBar<Rep: TabRepresentative>: NSView {
   private let stackView = DraggingSingleRowStackView(forAutoLayout: ())
 }
 
+// MARK: - Internal
+
 extension TabBar {
   func select(tab: Tab<Rep>) {
     guard let index = self.tabs.firstIndex(where: { $0 == tab }) else { return }
     self.selectHandler?(index, tab.tabRepresentative)
   }
 }
+
+// MARK: - Private
 
 extension TabBar {
   private func drawSeparator() {
