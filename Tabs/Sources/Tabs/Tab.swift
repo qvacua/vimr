@@ -78,11 +78,14 @@ extension Tab {
     if newIsSelected {
       self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
       self.titleView.textColor = self.theme.selectedForegroundColor
+      self.titleView.font = self.theme.selectedTitleFont
     } else {
       self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
       self.titleView.textColor = self.theme.foregroundColor
+      self.titleView.font = self.theme.titleFont
     }
 
+    self.adjustWidth()
     self.needsDisplay = true
   }
 

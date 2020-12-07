@@ -18,6 +18,7 @@ public struct Theme {
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
 
   public var titleFont = NSFont.systemFont(ofSize: 11)
+  public var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
 
   public var tabHeight = CGFloat(28)
 
