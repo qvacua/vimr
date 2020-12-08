@@ -110,9 +110,10 @@ extension Tab {
   }
 
   private func adjustWidth() {
-    let idealWidth = 4 * self.theme.tabHorizontalPadding + 2 * self.theme.iconDimension.width
+    let idealWidth = 3 * self.theme.tabHorizontalPadding + self.theme.iconDimension.width
       + self.titleView.intrinsicContentSize.width
     let targetWidth = min(max(self.theme.tabMinWidth, idealWidth), self.theme.tabMaxWidth)
+
     if let c = self.widthConstraint { self.removeConstraint(c) }
     self.widthConstraint = self.autoSetDimension(.width, toSize: targetWidth)
   }
