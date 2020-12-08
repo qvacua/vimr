@@ -64,7 +64,6 @@ class Tab<Rep: TabRepresentative>: NSView {
   private weak var tabBar: TabBar<Rep>?
 
   private let closeButton = NSButton(forAutoLayout: ())
-  private let iconView = NSImageView(forAutoLayout: ())
   private let titleView = NSTextField(forAutoLayout: ())
 
   private var widthConstraint: NSLayoutConstraint?
@@ -105,11 +104,9 @@ extension Tab {
 
   private func addViews() {
     let close = self.closeButton
-    let icon = self.iconView
     let title = self.titleView
 
     self.addSubview(close)
-    self.addSubview(icon)
     self.addSubview(title)
 
     close.imagePosition = .imageOnly
@@ -119,8 +116,6 @@ extension Tab {
     )
     close.isBordered = false
     (close.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
-
-    icon.image = NSImage(named: NSImage.actionTemplateName)
 
     title.drawsBackground = false
     title.font = self.theme.titleFont
@@ -135,11 +130,7 @@ extension Tab {
     close.autoPinEdge(toSuperviewEdge: .left, withInset: self.theme.tabHorizontalPadding)
     close.autoAlignAxis(toSuperviewAxis: .horizontal)
 
-    icon.autoSetDimensions(to: self.theme.iconDimension)
-    icon.autoPinEdge(.left, to: .right, of: close, withOffset: self.theme.tabHorizontalPadding)
-    icon.autoAlignAxis(toSuperviewAxis: .horizontal)
-
-    title.autoPinEdge(.left, to: .right, of: icon, withOffset: self.theme.tabHorizontalPadding)
+    title.autoPinEdge(.left, to: .right, of: close, withOffset: self.theme.tabHorizontalPadding)
     title.autoPinEdge(toSuperviewEdge: .right, withInset: self.theme.tabHorizontalPadding)
     title.autoAlignAxis(toSuperviewAxis: .horizontal)
   }
