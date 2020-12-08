@@ -1,8 +1,8 @@
 # Next
 
-## Since SNAPSHOT-20201121.103800
+## Since last snapshot
 
-* `language`-command works again.
+* GH-349: Custom tabs!
 
 ## Since 0.34.0
 
