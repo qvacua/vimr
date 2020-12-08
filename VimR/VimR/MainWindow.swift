@@ -8,6 +8,7 @@ import NvimView
 import os
 import PureLayout
 import RxSwift
+import Tabs
 import Workspace
 
 class MainWindow: NSObject,
@@ -72,7 +73,7 @@ class MainWindow: NSObject,
       sourceFileUrls.append(sourceFileUrl)
     }
 
-    // FIXME GH-349: Make usesCustomTabBar configurable via pref
+    // FIXME: GH-349: Make usesCustomTabBar configurable via pref
     let neoVimViewConfig = NvimView.Config(
       usesCustomTabBar: state.appearance.usesCustomTab,
       useInteractiveZsh: state.useInteractiveZsh,
@@ -393,12 +394,16 @@ class MainWindow: NSObject,
               .theme.payload.background.brightening(by: 0.9)
 
             self.set(workspaceThemeWith: state.appearance.theme.payload)
+            self.set(tabsThemeWith: state.appearance.theme.payload)
+
             self.lastThemeMark = state.appearance.theme.mark
           },
           forDefaultTheme: {
             self.unthemeTitlebar(dueFullScreen: false)
             self.window.backgroundColor = .windowBackgroundColor
+
             self.workspace.theme = .default
+            self.neoVimView.tabBar?.update(theme: .default)
           }
         )
 
@@ -468,6 +473,22 @@ class MainWindow: NSObject,
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
+  private func set(tabsThemeWith _: Theme) {
+    var tabsTheme = Tabs.Theme.default
+
+    tabsTheme.foregroundColor = theme.foreground
+    tabsTheme.backgroundColor = theme.background
+
+    tabsTheme.separatorColor = theme.background.brightening(by: 0.75)
+
+    tabsTheme.selectedForegroundColor = theme.highlightForeground
+    tabsTheme.selectedBackgroundColor = theme.highlightBackground
+
+    tabsTheme.tabSelectedIndicatorColor = theme.highlightForeground
+
+    self.neoVimView.tabBar?.update(theme: tabsTheme)
+  }
+
   private func set(workspaceThemeWith theme: Theme) {
     var workspaceTheme = Workspace.Theme()
     workspaceTheme.foreground = theme.foreground
@@ -527,11 +548,11 @@ class MainWindow: NSObject,
 
     self.window.contentView?.addSubview(tabBar)
     self.window.contentView?.addSubview(ws)
-    
+
     tabBar.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
     tabBar.autoPinEdge(toSuperviewEdge: .left)
     tabBar.autoPinEdge(toSuperviewEdge: .right)
-    
+
     ws.autoPinEdge(.top, to: .bottom, of: tabBar)
     ws.autoPinEdge(toSuperviewEdge: .left)
     ws.autoPinEdge(toSuperviewEdge: .right)

@@ -27,6 +27,14 @@ public class TabBar<Rep: TabRepresentative>: NSView {
     self.addViews()
   }
 
+  public func update(theme: Theme) {
+    self._theme = theme
+    self.layer?.backgroundColor = theme.backgroundColor.cgColor
+
+    self.needsDisplay = true
+    self.tabs.forEach { $0.updateTheme() }
+  }
+
   public func update(tabRepresentatives entries: [Rep]) {
     var result = [Tab<Rep>]()
     entries.forEach { entry in

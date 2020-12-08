@@ -46,6 +46,10 @@ class Tab<Rep: TabRepresentative>: NSView {
     self.adjustWidth()
   }
 
+  func updateTheme() {
+    self.adjustColors(self.isSelected)
+  }
+
   override func mouseUp(with _: NSEvent) { self.tabBar?.select(tab: self) }
 
   override func draw(_: NSRect) {
@@ -77,18 +81,28 @@ extension Tab {
     self.tabBar!.theme
   }
 
-  // We need the arg since we are calling this function also in willSet.
-  private func adjustToSelectionChange(_ newIsSelected: Bool) {
+  private func adjustColors(_ newIsSelected: Bool) {
     if newIsSelected {
       self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
       self.titleView.textColor = self.theme.selectedForegroundColor
-      self.titleView.font = self.theme.selectedTitleFont
       self.closeButton.image = self.theme.selectedCloseButtonImage
     } else {
       self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
       self.titleView.textColor = self.theme.foregroundColor
-      self.titleView.font = self.theme.titleFont
       self.closeButton.image = self.theme.closeButtonImage
+    }
+
+    self.needsDisplay = true
+  }
+
+  // We need the arg since we are calling this function also in willSet.
+  private func adjustToSelectionChange(_ newIsSelected: Bool) {
+    self.adjustColors(newIsSelected)
+
+    if newIsSelected {
+      self.titleView.font = self.theme.selectedTitleFont
+    } else {
+      self.titleView.font = self.theme.titleFont
     }
 
     self.adjustWidth()
