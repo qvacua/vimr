@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import MaterialIcons
 
 public struct Theme {
   public static let `default` = Self()
@@ -35,5 +36,18 @@ public struct Theme {
   public var tabBarHeight: CGFloat { self.tabHeight }
   public var tabSpacing = CGFloat(-1)
 
-  public init() {}
+  public var closeButtonImage: NSImage
+  public var selectedCloseButtonImage: NSImage
+
+  public init() {
+    self.closeButtonImage = Icon.close.asImage(
+      dimension: self.iconDimension.width,
+      color: self.foregroundColor
+    )
+
+    self.selectedCloseButtonImage = Icon.close.asImage(
+      dimension: self.iconDimension.width,
+      color: self.selectedForegroundColor
+    )
+  }
 }

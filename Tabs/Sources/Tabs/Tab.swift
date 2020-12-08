@@ -37,7 +37,6 @@ class Tab<Rep: TabRepresentative>: NSView {
     self.configureForAutoLayout()
     self.wantsLayer = true
 
-    self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
     self.autoSetDimension(.height, toSize: self.theme.tabHeight)
 
     self.titleView.stringValue = tabRepresentative.title
@@ -84,10 +83,12 @@ extension Tab {
       self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
       self.titleView.textColor = self.theme.selectedForegroundColor
       self.titleView.font = self.theme.selectedTitleFont
+      self.closeButton.image = self.theme.selectedCloseButtonImage
     } else {
       self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
       self.titleView.textColor = self.theme.foregroundColor
       self.titleView.font = self.theme.titleFont
+      self.closeButton.image = self.theme.closeButtonImage
     }
 
     self.adjustWidth()
@@ -110,10 +111,7 @@ extension Tab {
     self.addSubview(title)
 
     close.imagePosition = .imageOnly
-    close.image = Icon.close.asImage(
-      dimension: self.theme.iconDimension.width,
-      color: self.theme.foregroundColor
-    )
+    close.image = self.theme.closeButtonImage
     close.isBordered = false
     (close.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
 

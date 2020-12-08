@@ -36,10 +36,6 @@ extension MainWindow {
 
     self.clearCustomTitle()
 
-    guard let contentView = self.window.contentView else {
-      return
-    }
-
     let prevFrame = window.frame
 
     self.window.titlebarAppearsTransparent = false
