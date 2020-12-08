@@ -8,6 +8,7 @@ import NvimView
 import os
 import PureLayout
 import RxSwift
+import Tabs
 import Workspace
 
 class MainWindow: NSObject,
@@ -72,7 +73,9 @@ class MainWindow: NSObject,
       sourceFileUrls.append(sourceFileUrl)
     }
 
+    // FIXME: GH-349: Make usesCustomTabBar configurable via pref
     let neoVimViewConfig = NvimView.Config(
+      usesCustomTabBar: state.appearance.usesCustomTab,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,
@@ -191,7 +194,7 @@ class MainWindow: NSObject,
     self.windowController.window?.delegate = self
     self.workspace.delegate = self
 
-    self.addViews()
+    self.addViews(withTopInset: 0)
 
     self.neoVimView.trackpadScrollResistance = CGFloat(
       state.trackpadScrollResistance
@@ -391,12 +394,16 @@ class MainWindow: NSObject,
               .theme.payload.background.brightening(by: 0.9)
 
             self.set(workspaceThemeWith: state.appearance.theme.payload)
+            self.set(tabsThemeWith: state.appearance.theme.payload)
+
             self.lastThemeMark = state.appearance.theme.mark
           },
           forDefaultTheme: {
             self.unthemeTitlebar(dueFullScreen: false)
             self.window.backgroundColor = .windowBackgroundColor
+
             self.workspace.theme = .default
+            self.neoVimView.tabBar?.update(theme: .default)
           }
         )
 
@@ -466,6 +473,22 @@ class MainWindow: NSObject,
     self.neoVimView.usesLigatures = self.usesLigatures
   }
 
+  private func set(tabsThemeWith _: Theme) {
+    var tabsTheme = Tabs.Theme.default
+
+    tabsTheme.foregroundColor = theme.foreground
+    tabsTheme.backgroundColor = theme.background
+
+    tabsTheme.separatorColor = theme.background.brightening(by: 0.75)
+
+    tabsTheme.selectedForegroundColor = theme.highlightForeground
+    tabsTheme.selectedBackgroundColor = theme.highlightBackground
+
+    tabsTheme.tabSelectedIndicatorColor = theme.highlightForeground
+
+    self.neoVimView.tabBar?.update(theme: tabsTheme)
+  }
+
   private func set(workspaceThemeWith theme: Theme) {
     var workspaceTheme = Workspace.Theme()
     workspaceTheme.foreground = theme.foreground
@@ -507,9 +530,43 @@ class MainWindow: NSObject,
     )
   }
 
-  private func addViews() {
-    self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdgesToSuperviewEdges()
+  func addViews(withTopInset topInset: CGFloat) {
+    if self.neoVimView.usesCustomTabBar {
+      self.addViewsWithTabBar(withTopInset: topInset)
+    } else {
+      self.addViewsWithoutTabBar(withTopInset: topInset)
+    }
+  }
+
+  private func addViewsWithTabBar(withTopInset topInset: CGFloat) {
+    guard let tabBar = self.neoVimView.tabBar else {
+      self.log.error("Could not get the TabBar from NvimView!")
+      self.addViewsWithoutTabBar(withTopInset: 0)
+      return
+    }
+    let ws = self.workspace
+
+    self.window.contentView?.addSubview(tabBar)
+    self.window.contentView?.addSubview(ws)
+
+    tabBar.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
+    tabBar.autoPinEdge(toSuperviewEdge: .left)
+    tabBar.autoPinEdge(toSuperviewEdge: .right)
+
+    ws.autoPinEdge(.top, to: .bottom, of: tabBar)
+    ws.autoPinEdge(toSuperviewEdge: .left)
+    ws.autoPinEdge(toSuperviewEdge: .right)
+    ws.autoPinEdge(toSuperviewEdge: .bottom)
+  }
+
+  private func addViewsWithoutTabBar(withTopInset topInset: CGFloat) {
+    let ws = self.workspace
+
+    self.window.contentView?.addSubview(ws)
+    ws.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
+    ws.autoPinEdge(toSuperviewEdge: .right)
+    ws.autoPinEdge(toSuperviewEdge: .bottom)
+    ws.autoPinEdge(toSuperviewEdge: .left)
   }
 
   private func showInitError() {

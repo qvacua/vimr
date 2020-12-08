@@ -18,15 +18,12 @@ extension MainWindow {
 
     self.window.titlebarAppearsTransparent = true
 
+    self.neoVimView.tabBar?.removeFromSuperview()
     self.workspace.removeFromSuperview()
 
     self.set(repUrl: self.window.representedURL, themed: true)
 
-    self.window.contentView?.addSubview(self.workspace)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.top, withInset: 22)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.right)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.bottom)
-    self.workspace.autoPinEdge(toSuperviewEdge: ALEdge.left)
+    self.addViews(withTopInset: 22)
 
     self.titlebarThemed = true
 
@@ -39,14 +36,11 @@ extension MainWindow {
 
     self.clearCustomTitle()
 
-    guard let contentView = self.window.contentView else {
-      return
-    }
-
     let prevFrame = window.frame
 
     self.window.titlebarAppearsTransparent = false
 
+    self.neoVimView.tabBar?.removeFromSuperview()
     self.workspace.removeFromSuperview()
 
     self.window.titleVisibility = .visible
@@ -54,8 +48,7 @@ extension MainWindow {
 
     self.set(repUrl: self.window.representedURL, themed: false)
 
-    contentView.addSubview(self.workspace)
-    self.workspace.autoPinEdgesToSuperviewEdges()
+    self.addViews(withTopInset: 0)
 
     if !dueFullScreen {
       self.window.setFrame(prevFrame, display: true, animate: false)

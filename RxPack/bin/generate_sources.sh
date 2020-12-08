@@ -8,7 +8,7 @@ pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 mkdir -p ${BUILD_DIR}
 
 target_version=$(cat ./nvim-version.txt | awk '{$1=$1}1')
-nvim="./${BUILD_DIR}/nvim-osx64/bin/nvim"
+nvim="./${BUILD_DIR}/nvim/bin/nvim"
 if [[ -f ${nvim} ]] ; then
   version="$($nvim --version | grep ^NVIM | awk '{print $2}')" || "n/a"
 else
@@ -30,10 +30,10 @@ else
 fi
 
 if [[ "$download" == true ]]; then
-  curl -L -o ./${BUILD_DIR}/nvim-macos.tar.gz "https://github.com/neovim/neovim/releases/download/$target_version/nvim-macos.tar.gz"
+  curl -L -o ./${BUILD_DIR}/nvim-macos.tar.bz2 "https://github.com/neovim/neovim/releases/download/$target_version/nvim-macos.tar.bz2"
   echo "Downloaded $target_version"
   pushd ./${BUILD_DIR}
-  tar xjf nvim-macos.tar.gz
+  tar xjf nvim-macos.tar.bz2
   popd
   echo "Extracted $target_version"
 else

@@ -907,34 +907,6 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufClearHighlight(
-    buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
-    line_start: Int,
-    line_end: Int,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(line_start)),
-        .int(Int64(line_end)),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: expectsReturnValue)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: expectsReturnValue)
-      .asCompletable()
-  }
-
   public func bufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
@@ -2168,6 +2140,65 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func getAllOptionsInfo(
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        
+    ]
+
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_all_options_info", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_all_options_info", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func getOptionInfo(
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+    ]
+
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
@@ -3861,7 +3892,7 @@ extension RxNeovimApi {
 
 extension RxNeovimApi.Buffer {
 
-  init?(_ value: RxNeovimApi.Value) {
+  public init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -3880,7 +3911,7 @@ extension RxNeovimApi.Buffer {
 
 extension RxNeovimApi.Window {
 
-  init?(_ value: RxNeovimApi.Value) {
+  public init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -3899,7 +3930,7 @@ extension RxNeovimApi.Window {
 
 extension RxNeovimApi.Tabpage {
 
-  init?(_ value: RxNeovimApi.Value) {
+  public init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
