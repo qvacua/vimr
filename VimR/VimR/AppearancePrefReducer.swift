@@ -14,6 +14,9 @@ class AppearancePrefReducer: ReducerType {
     var appearance = state.mainWindowTemplate.appearance
 
     switch pair.action {
+    case let .setUsesCustomTab(value):
+      appearance.usesCustomTab = value
+
     case let .setUsesColorscheme(value):
       appearance.usesTheme = value
 

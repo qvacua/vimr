@@ -12,6 +12,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   typealias StateType = AppState
 
   enum Action {
+    case setUsesCustomTab(Bool)
     case setUsesColorscheme(Bool)
     case setShowsFileIcon(Bool)
     case setUsesLigatures(Bool)
@@ -324,7 +325,9 @@ extension AppearancePref {
 // MARK: - Actions
 
 extension AppearancePref {
-  @objc func usesCustomTabAction(_: NSButton) {}
+  @objc func usesCustomTabAction(_ sender: NSButton) {
+    self.emit(.setUsesCustomTab(sender.boolState))
+  }
 
   @objc func usesColorschemeAction(_ sender: NSButton) {
     self.emit(.setUsesColorscheme(sender.boolState))

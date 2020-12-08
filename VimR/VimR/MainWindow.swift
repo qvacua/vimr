@@ -74,7 +74,7 @@ class MainWindow: NSObject,
 
     // FIXME GH-349: Make usesCustomTabBar configurable via pref
     let neoVimViewConfig = NvimView.Config(
-      usesCustomTabBar: true,
+      usesCustomTabBar: state.appearance.usesCustomTab,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
       nvimArgs: state.nvimArgs,
