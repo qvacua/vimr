@@ -310,6 +310,8 @@ class MainWindow: NSObject,
 
         case let .rpcEvent(params): self?.rpcEventAction(params: params)
 
+        case let .warning(warning): self?.show(warning: warning)
+
         case .rpcEventSubscribed: break
         }
       }, onError: { error in
@@ -476,15 +478,15 @@ class MainWindow: NSObject,
   private func set(tabsThemeWith _: Theme) {
     var tabsTheme = Tabs.Theme.default
 
-    tabsTheme.foregroundColor = theme.foreground
-    tabsTheme.backgroundColor = theme.background
+    tabsTheme.foregroundColor = self.theme.foreground
+    tabsTheme.backgroundColor = self.theme.background
 
-    tabsTheme.separatorColor = theme.background.brightening(by: 0.75)
+    tabsTheme.separatorColor = self.theme.background.brightening(by: 0.75)
 
-    tabsTheme.selectedForegroundColor = theme.highlightForeground
-    tabsTheme.selectedBackgroundColor = theme.highlightBackground
+    tabsTheme.selectedForegroundColor = self.theme.highlightForeground
+    tabsTheme.selectedBackgroundColor = self.theme.highlightBackground
 
-    tabsTheme.tabSelectedIndicatorColor = theme.highlightForeground
+    tabsTheme.tabSelectedIndicatorColor = self.theme.highlightForeground
 
     self.neoVimView.tabBar?.update(theme: tabsTheme)
   }
@@ -580,5 +582,9 @@ class MainWindow: NSObject,
       """
 
     NSUserNotificationCenter.default.deliver(notification)
+  }
+
+  private func show(warning: NvimView.Warning) {
+    Swift.print(warning)
   }
 }

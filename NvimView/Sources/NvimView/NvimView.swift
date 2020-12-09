@@ -183,8 +183,12 @@ public class NvimView: NSView,
                 array[0].uint64Value == RxNeovimApi.Error.exceptionRawValue,
                 let errorMsg = array[1].stringValue else { return }
 
-          if errorMsg.contains("Vim(tabclose):E784") { Swift.print("cannot close last tab page!") }
-          if errorMsg.starts(with: "Vim(tabclose):E37") { Swift.print("no write!") }
+          if errorMsg.contains("Vim(tabclose):E784") {
+            self?.eventsSubject.onNext(.warning(.cannotCloseLastTab))
+          }
+          if errorMsg.starts(with: "Vim(tabclose):E37") {
+            self?.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
+          }
 
         default:
           self?.log.debug("???: This should not happen")

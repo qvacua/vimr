@@ -46,6 +46,11 @@ extension NvimView {
     }
   }
 
+  public enum Warning {
+    case cannotCloseLastTab
+    case noWriteSinceLastChange
+  }
+
   public enum Event {
 
     case neoVimStopped
@@ -67,6 +72,8 @@ extension NvimView {
 
     case rpcEvent([MessagePack.MessagePackValue])
     case rpcEventSubscribed
+
+    case warning(Warning)
 
     case initVimError
 
