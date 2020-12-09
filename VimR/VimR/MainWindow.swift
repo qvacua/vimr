@@ -585,6 +585,15 @@ class MainWindow: NSObject,
   }
 
   private func show(warning: NvimView.Warning) {
-    Swift.print(warning)
+    let alert = NSAlert()
+    alert.addButton(withTitle: "OK")
+    switch warning {
+    case .cannotCloseLastTab: alert.messageText = "You cannot close the last tab."
+    case .noWriteSinceLastChange: alert.messageText = "There are changes since the last write."
+    }
+    alert.alertStyle = .informational
+    alert.beginSheetModal(for: self.window) { _ in
+      Swift.print("fdsfd")
+    }
   }
 }

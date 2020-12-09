@@ -183,6 +183,7 @@ public class NvimView: NSView,
                 array[0].uint64Value == RxNeovimApi.Error.exceptionRawValue,
                 let errorMsg = array[1].stringValue else { return }
 
+          // FIXME
           if errorMsg.contains("Vim(tabclose):E784") {
             self?.eventsSubject.onNext(.warning(.cannotCloseLastTab))
           }
