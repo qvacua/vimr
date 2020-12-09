@@ -12,9 +12,13 @@ public protocol TabRepresentative: Hashable {
 }
 
 public class TabBar<Rep: TabRepresentative>: NSView {
+  public typealias TabCallback = (Int, Rep, [Rep]) -> Void
+
   public var theme: Theme { self._theme }
-  public var selectHandler: ((Int, Rep) -> Void)?
-  public var reorderHandler: ((Int, Rep, [Rep]) -> Void)?
+
+  public var closeHandler: TabCallback?
+  public var selectHandler: TabCallback?
+  public var reorderHandler: TabCallback?
 
   public init(withTheme theme: Theme) {
     self._theme = theme
@@ -69,9 +73,14 @@ public class TabBar<Rep: TabRepresentative>: NSView {
 // MARK: - Internal
 
 extension TabBar {
+  func close(tab: Tab<Rep>) {
+    guard let index = self.tabs.firstIndex(where: { $0 == tab }) else { return }
+    self.closeHandler?(index, tab.tabRepresentative, self.tabs.map(\.tabRepresentative))
+  }
+
   func select(tab: Tab<Rep>) {
     guard let index = self.tabs.firstIndex(where: { $0 == tab }) else { return }
-    self.selectHandler?(index, tab.tabRepresentative)
+    self.selectHandler?(index, tab.tabRepresentative, self.tabs.map(\.tabRepresentative))
   }
 }
 

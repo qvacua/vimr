@@ -164,8 +164,17 @@ public class NvimView: NSView,
 
     super.init(frame: .zero)
 
+    self.api.streamResponses = true
+    self.api.msgpackRawStream.subscribe(onNext: {Swift.print($0)})
+
     let db = self.disposeBag
-    self.tabBar?.selectHandler = { [weak self] _, tabEntry in
+    self.tabBar?.closeHandler = { [weak self] index, _, entries in
+      self?.api
+        .command(command: "tabclose \(index + 1)")
+        .subscribe()
+        .disposed(by: db)
+    }
+    self.tabBar?.selectHandler = { [weak self] _, tabEntry, _ in
       self?.api
         .setCurrentTabpage(tabpage: tabEntry.tabpage)
         .subscribe()
@@ -251,6 +260,7 @@ public class NvimView: NSView,
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
   var isInitialResize = true
 
+  // FIXME: Use self.tabEntries
   // cache the tabs for Touch Bar use
   var tabsCache = [NvimView.Tabpage]()
 

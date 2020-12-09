@@ -70,6 +70,10 @@ class Tab<Rep: TabRepresentative>: NSView {
   private let titleView = NSTextField(forAutoLayout: ())
 
   private var widthConstraint: NSLayoutConstraint?
+
+  @objc func closeAction(_ sender: NSButton) {
+    self.tabBar?.close(tab: self)
+  }
 }
 
 // MARK: - Private
@@ -129,6 +133,8 @@ extension Tab {
     close.image = self.theme.closeButtonImage
     close.isBordered = false
     (close.cell as? NSButtonCell)?.highlightsBy = .contentsCellMask
+    close.target = self
+    close.action = #selector(Self.closeAction)
 
     title.drawsBackground = false
     title.font = self.theme.titleFont
