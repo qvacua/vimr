@@ -9,11 +9,26 @@ import MaterialIcons
 public struct Theme {
   public static let `default` = Self()
 
-  public var foregroundColor = NSColor.textColor
+  public var foregroundColor = NSColor.textColor {
+    didSet {
+      self.closeButtonImage = Icon.close.asImage(
+        dimension: self.iconDimension.width,
+        color: self.foregroundColor
+      )
+    }
+  }
   public var backgroundColor = NSColor.textBackgroundColor
   public var separatorColor = NSColor.gridColor
 
-  public var selectedForegroundColor = NSColor.selectedTextColor
+  public var selectedForegroundColor = NSColor.selectedTextColor {
+    didSet {
+      self.selectedCloseButtonImage = Icon.close.asImage(
+        dimension: self.iconDimension.width,
+        color: self.selectedForegroundColor
+      )
+    }
+  }
+
   public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
 
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
@@ -30,7 +45,7 @@ public struct Theme {
   public var iconDimension = CGSize(width: 16, height: 16)
 
   public var tabMinWidth: CGFloat {
-    4 * self.tabHorizontalPadding + 2 * self.iconDimension.width + 32
+    3 * self.tabHorizontalPadding + self.iconDimension.width + 32
   }
 
   public var tabBarHeight: CGFloat { self.tabHeight }
