@@ -390,7 +390,7 @@ def parse_version(version):
 def parse_error_types(error_types):
     return textwrap.indent(
         '\n'.join(
-            [f'private static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]
+            [f'public static let {t.lower()}RawValue = UInt64({v["id"]})' for t, v in error_types.items()]
         ),
         '    '
     ).lstrip()

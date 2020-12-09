@@ -9,8 +9,8 @@ extension RxNeovimApi {
 
   public enum Error: Swift.Error {
 
-    private static let exceptionRawValue = UInt64(0)
-    private static let validationRawValue = UInt64(1)
+    public static let exceptionRawValue = UInt64(0)
+    public static let validationRawValue = UInt64(1)
 
     case exception(message: String)
     case validation(message: String)

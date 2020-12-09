@@ -74,29 +74,6 @@ extension NvimView {
 
     self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
-    self.api.msgpackRawStream
-      .subscribe(onNext: { [weak self] msg in
-        switch msg {
-
-        case let .notification(method, params):
-          self?.log.debug("NOTIFICATION: \(method): \(params)")
-
-          guard method == NvimView.rpcEventName else { return }
-          self?.eventsSubject.onNext(.rpcEvent(params))
-
-        case let .error(_, msg):
-          self?.log.debug("MSG ERROR: \(msg)")
-
-        default:
-          self?.log.debug("???: This should not happen")
-          break
-
-        }
-      }, onError: { [weak self] error in
-        self?.log.error(error)
-      })
-      .disposed(by: self.disposeBag)
-
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...

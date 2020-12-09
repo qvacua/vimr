@@ -30,10 +30,10 @@ else
 fi
 
 if [[ "$download" == true ]]; then
-  curl -L -o ./${BUILD_DIR}/nvim-macos.tar.bz2 "https://github.com/neovim/neovim/releases/download/$target_version/nvim-macos.tar.bz2"
+  curl -L -o ./${BUILD_DIR}/nvim-macos.tar.gz "https://github.com/neovim/neovim/releases/download/$target_version/nvim-macos.tar.gz"
   echo "Downloaded $target_version"
   pushd ./${BUILD_DIR}
-  tar xjf nvim-macos.tar.bz2
+  tar xf nvim-macos.tar.gz
   popd
   echo "Extracted $target_version"
 else

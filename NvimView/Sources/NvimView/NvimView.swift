@@ -165,10 +165,37 @@ public class NvimView: NSView,
     super.init(frame: .zero)
 
     self.api.streamResponses = true
-    self.api.msgpackRawStream.subscribe(onNext: {Swift.print($0)})
+    self.api.msgpackRawStream
+      .subscribe(onNext: { [weak self] msg in
+        switch msg {
+        case let .notification(method, params):
+          self?.log.debug("NOTIFICATION: \(method): \(params)")
+
+          guard method == NvimView.rpcEventName else { return }
+          self?.eventsSubject.onNext(.rpcEvent(params))
+
+        case let .error(_, msg):
+          self?.log.debug("MSG ERROR: \(msg)")
+
+        case let .response(_, error, _):
+          guard let array = error.arrayValue,
+                array.count >= 2,
+                array[0].uint64Value == RxNeovimApi.Error.exceptionRawValue,
+                let errorMsg = array[1].stringValue else { return }
+
+          if errorMsg.contains("Vim(tabclose):E784") { Swift.print("cannot close last tab page!") }
+          if errorMsg.starts(with: "Vim(tabclose):E37") { Swift.print("no write!") }
+
+        default:
+          self?.log.debug("???: This should not happen")
+        }
+      }, onError: {
+        [weak self] error in self?.log.error(error)
+      })
+      .disposed(by: self.disposeBag)
 
     let db = self.disposeBag
-    self.tabBar?.closeHandler = { [weak self] index, _, entries in
+    self.tabBar?.closeHandler = { [weak self] index, _, _ in
       self?.api
         .command(command: "tabclose \(index + 1)")
         .subscribe()
