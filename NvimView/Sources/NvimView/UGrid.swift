@@ -95,8 +95,7 @@ final class UGrid: CustomStringConvertible, Codable {
     let attrId = self.cells[position.row][position.column].attrId
 
     guard attrId >= CellAttributesCollection.defaultAttributesId,
-      attrId != CellAttributesCollection.reversedDefaultAttributesId
-    else { return }
+          attrId != CellAttributesCollection.reversedDefaultAttributesId else { return }
 
     let newAttrsId: Int
     if attrId == CellAttributesCollection.defaultAttributesId {
@@ -121,9 +120,7 @@ final class UGrid: CustomStringConvertible, Codable {
     return Position(row: row, column: col)
   }
 
-  func oneDimCellIndex(forRow row: Int, column: Int) -> Int {
-    row * self.size.width + column
-  }
+  func oneDimCellIndex(forRow row: Int, column: Int) -> Int { row * self.size.width + column }
 
   func oneDimCellIndex(forPosition position: Position) -> Int {
     position.row * self.size.width + position.column

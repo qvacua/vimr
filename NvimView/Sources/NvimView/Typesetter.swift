@@ -4,11 +4,10 @@
  */
 
 import Cocoa
-import os
 import Commons
+import os
 
 final class Typesetter {
-
   func fontGlyphRunsWithLigatures(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
@@ -16,7 +15,6 @@ final class Typesetter {
     font: NSFont,
     cellWidth: CGFloat
   ) -> [FontGlyphRun] {
-
     let utf16Chars = self.utf16Chars(from: nvimUtf16Cells)
     let cellIndices = self.cellIndices(from: nvimUtf16Cells, utf16CharsCount: utf16Chars.count)
     let ctRuns = self.ctRuns(from: utf16Chars, font: font)
@@ -75,7 +73,6 @@ final class Typesetter {
     font: NSFont,
     cellWidth: CGFloat
   ) -> [FontGlyphRun] {
-
     let nvimUtf16CellsRuns = self.groupSimpleAndNonSimpleChars(
       nvimUtf16Cells: nvimUtf16Cells, font: font
     )
@@ -92,7 +89,7 @@ final class Typesetter {
       }
 
       let unichars = self.utf16Chars(from: run.nvimUtf16Cells)
-      var glyphs = Array<CGGlyph>(repeating: CGGlyph(), count: unichars.count)
+      var glyphs = [CGGlyph](repeating: CGGlyph(), count: unichars.count)
 
       let gotAllGlyphs = CTFontGetGlyphsForCharacters(font, unichars, &glyphs, unichars.count)
       if gotAllGlyphs {
@@ -124,7 +121,7 @@ final class Typesetter {
           }
 
           return [
-            FontGlyphRun(font: font, glyphs: Array(glyphs[range]), positions: positions)
+            FontGlyphRun(font: font, glyphs: Array(glyphs[range]), positions: positions),
           ]
         }
       }
@@ -135,7 +132,7 @@ final class Typesetter {
     return runs.flatMap { $0 }
   }
 
-  private func ctRuns(from utf16Chars: Array<Unicode.UTF16.CodeUnit>, font: NSFont) -> [CTRun] {
+  private func ctRuns(from utf16Chars: [Unicode.UTF16.CodeUnit], font: NSFont) -> [CTRun] {
     if let ctRunsAndFont = self.ctRunsCache.valueForKey(utf16Chars),
        font == ctRunsAndFont.font { return ctRunsAndFont.ctRuns }
 
@@ -147,17 +144,14 @@ final class Typesetter {
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
-    self.ctRunsCache.set(
-      CtRunsAndFont(ctRuns: ctRuns, font: font),
-      forKey: utf16Chars
-    )
+    self.ctRunsCache.set(CtRunsAndFont(ctRuns: ctRuns, font: font), forKey: utf16Chars)
 
     return ctRuns
   }
 
   private func groupSimpleAndNonSimpleChars(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
-    font: NSFont
+    font _: NSFont
   ) -> [NvimUtf16CellsRun] {
     if nvimUtf16Cells.isEmpty { return [] }
 
@@ -226,8 +220,8 @@ final class Typesetter {
   private func cellIndices(
     from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     utf16CharsCount: Int
-  ) -> Array<Int> {
-    return nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [Int] in
+  ) -> [Int] {
+    nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [Int] in
       var cellIndices = Array(repeating: 0, count: utf16CharsCount)
       var cellIndex = 0
       var i = 0
@@ -238,7 +232,7 @@ final class Typesetter {
           continue
         }
 
-        for _ in (0..<pointer[cellIndex].count) {
+        for _ in 0..<pointer[cellIndex].count {
           cellIndices[i] = cellIndex
           i = i + 1
         }
@@ -249,11 +243,11 @@ final class Typesetter {
     }
   }
 
-  private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> Array<UInt16> {
+  private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> [UInt16] {
     nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
       let count = pointer.reduce(0) { acc, elem in acc + elem.count }
 
-      return Array<Unicode.UTF16.CodeUnit>(
+      return [Unicode.UTF16.CodeUnit](
         unsafeUninitializedCapacity: count
       ) { resultPtr, initCount in
         var i = 0
@@ -270,7 +264,7 @@ final class Typesetter {
     }
   }
 
-  private let ctRunsCache = FifoCache<Array<Unicode.UTF16.CodeUnit>, CtRunsAndFont>(
+  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], CtRunsAndFont>(
     count: 5000,
     queueQos: .userInteractive
   )
@@ -278,13 +272,11 @@ final class Typesetter {
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   private struct CtRunsAndFont {
-
     var ctRuns: [CTRun]
     var font: NSFont
   }
 
   private struct NvimUtf16CellsRun {
-
     var startColumn: Int
     var nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]
     var isSimple: Bool
