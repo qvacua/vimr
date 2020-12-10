@@ -7,46 +7,38 @@ import Cocoa
 import RxSwift
 
 // MARK: - NSUserInterfaceValidationsProtocol
-extension NvimView {
 
-  public func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+public extension NvimView {
+  func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     let canUndoOrRedo = self.mode == .insert
-                        || self.mode == .replace
-                        || self.mode == .normal
-                        || self.mode == .visual
+      || self.mode == .replace
+      || self.mode == .normal
+      || self.mode == .visual
     let canCopyOrCut = self.mode == .normal || self.mode == .visual
     let canPaste = NSPasteboard.general.string(forType: .string) != nil
     let canDelete = self.mode == .visual || self.mode == .normal
     let canSelectAll = self.mode == .insert
-                       || self.mode == .replace
-                       || self.mode == .normal
-                       || self.mode == .visual
+      || self.mode == .replace
+      || self.mode == .normal
+      || self.mode == .visual
 
-    guard let action = item.action else {
-      return true
-    }
+    guard let action = item.action else { return true }
 
     switch action {
-    case #selector(undo(_:)), #selector(redo(_:)):
-      return canUndoOrRedo
-    case #selector(copy(_:)), #selector(cut(_:)):
-      return canCopyOrCut
-    case #selector(paste(_:)):
-      return canPaste
-    case #selector(delete(_:)):
-      return canDelete
-    case #selector(selectAll(_:)):
-      return canSelectAll
-    default:
-      return true
+    case #selector(undo(_:)), #selector(redo(_:)): return canUndoOrRedo
+    case #selector(copy(_:)), #selector(cut(_:)): return canCopyOrCut
+    case #selector(paste(_:)): return canPaste
+    case #selector(delete(_:)): return canDelete
+    case #selector(selectAll(_:)): return canSelectAll
+    default: return true
     }
   }
 }
 
 // MARK: - Edit Menu Items
-extension NvimView {
 
-  @IBAction func undo(_ sender: Any?) {
+extension NvimView {
+  @IBAction func undo(_: Any?) {
     switch self.mode {
     case .insert, .replace:
       self.api
@@ -67,7 +59,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func redo(_ sender: Any?) {
+  @IBAction func redo(_: Any?) {
     switch self.mode {
     case .insert, .replace:
       self.api
@@ -88,7 +80,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func cut(_ sender: Any?) {
+  @IBAction func cut(_: Any?) {
     switch self.mode {
     case .visual, .normal:
       self.api
@@ -102,7 +94,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func copy(_ sender: Any?) {
+  @IBAction func copy(_: Any?) {
     switch self.mode {
     case .visual, .normal:
       self.api
@@ -116,7 +108,7 @@ extension NvimView {
     }
   }
 
-  @IBAction func paste(_ sender: Any?) {
+  @IBAction func paste(_: Any?) {
     guard let content = NSPasteboard.general.string(forType: .string) else { return }
 
     // phase == 1 means paste in a single call
@@ -128,7 +120,7 @@ extension NvimView {
       .disposed(by: self.disposeBag)
   }
 
-  @IBAction func delete(_ sender: Any?) {
+  @IBAction func delete(_: Any?) {
     switch self.mode {
     case .normal, .visual:
       self.api
@@ -142,7 +134,7 @@ extension NvimView {
     }
   }
 
-  @IBAction public override func selectAll(_ sender: Any?) {
+  @IBAction override public func selectAll(_: Any?) {
     switch self.mode {
     case .insert, .visual:
       self.api
@@ -163,20 +155,18 @@ extension NvimView {
 }
 
 // MARK: - Font Menu Items
+
 extension NvimView {
+  @IBAction func resetFontSize(_: Any?) { self.font = self._font }
 
-  @IBAction func resetFontSize(_ sender: Any?) {
-    self.font = self._font
-  }
-
-  @IBAction func makeFontBigger(_ sender: Any?) {
+  @IBAction func makeFontBigger(_: Any?) {
     let curFont = self.drawer.font
     let font = NSFontManager.shared
       .convert(curFont, toSize: min(curFont.pointSize + 1, NvimView.maxFontSize))
     self.updateFontMetaData(font)
   }
 
-  @IBAction func makeFontSmaller(_ sender: Any?) {
+  @IBAction func makeFontSmaller(_: Any?) {
     let curFont = self.drawer.font
     let font = NSFontManager.shared
       .convert(curFont, toSize: max(curFont.pointSize - 1, NvimView.minFontSize))
