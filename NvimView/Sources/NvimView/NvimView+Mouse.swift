@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 
 extension NvimView {
-
   override public func mouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName: "LeftMouse")
   }
@@ -22,22 +21,21 @@ extension NvimView {
 
   override public func scrollWheel(with event: NSEvent) {
     let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
-    if deltaX == 0 && deltaY == 0 {
-      return
-    }
+    if deltaX == 0, deltaY == 0 { return }
 
     let cellPosition = self.cellPosition(forEvent: event)
 
     let isTrackpad = event.hasPreciseScrollingDeltas
     if isTrackpad == false {
-      let (vimInputX, vimInputY) = self.vimScrollInputFor(deltaX: deltaX, deltaY: deltaY,
-                                                          modifierFlags: event.modifierFlags,
-                                                          cellPosition: cellPosition)
+      let (vimInputX, vimInputY) = self.vimScrollInputFor(
+        deltaX: deltaX,
+        deltaY: deltaY,
+        modifierFlags: event.modifierFlags,
+        cellPosition: cellPosition
+      )
       self.api
         .input(keys: vimInputX, errWhenBlocked: false).asCompletable()
-        .andThen(
-          self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable()
-        )
+        .andThen(self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable())
         .subscribe(onError: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -63,7 +61,7 @@ extension NvimView {
     let factor = 1 + event.magnification
     let pinchTargetScale = self.pinchTargetScale * factor
     let resultingFontSize = round(pinchTargetScale * self.font.pointSize)
-    if resultingFontSize >= NvimView.minFontSize && resultingFontSize <= NvimView.maxFontSize {
+    if resultingFontSize >= NvimView.minFontSize, resultingFontSize <= NvimView.maxFontSize {
       self.pinchTargetScale = pinchTargetScale
     }
 
@@ -82,17 +80,13 @@ extension NvimView {
 
     default:
       break
-
     }
 
     self.markForRenderWholeView()
   }
 
   func position(at location: CGPoint) -> Position {
-    let row = Int(
-      (self.bounds.size.height - location.y - self.offset.y)
-      / self.cellSize.height
-    )
+    let row = Int((self.bounds.size.height - location.y - self.offset.y) / self.cellSize.height)
     let column = Int((location.x - self.offset.x) / self.cellSize.width)
 
     let position = Position(
@@ -104,14 +98,12 @@ extension NvimView {
 
   private func cellPosition(forEvent event: NSEvent) -> Position {
     let location = self.convert(event.locationInWindow, from: nil)
-    return position(at: location)
+    return self.position(at: location)
   }
 
   private func mouse(event: NSEvent, vimName: String) {
     let cellPosition = self.cellPosition(forEvent: event)
-    guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else {
-      return
-    }
+    guard self.shouldFireVimInputFor(event: event, newCellPosition: cellPosition) else { return }
 
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
     let vimClickCount = self.vimClickCountFrom(event: event)
@@ -134,16 +126,14 @@ extension NvimView {
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {
     let type = event.type
     guard type == .leftMouseDragged
-          || type == .rightMouseDragged
-          || type == .otherMouseDragged else {
-
+      || type == .rightMouseDragged
+      || type == .otherMouseDragged
+    else {
       self.lastClickedCellPosition = newCellPosition
       return true
     }
 
-    if self.lastClickedCellPosition == newCellPosition {
-      return false
-    }
+    if self.lastClickedCellPosition == newCellPosition { return false }
 
     self.lastClickedCellPosition = newCellPosition
     return true
@@ -152,40 +142,31 @@ extension NvimView {
   private func vimClickCountFrom(event: NSEvent) -> String {
     let clickCount = event.clickCount
 
-    guard 2 <= clickCount && clickCount <= 4 else {
-      return ""
-    }
+    guard clickCount >= 2, clickCount <= 4 else { return "" }
 
     switch event.type {
-    case .leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp:
-      return "\(clickCount)-"
-    default:
-      return ""
+    case .leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp: return "\(clickCount)-"
+    default: return ""
     }
   }
 
   private func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
     let typeY: String
-    if deltaY > 0 {
-      typeY = "ScrollWheelUp"
-    } else {
-      typeY = "ScrollWheelDown"
-    }
+    if deltaY > 0 { typeY = "ScrollWheelUp" }
+    else { typeY = "ScrollWheelDown" }
 
     let typeX: String
-    if deltaX < 0 {
-      typeX = "ScrollWheelRight"
-    } else {
-      typeX = "ScrollWheelLeft"
-    }
+    if deltaX < 0 { typeX = "ScrollWheelRight" }
+    else { typeX = "ScrollWheelLeft" }
 
     return (typeX, typeY)
   }
 
-  private func vimScrollInputFor(deltaX: CGFloat, deltaY: CGFloat,
-                                 modifierFlags: NSEvent.ModifierFlags,
-                                 cellPosition: Position) -> (String, String) {
-
+  private func vimScrollInputFor(
+    deltaX: CGFloat, deltaY: CGFloat,
+    modifierFlags: NSEvent.ModifierFlags,
+    cellPosition: Position
+  ) -> (String, String) {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
 
     let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
