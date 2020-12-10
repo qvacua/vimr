@@ -49,14 +49,10 @@ public final class RxMessagePortClient {
     )
   }
 
-  public func send(
-    msgid: Int32,
-    data: Data?,
-    expectsReply: Bool
-  ) -> Single<Data?> {
+  public func send(msgid: Int32, data: Data?, expectsReply: Bool) -> Single<Data?> {
     Single.create { single in
       self.queue.async {
-        guard self.portIsValid else {
+        guard CFMessagePortIsValid(self.port) else {
           single(.error(Error.portInvalid))
           return
         }
@@ -110,7 +106,6 @@ public final class RxMessagePortClient {
           return
         }
 
-        self.portIsValid = true
         completable(.completed)
       }
 
@@ -121,7 +116,6 @@ public final class RxMessagePortClient {
   public func stop() -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.portIsValid = false
         if self.port != nil && CFMessagePortIsValid(self.port) {
           CFMessagePortInvalidate(self.port)
         }
@@ -132,7 +126,6 @@ public final class RxMessagePortClient {
     }
   }
 
-  private var portIsValid = false
   private var port: CFMessagePort?
 
   private let queue: DispatchQueue
@@ -245,10 +238,7 @@ private class MessageHandler {
 
   fileprivate init(subject: PublishSubject<RxMessagePortServer.Message>) { self.subject = subject }
 
-  fileprivate func handleMessage(
-    msgId: Int32,
-    cfdata: CFData?
-  ) -> Unmanaged<CFData>? {
+  fileprivate func handleMessage(msgId: Int32, cfdata: CFData?) -> Unmanaged<CFData>? {
     let d = cfdata?.data
 
     self.subject.onNext(RxMessagePortServer.Message(msgid: msgId, data: d))
