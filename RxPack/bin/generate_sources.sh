@@ -8,7 +8,7 @@ pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 mkdir -p ${BUILD_DIR}
 
 target_version=$(cat ./nvim-version.txt | awk '{$1=$1}1')
-nvim="./${BUILD_DIR}/nvim/bin/nvim"
+nvim="./${BUILD_DIR}/nvim-osx64/bin/nvim"
 if [[ -f ${nvim} ]] ; then
   version="$($nvim --version | grep ^NVIM | awk '{print $2}')" || "n/a"
 else

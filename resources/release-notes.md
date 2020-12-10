@@ -2,13 +2,14 @@
 
 ## Since the last snapshot
 
-* GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
-  Appearance preferences.
+* ...
 
 ## Since 0.34.0
 
 * Universal binary!
-* Neovim 0.5-dev (neovim/neovim@0798ad3a3a071db1b647df5aecd7698ed9aff7d9)
+* Neovim 0.5-dev (neovim/neovim@52e660e)
+* GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
+  Appearance preferences.
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
 * GH-812: Allow all fonts, but warn when variable width font is selected.
 * Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
