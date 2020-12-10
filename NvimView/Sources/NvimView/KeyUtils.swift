@@ -6,7 +6,6 @@
 import Cocoa
 
 class KeyUtils {
-
   static func isControlCode(key: String) -> Bool {
     guard key.count == 1 else {
       return false
@@ -91,6 +90,6 @@ private let specialKeys = [
   NSF35FunctionKey: "F35",
   0x09: "Tab",
   0x19: "Tab",
-  0xd: "CR",
+  0xD: "CR",
   0x20: "Space",
 ]
