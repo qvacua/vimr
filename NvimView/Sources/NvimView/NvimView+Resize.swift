@@ -7,7 +7,6 @@ import Cocoa
 import RxSwift
 
 extension NvimView {
-
   override public func setFrameSize(_ newSize: NSSize) {
     super.setFrameSize(newSize)
 
@@ -22,9 +21,7 @@ extension NvimView {
       return
     }
 
-    if self.inLiveResize || self.currentlyResizing {
-      return
-    }
+    if self.inLiveResize || self.currentlyResizing { return }
 
     // There can be cases where the frame is resized not by live resizing,
     // eg when the window is resized by window management tools.
@@ -38,8 +35,10 @@ extension NvimView {
   }
 
   func discreteSize(size: CGSize) -> Size {
-    return Size(width: Int(floor(size.width / self.cellSize.width)),
-                height: Int(floor(size.height / self.cellSize.height)))
+    Size(
+      width: Int(floor(size.width / self.cellSize.width)),
+      height: Int(floor(size.height / self.cellSize.height))
+    )
   }
 
   func resizeNeoVimUi(to size: CGSize) {
@@ -51,12 +50,8 @@ extension NvimView {
       return
     }
 
-    self.offset.x = floor(
-      (size.width - self.cellSize.width * discreteSize.width.cgf) / 2
-    )
-    self.offset.y = floor(
-      (size.height - self.cellSize.height * discreteSize.height.cgf) / 2
-    )
+    self.offset.x = floor((size.width - self.cellSize.width * discreteSize.width.cgf) / 2)
+    self.offset.y = floor((size.height - self.cellSize.height * discreteSize.height.cgf) / 2)
 
     self.bridge
       .resize(width: discreteSize.width, height: discreteSize.height)
@@ -68,9 +63,8 @@ extension NvimView {
 
   private func launchNeoVim(_ size: Size) {
     self.log.info("=== Starting neovim...")
-    let sockPath = URL(
-      fileURLWithPath: NSTemporaryDirectory()
-    ).appendingPathComponent("vimr_\(self.uuid).sock").path
+    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory())
+      .appendingPathComponent("vimr_\(self.uuid).sock").path
 
     self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
@@ -82,10 +76,7 @@ extension NvimView {
       .andThen(self.api.run(at: sockPath))
       .andThen(
         self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-          prev.andThen(
-            self.api
-              .exec(src: "source \(url.path)", output: true).asCompletable()
-          )
+          prev.andThen(self.api.exec(src: "source \(url.path)", output: true).asCompletable())
         }
       )
       .andThen(self.api.subscribe(event: NvimView.rpcEventName))
@@ -94,9 +85,7 @@ extension NvimView {
 
   private func randomEmoji() -> String {
     let idx = Int.random(in: 0..<emojis.count)
-    guard let scalar = UnicodeScalar(emojis[idx]) else {
-      return "😎"
-    }
+    guard let scalar = UnicodeScalar(emojis[idx]) else { return "😎" }
 
     return String(scalar)
   }
@@ -106,5 +95,5 @@ private let emojis: [UInt32] = [
   0x1F600...0x1F64F,
   0x1F910...0x1F918,
   0x1F980...0x1F984,
-  0x1F9C0...0x1F9C0
+  0x1F9C0...0x1F9C0,
 ].flatMap { $0 }
