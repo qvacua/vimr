@@ -601,8 +601,7 @@ extension NvimView {
     gui.async { self.tabBar?.update(tabRepresentatives: self.tabEntries) }
   }
 
-  func winViewportUpdate(_ args: [MessagePackValue]) {
-  }
+  func winViewportUpdate(_: [MessagePackValue]) {}
 
   private func bufferWritten(_ handle: Int) {
     self
