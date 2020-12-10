@@ -6,7 +6,6 @@
 import Cocoa
 
 extension NvimView {
-
   func draw(cellGridIn context: CGContext) {
     context.saveGState()
     defer { context.restoreGState() }
@@ -63,27 +62,27 @@ extension NvimView {
 
   func name(ofCursorMode mode: CursorModeShape) -> String {
     switch mode {
-      // @formatter:off
-    case .normal:                  return "Normal"
-    case .visual:                  return "Visual"
-    case .insert:                  return "Insert"
-    case .replace:                 return "Replace"
-    case .cmdlineNormal:                 return "Cmdline"
-    case .cmdlineInsert:           return "CmdlineInsert"
-    case .cmdlineReplace:          return "CmdlineReplace"
-    case .operatorPending:         return "OperatorPending"
-    case .visualExclusive:         return "VisualExclusive"
-    case .onCmdline:               return "OnCmdline"
-    case .onStatusLine:            return "OnStatusLine"
-    case .draggingStatusLine:      return "DraggingStatusLine"
-    case .onVerticalSepLine:       return "OnVerticalSepLine"
+    // @formatter:off
+    case .normal: return "Normal"
+    case .visual: return "Visual"
+    case .insert: return "Insert"
+    case .replace: return "Replace"
+    case .cmdlineNormal: return "Cmdline"
+    case .cmdlineInsert: return "CmdlineInsert"
+    case .cmdlineReplace: return "CmdlineReplace"
+    case .operatorPending: return "OperatorPending"
+    case .visualExclusive: return "VisualExclusive"
+    case .onCmdline: return "OnCmdline"
+    case .onStatusLine: return "OnStatusLine"
+    case .draggingStatusLine: return "DraggingStatusLine"
+    case .onVerticalSepLine: return "OnVerticalSepLine"
     case .draggingVerticalSepLine: return "DraggingVerticalSepLine"
-    case .more:                    return "More"
-    case .moreLastLine:            return "MoreLastLine"
-    case .showingMatchingParen:    return "ShowingMatchingParen"
-    case .termFocus:               return "TermFocus"
-    case .count:                   return "Count"
-    // @formatter:on
+    case .more: return "More"
+    case .moreLastLine: return "MoreLastLine"
+    case .showingMatchingParen: return "ShowingMatchingParen"
+    case .termFocus: return "TermFocus"
+    case .count: return "Count"
+      // @formatter:on
     }
   }
 }
