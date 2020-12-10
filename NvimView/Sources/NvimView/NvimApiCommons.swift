@@ -4,20 +4,17 @@
  */
 
 import Foundation
-import RxSwift
 import RxPack
+import RxSwift
 
-extension RxNeovimApi {
-
-  public func getDirtyStatus(
+public extension RxNeovimApi {
+  func getDirtyStatus(
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
-    let params: [RxNeovimApi.Value] = [
-    ]
+    let params: [RxNeovimApi.Value] = []
 
     func transform(_ value: Value) throws -> Bool {
-      guard let result = (value.boolValue) else {
+      guard let result = value.boolValue else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
 
@@ -37,18 +34,15 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetInfo(
+  func bufGetInfo(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+  ) -> Single<[String: RxNeovimApi.Value]> {
+    let params: [RxNeovimApi.Value] = [.int(Int64(buffer.handle))]
 
-    let params: [RxNeovimApi.Value] = [
-      .int(Int64(buffer.handle)),
-    ]
-
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    func transform(_ value: Value) throws -> [String: RxNeovimApi.Value] {
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -56,9 +50,7 @@ extension RxNeovimApi {
 
     if errWhenBlocked {
       return self
-        .checkBlocked(
-          self.rpc(method: "nvim_buf_get_info", params: params)
-        )
+        .checkBlocked(self.rpc(method: "nvim_buf_get_info", params: params))
         .map(transform)
     }
 
@@ -68,37 +60,38 @@ extension RxNeovimApi {
   }
 }
 
-private func msgPackDictToSwift(_ dict: Dictionary<RxNeovimApi.Value, RxNeovimApi.Value>?) -> Dictionary<String, RxNeovimApi.Value>? {
-  return dict?.flatMapToDict { k, v in
-    guard let strKey = k.stringValue else {
-      return nil
-    }
+private func msgPackDictToSwift(
+  _ dict: [RxNeovimApi.Value: RxNeovimApi.Value]?
+) -> [String: RxNeovimApi.Value]? {
+  dict?.flatMapToDict { k, v in
+    guard let strKey = k.stringValue else { return nil }
 
     return (strKey, v)
   }
 }
 
-private func msgPackArrayDictToSwift(_ array: [RxNeovimApi.Value]?) -> [Dictionary<String, RxNeovimApi.Value>]? {
-  return array?
+private func msgPackArrayDictToSwift(
+  _ array: [RxNeovimApi.Value]?
+) -> [[String: RxNeovimApi.Value]]? {
+  array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }
 }
 
-extension Dictionary {
-
-  fileprivate func flatMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+private extension Dictionary {
+  func flatMapToDict<K, V>(
+    _ transform: ((key: Key, value: Value)) throws -> (K, V)?
+  ) rethrows -> [K: V] {
     let array = try self.compactMap(transform)
-    return tuplesToDict(array)
+    return self.tuplesToDict(array)
   }
 
-  fileprivate func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
-      -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
+  func tuplesToDict<K: Hashable, V, S: Sequence>(
+    _ sequence: S
+  ) -> [K: V] where S.Iterator.Element == (K, V) {
+    var result = [K: V](minimumCapacity: sequence.underestimatedCount)
 
-    var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
-
-    for (key, value) in sequence {
-      result[key] = value
-    }
+    for (key, value) in sequence { result[key] = value }
 
     return result
   }
