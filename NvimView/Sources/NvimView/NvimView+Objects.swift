@@ -6,16 +6,13 @@
 import Foundation
 import RxPack
 
-extension NvimView {
+public extension NvimView {
+  struct Buffer: Equatable {
+    public static func == (lhs: Buffer, rhs: Buffer) -> Bool {
+      guard lhs.handle == rhs.handle else { return false }
 
-  public struct Buffer: Equatable {
-
-    public static func ==(lhs: Buffer, rhs: Buffer) -> Bool {
-      guard lhs.handle == rhs.handle else {
-        return false
-      }
-
-      // Transient buffer active -> open a file -> the resulting buffer has the same handle, but different URL
+      // Transient buffer active -> open a file -> the resulting buffer has the same handle,
+      // but different URL
       return lhs.url == rhs.url
     }
 
@@ -28,53 +25,36 @@ extension NvimView {
     public let isListed: Bool
 
     public var isTransient: Bool {
-      if self.isDirty {
-        return false
-      }
-
-      if self.url != nil {
-        return false
-      }
+      if self.isDirty { return false }
+      if self.url != nil { return false }
 
       return true
     }
 
     public var name: String? {
-      if self.type == "quickfix" {
-        return "Quickfix"
-      }
+      if self.type == "quickfix" { return "Quickfix" }
 
       return self.url?.lastPathComponent
     }
 
-    public var handle: Int {
-      return self.apiBuffer.handle
-    }
+    public var handle: Int { self.apiBuffer.handle }
   }
 
-  public struct Window {
-
+  struct Window {
     public let apiWindow: RxNeovimApi.Window
     public let buffer: Buffer
     public let isCurrentInTab: Bool
 
-    public var handle: Int {
-      return self.apiWindow.handle
-    }
+    public var handle: Int { self.apiWindow.handle }
   }
 
-  public struct Tabpage {
-
+  struct Tabpage {
     public let apiTabpage: RxNeovimApi.Tabpage
     public let windows: [Window]
     public let isCurrent: Bool
 
-    public var currentWindow: Window? {
-      return self.windows.first { $0.isCurrentInTab }
-    }
+    public var currentWindow: Window? { self.windows.first { $0.isCurrentInTab } }
 
-    public var handle: Int {
-      return self.apiTabpage.handle
-    }
+    public var handle: Int {self.apiTabpage.handle }
   }
 }
