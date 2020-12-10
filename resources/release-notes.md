@@ -1,8 +1,9 @@
 # Next
 
-## Since last snapshot
+## Since the last snapshot
 
-* GH-349: Custom tabs!
+* GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
+  Appearance preferences.
 
 ## Since 0.34.0
 
