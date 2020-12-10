@@ -190,9 +190,6 @@ public class NvimView: NSView,
           if errorMsg.starts(with: "Vim(tabclose):E37") {
             self?.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
           }
-
-        default:
-          self?.log.debug("???: This should not happen")
         }
       }, onError: {
         [weak self] error in self?.log.error(error)
