@@ -4,12 +4,11 @@
  */
 
 import Cocoa
-import NvimServerTypes
 import Commons
+import NvimServerTypes
 
 private struct SizedFontTrait: Hashable {
-
-  static func ==(lhs: SizedFontTrait, rhs: SizedFontTrait) -> Bool {
+  static func == (lhs: SizedFontTrait, rhs: SizedFontTrait) -> Bool {
     if lhs.trait != rhs.trait { return false }
     if lhs.size != rhs.size { return false }
 
@@ -20,11 +19,9 @@ private struct SizedFontTrait: Hashable {
   fileprivate var size: CGFloat
 }
 
-extension FontTrait: Hashable {
-}
+extension FontTrait: Hashable {}
 
-final class FontUtils {
-
+enum FontUtils {
   static func cellSize(of font: NSFont, linespacing: CGFloat, characterspacing: CGFloat) -> CGSize {
     if let cached = cellSizeWithDefaultLinespacingCache.valueForKey(font) {
       return CGSize(
@@ -66,11 +63,8 @@ final class FontUtils {
 
     if trait.contains(.italic) { ctFontTrait.insert(.italicTrait) }
 
-    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(
-      font, 0.0, nil, ctFontTrait, ctFontTrait
-    ) else {
-      return font
-    }
+    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(font, 0.0, nil, ctFontTrait, ctFontTrait)
+    else { return font }
 
     fontCache.set(ctFont, forKey: sizedFontTrait)
     return ctFont

@@ -4,13 +4,12 @@
  */
 
 import Cocoa
+import Commons
 import MessagePack
 import NvimServerTypes
-import Commons
 
 public struct CellAttributes: CustomStringConvertible, Equatable {
-
-  public static func ==(left: CellAttributes, right: CellAttributes) -> Bool {
+  public static func == (left: CellAttributes, right: CellAttributes) -> Bool {
     if left.foreground != right.foreground { return false }
     if left.background != right.background { return false }
     if left.special != right.special { return false }
@@ -36,7 +35,7 @@ public struct CellAttributes: CustomStringConvertible, Equatable {
     self.special = special
     self.reverse = reverse
   }
-  
+
   public init(
     withDict dict: [String: MessagePackValue],
     with defaultAttributes: CellAttributes
@@ -60,12 +59,12 @@ public struct CellAttributes: CustomStringConvertible, Equatable {
 
   public var description: String {
     "CellAttributes<" +
-    "trait: \(String(self.fontTrait.rawValue, radix: 2)), " +
-    "fg: \(ColorUtils.colorIgnoringAlpha(self.foreground).hex), " +
-    "bg: \(ColorUtils.colorIgnoringAlpha(self.background).hex), " +
-    "sp: \(ColorUtils.colorIgnoringAlpha(self.special).hex), " +
-    "reverse: \(self.reverse)" +
-    ">"
+      "trait: \(String(self.fontTrait.rawValue, radix: 2)), " +
+      "fg: \(ColorUtils.colorIgnoringAlpha(self.foreground).hex), " +
+      "bg: \(ColorUtils.colorIgnoringAlpha(self.background).hex), " +
+      "sp: \(ColorUtils.colorIgnoringAlpha(self.special).hex), " +
+      "reverse: \(self.reverse)" +
+      ">"
   }
 
   public var reversed: CellAttributes {

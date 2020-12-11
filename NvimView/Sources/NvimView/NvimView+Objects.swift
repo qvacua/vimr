@@ -55,6 +55,6 @@ public extension NvimView {
 
     public var currentWindow: Window? { self.windows.first { $0.isCurrentInTab } }
 
-    public var handle: Int {self.apiTabpage.handle }
+    public var handle: Int { self.apiTabpage.handle }
   }
 }

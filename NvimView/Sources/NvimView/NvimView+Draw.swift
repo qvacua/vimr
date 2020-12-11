@@ -6,7 +6,6 @@
 import Cocoa
 
 extension NvimView {
-
   override public func viewDidMoveToWindow() {
     self.window?.colorSpace = colorSpace
   }
@@ -18,7 +17,7 @@ extension NvimView {
     context.saveGState()
     defer { context.restoreGState() }
 
-    if (self.inLiveResize || self.currentlyResizing) && !self.usesLiveResize {
+    if self.inLiveResize || self.currentlyResizing, !self.usesLiveResize {
       self.drawResizeInfo(in: context, with: dirtyUnionRect)
       return
     }
@@ -31,8 +30,8 @@ extension NvimView {
     // When both anti-aliasing and font smoothing is turned on,
     // then the "Use LCD font smoothing when available" setting is used
     // to render texts, cf. chapter 11 from "Programming with Quartz".
-    context.setShouldSmoothFonts(true);
-    context.setTextDrawingMode(.fill);
+    context.setShouldSmoothFonts(true)
+    context.setTextDrawingMode(.fill)
 
     let dirtyRects = self.rectsBeingDrawn()
 
@@ -57,7 +56,7 @@ extension NvimView {
   }
 
   private func draw(
-    defaultBackgroundIn dirtyRects: [CGRect], `in` context: CGContext
+    defaultBackgroundIn dirtyRects: [CGRect], in context: CGContext
   ) {
     context.setFillColor(
       ColorUtils.cgColorIgnoringAlpha(
@@ -78,9 +77,9 @@ extension NvimView {
 
     let cursorRegion = self.cursorRegion(for: self.ugrid.cursorPosition)
     if cursorRegion.top < 0
-       || cursorRegion.bottom > self.ugrid.size.height - 1
-       || cursorRegion.left < 0
-       || cursorRegion.right > self.ugrid.size.width - 1
+      || cursorRegion.bottom > self.ugrid.size.height - 1
+      || cursorRegion.left < 0
+      || cursorRegion.right > self.ugrid.size.width - 1
     {
       self.log.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
@@ -99,27 +98,28 @@ extension NvimView {
     let modeInfo = modeInfoList[Int(mode.rawValue)]
 
     guard let cursorAttrId = modeInfo.attrId,
-      let cursorShapeAttrs = self.cellAttributesCollection.attributes(
-        of: cursorAttrId,
-        withDefaults: cellAtCursorAttrs
-      ) else {
-        self.log.error("Could not get the attributes for cursor in mode: \(mode) \(modeInfo)")
-        return
+          let cursorShapeAttrs = self.cellAttributesCollection.attributes(
+            of: cursorAttrId,
+            withDefaults: cellAtCursorAttrs
+          )
+    else {
+      self.log.error("Could not get the attributes for cursor in mode: \(mode) \(modeInfo)")
+      return
     }
 
     // will be used for clipping
     var cursorRect: CGRect
     let cursorTextColor: Int
 
-    switch (modeInfo.cursorShape) {
+    switch modeInfo.cursorShape {
     case .block:
       cursorRect = self.rect(for: cursorRegion)
       cursorTextColor = cursorShapeAttrs.effectiveForeground
-    case .horizontal(let cellPercentage):
+    case let .horizontal(cellPercentage):
       cursorRect = self.rect(for: cursorRegion)
       cursorRect.size.height = (cursorRect.size.height * CGFloat(cellPercentage)) / 100
       cursorTextColor = cellAtCursorAttrs.effectiveForeground
-    case .vertical(let cellPercentage):
+    case let .vertical(cellPercentage):
       cursorRect = self.rect(forRow: cursorPosition.row, column: cursorPosition.column)
       cursorRect.size.width = (cursorRect.size.width * CGFloat(cellPercentage)) / 100
       cursorTextColor = cellAtCursorAttrs.effectiveForeground
@@ -160,7 +160,7 @@ extension NvimView {
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
     let infoStr = "(You can turn on the experimental live resizing feature" +
-                  " in the Advanced preferences)"
+      " in the Advanced preferences)"
 
     var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
     sizeAttrs[.foregroundColor] = self.theme.foreground
@@ -185,8 +185,10 @@ extension NvimView {
     context.interpolationQuality = .none
 
     let boundsSize = self.bounds.size
-    let targetSize = CGSize(width: boundsSize.width * self.pinchTargetScale,
-                            height: boundsSize.height * self.pinchTargetScale)
+    let targetSize = CGSize(
+      width: boundsSize.width * self.pinchTargetScale,
+      height: boundsSize.height * self.pinchTargetScale
+    )
     self.pinchBitmap?.draw(
       in: CGRect(origin: self.bounds.origin, size: targetSize),
       from: CGRect.zero,
@@ -198,7 +200,7 @@ extension NvimView {
   }
 
   private func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
-    return rects
+    rects
       .map { rect in
         // Get all Regions that intersects with the given rects.
         // There can be overlaps between the Regions,
@@ -217,33 +219,31 @@ extension NvimView {
     forRowRange rowRange: CountableClosedRange<Int>,
     columnRange: CountableClosedRange<Int>
   ) -> [AttributesRun] {
+    rowRange.map { row in
+      self.ugrid.cells[row][columnRange]
+        .groupedRanges(with: { _, cell in cell.attrId })
+        .compactMap { range in
+          let cells = self.ugrid.cells[row][range]
 
-    return rowRange.map { row in
-        self.ugrid.cells[row][columnRange]
-          .groupedRanges(with: { _, cell in cell.attrId })
-          .compactMap { range in
-            let cells = self.ugrid.cells[row][range]
-
-            guard let firstCell = cells.first,
-                  let attrs = self.cellAttributesCollection.attributes(
-                    of: firstCell.attrId
-                  )
-              else {
-              // GH-666: FIXME: correct error handling
-              self.log.error("row: \(row), range: \(range): " +
-                             "Could not get CellAttributes with ID " +
-                             "\(String(describing: cells.first?.attrId))")
-              return nil
-            }
-
-            return AttributesRun(
-              location: self.pointInView(forRow: row, column: range.lowerBound),
-              cells: self.ugrid.cells[row][range],
-              attrs: attrs
+          guard let firstCell = cells.first,
+                let attrs = self.cellAttributesCollection.attributes(of: firstCell.attrId)
+          else {
+            // GH-666: FIXME: correct error handling
+            self.log.error(
+              "row: \(row), range: \(range): Could not get CellAttributes with ID " +
+                "\(String(describing: cells.first?.attrId))"
             )
+            return nil
           }
-      }
-      .flatMap { $0 }
+
+          return AttributesRun(
+            location: self.pointInView(forRow: row, column: range.lowerBound),
+            cells: self.ugrid.cells[row][range],
+            attrs: attrs
+          )
+        }
+    }
+    .flatMap { $0 }
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
@@ -258,18 +258,16 @@ extension NvimView {
   }
 }
 
-private let emojiAttrs = [
-  NSAttributedString.Key.font: NSFont(name: "AppleColorEmoji", size: 72)!
-]
+private let emojiAttrs = [NSAttributedString.Key.font: NSFont(name: "AppleColorEmoji", size: 72)!]
 
 private let resizeTextAttrs = [
   NSAttributedString.Key.font: NSFont.systemFont(ofSize: 18),
-  NSAttributedString.Key.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray,
 ]
 
 private let infoTextAttrs = [
   NSAttributedString.Key.font: NSFont.systemFont(ofSize: 16),
-  NSAttributedString.Key.foregroundColor: NSColor.darkGray
+  NSAttributedString.Key.foregroundColor: NSColor.darkGray,
 ]
 
 private let colorSpace = NSColorSpace.sRGB

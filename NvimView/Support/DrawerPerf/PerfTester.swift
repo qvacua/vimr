@@ -80,9 +80,9 @@ class PerfTester {
           let cells = ugrid.cells[row][range]
 
           guard let firstCell = cells.first,
-            let attrs = self.cellAttrsCollection.attributes(
-              of: firstCell.attrId
-            )
+                let attrs = self.cellAttrsCollection.attributes(
+                  of: firstCell.attrId
+                )
           else {
             // GH-666: FIXME: correct error handling
             self.log.error(

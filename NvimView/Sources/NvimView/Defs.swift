@@ -6,11 +6,9 @@
 import Foundation
 
 struct Defs {
-
   static let loggerSubsystem = "com.qvacua.NvimView"
 
-  struct LoggerCategory {
-
+  enum LoggerCategory {
     static let bridge = "bridge"
     static let view = "view"
   }

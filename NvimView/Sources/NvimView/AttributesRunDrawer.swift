@@ -7,7 +7,6 @@ import Cocoa
 import NvimServerTypes
 
 final class AttributesRunDrawer {
-
   var font: NSFont {
     didSet { self.updateFontMetrics() }
   }
@@ -42,7 +41,7 @@ final class AttributesRunDrawer {
     _ attrsRuns: [AttributesRun],
     defaultAttributes: CellAttributes,
     offset: CGPoint,
-    `in` context: CGContext
+    in context: CGContext
   ) {
     let runs = self.drawsParallel ?
       attrsRuns.parallelMap(chunkSize: 50) { run in
@@ -66,7 +65,7 @@ final class AttributesRunDrawer {
     _ run: AttributesRun,
     fontGlyphRuns: [FontGlyphRun],
     defaultAttributes: CellAttributes,
-    `in` context: CGContext
+    in context: CGContext
   ) {
     context.saveGState()
     defer { context.restoreGState() }
@@ -92,7 +91,7 @@ final class AttributesRunDrawer {
     }
   }
 
-  private func drawUnderline(in context: CGContext, fontGlyphRuns: [FontGlyphRun]) {
+  private func drawUnderline(in _: CGContext, fontGlyphRuns: [FontGlyphRun]) {
     guard let lastPosition = fontGlyphRuns.last?.positions.last?.x else { return }
 
     let x1 = lastPosition + self.cellSize.width
@@ -117,7 +116,7 @@ final class AttributesRunDrawer {
     let h = 0.5 * self.descent
 
     context.move(to: CGPoint(x: x0, y: y0))
-    for _ in (0..<count) {
+    for _ in 0..<count {
       context.addCurve(
         to: CGPoint(x: x0 + 0.5 * w, y: y0 + h),
         control1: CGPoint(x: x0 + 0.25 * w, y: y0),
@@ -137,7 +136,7 @@ final class AttributesRunDrawer {
   private func draw(
     backgroundFor run: AttributesRun,
     with defaultAttributes: CellAttributes,
-    `in` context: CGContext
+    in context: CGContext
   ) {
     if run.attrs.effectiveBackground == defaultAttributes.background { return }
 
@@ -183,8 +182,8 @@ final class AttributesRunDrawer {
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
     self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
-    self.descent = CTFontGetDescent(font)
-    self.underlinePosition = CTFontGetUnderlinePosition(font)
-    self.underlineThickness = CTFontGetUnderlineThickness(font)
+    self.descent = CTFontGetDescent(self.font)
+    self.underlinePosition = CTFontGetUnderlinePosition(self.font)
+    self.underlineThickness = CTFontGetUnderlineThickness(self.font)
   }
 }

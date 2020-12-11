@@ -6,7 +6,6 @@
 import Foundation
 
 final class CellAttributesCollection {
-
   static let defaultAttributesId = 0
   static let reversedDefaultAttributesId = Int.max
 
@@ -21,7 +20,7 @@ final class CellAttributesCollection {
   init() { self.attributes[CellAttributesCollection.defaultAttributesId] = self.defaultAttributes }
 
   func attributes(of id: Int) -> CellAttributes? {
-    return self.attributes(of: id, withDefaults: self.defaultAttributes)
+    self.attributes(of: id, withDefaults: self.defaultAttributes)
   }
 
   func attributes(of id: Int, withDefaults defaults: CellAttributes) -> CellAttributes? {

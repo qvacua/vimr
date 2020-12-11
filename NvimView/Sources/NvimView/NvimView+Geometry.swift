@@ -6,7 +6,6 @@
 import Cocoa
 
 extension NvimView {
-
   func cursorRegion(for cursorPosition: Position) -> Region {
     var cursorRegion = Region(
       top: cursorPosition.row,
@@ -28,26 +27,20 @@ extension NvimView {
 
     let rowStart = max(
       0,
-      Int(floor(
-        (self.bounds.height - self.offset.y
-          - (rect.origin.y + rect.size.height)) / cellHeight
-      ))
+      Int(
+        floor(
+          (self.bounds.height - self.offset.y - (rect.origin.y + rect.size.height)) / cellHeight
+        )
+      )
     )
     let rowEnd = min(
       self.ugrid.size.height - 1,
-      Int(ceil(
-        (self.bounds.height - self.offset.y - rect.origin.y) / cellHeight
-      )) - 1
+      Int(ceil((self.bounds.height - self.offset.y - rect.origin.y) / cellHeight)) - 1
     )
-    let columnStart = max(
-      0,
-      Int(floor((rect.origin.x - self.offset.x) / cellWidth))
-    )
+    let columnStart = max(0, Int(floor((rect.origin.x - self.offset.x) / cellWidth)))
     let columnEnd = min(
       self.ugrid.size.width - 1,
-      Int(ceil(
-        (rect.origin.x - self.offset.x + rect.size.width) / cellWidth
-      )) - 1
+      Int(ceil((rect.origin.x - self.offset.x + rect.size.width) / cellWidth)) - 1
     )
 
     return Region(
@@ -56,7 +49,7 @@ extension NvimView {
   }
 
   func pointInView(forRow row: Int, column: Int) -> CGPoint {
-    return CGPoint(
+    CGPoint(
       x: self.offset.x + column.cgf * self.cellSize.width,
       y: self.bounds.size.height - self.offset.y
         - row.cgf * self.cellSize.height - self.cellSize.height
@@ -64,9 +57,7 @@ extension NvimView {
   }
 
   func rect(forRow row: Int, column: Int) -> CGRect {
-    return CGRect(
-      origin: self.pointInView(forRow: row, column: column), size: self.cellSize
-    )
+    CGRect(origin: self.pointInView(forRow: row, column: column), size: self.cellSize)
   }
 
   func rect(for region: Region) -> CGRect {
@@ -83,8 +74,7 @@ extension NvimView {
 
     return CGRect(
       x: self.offset.x + left * cellWidth,
-      y: self.bounds.size.height - self.offset.y
-        - top * cellHeight - height * cellHeight,
+      y: self.bounds.size.height - self.offset.y - top * cellHeight - height * cellHeight,
       width: width * cellWidth,
       height: height * cellHeight
     )

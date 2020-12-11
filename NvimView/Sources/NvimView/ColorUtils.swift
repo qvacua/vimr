@@ -7,7 +7,6 @@ import Cocoa
 import Commons
 
 final class ColorUtils {
-
   /// ARGB
   static func cgColorIgnoringAlpha(_ rgb: Int) -> CGColor {
     if let color = cgColorCache.valueForKey(rgb) { return color }
@@ -32,9 +31,9 @@ final class ColorUtils {
     if let color = colorCache.valueForKey(rgb) { return color }
 
     // @formatter:off
-    let red =   ((rgb >> 16) & 0xFF).cgf / 255.0;
-    let green = ((rgb >>  8) & 0xFF).cgf / 255.0;
-    let blue =  ((rgb      ) & 0xFF).cgf / 255.0;
+    let red = ((rgb >> 16) & 0xFF).cgf / 255.0
+    let green = ((rgb >> 8) & 0xFF).cgf / 255.0
+    let blue = (rgb & 0xFF).cgf / 255.0
     // @formatter:on
 
     let color = NSColor(srgbRed: red, green: green, blue: blue, alpha: 1.0)
