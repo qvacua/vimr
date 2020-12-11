@@ -96,12 +96,8 @@ class UiBridge {
       .timeout(.seconds(timeout), scheduler: self.scheduler)
   }
 
-  func deleteCharacters(_ count: Int, andInputEscapedString string: String)
-    -> Completable
-  {
-    guard let strData = string.data(using: .utf8) else {
-      return .empty()
-    }
+  func deleteCharacters(_ count: Int, andInputEscapedString string: String) -> Completable {
+    guard let strData = string.data(using: .utf8) else { return .empty() }
 
     var data = Data(capacity: MemoryLayout<Int>.size + strData.count)
 
@@ -147,22 +143,16 @@ class UiBridge {
     }
   }
 
-  func debug() -> Completable {
-    self.sendMessage(msgId: .debug1, data: nil)
-  }
+  func debug() -> Completable { self.sendMessage(msgId: .debug1, data: nil) }
 
   private func handleMessage(msgId: Int32, data: Data?) {
-    guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else {
-      return
-    }
+    guard let msg = NvimServerMsgId(rawValue: Int(msgId)) else { return }
 
     switch msg {
     case .serverReady:
       self
         .establishNvimConnection()
-        .subscribe(onError: { [weak self] error in
-          self?.consumer?.ipcBecameInvalid(error)
-        })
+        .subscribe(onError: { [weak self] error in self?.consumer?.ipcBecameInvalid(error) })
         .disposed(by: self.disposeBag)
 
     case .nvimReady:
@@ -171,9 +161,7 @@ class UiBridge {
 
       let isInitErrorPresent = MessagePackUtils
         .value(from: data, conversion: { $0.boolValue }) ?? false
-      if isInitErrorPresent {
-        self.consumer?.initVimError()
-      }
+      if isInitErrorPresent { self.consumer?.initVimError() }
 
     case .resize:
       guard let v = MessagePackUtils.value(from: data) else { return }
@@ -321,6 +309,7 @@ class UiBridge {
     process
       .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
       ["--headless"] + self.nvimArgs
+
     self.log.debug(
       "Launching NvimServer with args: \(String(describing: process.arguments))"
     )
@@ -335,10 +324,7 @@ class UiBridge {
       .path
   }
 
-  private let log = OSLog(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.bridge
-  )
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
 
   private let uuid: UUID
 
@@ -367,13 +353,8 @@ class UiBridge {
 
   private let disposeBag = DisposeBag()
 
-  private var localServerName: String {
-    "com.qvacua.NvimView.\(self.uuid)"
-  }
-
-  private var remoteServerName: String {
-    "com.qvacua.NvimView.NvimServer.\(self.uuid)"
-  }
+  private var localServerName: String { "com.qvacua.NvimView.\(self.uuid)" }
+  private var remoteServerName: String { "com.qvacua.NvimView.NvimServer.\(self.uuid)" }
 }
 
 private let timeout = 5
