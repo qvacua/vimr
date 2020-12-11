@@ -71,9 +71,7 @@ class Tab<Rep: TabRepresentative>: NSView {
 
   private var widthConstraint: NSLayoutConstraint?
 
-  @objc func closeAction(_ sender: NSButton) {
-    self.tabBar?.close(tab: self)
-  }
+  @objc func closeAction(_: NSButton) { self.tabBar?.close(tab: self) }
 }
 
 // MARK: - Private
