@@ -149,7 +149,5 @@ class DraggingSingleRowStackView: NSStackView {
     try views.map { try cacheView(view: $0) }
   }
 
-  private func cacheView(view: NSView) throws -> CachedViewLayer {
-    try CachedViewLayer(view: view)
-  }
+  private func cacheView(view: NSView) throws -> CachedViewLayer { try CachedViewLayer(view: view) }
 }
