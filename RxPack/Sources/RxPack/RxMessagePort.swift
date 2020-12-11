@@ -45,7 +45,8 @@ public final class RxMessagePortClient {
   public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
-      qos: queueQos
+      qos: queueQos,
+      target: .global(qos: queueQos.qosClass)
     )
   }
 
@@ -151,7 +152,8 @@ public final class RxMessagePortServer {
   public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMessagePortClient.self))-\(self.uuid.uuidString)",
-      qos: queueQos
+      qos: queueQos,
+      target: .global(qos: queueQos.qosClass)
     )
     self.messageHandler = MessageHandler(subject: self.streamSubject)
   }

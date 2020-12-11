@@ -30,7 +30,7 @@ class FileMonitor {
         eventHandler(URL(fileURLWithPath: event.path))
       }
     )
-    self.monitor?.setDispatchQueue(globalFileMonitorQueue)
+    self.monitor?.setDispatchQueue(self.queue)
 
     try self.monitor?.start()
     self.log.info("Started monitoring \(self.urlToMonitor)")
@@ -46,6 +46,9 @@ class FileMonitor {
   private var monitor: EonilFSEventStream?
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
+  private let queue = DispatchQueue(
+    label: String(reflecting: FileMonitor.self) + "-\(UUID())",
+    qos: .userInitiated,
+    target: .global(qos: .userInitiated)
+  )
 }
-
-private let globalFileMonitorQueue = DispatchQueue.global(qos: .userInitiated)

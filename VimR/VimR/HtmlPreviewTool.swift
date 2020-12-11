@@ -13,7 +13,6 @@ import WebKit
 import Workspace
 
 private let fileSystemEventsLatency = 1.0
-private let monitorDispatchQueue = DispatchQueue.global(qos: .userInitiated)
 
 class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
@@ -31,6 +30,12 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     let configuration = WKWebViewConfiguration()
     configuration.processPool = Defs.webViewProcessPool
     self.webview = WKWebView(frame: CGRect.zero, configuration: configuration)
+
+    self.queue = DispatchQueue(
+      label: String(reflecting: HtmlPreviewTool.self) + "-\(self.uuid)",
+      qos: .userInitiated,
+      target: .global(qos: .userInitiated)
+    )
 
     super.init(frame: .zero)
     self.configureForAutoLayout()
@@ -72,7 +77,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
               self?.reloadWebview(with: serverUrl.payload)
             }
           )
-          self.monitor?.setDispatchQueue(monitorDispatchQueue)
+          self.monitor?.setDispatchQueue(self.queue)
           try self.monitor?.start()
         } catch {
           self.log.error("Could not start file monitor for \(htmlFileUrl): \(error)")
@@ -116,10 +121,8 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private var monitor: EonilFSEventStream?
 
   private let disposeBag = DisposeBag()
-  private let log = OSLog(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.ui
-  )
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private let queue: DispatchQueue
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }

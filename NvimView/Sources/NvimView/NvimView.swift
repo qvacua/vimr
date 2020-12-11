@@ -236,7 +236,11 @@ public class NvimView: NSView,
 
   // MARK: - Internal
 
-  let queue = DispatchQueue(label: String(reflecting: NvimView.self), qos: .userInteractive)
+  let queue = DispatchQueue(
+    label: String(reflecting: NvimView.self),
+    qos: .userInteractive,
+    target: .global(qos: .userInteractive)
+  )
 
   let bridge: UiBridge
 

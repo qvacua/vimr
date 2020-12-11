@@ -58,7 +58,8 @@ public final class RxMsgpackRpc {
   public init(queueQos: DispatchQoS) {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: RxMsgpackRpc.self))-\(self.uuid.uuidString)",
-      qos: queueQos
+      qos: queueQos,
+      target: .global(qos: queueQos.qosClass)
     )
   }
 

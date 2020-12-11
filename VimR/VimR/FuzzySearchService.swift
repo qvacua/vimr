@@ -438,7 +438,11 @@ class FuzzySearchService {
   private var stop = false
   private let stopLock = NSLock()
 
-  private let queue = DispatchQueue(label: "scan-score-queue", qos: .userInitiated)
+  private let queue = DispatchQueue(
+    label: "scan-score-queue",
+    qos: .userInitiated,
+    target: .global(qos: .userInitiated)
+  )
 
   private let fileMonitor = FileMonitor()
   private let writeContext: NSManagedObjectContext

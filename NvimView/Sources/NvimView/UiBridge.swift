@@ -361,7 +361,8 @@ class UiBridge {
   private let scheduler: SerialDispatchQueueScheduler
   private let queue = DispatchQueue(
     label: String(reflecting: UiBridge.self),
-    qos: .userInitiated
+    qos: .userInitiated,
+    target: .global(qos: .userInitiated)
   )
 
   private let disposeBag = DisposeBag()
