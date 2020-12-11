@@ -55,15 +55,11 @@ public class NvimView: NSView,
   }
 
   public var drawsParallel = false {
-    didSet {
-      self.drawer.drawsParallel = self.drawsParallel
-    }
+    didSet { self.drawer.drawsParallel = self.drawsParallel }
   }
 
   public var linespacing: CGFloat {
-    get {
-      self._linespacing
-    }
+    get { self._linespacing }
 
     set {
       guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else {
@@ -76,14 +72,10 @@ public class NvimView: NSView,
   }
 
   public var characterspacing: CGFloat {
-    get {
-      self._characterspacing
-    }
+    get { self._characterspacing }
 
     set {
-      guard newValue >= 0.0 else {
-        return
-      }
+      guard newValue >= 0.0 else { return }
 
       self._characterspacing = newValue
       self.updateFontMetaData(self._font)
@@ -91,9 +83,7 @@ public class NvimView: NSView,
   }
 
   public var font: NSFont {
-    get {
-      self._font
-    }
+    get { self._font }
 
     set {
       if !newValue.fontDescriptor.symbolicTraits.contains(.monoSpace) {
@@ -101,9 +91,7 @@ public class NvimView: NSView,
       }
 
       let size = newValue.pointSize
-      guard size >= NvimView.minFontSize, size <= NvimView.maxFontSize else {
-        return
-      }
+      guard size >= NvimView.minFontSize, size <= NvimView.maxFontSize else { return }
 
       self._font = newValue
       self.updateFontMetaData(newValue)
@@ -111,9 +99,7 @@ public class NvimView: NSView,
   }
 
   public var cwd: URL {
-    get {
-      self._cwd
-    }
+    get { self._cwd }
 
     set {
       self.api
@@ -131,17 +117,13 @@ public class NvimView: NSView,
     self.cellAttributesCollection.defaultAttributes
   }
 
-  override public var acceptsFirstResponder: Bool {
-    true
-  }
+  override public var acceptsFirstResponder: Bool { true }
 
   public let scheduler: SerialDispatchQueueScheduler
 
   public internal(set) var currentPosition = Position.beginning
 
-  public var events: Observable<Event> {
-    self.eventsSubject.asObservable()
-  }
+  public var events: Observable<Event> { self.eventsSubject.asObservable() }
 
   public init(frame _: NSRect, config: Config) {
     self.drawer = AttributesRunDrawer(
