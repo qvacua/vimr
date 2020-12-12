@@ -6,9 +6,7 @@
 import Cocoa
 
 extension NvimView {
-  override public func viewDidMoveToWindow() {
-    self.window?.colorSpace = colorSpace
-  }
+  override public func viewDidMoveToWindow() { self.window?.colorSpace = colorSpace }
 
   override public func draw(_ dirtyUnionRect: NSRect) {
     guard self.ugrid.hasData else { return }
@@ -59,9 +57,7 @@ extension NvimView {
     defaultBackgroundIn dirtyRects: [CGRect], in context: CGContext
   ) {
     context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(
-        self.cellAttributesCollection.defaultAttributes.background
-      )
+      ColorUtils.cgColorIgnoringAlpha(self.cellAttributesCollection.defaultAttributes.background)
     )
     context.fill(dirtyRects)
   }
@@ -170,13 +166,9 @@ extension NvimView {
     let (x, y) = ((boundsSize.width - size.width) / 2, emojiY - size.height)
 
     let infoSize = infoStr.size(withAttributes: infoAttrs)
-    let (infoX, infoY) = (
-      (boundsSize.width - infoSize.width) / 2, y - size.height - 5
-    )
+    let (infoX, infoY) = ((boundsSize.width - infoSize.width) / 2, y - size.height - 5)
 
-    self.currentEmoji.draw(
-      at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs
-    )
+    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
     displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
     infoStr.draw(at: CGPoint(x: infoX, y: infoY), withAttributes: infoAttrs)
   }
