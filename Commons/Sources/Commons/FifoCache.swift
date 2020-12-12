@@ -14,7 +14,8 @@ public final class FifoCache<Key: Hashable, Value> {
     self.queue = DispatchQueue(
       label: "\(String(reflecting: FifoCache.self))-\(UUID().uuidString)",
       qos: queueQos,
-      attributes: [.concurrent]
+      attributes: [.concurrent],
+      target: .global(qos: queueQos.qosClass)
     )
   }
 
