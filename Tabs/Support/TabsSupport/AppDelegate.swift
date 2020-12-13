@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     tb.autoPinEdge(toSuperviewEdge: .left)
     tb.autoPinEdge(toSuperviewEdge: .right)
     tb.autoSetDimension(.height, toSize: Theme().tabBarHeight)
-    tb.selectHandler = { [weak self] _, selectedEntry in
+    tb.selectHandler = { [weak self] _, selectedEntry, entries in
       self?.tabEntries.enumerated().forEach { index, entry in
         self?.tabEntries[index].isSelected = (entry == selectedEntry)
       }
