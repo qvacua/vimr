@@ -23,7 +23,11 @@ extension MainWindow {
 
     self.set(repUrl: self.window.representedURL, themed: true)
 
-    self.addViews(withTopInset: 22)
+    if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 {
+      self.addViews(withTopInset: 28)
+    } else {
+      self.addViews(withTopInset: 22)
+    }
 
     self.titlebarThemed = true
 
