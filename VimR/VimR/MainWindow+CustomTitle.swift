@@ -23,12 +23,7 @@ extension MainWindow {
 
     self.set(repUrl: self.window.representedURL, themed: true)
 
-    if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 {
-      self.addViews(withTopInset: 28)
-    } else {
-      self.addViews(withTopInset: 22)
-    }
-
+    self.addViews(withTopInset: titleBarHeight)
     self.titlebarThemed = true
 
     self.window.makeFirstResponder(prevFirstResponder)
@@ -125,7 +120,7 @@ extension MainWindow {
           toItem: contentView, attribute: .centerX,
           multiplier: 1,
           constant: -4 +
-            (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
+                    (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
         )
       )
 
@@ -153,3 +148,5 @@ extension MainWindow {
 }
 
 private let repIconToTitleGap = 4.0.cgf
+private let titleBarHeight
+  = CGFloat(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 ? 28 : 22)
