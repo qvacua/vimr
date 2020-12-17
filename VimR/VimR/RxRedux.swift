@@ -29,6 +29,10 @@ protocol ReduxContextType {
    */
   associatedtype ActionType
 
+  /**
+   We use tuple since SomeStruct<A, B> as? SomeStruct<A, Any> always fails,
+   but (A, B) as? (A, Any) succeeds.
+   */
   typealias ReduceTuple = (state: StateType, action: ActionType, modified: Bool)
   typealias ReduceFunction = (ReduceTuple) -> ReduceTuple
 }
@@ -54,9 +58,7 @@ protocol ReducerType {
 
 extension ReducerType {
   func reduce(_ tuple: ActionTypeErasedReduceTuple) -> ActionTypeErasedReduceTuple {
-    guard let typedTuple = tuple as? ReduceTuple else {
-      return tuple
-    }
+    guard let typedTuple = tuple as? ReduceTuple else { return tuple }
 
     let typedResult = self.typedReduce(typedTuple)
     return (state: typedResult.state, action: typedResult.action, modified: typedResult.modified)
@@ -84,9 +86,7 @@ protocol MiddlewareType {
 extension MiddlewareType {
   func apply(_ reduce: @escaping ActionTypeErasedReduceFunction) -> ActionTypeErasedReduceFunction {
     { tuple in
-      guard let typedTuple = tuple as? ReduceTuple else {
-        return reduce(tuple)
-      }
+      guard let typedTuple = tuple as? ReduceTuple else { return reduce(tuple) }
 
       let typedReduce: (ReduceTuple) -> ActionTypeErasedReduceTuple = { typedTuple in
         // We know that we can cast the typed action to ReduxTypes.ActionType
@@ -113,13 +113,9 @@ protocol UiComponent {
 class ActionEmitter {
   let observable: Observable<ReduxTypes.ActionType>
 
-  init() {
-    self.observable = self.subject.asObservable().observeOn(self.scheduler)
-  }
+  init() { self.observable = self.subject.asObservable().observeOn(self.scheduler) }
 
-  func typedEmit<T>() -> (T) -> Void {
-    { (action: T) in self.subject.onNext(action) }
-  }
+  func typedEmit<T>() -> (T) -> Void {{ (action: T) in self.subject.onNext(action) } }
 
   func terminate() { self.subject.onCompleted() }
 
@@ -136,8 +132,7 @@ class ReduxContext {
   convenience init(
     initialState: ReduxTypes.StateType,
     reducers: [ReduxTypes.ReduceFunction],
-    middlewares: [(@escaping ReduxTypes.ReduceFunction) -> ReduxTypes
-      .ReduceFunction] = []
+    middlewares: [(@escaping ReduxTypes.ReduceFunction) -> ReduxTypes.ReduceFunction] = []
   ) {
     self.init(initialState: initialState)
 
