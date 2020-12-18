@@ -1,6 +1,9 @@
 // Copyright 2017-2018 ccls Authors
 // SPDX-License-Identifier: Apache-2.0
 
+// Tae: From https://github.com/MaskRay/ccls/commit/61a1071634250b9e8f7f3c6be4e3966d9fb79e5b
+// Added a cast to suppress warning
+
 #include "fuzzy_match.hh"
 
 #include <algorithm>
@@ -134,7 +137,7 @@ int FuzzyMatcher::match(std::string_view text, bool strict) {
   // Enumerate the end position of the match in str. Each removed trailing
   // character has a penulty.
   int ret = kMinScore;
-  for (int j = pat.size(); j <= n; j++)
+  for (int j = static_cast<int>(pat.size()); j <= n; j++)
     ret = std::max(ret, dp[pat.size() & 1][j][1] - 2 * (n - j));
   return ret;
 }
