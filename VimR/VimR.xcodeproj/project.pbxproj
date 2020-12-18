@@ -42,6 +42,7 @@
 		1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */; };
 		1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */; };
 		1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */; };
+		1929B805633C40EC1642121C /* RxCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7609C0C23AC29BDC09B /* RxCommons.swift */; };
 		1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */; };
 		1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B14A5949FB64C4B2646F /* KeysPref.swift */; };
 		1929B8FB248D71BF88A35761 /* MarkdownTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6C6C7792B05164B0216 /* MarkdownTool.swift */; };
@@ -211,6 +212,7 @@
 		1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Delegates.swift"; sourceTree = "<group>"; };
 		1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
 		1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+CustomTitle.swift"; sourceTree = "<group>"; };
+		1929B7609C0C23AC29BDC09B /* RxCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCommons.swift; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateReducer.swift; sourceTree = "<group>"; };
 		1929B7F7A4B3FD52263D211D /* Defs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defs.swift; sourceTree = "<group>"; };
 		1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefUtils.swift; sourceTree = "<group>"; };
@@ -632,6 +634,7 @@
 				4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */,
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
+				1929B7609C0C23AC29BDC09B /* RxCommons.swift */,
 			);
 			name = Commons;
 			sourceTree = "<group>";
@@ -1011,6 +1014,7 @@
 				1929B223C6E97C090474B2C2 /* Resources.swift in Sources */,
 				1929BC64D3C195A92BE3FD64 /* HtmlPreviewMiddleware.swift in Sources */,
 				1929B29FF537A339CF4075BD /* CssUtils.swift in Sources */,
+				1929B805633C40EC1642121C /* RxCommons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

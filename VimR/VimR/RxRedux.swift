@@ -111,9 +111,9 @@ protocol UiComponent {
 }
 
 class ActionEmitter {
-  let observable: Observable<ReduxTypes.ActionType>
-
-  init() { self.observable = self.subject.asObservable().observeOn(self.scheduler) }
+  var observable: Observable<ReduxTypes.ActionType> {
+    self.subject.asObservable().observeOn(self.scheduler)
+  }
 
   func typedEmit<T>() -> (T) -> Void {{ (action: T) in self.subject.onNext(action) } }
 
@@ -163,28 +163,6 @@ class ReduxContext {
   let stateScheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
 
   let disposeBag = DisposeBag()
-}
-
-extension Observable {
-  func completableSubject() -> CompletableSubject<Element> { CompletableSubject(source: self) }
-}
-
-class CompletableSubject<T> {
-  func asObservable() -> Observable<T> { self.subject.asObservable() }
-
-  init(source: Observable<T>) {
-    let subject = PublishSubject<T>()
-    self.subscription = source.subscribe(onNext: { element in subject.onNext(element) })
-    self.subject = subject
-  }
-
-  func onCompleted() {
-    self.subject.onCompleted()
-    self.subscription.dispose()
-  }
-
-  private let subject: PublishSubject<T>
-  private let subscription: Disposable
 }
 
 extension Observable {
