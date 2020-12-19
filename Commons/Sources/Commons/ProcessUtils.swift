@@ -6,9 +6,54 @@
 import Foundation
 import os
 
-public final class ProcessUtils {
+public enum ProcessUtils {
+  public static func loginShell() -> URL {
+    URL(fileURLWithPath: ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/bash")
+  }
+
+  public static func execProcessViaLoginShell(
+    cmd: String,
+    cwd: URL,
+    envs: [String: String],
+    interactive: Bool,
+    qos: QualityOfService
+  ) -> Process? {
+    let shellUrl = Self.loginShell()
+    let shellName = shellUrl.lastPathComponent
+    var shellArgs = [String]()
+    if shellName != "tcsh" { shellArgs.append("-l") }
+    if interactive { shellArgs.append("-i") }
+
+    Self.logger.debug("Using \(shellUrl) with \(shellArgs)")
+
+    let stdin = Pipe()
+    let process = Process()
+    process.environment = envs
+    process.standardInput = stdin
+    process.standardOutput = Pipe()
+    process.standardError = Pipe()
+    process.currentDirectoryPath = cwd.path
+    process.launchPath = shellUrl.path
+    process.arguments = shellArgs
+    process.qualityOfService = qos
+
+    Self.logger.debug("Launched shell")
+    do { try process.run() }
+    catch { return nil }
+
+    Self.logger.debug("exec \(cmd)")
+    let cmd = "exec \(cmd)"
+    guard let cmdData = cmd.data(using: .utf8) else { return nil }
+    let writeHandle = stdin.fileHandleForWriting
+    writeHandle.write(cmdData)
+    writeHandle.closeFile()
+
+    return process
+  }
+
   public static func envVars(
-    of shellPath: URL, usingInteractiveMode: Bool
+    of shellPath: URL,
+    usingInteractiveMode: Bool
   ) -> [String: String] {
     let shellName = shellPath.lastPathComponent
     var shellArgs = [String]()

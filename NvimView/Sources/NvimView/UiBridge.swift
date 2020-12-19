@@ -48,7 +48,7 @@ class UiBridge {
     self.uuid = uuid
 
     self.usesCustomTabBar = config.usesCustomTabBar
-    self.useInteractiveZsh = config.useInteractiveZsh
+    self.usesInteractiveZsh = config.useInteractiveZsh
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
 
@@ -88,7 +88,7 @@ class UiBridge {
       .run(as: self.localServerName)
       .andThen(Completable.create { completable in
         self.runLocalServerAndNvimCompletable = completable
-        self.launchNvimUsingLoginShellEnv()
+        self.launchNvimUsingLoginShell()
 
         // This will be completed in .nvimReady branch of handleMessage()
         return Disposables.create()
@@ -287,41 +287,36 @@ class UiBridge {
     self.nvimServerProc?.terminate()
   }
 
-  private func launchNvimUsingLoginShellEnv() {
-    let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory())
+  private func launchNvimUsingLoginShell() {
+    var nvimCmd = [
+      // We know that NvimServer is there.
+      Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path,
+      self.localServerName,
+      self.remoteServerName,
+      self.usesCustomTabBar ? "1" : "0",
+      "--headless",
+    ] + self.nvimArgs
+
+    let listenAddress = FileManager.default.temporaryDirectory
       .appendingPathComponent("vimr_\(self.uuid).sock")
-    var env = self.envDict
-    env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
-    env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
+    var nvimEnv = [
+      // We know that runtime is there.
+      "VIMRUNTIME": Bundle.module.url(forResource: "runtime", withExtension: nil)!.path,
+      "NVIM_LISTEN_ADDRESS": listenAddress.path,
+    ]
 
-    self.log.debug("Socket: \(listenAddress.path)")
-
-    let usesCustomTabBarArg = self.usesCustomTabBar ? "1" : "0"
-
-    let outPipe = Pipe()
-    let errorPipe = Pipe()
-    let process = Process()
-    process.environment = env
-    process.standardError = errorPipe
-    process.standardOutput = outPipe
-    process.currentDirectoryPath = self.cwd.path
-    process.launchPath = self.nvimServerExecutablePath()
-    process
-      .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
-      ["--headless"] + self.nvimArgs
-
-    self.log.debug(
-      "Launching NvimServer with args: \(String(describing: process.arguments))"
+    self.nvimServerProc = ProcessUtils.execProcessViaLoginShell(
+      cmd: nvimCmd.map { "'\($0)'" }.joined(separator: " "),
+      cwd: self.cwd,
+      envs: nvimEnv,
+      interactive: self.interactive(for: ProcessUtils.loginShell()),
+      qos: .userInteractive
     )
-    process.launch()
-
-    self.nvimServerProc = process
   }
 
-  private func nvimServerExecutablePath() -> String {
-    Bundle.module
-      .url(forResource: "NvimServer", withExtension: nil)!
-      .path
+  private func interactive(for shell: URL) -> Bool {
+    if shell.lastPathComponent == "zsh" { return self.usesInteractiveZsh }
+    return true
   }
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
@@ -329,7 +324,7 @@ class UiBridge {
   private let uuid: UUID
 
   private let usesCustomTabBar: Bool
-  private let useInteractiveZsh: Bool
+  private let usesInteractiveZsh: Bool
   private let cwd: URL
   private let nvimArgs: [String]
   private let envDict: [String: String]
