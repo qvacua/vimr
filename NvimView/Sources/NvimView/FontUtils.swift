@@ -69,6 +69,14 @@ enum FontUtils {
     fontCache.set(ctFont, forKey: sizedFontTrait)
     return ctFont
   }
+
+  static func vimFontSpec(forFont font: NSFont) -> String? {
+    guard let escapedName = font.displayName?.components(separatedBy: " ").joined(separator: "_") else {
+      return nil
+    }
+
+    return "\(escapedName):h\(Int(font.pointSize))"
+  }
 }
 
 private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100, queueQos: .userInteractive)

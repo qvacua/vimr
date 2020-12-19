@@ -5,6 +5,7 @@
 
 import Cocoa
 import MessagePack
+import RxSwift
 
 extension NvimView {
   enum RemoteOption {
@@ -20,6 +21,18 @@ extension NvimView {
       default: return nil
       }
     }
+
+    // convenience methods
+    static func fromFont(_ font: NSFont, forWideFont isWide: Bool = false) -> RemoteOption? {
+      guard let fontSpec = FontUtils.vimFontSpec(forFont: font) else {
+        return nil
+      }
+
+      if isWide {
+        return RemoteOption.guifontWide(fontSpec: fontSpec)
+      }
+      return RemoteOption.guifont(fontSpec: fontSpec)
+    }
   }
 
   final func handleRemoteOptions(_ options: [MessagePackValue: MessagePackValue]) {
@@ -29,15 +42,45 @@ extension NvimView {
         continue
       }
 
-      switch(option) {
+      switch option {
         // fixme: currently this treats gft and gfw the as the same
-        case .guifont(let fontSpec): handleGuifontSet(fontSpec); break
-        case .guifontWide(let fontSpec): handleGuifontSet(fontSpec); break
+        case .guifont(let fontSpec): handleGuifontSet(fontSpec)
+        case .guifontWide(let fontSpec): handleGuifontSet(fontSpec, forWideFont: true)
       }
     }
   }
 
-  private final func handleGuifontSet(_ fontSpec: String) {
+  final func signalRemoteOptionChange(_ option: RemoteOption) {
+    var command: Completable? = nil
+
+    switch option {
+    case .guifont(let fontSpec):
+        command = self.api.setOption(name: "guifont", value: .string(fontSpec))
+
+    case .guifontWide(let fontSpec):
+        command = self.api.setOption(name: "guifontwide", value: .string(fontSpec))
+    }
+
+    command?.subscribe().disposed(by: self.disposeBag)
+  }
+
+  private final func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {
+    if fontSpec.isEmpty {
+      // this happens on connect - signal the current value
+      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
+      return
+    }
+
+    // stop if we would set the same font again
+
+    if let currentSpec = FontUtils.vimFontSpec(forFont: font) {
+      let escapedFontSpec = fontSpec.components(separatedBy: " ").joined(separator: "_")
+
+      if currentSpec == escapedFontSpec {
+        return
+      }
+    }
+
     let fontParams = fontSpec.components(separatedBy: ":")
 
     guard fontParams.count == 2 else {
