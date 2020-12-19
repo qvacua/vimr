@@ -14,7 +14,14 @@ extension NvimView {
     self.eventsSubject.onNext(.initVimError)
   }
 
-  final func optionSet(_: MessagePackValue) {}
+  final func optionSet(_ value: MessagePackValue) {
+    guard let options = value.dictionaryValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
+
+    handleRemoteOptions(options);
+  }
 
   final func resize(_ value: MessagePackValue) {
     guard let array = MessagePackUtils.array(

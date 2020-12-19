@@ -103,6 +103,10 @@ extension MainWindow {
       .disposed(by: self.disposeBag)
   }
 
+  func guifontChanged(to font: NSFont) {
+    self.emit(self.uuidAction(for: .setFont(font)))
+  }
+
   func ipcBecameInvalid(reason: String) {
     let alert = NSAlert()
     alert.addButton(withTitle: "Close")
