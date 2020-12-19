@@ -64,7 +64,13 @@ extension NvimView {
     command?.subscribe().disposed(by: self.disposeBag)
   }
 
-  private final func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {
+  public final func signalError(code: Int, message: String) {
+      self.api.errWriteln(str: "E\(code): \(message)")
+              .subscribe()
+              .disposed(by: self.disposeBag)
+  }
+
+  private func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {
     if fontSpec.isEmpty {
       // this happens on connect - signal the current value
       signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
@@ -85,6 +91,9 @@ extension NvimView {
 
     guard fontParams.count == 2 else {
       self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
+
+      signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
       return
     }
 
@@ -109,8 +118,10 @@ extension NvimView {
         self.eventsSubject.onNext(.guifontChanged(newFont))
       }
     } else {
-      // todo: report an error back to NvimServer?
       self.bridgeLogger.debug("No valid font for name=\(fontName) size=\(fontSize)")
+
+      signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
     }
   }
 }
