@@ -13,11 +13,17 @@ extension NvimView {
     case guifont(fontSpec: String)
     case guifontWide(fontSpec: String)
 
-    static func fromValuePair(_ option: (key: MessagePackValue, value: MessagePackValue)) -> RemoteOption? {
-      switch option.key.stringValue ?? "" {
-      case "guifont": return RemoteOption.guifont(fontSpec: option.value.stringValue ?? "")
-      case "guifontwide": return RemoteOption.guifontWide(fontSpec: option.value.stringValue ?? "")
+    static func fromValuePair(_ option: (key: MessagePackValue, value: MessagePackValue))
+      -> RemoteOption?
+    {
+      guard let key = option.key.stringValue,
+            let val = option.value.stringValue else {
+        return nil
+      }
 
+      switch key {
+      case "guifont": return RemoteOption.guifont(fontSpec: val)
+      case "guifontwide": return RemoteOption.guifontWide(fontSpec: val)
       default: return nil
       }
     }
@@ -43,48 +49,45 @@ extension NvimView {
       }
 
       switch option {
-        // fixme: currently this treats gft and gfw the as the same
-        case .guifont(let fontSpec): handleGuifontSet(fontSpec)
-        case .guifontWide(let fontSpec): handleGuifontSet(fontSpec, forWideFont: true)
+      // FIXME: currently this treats gft and gfw the as the same
+      case let .guifont(fontSpec): self.handleGuifontSet(fontSpec)
+      case let .guifontWide(fontSpec): self.handleGuifontSet(fontSpec, forWideFont: true)
       }
     }
   }
 
   final func signalRemoteOptionChange(_ option: RemoteOption) {
-    var command: Completable? = nil
+    let command: Completable?
 
     switch option {
-    case .guifont(let fontSpec):
-        command = self.api.setOption(name: "guifont", value: .string(fontSpec))
+    case let .guifont(fontSpec):
+      command = self.api.setOption(name: "guifont", value: .string(fontSpec))
 
-    case .guifontWide(let fontSpec):
-        command = self.api.setOption(name: "guifontwide", value: .string(fontSpec))
+    case let .guifontWide(fontSpec):
+      command = self.api.setOption(name: "guifontwide", value: .string(fontSpec))
     }
 
     command?.subscribe().disposed(by: self.disposeBag)
   }
 
   public final func signalError(code: Int, message: String) {
-      self.api.errWriteln(str: "E\(code): \(message)")
-              .subscribe()
-              .disposed(by: self.disposeBag)
+    self.api.errWriteln(str: "E\(code): \(message)")
+      .subscribe()
+      .disposed(by: self.disposeBag)
   }
 
   private func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {
     if fontSpec.isEmpty {
       // this happens on connect - signal the current value
-      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
+      self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
       return
     }
 
     // stop if we would set the same font again
 
-    if let currentSpec = FontUtils.vimFontSpec(forFont: font) {
-      let escapedFontSpec = fontSpec.components(separatedBy: " ").joined(separator: "_")
-
-      if currentSpec == escapedFontSpec {
-        return
-      }
+    if let currentSpec = FontUtils.vimFontSpec(forFont: font),
+      currentSpec == fontSpec.components(separatedBy: " ").joined(separator: "_") {
+      return
     }
 
     let fontParams = fontSpec.components(separatedBy: ":")
@@ -92,15 +95,15 @@ extension NvimView {
     guard fontParams.count == 2 else {
       self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
 
-      signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
-      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
+      self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
       return
     }
 
     let fontName = fontParams[0].components(separatedBy: "_").joined(separator: " ")
     var fontSize = NvimView.defaultFont.pointSize // use a sane fallback
 
-    if fontParams[1].hasPrefix("h") && fontParams[1].count >= 2 {
+    if fontParams[1].hasPrefix("h"), fontParams[1].count >= 2 {
       let sizeSpec = fontParams[1].dropFirst()
       if let parsed = Float(sizeSpec)?.rounded() {
         fontSize = CGFloat(parsed)
@@ -120,8 +123,8 @@ extension NvimView {
     } else {
       self.bridgeLogger.debug("No valid font for name=\(fontName) size=\(fontSize)")
 
-      signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
-      signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
+      self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
     }
   }
 }
