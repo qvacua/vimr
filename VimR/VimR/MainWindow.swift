@@ -296,6 +296,8 @@ class MainWindow: NSObject,
 
         case let .colorschemeChanged(theme): self?.colorschemeChanged(to: theme)
 
+	case let .guifontChanged(font): self?.guifontChanged(to: font)
+
         case let .ipcBecameInvalid(reason):
           self?.ipcBecameInvalid(reason: reason)
 

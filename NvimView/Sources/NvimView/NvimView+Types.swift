@@ -61,6 +61,7 @@ public extension NvimView {
     case bufferWritten(NvimView.Buffer)
 
     case colorschemeChanged(NvimView.Theme)
+    case guifontChanged(NSFont)
 
     case ipcBecameInvalid(String)
 
