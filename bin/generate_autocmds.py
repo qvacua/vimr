@@ -7,7 +7,7 @@ from string import Template
 
 # Assume that we're in $REPO_ROOT/NvimView
 
-NVIM_AUEVENTS_ENUM_FILE = "./neovim/build/include/auevents_enum.generated.h"
+NVIM_AUEVENTS_ENUM_FILE = "./build/include/auevents_enum.generated.h"
 SWIFT_TEMPLATE_FILE = "../resources/autocmds.template.swift"
 
 

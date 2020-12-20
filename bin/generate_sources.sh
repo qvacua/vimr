@@ -27,9 +27,9 @@ main() {
       ./NvimServer/bin/build_libnvim.sh
     popd > /dev/null
 
-    pushd NvimView
-      version=${nvim_version} ../bin/generate_autocmds.py > "./Sources/NvimView/NvimAutoCommandEvent.generated.swift"
-      version=${nvim_version} ../bin/generate_cursor_shape.py > "./Sources/NvimView/NvimCursorModeShape.generated.swift"
+    pushd NvimServer
+      version=${nvim_version} ../bin/generate_autocmds.py > "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
+      version=${nvim_version} ../bin/generate_cursor_shape.py > "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
     popd > /dev/null
 
   popd > /dev/null

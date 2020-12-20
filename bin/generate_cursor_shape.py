@@ -8,7 +8,7 @@ from string import Template
 
 # Assume that we're in $REPO_ROOT/NvimView
 
-NVIM_CURSOR_SHAPE_ENUM_FILE = "./neovim/src/nvim/cursor_shape.h"
+NVIM_CURSOR_SHAPE_ENUM_FILE = "./src/nvim/cursor_shape.h"
 SWIFT_TEMPLATE_FILE = "../resources/cursor_shape.template.swift"
 
 SHAPE_NAMES = {

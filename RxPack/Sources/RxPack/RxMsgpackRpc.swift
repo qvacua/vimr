@@ -121,7 +121,8 @@ public final class RxMsgpackRpc {
 
         guard let socket = self.socket else {
           single(.error(Error(
-            msg: "Socket is invalid, but trying to send a request with msg id \(msgid)"
+            msg: "Socket is invalid, but trying to send a request with " +
+              "msg id \(msgid): \(method) with \(params)"
           )))
           return
         }
