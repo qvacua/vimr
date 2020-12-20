@@ -96,9 +96,7 @@ public class NvimView: NSView,
       self._font = newValue
       self.updateFontMetaData(newValue)
 
-      if let guifontOption = RemoteOption.fromFont(newValue) {
-        signalRemoteOptionChange(guifontOption)
-      }
+      signalRemoteOptionChange(RemoteOption.fromFont(newValue));
     }
   }
 

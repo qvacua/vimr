@@ -90,16 +90,15 @@ enum FontUtils {
         }
       }
     }
-
     return NSFont(name: fontName, size: CGFloat(fontSize))
   }
 
-  static func vimFontSpec(forFont font: NSFont) -> String? {
-    guard let escapedName = font.displayName?.components(separatedBy: " ").joined(separator: "_") else {
-      return nil
+  static func vimFontSpec(forFont font: NSFont) -> String {
+    if let escapedName = font.displayName?.components(separatedBy: " ").joined(separator: "_") {
+      return "\(escapedName):h\(Int(font.pointSize))"
     }
-
-    return "\(escapedName):h\(Int(font.pointSize))"
+    // fontName always returns a valid result and works for font(name:, size:) as well
+    return "\(font.fontName):h\(Int(font.pointSize))"
   }
 }
 
