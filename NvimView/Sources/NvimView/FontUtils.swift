@@ -70,6 +70,30 @@ enum FontUtils {
     return ctFont
   }
 
+  static func font(fromVimFontSpec fontSpec: String) -> NSFont? {
+    let fontParams = fontSpec.components(separatedBy: ":")
+
+    guard fontParams.count == 2 else {
+      return nil
+    }
+
+    let fontName = fontParams[0].components(separatedBy: "_").joined(separator: " ")
+    var fontSize = NvimView.defaultFont.pointSize // use a sane fallback
+
+    if fontParams[1].hasPrefix("h"), fontParams[1].count >= 2 {
+      let sizeSpec = fontParams[1].dropFirst()
+      if let parsed = Float(sizeSpec)?.rounded() {
+        fontSize = CGFloat(parsed)
+
+        if fontSize < NvimView.minFontSize || fontSize > NvimView.maxFontSize {
+          fontSize = NvimView.defaultFont.pointSize
+        }
+      }
+    }
+
+    return NSFont(name: fontName, size: CGFloat(fontSize))
+  }
+
   static func vimFontSpec(forFont font: NSFont) -> String? {
     guard let escapedName = font.displayName?.components(separatedBy: " ").joined(separator: "_") else {
       return nil

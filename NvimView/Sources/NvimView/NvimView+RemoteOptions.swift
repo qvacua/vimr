@@ -84,15 +84,12 @@ extension NvimView {
     }
 
     // stop if we would set the same font again
-
     if let currentSpec = FontUtils.vimFontSpec(forFont: font),
-      currentSpec == fontSpec.components(separatedBy: " ").joined(separator: "_") {
+       currentSpec == fontSpec.components(separatedBy: " ").joined(separator: "_") {
       return
     }
 
-    let fontParams = fontSpec.components(separatedBy: ":")
-
-    guard fontParams.count == 2 else {
+    guard let newFont = FontUtils.font(fromVimFontSpec: fontSpec) else {
       self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
 
       self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
@@ -100,31 +97,10 @@ extension NvimView {
       return
     }
 
-    let fontName = fontParams[0].components(separatedBy: "_").joined(separator: " ")
-    var fontSize = NvimView.defaultFont.pointSize // use a sane fallback
-
-    if fontParams[1].hasPrefix("h"), fontParams[1].count >= 2 {
-      let sizeSpec = fontParams[1].dropFirst()
-      if let parsed = Float(sizeSpec)?.rounded() {
-        fontSize = CGFloat(parsed)
-
-        if fontSize < NvimView.minFontSize || fontSize > NvimView.maxFontSize {
-          fontSize = NvimView.defaultFont.pointSize
-        }
-      }
-    }
-
-    if let newFont = NSFont(name: fontName, size: CGFloat(fontSize)) {
-      gui.async {
-        self.font = newFont
-        self.markForRenderWholeView()
-        self.eventsSubject.onNext(.guifontChanged(newFont))
-      }
-    } else {
-      self.bridgeLogger.debug("No valid font for name=\(fontName) size=\(fontSize)")
-
-      self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
-      self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag)!)
+    gui.async {
+      self.font = newFont
+      self.markForRenderWholeView()
+      self.eventsSubject.onNext(.guifontChanged(newFont))
     }
   }
 }
