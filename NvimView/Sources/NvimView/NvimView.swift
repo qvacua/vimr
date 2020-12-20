@@ -96,7 +96,7 @@ public class NvimView: NSView,
       self._font = newValue
       self.updateFontMetaData(newValue)
 
-      signalRemoteOptionChange(RemoteOption.fromFont(newValue));
+      self.signalRemoteOptionChange(RemoteOption.fromFont(newValue))
     }
   }
 
