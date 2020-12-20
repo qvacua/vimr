@@ -1,5 +1,6 @@
 /**
  * Renee Koecher -  @shirk
+ * Tae Won Ha - http://taewon.de - @hataewon
  * See LICENSE
  */
 
@@ -55,7 +56,7 @@ extension NvimView {
   }
 
   final func signalRemoteOptionChange(_ option: RemoteOption) {
-    let command: Completable?
+    let command: Completable
 
     switch option {
     case let .guifont(fontSpec):
@@ -65,7 +66,13 @@ extension NvimView {
       command = self.api.setOption(name: "guifontwide", value: .string(fontSpec))
     }
 
-    command?.subscribe().disposed(by: self.disposeBag)
+    command
+      .subscribe(onError: { [weak self] error in
+        // We're here probably because the font of NvimView is set before the API socket connection
+        // is established. Let's ignore the error.
+        self?.log.info("Setting \(option) did not go through: \(error).")
+      })
+      .disposed(by: self.disposeBag)
   }
 
   public final func signalError(code: Int, message: String) {
