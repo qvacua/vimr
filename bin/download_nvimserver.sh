@@ -22,9 +22,9 @@ download_nvimserver() {
   tar xf "NvimServer.tar.bz2"
   popd >/dev/null
 
-  cp -r "${nvimserver_dir_path}/NvimServer" NvimView/Sources/NvimView/
-  cp -r "${nvimserver_dir_path}/runtime" NvimView/Sources/NvimView/
-  cp NvimView/Sources/NvimView/com.qvacua.NvimView.vim NvimView/Sources/NvimView/runtime/plugin
+  cp -r "${nvimserver_dir_path}/NvimServer" NvimView/Sources/NvimView/Resources
+  cp -r "${nvimserver_dir_path}/runtime" NvimView/Sources/NvimView/Resources
+  cp NvimView/Sources/NvimView/Resources/com.qvacua.NvimView.vim NvimView/Sources/NvimView/Resources/runtime/plugin
 
   echo "### Downloaded NvimServer"
 }

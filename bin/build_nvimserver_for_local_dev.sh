@@ -12,9 +12,9 @@ main() {
 
   pushd "./NvimServer"
     ./NvimServer/bin/build_nvimserver.sh
-    cp ./build/Build/Products/Release/NvimServer ../NvimView/Sources/NvimView
-    cp -r ./runtime ../NvimView/Sources/NvimView
-    cp ../NvimView/Sources/NvimView/com.qvacua.NvimView.vim ../NvimView/Sources/NvimView/runtime/plugin
+    cp ./build/Build/Products/Release/NvimServer ../NvimView/Sources/NvimView/Resources
+    cp -r ./runtime ../NvimView/Sources/NvimView/Resources
+    cp ../NvimView/Sources/NvimView/Resources/com.qvacua.NvimView.vim ../NvimView/Sources/NvimView/Resources/runtime/plugin
 
   popd >/dev/null
 

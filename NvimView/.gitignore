@@ -4,5 +4,5 @@
 /*.xcodeproj
 xcuserdata/
 
-Sources/NvimView/runtime
-Sources/NvimView/NvimServer
+Sources/NvimView/Resources/runtime
+Sources/NvimView/Resources/NvimServer
