@@ -18,12 +18,16 @@
 		1929BD694DE393302A1AF42E /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B51A7E7A07A38C8497FF /* ColorUtils.swift */; };
 		1929BE00E22B5E472B89C7AA /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B201A097751F817A23B1 /* Defs.swift */; };
 		1929BE88F4A892215227D0AB /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEB34345F348237FE0E4 /* UGrid.swift */; };
-		1929BF95400085EE3F0FFAD5 /* FontTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9D7F040B8B9E2F038DF /* FontTrait.swift */; };
 		4B0225F3224AAE260052362B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0225F2224AAE260052362B /* AppDelegate.swift */; };
 		4B0225F5224AAE260052362B /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0225F4224AAE260052362B /* Document.swift */; };
 		4B0225F8224AAE260052362B /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225F6224AAE260052362B /* Document.xib */; };
 		4B0225FA224AAE270052362B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225F9224AAE270052362B /* Assets.xcassets */; };
 		4B0225FD224AAE270052362B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225FB224AAE270052362B /* MainMenu.xib */; };
+		4B0B364B25953BA100B06899 /* NvimServerTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 4B0B364A25953BA100B06899 /* NvimServerTypes */; };
+		4B0B364F25953BEB00B06899 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B364E25953BEB00B06899 /* NvimView.swift */; };
+		4B0B365325953CAC00B06899 /* NvimServerTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 4B0B365225953CAC00B06899 /* NvimServerTypes */; };
+		4B0B365725953CDE00B06899 /* NvimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B365625953CDE00B06899 /* NvimView.swift */; };
+		4B0B365D25953D3D00B06899 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B0B365C25953D3D00B06899 /* NvimView */; };
 		4BD67C9924ECF53E00147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7C24ECF35300147C51 /* Commons */; };
 		4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C9624ECF4B300147C51 /* MessagePack */; };
 		4BD67CA524ED037000147C51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD67CA424ED037000147C51 /* AppDelegate.swift */; };
@@ -46,7 +50,6 @@
 		4BD67CC824ED042600147C51 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B201A097751F817A23B1 /* Defs.swift */; };
 		4BD67CCA24ED042F00147C51 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CC924ED042F00147C51 /* MessagePack */; };
 		4BD67CCC24ED089800147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CCB24ED089800147C51 /* Commons */; };
-		4BD67CCE24ED089A00147C51 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CCD24ED089A00147C51 /* NvimView */; };
 		4BD67CD124ED08D400147C51 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CD024ED08D400147C51 /* PureLayout */; };
 		4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF1852221313EE400954FE7 /* AppDelegate.swift */; };
 		4BF1852521313EE500954FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BF1852421313EE500954FE7 /* Assets.xcassets */; };
@@ -73,7 +76,6 @@
 		1929B8E30EBB02E9CF99E5E3 /* AttributesRunDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttributesRunDrawer.swift; path = ../Sources/NvimView/AttributesRunDrawer.swift; sourceTree = "<group>"; };
 		1929B92EC70C40EE6647886E /* Typesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Typesetter.swift; path = ../Sources/NvimView/Typesetter.swift; sourceTree = "<group>"; };
 		1929B9AC87B65FDA23239EA7 /* FontUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FontUtils.swift; path = ../Sources/NvimView/FontUtils.swift; sourceTree = "<group>"; };
-		1929B9D7F040B8B9E2F038DF /* FontTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontTrait.swift; sourceTree = "<group>"; };
 		1929BAF033A398BFBC2A7890 /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
 		1929BC404D40D77F35EA10BB /* Runs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Runs.swift; path = ../Sources/NvimView/Runs.swift; sourceTree = "<group>"; };
 		1929BDFF7AC6A198BDC64B14 /* CellAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CellAttributes.swift; path = ../Sources/NvimView/CellAttributes.swift; sourceTree = "<group>"; };
@@ -86,6 +88,8 @@
 		4B0225F9224AAE270052362B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B0225FC224AAE270052362B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B0225FE224AAE270052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B0B364E25953BEB00B06899 /* NvimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NvimView.swift; sourceTree = "<group>"; };
+		4B0B365625953CDE00B06899 /* NvimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NvimView.swift; sourceTree = "<group>"; };
 		4BD67CA224ED037000147C51 /* DrawerPerf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawerPerf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BD67CA424ED037000147C51 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BD67CA624ED037100147C51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -109,8 +113,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67CD124ED08D400147C51 /* PureLayout in Frameworks */,
+				4B0B365D25953D3D00B06899 /* NvimView in Frameworks */,
 				4BD67CCC24ED089800147C51 /* Commons in Frameworks */,
-				4BD67CCE24ED089A00147C51 /* NvimView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67CBB24ED03BF00147C51 /* Commons in Frameworks */,
+				4B0B365325953CAC00B06899 /* NvimServerTypes in Frameworks */,
 				4BD67CCA24ED042F00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67C9924ECF53E00147C51 /* Commons in Frameworks */,
+				4B0B364B25953BA100B06899 /* NvimServerTypes in Frameworks */,
 				4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,6 +171,13 @@
 			path = MinimalNvimViewDemo;
 			sourceTree = "<group>";
 		};
+		4B0B363425953AC000B06899 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4B90EFFA1FD2AF59008A39E0 = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +186,7 @@
 				4BF1852121313EE400954FE7 /* DrawerDev */,
 				4B0225F1224AAE260052362B /* MinimalNvimViewDemo */,
 				4B90F0051FD2AF59008A39E0 /* Products */,
+				4B0B363425953AC000B06899 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -189,6 +203,7 @@
 		4BD67CA324ED037000147C51 /* DrawerPerf */ = {
 			isa = PBXGroup;
 			children = (
+				4B0B365625953CDE00B06899 /* NvimView.swift */,
 				4BD67CA424ED037000147C51 /* AppDelegate.swift */,
 				4BD67CB124ED03B000147C51 /* FontTrait.swift */,
 				4BD67CB224ED03B000147C51 /* PerfTester.swift */,
@@ -209,8 +224,8 @@
 				4BF1852421313EE500954FE7 /* Assets.xcassets */,
 				4BF1852621313EE500954FE7 /* MainMenu.xib */,
 				4BF1852921313EE500954FE7 /* Info.plist */,
-				1929B9D7F040B8B9E2F038DF /* FontTrait.swift */,
 				1929BAF033A398BFBC2A7890 /* MyView.swift */,
+				4B0B364E25953BEB00B06899 /* NvimView.swift */,
 			);
 			path = DrawerDev;
 			sourceTree = "<group>";
@@ -234,8 +249,8 @@
 			name = MinimalNvimViewDemo;
 			packageProductDependencies = (
 				4BD67CCB24ED089800147C51 /* Commons */,
-				4BD67CCD24ED089A00147C51 /* NvimView */,
 				4BD67CD024ED08D400147C51 /* PureLayout */,
+				4B0B365C25953D3D00B06899 /* NvimView */,
 			);
 			productName = MinimalNvimViewDemo;
 			productReference = 4B0225F0224AAE260052362B /* MinimalNvimViewDemo.app */;
@@ -257,6 +272,7 @@
 			packageProductDependencies = (
 				4BD67CBA24ED03BF00147C51 /* Commons */,
 				4BD67CC924ED042F00147C51 /* MessagePack */,
+				4B0B365225953CAC00B06899 /* NvimServerTypes */,
 			);
 			productName = DrawerPerf;
 			productReference = 4BD67CA224ED037000147C51 /* DrawerPerf.app */;
@@ -278,6 +294,7 @@
 			packageProductDependencies = (
 				4BD67C7C24ECF35300147C51 /* Commons */,
 				4BD67C9624ECF4B300147C51 /* MessagePack */,
+				4B0B364A25953BA100B06899 /* NvimServerTypes */,
 			);
 			productName = DrawerDev;
 			productReference = 4BF1852021313EE300954FE7 /* DrawerDev.app */;
@@ -387,6 +404,7 @@
 				4BD67CBF24ED03F800147C51 /* Runs.swift in Sources */,
 				4BD67CC024ED03F800147C51 /* UGrid.swift in Sources */,
 				4BD67CBE24ED03ED00147C51 /* Typesetter.swift in Sources */,
+				4B0B365725953CDE00B06899 /* NvimView.swift in Sources */,
 				4BD67CA524ED037000147C51 /* AppDelegate.swift in Sources */,
 				4BD67CB724ED03B000147C51 /* PerfTester.swift in Sources */,
 				4BD67CB624ED03B000147C51 /* FontTrait.swift in Sources */,
@@ -398,7 +416,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */,
-				1929BF95400085EE3F0FFAD5 /* FontTrait.swift in Sources */,
 				1929B2DB631E6EB5C3452B68 /* MyView.swift in Sources */,
 				1929BC29B7858F8E963FD9BE /* AttributesRunDrawer.swift in Sources */,
 				1929BCC8C561F0DE73B67D90 /* CellAttributes.swift in Sources */,
@@ -407,6 +424,7 @@
 				1929BE00E22B5E472B89C7AA /* Defs.swift in Sources */,
 				1929B45811AAE477DFA4C107 /* FontUtils.swift in Sources */,
 				1929B11F4306BF8AA97E080F /* Geometry.swift in Sources */,
+				4B0B364F25953BEB00B06899 /* NvimView.swift in Sources */,
 				1929B9F7DD2EB3277A133EAF /* Runs.swift in Sources */,
 				1929BAA738326459033CADAE /* Typesetter.swift in Sources */,
 				1929BE88F4A892215227D0AB /* UGrid.swift in Sources */,
@@ -754,6 +772,18 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B0B364A25953BA100B06899 /* NvimServerTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NvimServerTypes;
+		};
+		4B0B365225953CAC00B06899 /* NvimServerTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NvimServerTypes;
+		};
+		4B0B365C25953D3D00B06899 /* NvimView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NvimView;
+		};
 		4BD67C7C24ECF35300147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
@@ -775,10 +805,6 @@
 		4BD67CCB24ED089800147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
-		};
-		4BD67CCD24ED089A00147C51 /* NvimView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = NvimView;
 		};
 		4BD67CD024ED08D400147C51 /* PureLayout */ = {
 			isa = XCSwiftPackageProductDependency;
