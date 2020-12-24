@@ -18,9 +18,7 @@ extension NvimView {
       -> RemoteOption?
     {
       guard let key = option.key.stringValue,
-            let val = option.value.stringValue else {
-        return nil
-      }
+            let val = option.value.stringValue else { return nil }
 
       switch key {
       case "guifont": return RemoteOption.guifont(fontSpec: val)

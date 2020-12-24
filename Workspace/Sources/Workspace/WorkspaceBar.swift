@@ -335,7 +335,7 @@ extension ProxyBar {
       let locInBar = self.convert(locInProxy, to: self.container)
 
       if self.buttonFrames.filter({ $0.contains(locInBar) }).isEmpty,
-        self.container!.barFrame().contains(locInBar)
+         self.container!.barFrame().contains(locInBar)
       {
         self.container!.tools.remove(at: toolIdx)
         self.container!.tools.append(tool)

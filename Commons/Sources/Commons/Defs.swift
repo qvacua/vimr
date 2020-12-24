@@ -8,7 +8,7 @@ import Foundation
 struct Defs {
   static let loggerSubsystem = "com.qvacua.Commons"
 
-  struct LoggerCategory {
+  enum LoggerCategory {
     static let general = "general"
   }
 }

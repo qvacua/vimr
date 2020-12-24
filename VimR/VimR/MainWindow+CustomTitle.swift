@@ -120,7 +120,7 @@ extension MainWindow {
           toItem: contentView, attribute: .centerX,
           multiplier: 1,
           constant: -4 +
-                    (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
+            (button.frame.width + repIconToTitleGap + title.intrinsicContentSize.width) / 2
         )
       )
 

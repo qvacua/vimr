@@ -203,7 +203,7 @@ extension MainWindow {
       .disposed(by: self.disposeBag)
   }
 
-  fileprivate func savePanelSheet(action: @escaping (URL) -> Void) {
+  private func savePanelSheet(action: @escaping (URL) -> Void) {
     let panel = NSSavePanel()
     panel.beginSheetModal(for: self.window) { result in
       guard result == .OK else {

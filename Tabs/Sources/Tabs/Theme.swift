@@ -17,6 +17,7 @@ public struct Theme {
       )
     }
   }
+
   public var backgroundColor = NSColor.textBackgroundColor
   public var separatorColor = NSColor.gridColor
 

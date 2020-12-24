@@ -20,7 +20,7 @@ extension NvimView {
       return
     }
 
-    handleRemoteOptions(options);
+    self.handleRemoteOptions(options)
   }
 
   final func resize(_ value: MessagePackValue) {
