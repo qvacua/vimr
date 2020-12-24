@@ -288,7 +288,7 @@ class UiBridge {
   }
 
   private func launchNvimUsingLoginShell() {
-    var nvimCmd = [
+    let nvimCmd = [
       // We know that NvimServer is there.
       Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path,
       self.localServerName,
@@ -299,7 +299,7 @@ class UiBridge {
 
     let listenAddress = FileManager.default.temporaryDirectory
       .appendingPathComponent("vimr_\(self.uuid).sock")
-    var nvimEnv = [
+    let nvimEnv = [
       // We know that runtime is there.
       "VIMRUNTIME": Bundle.module.url(forResource: "runtime", withExtension: nil)!.path,
       "NVIM_LISTEN_ADDRESS": listenAddress.path,
