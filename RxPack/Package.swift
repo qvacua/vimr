@@ -20,7 +20,7 @@ let package = Package(
       url: "https://github.com/IBM-Swift/BlueSocket",
       .upToNextMinor(from: "1.0.52")
     ),
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.0.0")),
   ],
   targets: [
     .target(

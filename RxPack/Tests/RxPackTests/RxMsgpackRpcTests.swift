@@ -16,7 +16,7 @@ class RxMsgpackRpcTests: XCTestCase {
     super.setUp()
 
     // $ NVIM_LISTEN_ADDRESS=/tmp/nvim.sock nvim --headless $SOMEFILE
-    self.connection = RxMsgpackRpc()
+    self.connection = RxMsgpackRpc(queueQos: .default)
     self.connection.stream
       .subscribe(
         onNext: { msg in

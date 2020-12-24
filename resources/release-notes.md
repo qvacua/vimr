@@ -2,9 +2,8 @@
 
 ## Since the last snapshot
 
-* GH-830: Support `guifont` option (fixes GH-779). Thank you @Shirk!
-* Revert to old launching logic (first launch the login shell, then launch NvimServer).
-* Adapt title bar rendering on Big Sur.
+* Dependencies updates:
+    - Quick/Nimble@9.0.0
 
 ## Since 0.34.0
 
@@ -16,6 +15,9 @@
 * GH-812: Allow all fonts, but warn when variable width font is selected.
 * Do not hard-code `${LANG}` environment variable to `en_US.UTF-8`.
 * Replace FontAwesome with [Material Icons](https://github.com/qvacua/material-icons).
+* GH-830: Support `guifont` option (fixes GH-779). Thank you @Shirk!
+* Revert to old launching logic (first launch the login shell, then launch NvimServer).
+* Adapt title bar rendering on Big Sur.
 * Dependencies updates:
     - httpswift/swifter@1.5.0
 

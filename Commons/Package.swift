@@ -9,7 +9,7 @@ let package = Package(
     .library(name: "Commons", targets: ["Commons", "CommonsObjC"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.0.0")),
   ],
   targets: [
     .target(name: "Commons", dependencies: []),
