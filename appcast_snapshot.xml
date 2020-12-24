@@ -7,17 +7,21 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20201210.181940</title>
+      <title>SNAPSHOT-20201224.175200</title>
       <description><![CDATA[
-    <h2>Since the last snapshot</h2>
+    <p><em>WARNING</em>: This version may be very instable!</p>
+<h2>Since the last snapshot</h2>
 <ul>
-<li>GH-349: First version of custom tabs. If they does not work well, you can turn it off in the
-  Appearance preferences.</li>
+<li>GH-830: Support <code>guifont</code> option (fixes GH-779). Thank you @Shirk!</li>
+<li>Revert to old launching logic (first launch the login shell, then launch NvimServer).</li>
+<li>Adapt title bar rendering on Big Sur.</li>
 </ul>
 <h2>Since 0.34.0</h2>
 <ul>
 <li>Universal binary!</li>
-<li>Neovim 0.5-dev (neovim/neovim@0798ad3a3a071db1b647df5aecd7698ed9aff7d9)</li>
+<li>Neovim 0.5-dev (neovim/neovim@52e660e)</li>
+<li>GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
+  Appearance preferences.</li>
 <li>GH-804: Configurable cursor shapes and color: Thank you @cypheon!</li>
 <li>GH-812: Allow all fonts, but warn when variable width font is selected.</li>
 <li>Do not hard-code <code>${LANG}</code> environment variable to <code>en_US.UTF-8</code>.</li>
@@ -29,15 +33,15 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20201210.181940
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20201224.175200
       </releaseNotesLink>
-      <pubDate>2020-12-10T18:35:39.262632</pubDate>
+      <pubDate>2020-12-24T18:15:05.407505</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20201210.181940/VimR-SNAPSHOT-20201210.181940.tar.bz2"
-                 sparkle:version="20201210.181940"
-                 sparkle:shortVersionString="SNAPSHOT-20201210.181940"
-                 sparkle:dsaSignature="MC0CFHgZc98a/LrVOGELr3AYkI87BamqAhUAs+SbP2iYKgfhYK1T8qpmWXmoySg="
-                 length="20639401"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20201224.175200/VimR-SNAPSHOT-20201224.175200.tar.bz2"
+                 sparkle:version="20201224.175200"
+                 sparkle:shortVersionString="SNAPSHOT-20201224.175200"
+                 sparkle:dsaSignature="MCwCFC5ngE/xUpuq6nNIx0XihGMns9VtAhQWgGZeTh/T3eu5aPB14wH4nL/luQ=="
+                 length="20680319"
                  type="application/octet-stream"/>
     </item>
   </channel>
