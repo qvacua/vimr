@@ -16,7 +16,7 @@ let package = Package(
     ),
     .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "5.1.1")),
     .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "8.1.1")),
-    .package(name: "NvimServerTypes", path: "../NvimServer"),
+    .package(name: "NvimServer", path: "../NvimServer"),
     .package(name: "RxPack", path: "../RxPack"),
     .package(name: "Commons", path: "../Commons"),
     .package(name: "Tabs", path: "../Tabs"),
@@ -24,7 +24,14 @@ let package = Package(
   targets: [
     .target(
       name: "NvimView",
-      dependencies: ["RxSwift", "RxPack", "Tabs", "NvimServerTypes", "MessagePack", "Commons"],
+      dependencies: [
+        "RxSwift",
+        "RxPack",
+        "Tabs",
+        .product(name: "NvimServerTypes", package: "NvimServer"),
+        "MessagePack",
+        "Commons",
+      ],
       // com.qvacua.NvimView.vim is copied by the download NvimServer script.
       exclude: ["Resources/com.qvacua.NvimView.vim"],
       resources: [
