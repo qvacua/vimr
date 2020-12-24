@@ -1,1 +1,1 @@
-dev-nvimserver-universal
+../NvimServer/NvimServer/Resources/nvim-version-for-download.txt
