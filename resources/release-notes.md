@@ -4,6 +4,7 @@
 
 * GH-830: Support `guifont` option (fixes GH-779). Thank you @Shirk!
 * Revert to old launching logic (first launch the login shell, then launch NvimServer).
+* Adapt title bar rendering on Big Sur.
 
 ## Since 0.34.0
 
