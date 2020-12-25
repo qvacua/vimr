@@ -14,25 +14,25 @@ class RxSwiftCommonsTest: XCTestCase {
 
     let xs = scheduler.createHotObservable(
       [
-        next(150, 1),
-        next(210, 2),
-        next(220, 3),
-        next(230, 4),
-        next(240, 5),
-        next(260, 6),
-        completed(300),
+        Recorded.next(150, 1),
+        Recorded.next(210, 2),
+        Recorded.next(220, 3),
+        Recorded.next(230, 4),
+        Recorded.next(240, 5),
+        Recorded.next(260, 6),
+        Recorded.completed(300),
       ]
     )
 
     let res = scheduler.start { xs.compactMap { $0 % 2 == 0 ? $0 : nil } }
 
     let correctMessages = [
-      next(210, 2),
-      next(230, 4),
-      next(260, 6),
-      completed(300),
+      Recorded.next(210, 2),
+      Recorded.next(230, 4),
+      Recorded.next(260, 6),
+      Recorded.completed(300),
     ]
 
-    XCTAssertEqual(res.events, correctMessages)
+    expect(res.events).to(equal(correctMessages))
   }
 }
