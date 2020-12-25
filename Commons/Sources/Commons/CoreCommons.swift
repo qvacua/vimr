@@ -14,11 +14,3 @@ public extension CGSize {
     CGSize(width: self.width * factor, height: self.height * factor)
   }
 }
-
-public extension CGRect {
-  var hashValue: Int {
-    let o = Int(self.origin.x) << 10 ^ Int(self.origin.y)
-    let s = Int(self.size.width) << 10 ^ Int(self.size.height)
-    return o + s
-  }
-}

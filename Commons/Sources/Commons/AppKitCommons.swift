@@ -87,7 +87,10 @@ public extension NSColor {
 
 public extension NSImage {
   func tinting(with color: NSColor) -> NSImage {
+    // swiftlint:disable force_cast
+    // Copy should be safe to force cast.
     let result = self.copy() as! NSImage
+    // swiftlint:enable force_cast
 
     result.lockFocus()
     color.set()
@@ -132,7 +135,6 @@ public extension NSView {
 
 public extension NSEvent.ModifierFlags {
   // Values are from https://github.com/SFML/SFML/blob/master/src/SFML/Window/OSX/SFKeyboardModifiersHelper.mm
-  // @formatter:off
   static let rightShift = NSEvent.ModifierFlags(rawValue: 0x020004)
   static let leftShift = NSEvent.ModifierFlags(rawValue: 0x020002)
   static let rightCommand = NSEvent.ModifierFlags(rawValue: 0x100010)
@@ -141,5 +143,4 @@ public extension NSEvent.ModifierFlags {
   static let leftOption = NSEvent.ModifierFlags(rawValue: 0x080020)
   static let rightControl = NSEvent.ModifierFlags(rawValue: 0x042000)
   static let leftControl = NSEvent.ModifierFlags(rawValue: 0x040001)
-  // @formatter:on
 }

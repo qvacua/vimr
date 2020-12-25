@@ -160,7 +160,7 @@ public extension URL {
     do {
       try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
     } catch let error as NSError {
-      // FIXME: error handling
+      // FIXME: How to error handle?
       log.error("ERROR while getting \(key): \(error)")
       return false
     }
