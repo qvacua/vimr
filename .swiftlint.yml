@@ -1,0 +1,18 @@
+disabled_rules:
+  - opening_brace
+  - trailing_comma
+  - orphaned_doc_comment
+  - identifier_name
+  - statement_position
+nesting:
+  type_level: 3
+identifier_name:
+  min_length: 2
+excluded:
+  - Carthage
+  - .build
+  - .deps
+  - build
+  - NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift
+  - NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift
+  - RxPack/Sources/RxPack/RxNeovimApi.generated.swift
