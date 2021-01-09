@@ -4,15 +4,12 @@
  */
 
 import Cocoa
-import RxSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_: Notification) {}
 
-  func applicationShouldTerminate(
-    _: NSApplication
-  ) -> NSApplication.TerminateReply {
+  func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
     NSDocumentController.shared
       .documents
       .compactMap { $0 as? Document }
