@@ -45,7 +45,7 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
   and upload them to the release from the last step.
 * Set a new version of VimR via
     ```
-    ./bin/set_new_version.sh`
+    is_snapshot=true ./bin/set_new_versions.sh
     ```
 * Push and and build using
     ```
