@@ -10,10 +10,7 @@ main() {
 
     echo "#### Uploading"
     local -x request_uuid
-    request_uuid=$(xcrun \
-      altool --notarize-app --primary-bundle-id "com.qvacua.VimR" \
-      --username "hataewon@gmail.com" --password "@keychain:dev-notar" \
-      --file VimR.app.zip | grep RequestUUID | sed -E 's/.* = (.*)/\1/')
+    request_uuid=$(xcrun altool --notarize-app --primary-bundle-id "com.qvacua.VimR" --username "hataewon@gmail.com" --password "@keychain:dev-notar" --file VimR.app.zip | grep RequestUUID | sed -E 's/.* = (.*)/\1/')
     readonly request_uuid
 
     echo "#### Uploaded"

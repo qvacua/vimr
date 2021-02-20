@@ -2,6 +2,7 @@
 
 ## Since the last snapshot
 
+* GH-832: Re-revert neovim launching code
 * Dependencies updates:
     - Quick/Nimble@9.0.0
 
