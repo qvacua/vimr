@@ -88,7 +88,7 @@ class UiBridge {
       .run(as: self.localServerName)
       .andThen(Completable.create { completable in
         self.runLocalServerAndNvimCompletable = completable
-        self.launchNvimUsingLoginShell()
+        self.launchNvimUsingLoginShellEnv()
 
         // This will be completed in .nvimReady branch of handleMessage()
         return Disposables.create()
@@ -287,6 +287,39 @@ class UiBridge {
     self.nvimServerProc?.terminate()
   }
 
+  private func launchNvimUsingLoginShellEnv() {
+    let listenAddress = URL(fileURLWithPath: NSTemporaryDirectory())
+      .appendingPathComponent("vimr_\(self.uuid).sock")
+    var env = self.envDict
+    env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
+    env["NVIM_LISTEN_ADDRESS"] = listenAddress.path
+
+    self.log.debug("Socket: \(listenAddress.path)")
+
+    let usesCustomTabBarArg = self.usesCustomTabBar ? "1" : "0"
+
+    let outPipe = Pipe()
+    let errorPipe = Pipe()
+    let process = Process()
+    process.environment = env
+    process.standardError = errorPipe
+    process.standardOutput = outPipe
+    process.currentDirectoryPath = self.cwd.path
+    // We know that NvimServer is there.
+    process.launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
+    process
+      .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
+    ["--headless"] + self.nvimArgs
+
+    self.log.debug(
+      "Launching NvimServer with args: \(String(describing: process.arguments))"
+    )
+    process.launch()
+
+    self.nvimServerProc = process
+  }
+
+  // FIXME: GH-832
   private func launchNvimUsingLoginShell() {
     let nvimCmd = [
       // We know that NvimServer is there.
