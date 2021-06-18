@@ -4,7 +4,11 @@
 
 * GH-832: Re-revert neovim launching code
 * Dependencies updates:
-    - Quick/Nimble@9.0.0
+    - PureLayout/PureLayout@3.1.9
+    - iwasrobbed/Down@0.11.0
+    - sparkle-project/Sparkle@1.26.0
+    - Quick/Nimble@9.2.0
+    - ReactiveX/RxSwift@6.2.0
 
 ## Since 0.34.0
 
