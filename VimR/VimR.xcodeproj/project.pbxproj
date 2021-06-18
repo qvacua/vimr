@@ -78,12 +78,8 @@
 		4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
 		4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
 		4B0B36252595236000B06899 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC41D24EB2E22000209B5 /* MessagePack */; };
-		4B0B36262595236000B06899 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42024EB2E45000209B5 /* RxCocoa */; };
-		4B0B36272595236000B06899 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42224EB2E45000209B5 /* RxSwift */; };
-		4B0B36282595236000B06899 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42424EB2E45000209B5 /* RxRelay */; };
 		4B0B36292595236000B06899 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42624EB2E51000209B5 /* NvimView */; };
 		4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */; };
-		4B0B362B2595236000B06899 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7724EC488200147C51 /* RxPack */; };
 		4B0B362C2595236000B06899 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7A24EC765900147C51 /* Commons */; };
 		4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */ = {isa = PBXBuildFile; productRef = 4B69B31A24EDBAF000B1E5EB /* MaterialIcons */; };
 		4B0B362E2595236000B06899 /* Workspace in Frameworks */ = {isa = PBXBuildFile; productRef = 4B69B31C24EDC9F100B1E5EB /* Workspace */; };
@@ -96,6 +92,9 @@
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
 		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
+		4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE2267C71ED00F77527 /* RxCocoa */; };
+		4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE4267C71ED00F77527 /* RxRelay */; };
+		4B6C6AE7267C71ED00F77527 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE6267C71ED00F77527 /* RxSwift */; };
 		4B9433DC20B95EC6005807BA /* MacVim-bsh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A120B95EC1005807BA /* MacVim-bsh.icns */; };
 		4B9433DD20B95EC6005807BA /* MacVim-generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A220B95EC1005807BA /* MacVim-generic.icns */; };
 		4B9433DE20B95EC6005807BA /* MacVim-dylan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433A320B95EC1005807BA /* MacVim-dylan.icns */; };
@@ -363,20 +362,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */,
-				4B0B36282595236000B06899 /* RxRelay in Frameworks */,
 				4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */,
-				4B0B362B2595236000B06899 /* RxPack in Frameworks */,
+				4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */,
 				4B0B36212595236000B06899 /* PureLayout in Frameworks */,
+				4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */,
 				4B0B362E2595236000B06899 /* Workspace in Frameworks */,
 				4B0B362C2595236000B06899 /* Commons in Frameworks */,
 				4B0B36202595236000B06899 /* Swifter in Frameworks */,
-				4B0B36262595236000B06899 /* RxCocoa in Frameworks */,
 				4B0B362F2595236000B06899 /* Sparkle in Frameworks */,
 				4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */,
 				4B0B36222595236000B06899 /* Down in Frameworks */,
 				4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */,
+				4B6C6AE7267C71ED00F77527 /* RxSwift in Frameworks */,
 				4B0B36292595236000B06899 /* NvimView in Frameworks */,
-				4B0B36272595236000B06899 /* RxSwift in Frameworks */,
 				4B0B36252595236000B06899 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -778,16 +776,15 @@
 				4BD5657724E8443300D52809 /* DictionaryCoding */,
 				4BD5657A24E8448300D52809 /* EonilFSEvents */,
 				4B9BC41D24EB2E22000209B5 /* MessagePack */,
-				4B9BC42024EB2E45000209B5 /* RxCocoa */,
-				4B9BC42224EB2E45000209B5 /* RxSwift */,
-				4B9BC42424EB2E45000209B5 /* RxRelay */,
 				4B9BC42624EB2E51000209B5 /* NvimView */,
 				4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */,
-				4BD67C7724EC488200147C51 /* RxPack */,
 				4BD67C7A24EC765900147C51 /* Commons */,
 				4B69B31A24EDBAF000B1E5EB /* MaterialIcons */,
 				4B69B31C24EDC9F100B1E5EB /* Workspace */,
 				4BA284B1256471ED00CFDF7F /* Sparkle */,
+				4B6C6AE2267C71ED00F77527 /* RxCocoa */,
+				4B6C6AE4267C71ED00F77527 /* RxRelay */,
+				4B6C6AE6267C71ED00F77527 /* RxSwift */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -1390,7 +1387,7 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = exactVersion;
-				version = 5.1.1;
+				version = 6.2.0;
 			};
 		};
 		4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */ = {
@@ -1469,25 +1466,25 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Workspace;
 		};
-		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
-			productName = MessagePack;
-		};
-		4B9BC42024EB2E45000209B5 /* RxCocoa */ = {
+		4B6C6AE2267C71ED00F77527 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
-		4B9BC42224EB2E45000209B5 /* RxSwift */ = {
+		4B6C6AE4267C71ED00F77527 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		4B6C6AE6267C71ED00F77527 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
-		4B9BC42424EB2E45000209B5 /* RxRelay */ = {
+		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxRelay;
+			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
+			productName = MessagePack;
 		};
 		4B9BC42624EB2E51000209B5 /* NvimView */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1527,10 +1524,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */;
 			productName = EonilFSEvents;
-		};
-		4BD67C7724EC488200147C51 /* RxPack */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RxPack;
 		};
 		4BD67C7A24EC765900147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;

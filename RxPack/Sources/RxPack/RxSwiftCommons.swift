@@ -67,13 +67,6 @@ public extension PrimitiveSequence where Trait == SingleTrait {
       .toArray()
   }
 
-  func flatMapCompletable(_ selector: @escaping (Element) throws -> Completable) -> Completable {
-    self
-      .asObservable()
-      .flatMap { try selector($0).asObservable() }
-      .ignoreElements()
-  }
-
   func syncValue(timeout: TimeInterval = 5) -> Element? {
     var trigger = false
     var value: Element?
@@ -106,6 +99,4 @@ public extension PrimitiveSequence where Trait == SingleTrait {
 
     return value
   }
-
-  func asCompletable() -> Completable { self.asObservable().ignoreElements() }
 }

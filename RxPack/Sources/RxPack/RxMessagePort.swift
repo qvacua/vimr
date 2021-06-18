@@ -54,7 +54,7 @@ public final class RxMessagePortClient {
     Single.create { single in
       self.queue.async {
         guard CFMessagePortIsValid(self.port) else {
-          single(.error(Error.portInvalid))
+          single(.failure(Error.portInvalid))
           return
         }
 
@@ -72,7 +72,7 @@ public final class RxMessagePortClient {
         )
 
         guard responseCode == kCFMessagePortSuccess else {
-          single(.error(
+          single(.failure(
             Error.send(msgid: msgid, response: ResponseCode(rawResponseCode: responseCode))
           ))
           return
