@@ -275,7 +275,7 @@ class MainWindow: NSObject,
 
   private func subscribeToNvimViewEvents() {
     self.neoVimView.events
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] event in
         switch event {
         case .neoVimStopped: self?.neoVimStopped()
@@ -325,7 +325,7 @@ class MainWindow: NSObject,
 
   private func subscribeToStateChange(source: Observable<StateType>) {
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.isClosing {
           return

@@ -26,7 +26,7 @@ class UiRoot: UiComponent {
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         let uuidsInState = Set(state.mainWindows.keys)
 

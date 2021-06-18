@@ -50,7 +50,7 @@ class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     }
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.viewToBeFocused != nil,
            case .htmlPreview = state.viewToBeFocused! { self.beFirstResponder() }

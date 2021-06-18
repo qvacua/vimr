@@ -35,7 +35,7 @@ class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.updateViews()
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.isLeftOptionMeta != state.mainWindowTemplate.isLeftOptionMeta
           || self.isRightOptionMeta != state.mainWindowTemplate.isRightOptionMeta

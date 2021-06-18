@@ -55,7 +55,7 @@ class OpenQuicklyWindow: NSObject,
     self.addViews()
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] state in self?.subscription(state) })
       .disposed(by: self.disposeBag)
   }
@@ -145,7 +145,7 @@ class OpenQuicklyWindow: NSObject,
     self.cwdControl.url = cwd
 
     self.searchStream
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] pattern in
         self?.scanAndScore(pattern)
       })

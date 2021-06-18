@@ -112,7 +112,7 @@ protocol UiComponent {
 
 class ActionEmitter {
   var observable: Observable<ReduxTypes.ActionType> {
-    self.subject.asObservable().observeOn(self.scheduler)
+    self.subject.asObservable().observe(on: self.scheduler)
   }
 
   func typedEmit<T>() -> (T) -> Void {{ (action: T) in self.subject.onNext(action) } }
@@ -149,7 +149,7 @@ class ReduxContext {
 
   init(initialState: ReduxTypes.StateType) {
     self.state = initialState
-    self.stateSource = self.stateSubject.asObservable().observeOn(self.stateScheduler)
+    self.stateSource = self.stateSubject.asObservable().observe(on: self.stateScheduler)
   }
 
   func terminate() {

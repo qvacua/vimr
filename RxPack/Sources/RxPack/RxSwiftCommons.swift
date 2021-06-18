@@ -78,12 +78,12 @@ public extension PrimitiveSequence where Trait == SingleTrait {
 
     let disposable = self.subscribe(onSuccess: { result in
       value = result
-
+      
       condition.lock()
       defer { condition.unlock() }
       trigger = true
       condition.broadcast()
-    }, onError: { _ in
+    }, onFailure: { _ in
       condition.lock()
       defer { condition.unlock() }
       trigger = true

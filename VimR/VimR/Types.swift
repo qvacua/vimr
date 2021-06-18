@@ -104,7 +104,7 @@ class UiComponentTemplate: UiComponent {
 
     // react to the new state
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(
         onNext: { _ in
           Swift.print("Hello, \(self.someField)")

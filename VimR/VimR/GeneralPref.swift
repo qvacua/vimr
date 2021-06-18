@@ -41,7 +41,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.openWhenLaunchingCheckbox.boolState != state.openNewMainWindowOnLaunch {
           self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
