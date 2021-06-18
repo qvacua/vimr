@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/iwasrobbed/Down",
         "state": {
           "branch": null,
-          "revision": "731f6bbab24ab208ea2d6a944e3f8a8a9d5273c7",
-          "version": "0.9.4"
+          "revision": "f34b166be1f1db4aa8f573067e901d72f2a6be57",
+          "version": "0.11.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble",
         "state": {
           "branch": null,
-          "revision": "e491a6731307bb23783bf664d003be9b2fa59ab5",
-          "version": "9.0.0"
+          "revision": "af1730dde4e6c0d45bf01b99f8a41713ce536790",
+          "version": "9.2.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/PureLayout/PureLayout",
         "state": {
           "branch": null,
-          "revision": "d19b40e831e4d621097765998be97df3856e8413",
-          "version": "3.1.6"
+          "revision": "5561683c96dc49b023c1299bfe4f6fbeed5f8199",
+          "version": "3.1.9"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/ReactiveX/RxSwift",
         "state": {
           "branch": null,
-          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
-          "version": "5.1.1"
+          "revision": "7c17a6ccca06b5c107cfa4284e634562ddaf5951",
+          "version": "6.2.0"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/sparkle-project/Sparkle",
         "state": {
           "branch": null,
-          "revision": "891afd44c7075e699924ed9b81d8dc94a5111dfd",
-          "version": "1.24.0-spm"
+          "revision": "c0933a516b420806e9216e71bd13ba76c54f0de6",
+          "version": "1.26.0"
         }
       },
       {

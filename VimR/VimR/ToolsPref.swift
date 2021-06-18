@@ -33,7 +33,7 @@ class ToolsPref: PrefPane, UiComponent {
     self.updateViews()
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { _ in
 
         self.updateViews()

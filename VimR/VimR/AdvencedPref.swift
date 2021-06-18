@@ -41,7 +41,7 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.updateViews()
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
           || self.useSnapshotUpdate != state.useSnapshotUpdate

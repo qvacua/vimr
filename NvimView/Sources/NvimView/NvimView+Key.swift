@@ -118,7 +118,7 @@ public extension NvimView {
     if chars == "\0" {
       self.api
         .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onError: { [weak self] error in
+        .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
         .disposed(by: self.disposeBag)
@@ -131,7 +131,7 @@ public extension NvimView {
     if flags == .control, chars == "6" {
       self.api
         .input(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
-        .subscribe(onError: { [weak self] error in
+        .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
         .disposed(by: self.disposeBag)
@@ -142,7 +142,7 @@ public extension NvimView {
       // <C-2> should generate \0, escaping as above
       self.api
         .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onError: { [weak self] error in
+        .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
         .disposed(by: self.disposeBag)

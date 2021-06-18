@@ -40,7 +40,7 @@ class PrefWindow: NSObject,
     self.addViews()
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.preferencesOpen.payload == false {
           self.openStatusMark = state.preferencesOpen.mark

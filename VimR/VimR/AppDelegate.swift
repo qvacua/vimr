@@ -77,7 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     )
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }

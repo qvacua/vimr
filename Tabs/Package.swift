@@ -18,7 +18,7 @@ let package = Package(
     .package(
       name: "PureLayout",
       url: "https://github.com/PureLayout/PureLayout",
-      .upToNextMinor(from: "3.1.6")
+      .upToNextMinor(from: "3.1.9")
     ),
   ],
   targets: [

@@ -166,7 +166,7 @@ extension MainWindow {
   @IBAction func saveDocument(_: Any?) {
     self.neoVimView
       .currentBuffer()
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .flatMapCompletable { curBuf -> Completable in
         if curBuf.url == nil {
           self.savePanelSheet {
@@ -187,7 +187,7 @@ extension MainWindow {
   @IBAction func saveDocumentAs(_: Any?) {
     self.neoVimView
       .currentBuffer()
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onSuccess: { curBuf in
         self.savePanelSheet { url in
           self.neoVimView

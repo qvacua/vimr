@@ -79,7 +79,7 @@ class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     if let url = state.preview.server { self.webview.load(URLRequest(url: url)) }
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if state.viewToBeFocused != nil,
            case .markdownPreview = state.viewToBeFocused!

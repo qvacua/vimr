@@ -117,7 +117,7 @@ extension NvimView {
 
     self.api
       .input(keys: result, errWhenBlocked: false)
-      .subscribe(onError: { [weak self] error in
+      .subscribe(onFailure: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
       .disposed(by: self.disposeBag)

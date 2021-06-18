@@ -186,7 +186,7 @@ extension NvimView {
     if event == .vimenter {
       Completable
         .empty()
-        .observeOn(SerialDispatchQueueScheduler(qos: .userInitiated))
+        .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
         .andThen(
           Completable.create { completable in
             self.rpcEventSubscriptionCondition.wait(for: 5)
@@ -245,7 +245,7 @@ extension NvimView {
     try? self.api
       .stop()
       .andThen(self.bridge.forceQuit())
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .wait(onCompleted: { [weak self] in
         self?.bridgeLogger.fault("Successfully force-closed the bridge.")
       }, onError: { [weak self] in
@@ -621,7 +621,7 @@ extension NvimView {
       .subscribe(onSuccess: { [weak self] in
         self?.eventsSubject.onNext(.bufferWritten($0))
         self?.updateTouchBarTab()
-      }, onError: { [weak self] error in
+      }, onFailure: { [weak self] error in
         self?.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
         self?.eventsSubject.onNext(
           .apiError(msg: "Could not get the buffer \(handle).", cause: error)

@@ -113,14 +113,14 @@ public final class RxMsgpackRpc {
         )
 
         if self.socket?.remoteConnectionClosed == true {
-          single(.error(Error(
+          single(.failure(Error(
             msg: "Connection stopped, but trying to send a request with msg id \(msgid)"
           )))
           return
         }
 
         guard let socket = self.socket else {
-          single(.error(Error(
+          single(.failure(Error(
             msg: "Socket is invalid, but trying to send a request with " +
               "msg id \(msgid): \(method) with \(params)"
           )))
@@ -132,7 +132,7 @@ public final class RxMsgpackRpc {
         do {
           let writtenBytes = try socket.write(from: packed)
           if writtenBytes < packed.count {
-            single(.error(Error(
+            single(.failure(Error(
               msg: "(Written) = \(writtenBytes) < \(packed.count) = " +
                 "(requested) for msg id: \(msgid)"
             )))
@@ -144,7 +144,7 @@ public final class RxMsgpackRpc {
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           ))
 
-          single(.error(Error(
+          single(.failure(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           )))
 

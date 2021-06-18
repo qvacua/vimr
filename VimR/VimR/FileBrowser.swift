@@ -50,7 +50,7 @@ class FileBrowser: NSView,
     self.innerCustomToolbar.fileBrowser = self
 
     source
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.cwd != state.cwd {
           self.cwd = state.cwd

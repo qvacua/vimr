@@ -106,7 +106,7 @@ public class NvimView: NSView,
     set {
       self.api
         .setCurrentDir(dir: newValue.path)
-        .subscribeOn(self.scheduler)
+        .subscribe(on: self.scheduler)
         .subscribe(onError: { [weak self] error in
           self?.eventsSubject
             .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
