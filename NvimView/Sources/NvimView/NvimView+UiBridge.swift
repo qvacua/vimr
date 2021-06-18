@@ -621,7 +621,7 @@ extension NvimView {
       .subscribe(onSuccess: { [weak self] in
         self?.eventsSubject.onNext(.bufferWritten($0))
         self?.updateTouchBarTab()
-      }, onError: { [weak self] error in
+      }, onFailure: { [weak self] error in
         self?.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
         self?.eventsSubject.onNext(
           .apiError(msg: "Could not get the buffer \(handle).", cause: error)
