@@ -1406,7 +1406,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = "1.24.0-spm";
+				version = 1.26.0;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
@@ -1422,7 +1422,7 @@
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
 			requirement = {
 				kind = exactVersion;
-				version = 3.1.6;
+				version = 3.1.9;
 			};
 		};
 		4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */ = {
@@ -1430,7 +1430,7 @@
 			repositoryURL = "https://github.com/iwasrobbed/Down";
 			requirement = {
 				kind = exactVersion;
-				version = 0.9.4;
+				version = 0.11.0;
 			};
 		};
 		4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
@@ -1454,7 +1454,7 @@
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 9.0.0;
+				minimumVersion = 9.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
