@@ -126,7 +126,7 @@ extension NvimView {
       foreground: cursorTextColor,
       background: cursorShapeAttrs.effectiveBackground,
       special: cellAtCursorAttrs.special,
-      reverse: true
+      reverse: !cellAtCursorAttrs.reverse
     )
 
     context.saveGState()
