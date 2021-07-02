@@ -2,6 +2,7 @@
 
 ## Since the last snapshot
 
+* Neovim 0.5.0
 * GH-832: Re-revert neovim launching code
 * Dependencies updates:
     - PureLayout/PureLayout@3.1.9
