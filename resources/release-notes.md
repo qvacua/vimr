@@ -2,8 +2,13 @@
 
 ## Since the last snapshot
 
-* Neovim 0.5.0
+* ...
+
+## SNAPSHOT-20210703.151310
+
+* Neovim 0.5.0 😀
 * GH-832: Re-revert neovim launching code
+* GH-750: Search highlight displays incorrectly for gui=reverse: Thanks @rluba for the PR!
 * Dependencies updates:
     - PureLayout/PureLayout@3.1.9
     - iwasrobbed/Down@0.11.0
