@@ -13,9 +13,9 @@ class UrlCommonsTest: XCTestCase {
     let noChild1 = URL(fileURLWithPath: "/some/where/else/text.txt")
     let noChild2 = URL(fileURLWithPath: "/some/text.txt")
 
-    expect(parent.isDirectParent(of: child)).to(beTrue())
-    expect(parent.isDirectParent(of: noChild1)).to(beFalse())
-    expect(parent.isDirectParent(of: noChild2)).to(beFalse())
+    expect(parent.isParent(of: child)).to(beTrue())
+    expect(parent.isParent(of: noChild1)).to(beFalse())
+    expect(parent.isParent(of: noChild2)).to(beFalse())
   }
 
   func testIsParent() {
@@ -25,10 +25,10 @@ class UrlCommonsTest: XCTestCase {
     let noChild1 = URL(fileURLWithPath: "/some/where/else/text.txt")
     let noChild2 = URL(fileURLWithPath: "/some/text.txt")
 
-    expect(parent.isParent(of: child1)).to(beTrue())
-    expect(parent.isParent(of: child2)).to(beTrue())
-    expect(parent.isParent(of: noChild1)).to(beFalse())
-    expect(parent.isParent(of: noChild2)).to(beFalse())
+    expect(parent.isAncestor(of: child1)).to(beTrue())
+    expect(parent.isAncestor(of: child2)).to(beTrue())
+    expect(parent.isAncestor(of: noChild1)).to(beFalse())
+    expect(parent.isAncestor(of: noChild2)).to(beFalse())
   }
 
   func testIsContained() {
