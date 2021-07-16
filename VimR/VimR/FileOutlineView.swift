@@ -120,7 +120,7 @@ class FileOutlineView: NSOutlineView,
         return
       }
 
-      if node.url.isParent(of: url) {
+      if node.url.isAncestor(of: url) {
         self.expandItem(childOfRoot)
         stack.append(contentsOf: childOfRoot.children ?? [])
         break
@@ -136,7 +136,7 @@ class FileOutlineView: NSOutlineView,
         return
       }
 
-      if node.url.isParent(of: url) { stack.append(contentsOf: item.children ?? []) }
+      if node.url.isAncestor(of: url) { stack.append(contentsOf: item.children ?? []) }
     }
   }
 

@@ -375,7 +375,7 @@ class FuzzySearchService {
   }
 
   private func baton(for url: URL) -> (FileScanBaton, [FileScanBaton]) {
-    assert(self.root.isParent(of: url) || url == self.root)
+    assert(self.root.isAncestor(of: url) || url == self.root)
 
     if url == self.root {
       let rootBaton = FileScanBaton(baseUrl: self.root)
