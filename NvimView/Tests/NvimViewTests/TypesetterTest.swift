@@ -432,34 +432,41 @@ class TypesetterWithLigaturesTest: XCTestCase {
     )
     expect(runs).to(haveCount(4))
 
-    // The positions of the combining characters are copied from print outputs
-    // and they are visually checked by drawing them and inspecting them...
-    var run = runs[0]
-    expect(run.font).to(equalFont(courierNew))
-    expect(run.glyphs).to(haveCount(2))
-    expect(run.positions[0])
-      .to(equal(CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)))
-    expect(run.positions[1].x)
-      .to(beCloseTo(offset.x + 1 * defaultWidth + 0.003, within: 0.001))
-    expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
+    // newest xcode(13.1) will crash at the follwing code, by use var run, and call expect(run.positions[0]). avoid crash
+    do {
+        // The positions of the combining characters are copied from print outputs
+        // and they are visually checked by drawing them and inspecting them...
+        let run = runs[0]
+        expect(run.font).to(equalFont(courierNew))
+        expect(run.glyphs).to(haveCount(2))
+        expect(run.positions[0])
+          .to(equal(CGPoint(x: offset.x + 1 * defaultWidth, y: offset.y)))
+        expect(run.positions[1].x)
+          .to(beCloseTo(offset.x + 1 * defaultWidth + 0.003, within: 0.001))
+        expect(run.positions[1].y).to(beCloseTo(offset.y + 0.305, within: 0.001))
+    }
 
-    run = runs[1]
-    expect(run.font).to(equalFont(defaultFont))
-    expect(run.glyphs).to(haveCount(2))
-    expect(run.positions[0])
-      .to(equal(CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y)))
-    expect(run.positions[1].x)
-      .to(beCloseTo(offset.x + 2 * defaultWidth, within: 0.001))
-    expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
+    do {
+        let run = runs[1]
+        expect(run.font).to(equalFont(defaultFont))
+        expect(run.glyphs).to(haveCount(2))
+        expect(run.positions[0])
+          .to(equal(CGPoint(x: offset.x + 2 * defaultWidth, y: offset.y)))
+        expect(run.positions[1].x)
+          .to(beCloseTo(offset.x + 2 * defaultWidth, within: 0.001))
+        expect(run.positions[1].y).to(beCloseTo(offset.y - 0.279, within: 0.001))
+    }
 
-    run = runs[2]
-    expect(run.font).to(equalFont(monaco))
-    expect(run.glyphs).to(haveCount(2))
-    expect(run.positions[0])
-      .to(equal(CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y)))
-    expect(run.positions[1].x)
-      .to(beCloseTo(offset.x + 3 * defaultWidth + 7.804, within: 0.001))
-    expect(run.positions[1].y).to(beCloseTo(offset.y + 2.446, within: 0.001))
+    do {
+        let run = runs[2]
+        expect(run.font).to(equalFont(monaco))
+        expect(run.glyphs).to(haveCount(2))
+        expect(run.positions[0])
+          .to(equal(CGPoint(x: offset.x + 3 * defaultWidth, y: offset.y)))
+        expect(run.positions[1].x)
+          .to(beCloseTo(offset.x + 3 * defaultWidth + 7.804, within: 0.001))
+        expect(run.positions[1].y).to(beCloseTo(offset.y + 2.446, within: 0.001))
+    }
 
     self.assertEmojiMarker(run: runs[3], xPosition: offset.x + 4 * defaultWidth)
   }
