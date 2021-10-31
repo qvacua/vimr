@@ -61,6 +61,27 @@ Let's assume we want to enter `河`: (again `hasMarkedText()` is called here and
 1. `setMarkedText("下" , selectedRange: NSRange(1, 0), replacementRange: NSRange(1, 1))` is called: the replacement range is not `NotFound` which means that we first have to delete the text in the given range, in this case the finalized `하` and then append the marked text.
 1. Selecting different Hanja calls the usual `setMarkedText(_:selectedRange:actualRange)` and `Return` finalizes the input of `河`.
 
+## Chinese Pinyin
+
+suppose we want to enter 中国
+
+1. we should enter the pinyin `zhongguo`, then `<Space>` to confirm it.
+2. each char input triggers: setMarkedText, markedRange, firstRect, attributedSubstringForProposedRange
+3. finally setMarkedText("zhong guo", selectedRange: NSRange(10, 0), replacementRange: NSRange(NotFound, 0)) iscalled:
+4. then after `<Space>` enter, insertText("中国", replacementRange: NSRange(NotFound, 0)) is called
+5. many selectedRange and attributedSubstring(forProposedRange:actualRange:) calls.
+
+this seems right simple. but when in markedtext state(before confirming it),
+1. we can use number to select other candidates
+2. we can use `=`, `-`, `<UP>`, `<DOWN>`, `<Left>`, `<Right>` to choose candidate, and vim shouldn't handle it.
+3. we can use `<Left>`, `<Right>` to move in marked text, and insert char in middle of markedText. even complicate, the move is not by char, but by word.
+
+each marked text or marked cursor changes, setMarkedText will called, with selectedRange point to the marked cursor position(may be middle, not the text end)
+
+so these key shouldn't be handle by vim directly when in marked text state.
+
+and finally we confirmed all markedtext, then a `insertText` will be called
+
 ## Other Writing System
 
 Not a clue, since I only know Latin alphabet and Korean (+Hanja)...
