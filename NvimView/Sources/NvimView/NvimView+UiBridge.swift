@@ -83,7 +83,7 @@ extension NvimView {
   final func flush(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
-    gui.async {
+    gui.async { [self] in
       var (recompute, rowStart) = (false, Int.max)
       renderData.forEach { value in
         guard let renderEntry = value.arrayValue else { return }
@@ -109,10 +109,13 @@ extension NvimView {
                 let textPositionRow = innerArray[2].uint64Value,
                 let textPositionCol = innerArray[3].uint64Value else { return }
 
-          self.doGoto(
+          if let possibleNewRowStart = self.doGoto(
             position: Position(row: Int(row), column: Int(col)),
             textPosition: Position(row: Int(textPositionRow), column: Int(textPositionCol))
-          )
+          ) {
+            rowStart = min(rowStart, possibleNewRowStart)
+            recompute = true
+          }
 
         case .scroll:
           let values = innerArray.compactMap(\.intValue)
@@ -131,10 +134,7 @@ extension NvimView {
       }
 
       guard recompute else { return }
-      self.ugrid.recomputeFlatIndices(
-        rowStart: rowStart,
-        rowEndInclusive: self.ugrid.size.height - 1
-      )
+      self.ugrid.recomputeFlatIndices(rowStart: rowStart)
     }
   }
 
@@ -298,7 +298,12 @@ extension NvimView {
     )
 
     if count > 0 {
-      if self.usesLigatures {
+      if row == self.ugrid.markedInfo?.position.row  {
+        self.markForRender(region: Region(
+          top: row, bottom: row,
+          left: startCol, right: self.ugrid.size.width
+          ))
+      } else if self.usesLigatures {
         let leftBoundary = self.ugrid.leftBoundaryOfWord(
           at: Position(row: row, column: startCol)
         )
@@ -321,30 +326,47 @@ extension NvimView {
       ))
     }
 
-    if row == self.markedPosition.row,
-       startCol <= self.markedPosition.column,
-       self.markedPosition.column <= endCol
-    {
-      self.ugrid.markCell(at: self.markedPosition)
-    }
-
     return row
   }
 
-  private func doGoto(position: Position, textPosition: Position) {
+  func regionForRow(at: Position) -> Region {
+    return Region(
+      top: at.row,
+      bottom: at.row,
+      left: at.column,
+      right: ugrid.size.width
+      )
+  }
+
+  private func doGoto(position: Position, textPosition: Position) -> Int? {
     self.bridgeLogger.debug(position)
 
-    // Re-render the old cursor position.
-    self.markForRender(
-      region: self.cursorRegion(for: self.ugrid.cursorPosition)
-    )
+    var rowStart: Int?
+    if var markedInfo = self.ugrid.popMarkedInfo() {
+      rowStart = min(markedInfo.position.row, position.row)
+      self.markForRender(
+        region: self.regionForRow(at: self.ugrid.cursorPosition)
+      )
+      self.ugrid.goto(position)
+      markedInfo.position = position
+      self.ugrid.updateMarkedInfo(newValue: markedInfo)
+      self.markForRender(
+        region: self.regionForRow(at: self.ugrid.cursorPosition)
+      )
+    } else {
+      // Re-render the old cursor position.
+      self.markForRender(
+        region: self.cursorRegion(for: self.ugrid.cursorPosition)
+      )
 
-    self.ugrid.goto(position)
-    self.markForRender(
-      region: self.cursorRegion(for: self.ugrid.cursorPosition)
-    )
+      self.ugrid.goto(position)
+      self.markForRender(
+        region: self.cursorRegion(for: self.ugrid.cursorPosition)
+      )
+    }
 
     self.eventsSubject.onNext(.cursor(textPosition))
+    return rowStart
   }
 
   private func doScroll(_ array: [Int]) -> Int {
