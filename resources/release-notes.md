@@ -2,6 +2,7 @@
 
 ## Since the last snapshot
 
+* Neovim 0.5.1 😀
 * ...
 
 ## SNAPSHOT-20210703.151310
