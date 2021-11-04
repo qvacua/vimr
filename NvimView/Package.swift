@@ -15,7 +15,7 @@ let package = Package(
       .upToNextMinor(from: "4.0.0")
     ),
     .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.2.0")),
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.0")),
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.1")),
     .package(name: "NvimServer", path: "../NvimServer"),
     .package(name: "RxPack", path: "../RxPack"),
     .package(name: "Commons", path: "../Commons"),

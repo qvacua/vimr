@@ -74,7 +74,6 @@
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0B36202595236000B06899 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
 		4B0B36212595236000B06899 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
-		4B0B36222595236000B06899 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5656024E8311400D52809 /* Down */; };
 		4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
 		4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657A24E8448300D52809 /* EonilFSEvents */; };
 		4B0B36252595236000B06899 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC41D24EB2E22000209B5 /* MessagePack */; };
@@ -155,6 +154,7 @@
 		4B94341520B95EC7005807BA /* MacVim-ps.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DA20B95EC6005807BA /* MacVim-ps.icns */; };
 		4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
+		4B9D049D273481AD007E8614 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9D049C273481AD007E8614 /* Down */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
@@ -363,6 +363,7 @@
 			files = (
 				4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */,
 				4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */,
+				4B9D049D273481AD007E8614 /* Down in Frameworks */,
 				4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */,
 				4B0B36212595236000B06899 /* PureLayout in Frameworks */,
 				4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */,
@@ -371,7 +372,6 @@
 				4B0B36202595236000B06899 /* Swifter in Frameworks */,
 				4B0B362F2595236000B06899 /* Sparkle in Frameworks */,
 				4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */,
-				4B0B36222595236000B06899 /* Down in Frameworks */,
 				4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */,
 				4B6C6AE7267C71ED00F77527 /* RxSwift in Frameworks */,
 				4B0B36292595236000B06899 /* NvimView in Frameworks */,
@@ -772,7 +772,6 @@
 			packageProductDependencies = (
 				4BD5655224E8014100D52809 /* Swifter */,
 				4BD5655824E8040E00D52809 /* PureLayout */,
-				4BD5656024E8311400D52809 /* Down */,
 				4BD5657724E8443300D52809 /* DictionaryCoding */,
 				4BD5657A24E8448300D52809 /* EonilFSEvents */,
 				4B9BC41D24EB2E22000209B5 /* MessagePack */,
@@ -785,6 +784,7 @@
 				4B6C6AE2267C71ED00F77527 /* RxCocoa */,
 				4B6C6AE4267C71ED00F77527 /* RxRelay */,
 				4B6C6AE6267C71ED00F77527 /* RxSwift */,
+				4B9D049C273481AD007E8614 /* Down */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -847,7 +847,6 @@
 			packageReferences = (
 				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
 				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
-				4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */,
 				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
 				4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */,
 				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */,
@@ -856,6 +855,7 @@
 				4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */,
 				4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */,
 				4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */,
+				4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1400,12 +1400,20 @@
 				version = 3.3.0;
 			};
 		};
+		4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/johnxnguyen/Down";
+			requirement = {
+				kind = exactVersion;
+				version = 0.11.0;
+			};
+		};
 		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 1.26.0;
+				version = 1.27.0;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
@@ -1422,14 +1430,6 @@
 			requirement = {
 				kind = exactVersion;
 				version = 3.1.9;
-			};
-		};
-		4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/iwasrobbed/Down";
-			requirement = {
-				kind = exactVersion;
-				version = 0.11.0;
 			};
 		};
 		4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
@@ -1453,7 +1453,7 @@
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 9.2.0;
+				minimumVersion = 9.2.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1497,6 +1497,11 @@
 			package = 4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */;
 			productName = ShortcutRecorder;
 		};
+		4B9D049C273481AD007E8614 /* Down */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
+		};
 		4BA284B1256471ED00CFDF7F /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */;
@@ -1511,11 +1516,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */;
 			productName = PureLayout;
-		};
-		4BD5656024E8311400D52809 /* Down */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BD5655F24E8311400D52809 /* XCRemoteSwiftPackageReference "Down" */;
-			productName = Down;
 		};
 		4BD5657724E8443300D52809 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;

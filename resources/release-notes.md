@@ -4,6 +4,11 @@
 
 * Neovim 0.5.1 😀
 * ...
+* Dependencies updates:
+    - IBM-Swift/BlueSocket 2.0.2
+    - johnxnguyen/Down@0.11.0
+    - sparkle-project/Sparkle@1.27.0
+    - Quick/Nimble@9.2.1
 
 ## SNAPSHOT-20210703.151310
 

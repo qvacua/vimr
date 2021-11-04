@@ -18,9 +18,9 @@ let package = Package(
     .package(
       name: "Socket",
       url: "https://github.com/IBM-Swift/BlueSocket",
-      .upToNextMinor(from: "1.0.52")
+      .upToNextMinor(from: "2.0.2")
     ),
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.0")),
+    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.1")),
   ],
   targets: [
     .target(

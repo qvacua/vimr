@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
         "state": {
           "branch": null,
-          "revision": "c46a3d41f5b2401d18bcb46d0101cdc5cd13e307",
-          "version": "1.0.52"
+          "revision": "dd924c3bc2c1c144c42b8dda3896f1a03115ded4",
+          "version": "2.0.2"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
         "state": {
           "branch": null,
-          "revision": "02b7a39a99c4da27abe03cab2053a9034379639f",
-          "version": "2.0.0"
+          "revision": "fb7a26374e8570ff5c68142e5c83406d6abae0d8",
+          "version": "2.0.2"
         }
       },
       {
@@ -39,7 +39,7 @@
       },
       {
         "package": "Down",
-        "repositoryURL": "https://github.com/iwasrobbed/Down",
+        "repositoryURL": "https://github.com/johnxnguyen/Down",
         "state": {
           "branch": null,
           "revision": "f34b166be1f1db4aa8f573067e901d72f2a6be57",
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble",
         "state": {
           "branch": null,
-          "revision": "af1730dde4e6c0d45bf01b99f8a41713ce536790",
-          "version": "9.2.0"
+          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
+          "version": "9.2.1"
         }
       },
       {
@@ -114,8 +114,17 @@
         "repositoryURL": "https://github.com/sparkle-project/Sparkle",
         "state": {
           "branch": null,
-          "revision": "c0933a516b420806e9216e71bd13ba76c54f0de6",
-          "version": "1.26.0"
+          "revision": "99dbdcbd96b80bbdf36ff02bf7f9f9cd7ed26f49",
+          "version": "1.27.0"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
+          "version": "0.5.0"
         }
       },
       {
