@@ -4,10 +4,11 @@ from builder import Builder
 from utils.shell import shell
 
 
+# "https://ftp.pcre.org/pub/pcre/pcre-${version}.tar.bz2" seems to be down as of 2021-11-04.
 # language=bash
 download_command = Template(
     """
-curl -L -s -o pcre.tar.bz2 "https://ftp.pcre.org/pub/pcre/pcre-${version}.tar.bz2"
+curl -L -s -o pcre.tar.bz2 "https://www.mirrorservice.org/sites/ftp.exim.org/pub/pcre/pcre-${version}.tar.bz2"
 """
 )
 

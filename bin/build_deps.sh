@@ -11,8 +11,8 @@ main () {
     arm64_deployment_target=$(cat ./resources/arm64_deployment_target.txt)
     readonly arm64_deployment_target
 
-    local -r pcre_version="8.43"
-    local -r xz_version="5.2.4"
+    local -r pcre_version="8.45"
+    local -r xz_version="5.3.2alpha"
     local -r ag_version="2.2.0"
 
     pushd ./third-party >/dev/null

@@ -8,11 +8,14 @@ class ShellExecutionException(Exception):
 
 
 def shell(command: str, cwd: Path):
-    proc = subprocess.Popen(
+    with subprocess.Popen(
         command, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
-    for line in iter(lambda: proc.stdout.read(1), b""):
-        sys.stdout.write(line.decode("utf-8"))
+    ) as proc:
+        while proc.stdout.readable():
+            if line := proc.stdout.readline():
+                sys.stdout.write(line.decode("utf-8"))
+            else:
+                break
 
-    if proc.poll() != 0:
-        raise ShellExecutionException(command)
+        if proc.wait() != 0:
+            raise ShellExecutionException(command)
