@@ -1,1 +1,1 @@
-../NvimServer/NvimServer/Resources/nvim-version-for-download.txt
+../NvimServer/NvimServer/Resources/nvimserver-for-download.txt
