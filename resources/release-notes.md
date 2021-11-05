@@ -1,31 +1,13 @@
 # Next
 
-## Since the last snapshot
-
-* Neovim 0.5.1 😀
 * ...
-* Dependencies updates:
-    - IBM-Swift/BlueSocket 2.0.2
-    - johnxnguyen/Down@0.11.0
-    - sparkle-project/Sparkle@1.27.0
-    - Quick/Nimble@9.2.1
 
-## SNAPSHOT-20210703.151310
-
-* Neovim 0.5.0 😀
-* GH-832: Re-revert neovim launching code
-* GH-750: Search highlight displays incorrectly for gui=reverse: Thanks @rluba for the PR!
-* Dependencies updates:
-    - PureLayout/PureLayout@3.1.9
-    - iwasrobbed/Down@0.11.0
-    - sparkle-project/Sparkle@1.26.0
-    - Quick/Nimble@9.2.0
-    - ReactiveX/RxSwift@6.2.0
-
-## Since 0.34.0
+## 0.35.0-20211105.213803
 
 * Universal binary!
-* Neovim 0.5-dev (neovim/neovim@52e660e)
+* Neovim 0.5.1 😀
+* GH-832: Re-revert neovim launching code
+* GH-750: Search highlight displays incorrectly for gui=reverse: Thanks @rluba for the PR!
 * GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
   Appearance preferences.
 * GH-804: Configurable cursor shapes and color: Thank you @cypheon!
@@ -36,7 +18,13 @@
 * Revert to old launching logic (first launch the login shell, then launch NvimServer).
 * Adapt title bar rendering on Big Sur.
 * Dependencies updates:
+    - IBM-Swift/BlueSocket 2.0.2
+    - PureLayout/PureLayout@3.1.9
+    - Quick/Nimble@9.2.1
+    - ReactiveX/RxSwift@6.2.0
     - httpswift/swifter@1.5.0
+    - iwasrobbed/Down@0.11.0 -> johnxnguyen/Down@0.11.0
+    - sparkle-project/Sparkle@1.27.0
 
 # 0.34.0-355
 
