@@ -37,7 +37,7 @@ token = token_file.read().strip()
 token_file.close()
 
 release_response = requests.get('https://api.github.com/repos/qvacua/vimr/releases/tags/{0}'.format(tag_name),
-                                params={'access_token': token})
+                                headers={'Authorization': f"token {token}"})
 release_json = json.loads(release_response.content)
 
 title = release_json['name']
