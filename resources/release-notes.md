@@ -1,5 +1,6 @@
 # Next
 
+* GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolarWing!
 * ...
 
 ## 0.35.0-20211105.213803
