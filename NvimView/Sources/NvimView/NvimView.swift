@@ -285,8 +285,6 @@ public class NvimView: NSView,
   let disposeBag = DisposeBag()
 
   var markedText: String?
-  var markedPosition = Position.null
-
   let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
   let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 

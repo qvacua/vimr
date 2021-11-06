@@ -19,6 +19,7 @@ public extension NvimView {
 
     if !isMeta {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
+      if self.hasMarkedText() { self.keyDownDone = true } // mark state ignore Down,Up,Left,Right,=,- etc keys
       if self.keyDownDone, cocoaHandledEvent { return }
     }
 
@@ -54,23 +55,11 @@ public extension NvimView {
     default: return
     }
 
-    let length = self.markedText?.count ?? 0
     try? self.bridge
-      .deleteCharacters(length, andInputEscapedString: self.vimPlainString(text))
+      .deleteCharacters(0, andInputEscapedString: self.vimPlainString(text))
       .wait()
 
-    if length > 0 {
-      self.ugrid.unmarkCell(at: self.markedPosition)
-      self.markForRender(position: self.markedPosition)
-      if self.ugrid.isNextCellEmpty(self.markedPosition) {
-        self.ugrid.unmarkCell(at: self.markedPosition.advancing(row: 0, column: 1))
-        self.markForRender(position: self.markedPosition.advancing(row: 0, column: 1))
-      }
-    }
-
-    self.lastMarkedText = self.markedText
-    self.markedText = nil
-    self.markedPosition = .null
+    if self.hasMarkedText() { _unmarkText() }
     self.keyDownDone = true
   }
 
@@ -161,10 +150,6 @@ public extension NvimView {
 
     defer { self.keyDownDone = true }
 
-    if self.markedText == nil { self.markedPosition = self.ugrid.cursorPosition }
-
-    let oldMarkedTextLength = self.markedText?.count ?? 0
-
     switch object {
     case let string as String: self.markedText = string
     case let attributedString as NSAttributedString: self.markedText = attributedString.string
@@ -172,40 +157,41 @@ public extension NvimView {
     }
 
     if replacementRange != .notFound {
-      guard let newMarkedPosition = self.ugrid.firstPosition(
-        fromFlatCharIndex: replacementRange.location
-      ) else { return }
-
-      self.markedPosition = newMarkedPosition
-
-      self.log.debug("Deleting \(replacementRange.length) and inputting \(self.markedText!)")
-      try? self.bridge.deleteCharacters(
-        replacementRange.length,
-        andInputEscapedString: self.vimPlainString(self.markedText!)
-      ).wait()
-    } else {
-      self.log.debug("Deleting \(oldMarkedTextLength) and inputting \(self.markedText!)")
-      try? self.bridge.deleteCharacters(
-        oldMarkedTextLength,
-        andInputEscapedString: self.vimPlainString(self.markedText!)
-      ).wait()
+      guard self.ugrid.firstPosition(fromFlatCharIndex: replacementRange.location) != nil else { return }
+      // FIXME: here not validate location, only delete by length.
+      // after delete, cusor should be the location
+    }
+    if replacementRange.length > 0 {
+      try? self.bridge
+      .deleteCharacters(replacementRange.length, andInputEscapedString: "")
+      .wait()
     }
 
+    // delay to wait async gui update handled.
+    // this avoid insert and then delete flicker
+    // the markedPosition is not needed since marked Text should always following cursor..
+    DispatchQueue.main.async { [self, markedText] in
+        ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
+        markForRender(region: regionForRow(at: ugrid.cursorPosition))
+    }
     self.keyDownDone = true
   }
 
   func unmarkText() {
-    let position = self.markedPosition
-    self.ugrid.unmarkCell(at: position)
-    self.markForRender(position: position)
-    if self.ugrid.isNextCellEmpty(position) {
-      self.ugrid.unmarkCell(at: position.advancing(row: 0, column: 1))
-      self.markForRender(position: position.advancing(row: 0, column: 1))
-    }
-
-    self.markedText = nil
-    self.markedPosition = .null
+    _unmarkText()
     self.keyDownDone = true
+  }
+
+  func _unmarkText() {
+    guard hasMarkedText() else { return }
+    // wait inserted text gui update event, so hanji in korean get right previous string and can popup candidate window
+    DispatchQueue.main.async { [self] in
+      if let markedInfo = self.ugrid.markedInfo {
+        self.ugrid.markedInfo = nil
+        self.markForRender(region: regionForRow(at: markedInfo.position))
+      }
+    }
+    self.markedText = nil
   }
 
   /**
@@ -224,7 +210,7 @@ public extension NvimView {
 
     let result: NSRange
     result = NSRange(
-      location: self.ugrid.flatCharIndex(forPosition: self.ugrid.cursorPosition),
+      location: self.ugrid.flatCharIndex(forPosition: self.ugrid.cursorPositionWithMarkedInfo(allowOverflow: true)),
       length: 0
     )
 
@@ -239,7 +225,7 @@ public extension NvimView {
     }
 
     let result = NSRange(
-      location: self.ugrid.flatCharIndex(forPosition: self.markedPosition),
+      location: self.ugrid.flatCharIndex(forPosition: self.ugrid.cursorPosition),
       length: marked.count
     )
 

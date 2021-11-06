@@ -37,6 +37,14 @@ class KeyUtils {
 
     return key
   }
+  static func isHalfWidth(char: Character) -> Bool {
+    // https://stackoverflow.com/questions/13505075/analyzing-full-width-or-half-width-character-in-java?noredirect=1&lq=1 // swiftlint:disable:this all
+    switch char {
+    case "\u{00}"..."\u{FF}", "\u{FF61}"..."\u{FFDC}", "\u{FFE8}"..."\u{FFEE}":
+      return true
+    default: return false
+    }
+  }
 }
 
 private let specialKeys = [
