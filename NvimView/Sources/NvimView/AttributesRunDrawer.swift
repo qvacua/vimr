@@ -181,7 +181,9 @@ final class AttributesRunDrawer {
     self.cellSize = FontUtils.cellSize(
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
-    self.baselineOffset = self.cellSize.height - CTFontGetAscent(self.font)
+    self
+      .baselineOffset = (self.cellSize.height + FontUtils.fontHeight(of: self.font)) / 2 -
+      CTFontGetAscent(self.font)
     self.descent = CTFontGetDescent(self.font)
     self.underlinePosition = CTFontGetUnderlinePosition(self.font)
     self.underlineThickness = CTFontGetUnderlineThickness(self.font)

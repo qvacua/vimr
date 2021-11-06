@@ -23,15 +23,19 @@ extension FontTrait: Hashable {}
 
 final class FontUtils {
 
-  static func cellHeight(of font: NSFont) -> CGFloat {
+  static func fontHeight(of font: NSFont) -> CGFloat {
+    if let cached = fontHeightCache.valueForKey(font) { return cached }
+
     let ascent = CTFontGetAscent(font)
     let descent = CTFontGetDescent(font)
     let leading = CTFontGetLeading(font)
+    let height = ceil(ascent + descent + leading)
 
-    return ceil(ascent + descent + leading)
+    fontHeightCache.set(height, forKey: font)
+    return height
   }
 
-  static func cellWidth(of font: NSFont) -> CGFloat {
+  static func fontWidth(of font: NSFont) -> CGFloat {
     let capitalM = [UniChar(0x004D)]
     var glyph = [CGGlyph(0)]
     var advancement = CGSize.zero
@@ -49,7 +53,7 @@ final class FontUtils {
       )
     }
 
-    let cellSizeToCache = CGSize(width: cellWidth(of: font), height: cellHeight(of: font))
+    let cellSizeToCache = CGSize(width: fontWidth(of: font), height: fontHeight(of: font))
     cellSizeWithDefaultLinespacingCache.set(cellSizeToCache, forKey: font)
 
     let cellSize = CGSize(
@@ -112,6 +116,7 @@ final class FontUtils {
 }
 
 private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100, queueQos: .userInteractive)
+private let fontHeightCache = FifoCache<NSFont, CGFloat>(count: 100, queueQos: .userInteractive)
 private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(
   count: 100,
   queueQos: .userInteractive
