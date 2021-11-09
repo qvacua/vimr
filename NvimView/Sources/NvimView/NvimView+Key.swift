@@ -100,6 +100,12 @@ public extension NvimView {
       return true
     }
 
+    // <D-.> do not trigger keyDown event.
+    if flags.contains(.command), event.keyCode == 47 {
+      self.keyDown(with: event)
+      return true
+    }
+
     guard let chars = event.characters else { return false }
 
     // Control code \0 causes rpc parsing problems.
