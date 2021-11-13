@@ -1,10 +1,10 @@
 # Next
 
+* ...
 * GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolarWing!
 * GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!
-* ...
 
-## 0.35.0-20211105.213803
+# 0.35.0-20211105.213803
 
 * Universal binary!
 * Neovim 0.5.1 😀
