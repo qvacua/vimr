@@ -7,44 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.35.0-20211105.213803</title>
+      <title>SNAPSHOT-20211121.190603</title>
       <description><![CDATA[
     <ul>
-<li>Universal binary!</li>
-<li>Neovim 0.5.1 😀</li>
-<li>GH-750: Search highlight displays incorrectly for gui=reverse: Thanks @rluba for the PR!</li>
-<li>GH-349: First versino of custom tabs. If they does not work well, you can turn it off in the
-  Appearance preferences.</li>
-<li>GH-804: Configurable cursor shapes and color: Thank you @cypheon!</li>
-<li>GH-812: Allow all fonts, but warn when variable width font is selected.</li>
-<li>Do not hard-code <code>${LANG}</code> environment variable to <code>en_US.UTF-8</code>.</li>
-<li>Replace FontAwesome with <a href="https://github.com/qvacua/material-icons">Material Icons</a>.</li>
-<li>GH-830: Support <code>guifont</code> option (fixes GH-779). Thank you @Shirk!</li>
-<li>GH-832: Re-revert neovim launching code</li>
-<li>Revert to old launching logic (first launch the login shell, then launch NvimServer).</li>
-<li>Adapt title bar rendering on Big Sur.</li>
-<li>Dependencies updates:<ul>
-<li>IBM-Swift/BlueSocket 2.0.2</li>
-<li>PureLayout/PureLayout@3.1.9</li>
-<li>Quick/Nimble@9.2.1</li>
-<li>ReactiveX/RxSwift@6.2.0</li>
-<li>httpswift/swifter@1.5.0</li>
-<li>iwasrobbed/Down@0.11.0 -&gt; johnxnguyen/Down@0.11.0</li>
-<li>sparkle-project/Sparkle@1.27.0</li>
-</ul>
-</li>
+<li>GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolarWing!</li>
+<li>GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.35.0-20211105.213803
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20211121.190603
       </releaseNotesLink>
-      <pubDate>2021-11-05T22:07:51.688451</pubDate>
-      <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.35.0-20211105.213803/VimR-v0.35.0-20211105.213803.tar.bz2"
-                 sparkle:version="20211105.213803"
-                 sparkle:shortVersionString="0.35.0"
-                 sparkle:dsaSignature="MC0CFH4aBu0GMHwkpkKqvpuJ0B1zR7nmAhUAi6nd3VvXf/QgSYoHYR9UNMX5COI="
-                 length="20181834"
+      <pubDate>2021-11-21T19:30:12.270721</pubDate>
+      <minimumSystemVersion>10.12.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20211121.190603/VimR-SNAPSHOT-20211121.190603.tar.bz2"
+                 sparkle:version="20211121.190603"
+                 sparkle:shortVersionString="SNAPSHOT-20211121.190603"
+                 sparkle:dsaSignature="MC4CFQDklVRBV6M1iaix9Znb4obFuqN5ZAIVAKbYwBdGHxnjI5ppTfCnCoJYKmcw"
+                 length="20193457"
                  type="application/octet-stream"/>
     </item>
   </channel>
