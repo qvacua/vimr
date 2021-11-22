@@ -184,8 +184,9 @@ extension AppDelegate {
 
     if self.hasDirtyWindows {
       let alert = NSAlert()
-      alert.addButton(withTitle: "Cancel")
+      let cancelButton = alert.addButton(withTitle: "Cancel")
       let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
+      cancelButton.keyEquivalent = "\u{1b}"
       alert.messageText = "There are windows with unsaved buffers!"
       alert.alertStyle = .warning
       discardAndQuitButton.keyEquivalentModifierMask = .command

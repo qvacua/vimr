@@ -250,8 +250,9 @@ extension MainWindow {
 
   private func discardCloseActionAlert() -> NSAlert {
     let alert = NSAlert()
-    alert.addButton(withTitle: "Cancel")
+    let cancelButton = alert.addButton(withTitle: "Cancel")
     let discardAndCloseButton = alert.addButton(withTitle: "Discard and Close")
+    cancelButton.keyEquivalent = "\u{1b}"
     alert.messageText = "The current buffer has unsaved changes!"
     alert.alertStyle = .warning
     discardAndCloseButton.keyEquivalentModifierMask = .command
