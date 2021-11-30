@@ -4,6 +4,8 @@
 * GH-881: Make the `ESC` key cancel "Not yet saved"-dialogs. Thank you @jasonm!
 * GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolaWing!
 * GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!
+* Dependencies updates:
+    - sindresorhus/github-markdown-css@5.0.0
 
 # 0.35.0-20211105.213803
 
@@ -21,7 +23,7 @@
 * Revert to old launching logic (first launch the login shell, then launch NvimServer).
 * Adapt title bar rendering on Big Sur.
 * Dependencies updates:
-    - IBM-Swift/BlueSocket 2.0.2
+    - IBM-Swift/BlueSocket@2.0.2
     - PureLayout/PureLayout@3.1.9
     - Quick/Nimble@9.2.1
     - ReactiveX/RxSwift@6.2.0
