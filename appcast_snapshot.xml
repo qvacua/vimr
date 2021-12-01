@@ -7,23 +7,29 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20211121.190603</title>
+      <title>SNAPSHOT-20211201.192602</title>
       <description><![CDATA[
     <ul>
-<li>GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolarWing!</li>
+<li>Neovim 0.6.0 😀</li>
+<li>GH-881: Make the <code>ESC</code> key cancel "Not yet saved"-dialogs. Thank you @jasonm!</li>
+<li>GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolaWing!</li>
 <li>GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!</li>
+<li>Dependencies updates:<ul>
+<li>sindresorhus/github-markdown-css@5.0.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20211121.190603
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20211201.192602
       </releaseNotesLink>
-      <pubDate>2021-11-21T19:30:12.270721</pubDate>
+      <pubDate>2021-12-01T19:41:15.815132</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20211121.190603/VimR-SNAPSHOT-20211121.190603.tar.bz2"
-                 sparkle:version="20211121.190603"
-                 sparkle:shortVersionString="SNAPSHOT-20211121.190603"
-                 sparkle:dsaSignature="MC4CFQDklVRBV6M1iaix9Znb4obFuqN5ZAIVAKbYwBdGHxnjI5ppTfCnCoJYKmcw"
-                 length="20193457"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20211201.192602/VimR-SNAPSHOT-20211201.192602.tar.bz2"
+                 sparkle:version="20211201.192602"
+                 sparkle:shortVersionString="SNAPSHOT-20211201.192602"
+                 sparkle:dsaSignature="MC4CFQCgOqsTR8X5qCKt1TW1XVSQ2pi0rQIVAIHH2GAEnjctKEeTzy+NLO8abJTf"
+                 length="20303039"
                  type="application/octet-stream"/>
     </item>
   </channel>
