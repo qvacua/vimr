@@ -1,6 +1,7 @@
 # Next
 
 * ...
+* Neovim 0.6.0 😀
 * GH-881: Make the `ESC` key cancel "Not yet saved"-dialogs. Thank you @jasonm!
 * GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolaWing!
 * GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!
