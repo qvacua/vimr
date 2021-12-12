@@ -25,9 +25,12 @@ jobs:
           export PATH="$PYENV_ROOT/bin:$PATH"
           eval "$(pyenv init --path)"
           eval "$(pyenv init -)"
+          eval "$(pyenv virtualenv-init -)"
           
-          pip install -r requirements.txt
-          python setup.py develop
+          pushd bin >/dev/null
+            pip install -r requirements.txt
+            python setup.py develop
+          popd >/dev/null
       - name: Build deps
         run: |
           ./bin/build_deps.sh
