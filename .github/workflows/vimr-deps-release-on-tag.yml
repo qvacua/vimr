@@ -25,7 +25,7 @@ jobs:
           eval "$(pyenv virtualenv-init -)"
           
           pyenv install 3.9.7
-          pyenv virtualenv 3.9.7 com.qvacua.VimR.third-party
+          pyenv virtualenv 3.9.7 com.qvacua.VimR.bin
           
           pushd bin >/dev/null
             pip install -r requirements.txt
