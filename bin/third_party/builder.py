@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from string import Template
 
-from config import Config, Target
-from utils.shell import shell
+from third_party.config import Config, Target
+from third_party.utils.shell import shell
 
 
 @dataclass(frozen=True)

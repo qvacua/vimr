@@ -15,8 +15,8 @@ main () {
     local -r xz_version="5.3.2alpha"
     local -r ag_version="2.2.0"
 
-    pushd ./third-party >/dev/null
-      python3 build.py \
+    pushd ./bin >/dev/null
+      python third_party/build.py \
           --arm64-deployment-target="${arm64_deployment_target}" \
           --x86_64-deployment-target="${x86_64_deployment_target}" \
           --xz-version "${xz_version}" \

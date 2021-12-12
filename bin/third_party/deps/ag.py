@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from string import Template
 
-from builder import Builder
-from config import Config, Target
-from utils.shell import shell
+from third_party.builder import Builder
+from third_party.config import Config, Target
+from third_party.utils.shell import shell
 
 # language=bash
 download_command = Template(

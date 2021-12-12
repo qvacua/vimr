@@ -1,7 +1,4 @@
 from string import Template
-from config import Target
-from builder import Builder
-from utils.shell import shell
 
 
 # "https://ftp.pcre.org/pub/pcre/pcre-${version}.tar.bz2" seems to be down as of 2021-11-04.

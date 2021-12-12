@@ -2,10 +2,10 @@ import argparse
 import pathlib
 import shutil
 
-from builder import Builder
-from config import Config
-from deps import ag, pcre, xz
-from deps.ag import AgBuilder
+from third_party.config import Config
+from third_party.deps import ag, pcre, xz
+from third_party.deps.ag import AgBuilder
+from third_party.builder import Builder
 
 DEPS_FILE_NAME = ".deps"
 PACKAGE_NAME = "vimr-deps"
