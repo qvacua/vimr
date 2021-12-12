@@ -13,6 +13,8 @@ jobs:
           fetch-depth: 0
       - name: Install brew packages
         run: |
+          brew update >/dev/null
+          brew upgrade
           brew install automake coreutils pyenv pyenv-virtualenv
       - name: Set up Python env
         run: |

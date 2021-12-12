@@ -3,10 +3,16 @@ set -Eeuo pipefail
 
 readonly code_sign=${code_sign:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
+readonly download_deps=${download_deps:?"true or false: when true, vimr-deps is downloaded"}
 
 main () {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
   echo "### Building VimR target"
+
+  if [[ "${download_deps}" == true ]]; then
+    rm -rf ./VimR/.deps
+    ./bin/download_vimr_deps.sh
+  fi
 
   local -r build_path="./build"
 

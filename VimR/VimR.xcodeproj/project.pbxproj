@@ -1245,7 +1245,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 20211201.192602;
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1253,9 +1253,9 @@
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libag.a",
+					"$(PROJECT_DIR)/.deps/lib/liblzma.a",
+					"$(PROJECT_DIR)/.deps/lib/libpcre.a",
+					"$(PROJECT_DIR)/.deps/lib/libag.a",
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
@@ -1273,7 +1273,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 20211201.192602;
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../third-party/vimr-deps/include";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1281,9 +1281,9 @@
 					"@executable_path/../Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/liblzma.a",
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libpcre.a",
-					"$(PROJECT_DIR)/../third-party/vimr-deps/lib/libag.a",
+					"$(PROJECT_DIR)/.deps/lib/liblzma.a",
+					"$(PROJECT_DIR)/.deps/lib/libpcre.a",
+					"$(PROJECT_DIR)/.deps/lib/libag.a",
 					"-pthread",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
