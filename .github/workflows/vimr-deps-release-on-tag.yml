@@ -1,8 +1,6 @@
 name: "VimR deps release on tag"
 on:
   push:
-    branches:
-      - scripts
     tags:
       - 'vimr-deps-*'
 
@@ -40,6 +38,16 @@ jobs:
           eval "$(pyenv virtualenv-init -)"
           
           ./bin/build_deps.sh
+      - name: Create release and upload artifact
+          env:
+            GH_REPO: ${{ github.repository }}
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            pushd bin/third_party >/dev/null
+              tar cjf vimr-deps.tar.bz2 vimr-deps
+              gh release create -p ${{ github.ref_name }}
+              gh release upload ${{ github.ref_name }} vimr-deps.tar.bz2
+            popd >/dev/null
       - uses: actions/upload-artifact@v2
         with:
           name: vimr-deps
