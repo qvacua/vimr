@@ -39,18 +39,18 @@ jobs:
           
           ./bin/build_deps.sh
       - name: Create release and upload artifact
-          env:
-            GH_REPO: ${{ github.repository }}
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            pushd bin/third_party >/dev/null
-              tar cjf vimr-deps.tar.bz2 vimr-deps
-              gh release create -p ${{ github.ref_name }}
-              gh release upload ${{ github.ref_name }} vimr-deps.tar.bz2
-            popd >/dev/null
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pushd bin/third_party >/dev/null
+            tar cjf vimr-deps.tar.bz2 vimr-deps
+            gh release create -p ${{ github.ref_name }}
+            gh release upload ${{ github.ref_name }} vimr-deps.tar.bz2
+          popd >/dev/null
       - uses: actions/upload-artifact@v2
         with:
           name: vimr-deps
           path: bin/third_party/vimr-deps
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 7
