@@ -97,10 +97,10 @@ main() {
 
     if [[ "${upload}" == true ]]; then
       upload_artifact
-    fi
 
-    if [[ "${update_appcast}" == true ]]; then
-      update_appcast_file
+      if [[ "${update_appcast}" == true ]]; then
+        update_appcast_file
+      fi
     fi
   popd >/dev/null
 }

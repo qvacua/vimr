@@ -12,18 +12,17 @@ The goal is to build an editor that uses Neovim inside with many of the convenie
 GUI features similar to those present in modern editors. We mainly use Swift,
 but also use C/Objective-C when where appropriate.
 
-There are other Neovim GUIs for macOS, e.g. [NyaoVim](https://github.com/rhysd/NyaoVim), [neovim-dot-app](https://github.com/rogual/neovim-dot-app), [Oni](https://www.onivim.io), etc., so why?
+There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
 
 - Play around with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
 - (most importantly) have fun!
 
-If you want to support VimR financially, use [Github's Sponsor](https://github.com/sponsors/qvacua)
-or [Bountysource](https://www.bountysource.com/teams/vimr).
+If you want to support VimR financially, use [Github's Sponsor](https://github.com/sponsors/qvacua).
 
 ## Download
 
-Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
+Pre-built Universal signed and notarized binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
 
 ## Reusable Components
 
@@ -45,45 +44,21 @@ Pre-built binaries can be found under [Releases](https://github.com/qvacua/vimr/
 
 ## How to Build
 
-First after cloning the VimR source tree you need to initialize git submodules
-
-```bash
-git lfs install
-git submodule update --init
-```
-
-First install `homebrew`, then in the project root:
+Clone this repository. Install `homebrew`, then in the project root:
 
 ```bash
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle
 
-code_sign=false use_carthage_cache=false ./bin/build_vimr.sh # VimR.app will be placed in build/Build/Products/Release/
+code_sign=false use_carthage_cache=false download_deps=true ./bin/build_vimr.sh
+# VimR.app will be placed in ./build/Build/Products/Release/
 ```
 
-## Project Setup
+## Development
 
-### Artifacts Hierarchy
-
-```
-VimR.app
-+-- NvimView.framework
-    +-- NvimServer
-        +-- libnvim
-        +-- other libs for Neovim
-    +-- NvimView
-        +-- NvimServer binary (copied by the build script)
-        +-- runtime files for Neovim (copied by the build script)
-```
-
-### How to develop
-
-See [DEVELOP.md](docs/develop.md).
+See [DEVELOP.md](DEVELOP.md).
 
 ## License
 
 [MIT](https://github.com/qvacua/vimr/blob/master/LICENSE)
 
----
-
-If you are here for VimR-MacVim, use the [macvim/master](https://github.com/qvacua/vimr/tree/macvim/master) branch and the version [0.8.0 (32)](https://github.com/qvacua/vimr/releases/tag/v0.8.0-32).

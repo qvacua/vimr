@@ -7,6 +7,12 @@ marketing_version=${marketing_version:-""}
 main() {
   if [[ "${is_snapshot}" == false && -z "${marketing_version}" ]]; then
     echo "When no snapshot, you have to set 'marketing_version', eg 0.38.1"
+
+    if [[ "${marketing_version}" =~ ^v.* ]]; then
+      echo "### marketing_version must not begin with v!"
+      exit 1
+    fi
+
     exit 1
   fi
 
@@ -29,6 +35,14 @@ main() {
 
   popd >/dev/null
   echo "### Set versions of VimR"
+
+  local tag
+  if [[ "${is_snapshot}" == true ]]; then
+    tag="tag=snapshot/${bundle_version}"
+  else
+    tag="tag=v${marketing_version}"
+  fi
+  echo "bundle_version=${bundle_version} marketing_version=${marketing_version} tag=${tag}"
 }
 
 main
