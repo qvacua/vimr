@@ -96,8 +96,7 @@ class UiRoot: UiComponent {
   private let prefWindow: PrefWindow
 
   private var mainWindows = [UUID: MainWindow]()
-  private var subjectForMainWindows
-    = [UUID: CompletableSubject<MainWindow.State>]()
+  private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
     let subject = self
