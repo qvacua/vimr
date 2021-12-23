@@ -213,7 +213,7 @@ extension NvimView {
   ) -> [AttributesRun] {
     rowRange.map { row in
       self.ugrid.cells[row][columnRange]
-        .groupedRanges(with: { _, cell in cell.attrId })
+        .groupedRanges(with: { cell in cell.attrId })
         .compactMap { range in
           let cells = self.ugrid.cells[row][range]
 

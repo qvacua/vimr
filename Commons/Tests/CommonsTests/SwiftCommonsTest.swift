@@ -24,7 +24,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 2, marker: false),
 
       Dummy(value: 3, marker: false),
-    ][1...3].groupedRanges { _, element in element.marker }
+    ][1...3].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -43,7 +43,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 3, marker: true),
 
       Dummy(value: 3, marker: true),
-    ][1...3].groupedRanges { _, element in element.marker }
+    ][1...3].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -61,7 +61,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 2, marker: true),
 
       Dummy(value: 3, marker: true),
-    ][1...2].groupedRanges { _, element in element.marker }
+    ][1...2].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -81,7 +81,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 1, marker: true),
 
       Dummy(value: 1, marker: true),
-    ][1...5].groupedRanges { _, element in element.marker }
+    ][1...5].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -103,7 +103,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 1, marker: true),
 
       Dummy(value: 1, marker: true),
-    ][1...5].groupedRanges { _, element in element.marker }
+    ][1...5].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -121,7 +121,7 @@ class ArraySliceTest: XCTestCase {
       Dummy(value: 0, marker: true),
 
       Dummy(value: 0, marker: true),
-    ][1...1].groupedRanges { _, element in element.marker }
+    ][1...1].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -138,7 +138,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: false),
       Dummy(value: 2, marker: false),
       Dummy(value: 3, marker: false),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -154,7 +154,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: false),
       Dummy(value: 2, marker: false),
       Dummy(value: 3, marker: true),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -168,7 +168,7 @@ class SwiftCommonsTest: XCTestCase {
     let grouped = [
       Dummy(value: 0, marker: true),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -184,7 +184,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: false),
       Dummy(value: 1, marker: true),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -202,7 +202,7 @@ class SwiftCommonsTest: XCTestCase {
       Dummy(value: 1, marker: true),
       Dummy(value: 1, marker: false),
       Dummy(value: 1, marker: true),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [
@@ -216,7 +216,7 @@ class SwiftCommonsTest: XCTestCase {
   func testArrayGroup6() {
     let grouped = [
       Dummy(value: 0, marker: true),
-    ].groupedRanges { _, element in element.marker }
+    ].groupedRanges { element in element.marker }
 
     expect(grouped).to(equal(
       [

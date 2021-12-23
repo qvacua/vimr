@@ -102,7 +102,7 @@ final class Typesetter {
         return [FontGlyphRun(font: font, glyphs: glyphs, positions: positions)]
       }
 
-      let groupRanges = glyphs.groupedRanges { _, element in element == 0 }
+      let groupRanges = glyphs.groupedRanges { element in element == 0 }
       let groupRuns: [[FontGlyphRun]] = groupRanges.map { range in
         if glyphs[range.lowerBound] == 0 {
           let nvimUtf16Cells = unichars[range].map { [$0] }

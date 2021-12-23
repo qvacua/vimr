@@ -75,7 +75,7 @@ class PerfTester {
     let ugrid = self.ugrids[index]
     return rowRange.map { row in
       ugrid.cells[row][columnRange]
-        .groupedRanges(with: { _, cell in cell.attrId })
+        .groupedRanges(with: { cell in cell.attrId })
         .compactMap { range in
           let cells = ugrid.cells[row][range]
 
