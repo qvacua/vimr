@@ -11,6 +11,10 @@ import RxPack
 import RxSwift
 import Tabs
 
+public protocol NvimViewDelegate: AnyObject {
+  func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
+}
+
 public class NvimView: NSView,
   UiBridgeConsumer,
   NSUserInterfaceValidations,
@@ -28,6 +32,8 @@ public class NvimView: NSView,
 
   public static let minLinespacing = 0.5.cgf
   public static let maxLinespacing = 8.cgf
+
+  public weak var delegate: NvimViewDelegate?
 
   public let usesCustomTabBar: Bool
   public let tabBar: TabBar<TabEntry>?
@@ -62,9 +68,7 @@ public class NvimView: NSView,
     get { self._linespacing }
 
     set {
-      guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else {
-        return
-      }
+      guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else { return }
 
       self._linespacing = newValue
       self.updateFontMetaData(self._font)
@@ -226,9 +230,7 @@ public class NvimView: NSView,
   }
 
   @available(*, unavailable)
-  public required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  public required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   @IBAction public func debug1(_: Any?) {
     #if DEBUG

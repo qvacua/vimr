@@ -24,6 +24,7 @@ class UiRoot: UiComponent {
 
     self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
+    self.prefWindow.shortcutService = self.shortcutService
 
     source
       .observe(on: MainScheduler.instance)
@@ -90,12 +91,12 @@ class UiRoot: UiComponent {
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
+  private let shortcutService = ShortcutService()
   private let openQuicklyWindow: OpenQuicklyWindow
   private let prefWindow: PrefWindow
 
   private var mainWindows = [UUID: MainWindow]()
-  private var subjectForMainWindows
-    = [UUID: CompletableSubject<MainWindow.State>]()
+  private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
     let subject = self
@@ -104,11 +105,14 @@ class UiRoot: UiComponent {
       .completableSubject()
 
     self.subjectForMainWindows[state.uuid] = subject
-    return MainWindow(
+    let mainWin = MainWindow(
       source: subject.asObservable(),
       emitter: self.emitter,
       state: state
     )
+    mainWin.shortcutService = self.shortcutService
+
+    return mainWin
   }
 
   private func removeMainWindow(with uuid: UUID) {

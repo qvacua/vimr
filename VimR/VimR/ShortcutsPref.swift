@@ -21,6 +21,10 @@ class ShortcutsPref: PrefPane,
 
   override var pinToContainer: Bool { true }
 
+  weak var shortcutService: ShortcutService? {
+    didSet { self.updateShortcutService() }
+  }
+
   required init(source _: Observable<StateType>, emitter _: ActionEmitter, state _: StateType) {
     // We know that the identifier is not empty.
     let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
@@ -99,7 +103,7 @@ class ShortcutsPref: PrefPane,
   }
 
   private func initShortcutUserDefaults() {
-    let transformer = ValueTransformer(forName: .keyedUnarchiveFromDataTransformerName)!
+    let transformer = ValueTransformer.keyedUnarchiveFromDataTransformer
     defaultShortcuts.forEach { id, shortcut in
       if self.shortcutsUserDefaults?.value(forKey: id) == nil {
         let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
@@ -135,7 +139,9 @@ class ShortcutsPref: PrefPane,
         continue
       }
 
-      guard let menuItem = item.item, let identifier = item.identifier else { continue }
+      guard let menuItem = item.item, let identifier = item.identifier, item.isLeaf else {
+        continue
+      }
 
       fn(identifier, menuItem)
     }
@@ -199,6 +205,19 @@ class ShortcutsPref: PrefPane,
     }
   }
 
+  private func updateShortcutService() {
+    let transformer = ValueTransformer.keyedUnarchiveFromDataTransformer
+    let shortcuts = defaultShortcuts.compactMap { id, shortcut -> Shortcut? in
+      if self.shortcutsUserDefaults?.value(forKey: id) == nil { return shortcut }
+
+      return transformer.transformedValue(
+        self.shortcutsUserDefaults?.value(forKey: id)
+      ) as? Shortcut
+    }
+
+    self.shortcutService?.update(shortcuts: shortcuts)
+  }
+
   private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "Shortcuts")
 
@@ -255,6 +274,9 @@ extension ShortcutsPref {
           .reverseTransformedValue(shortcut)
 
         self.shortcutsDefaultsController.setValue(valueToWrite, forKeyPath: "values.\(identifier)")
+
+        self.updateShortcutService()
+
         self.treeController.rearrangeObjects()
       }
     })
@@ -264,14 +286,6 @@ extension ShortcutsPref {
 // MARK: - NSOutlineViewDelegate
 
 extension ShortcutsPref {
-  private func isUppercase(_ str: String) -> Bool {
-    for c in str.unicodeScalars {
-      if !CharacterSet.uppercaseLetters.contains(c) { return false }
-    }
-
-    return true
-  }
-
   func outlineView(_: NSOutlineView, rowViewForItem _: Any) -> NSTableRowView? {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
@@ -329,6 +343,7 @@ extension ShortcutsPref {
 
 extension ShortcutsPref {
   func recorderControlDidEndRecording(_: RecorderControl) {
+    self.updateShortcutService()
     self.treeController.rearrangeObjects()
   }
 }

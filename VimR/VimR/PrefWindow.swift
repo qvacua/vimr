@@ -18,6 +18,13 @@ class PrefWindow: NSObject,
     case close
   }
 
+  weak var shortcutService: ShortcutService? {
+    didSet {
+      let shortcutsPref = self.panes.first { pane in pane is ShortcutsPref } as? ShortcutsPref
+      shortcutsPref?.shortcutService = shortcutService
+    }
+  }
+
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
