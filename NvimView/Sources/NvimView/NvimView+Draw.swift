@@ -208,8 +208,8 @@ extension NvimView {
   }
 
   private func runs(
-    forRowRange rowRange: CountableClosedRange<Int>,
-    columnRange: CountableClosedRange<Int>
+    forRowRange rowRange: ClosedRange<Int>,
+    columnRange: ClosedRange<Int>
   ) -> [AttributesRun] {
     rowRange.map { row in
       self.ugrid.cells[row][columnRange]

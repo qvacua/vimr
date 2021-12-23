@@ -67,8 +67,8 @@ class PerfTester {
 
   private func runs(
     _ index: Int,
-    forRowRange rowRange: CountableClosedRange<Int>,
-    columnRange: CountableClosedRange<Int>
+    forRowRange rowRange: ClosedRange<Int>,
+    columnRange: ClosedRange<Int>
   ) -> [AttributesRun] {
     precondition(index >= 0 && index <= 2, "Wrong index!")
 

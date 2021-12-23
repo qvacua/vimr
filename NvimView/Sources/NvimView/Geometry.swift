@@ -59,7 +59,7 @@ struct Region: CustomStringConvertible {
     "Region<\(self.top)...\(self.bottom):\(self.left)...\(self.right)>"
   }
 
-  var rowRange: CountableClosedRange<Int> { self.top...self.bottom }
+  var rowRange: ClosedRange<Int> { self.top...self.bottom }
 
-  var columnRange: CountableClosedRange<Int> { self.left...self.right }
+  var columnRange: ClosedRange<Int> { self.left...self.right }
 }

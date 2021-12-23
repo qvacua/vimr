@@ -48,7 +48,7 @@ public extension RandomAccessCollection where Index == Int {
     if self.isEmpty { return [] }
     if self.count == 1 { return [self.startIndex...self.startIndex] }
 
-    var result = [CountableClosedRange<Index>]()
+    var result = [ClosedRange<Index>]()
     result.reserveCapacity(self.count / 2)
 
     let inclusiveEndIndex = self.endIndex - 1
