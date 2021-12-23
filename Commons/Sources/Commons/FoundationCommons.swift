@@ -59,17 +59,13 @@ public extension RandomAccessCollection where Index == Int {
       let currentMarker = marker(self[i])
 
       if lastMarker == currentMarker {
-        if i == inclusiveEndIndex {
-          result.append(lastStartIndex...i)
-        }
+        if i == inclusiveEndIndex { result.append(lastStartIndex...i) }
       } else {
         result.append(lastStartIndex...lastEndIndex)
         lastMarker = currentMarker
         lastStartIndex = i
 
-        if i == inclusiveEndIndex {
-          result.append(i...i)
-        }
+        if i == inclusiveEndIndex { result.append(i...i) }
       }
 
       lastEndIndex = i
