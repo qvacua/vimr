@@ -11,7 +11,7 @@ import RxPack
 import RxSwift
 import Tabs
 
-public protocol NvimViewDelegate {
+public protocol NvimViewDelegate: AnyObject {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
 }
 
@@ -33,7 +33,7 @@ public class NvimView: NSView,
   public static let minLinespacing = 0.5.cgf
   public static let maxLinespacing = 8.cgf
 
-  public var delegate: NvimViewDelegate?
+  public weak var delegate: NvimViewDelegate?
 
   public let usesCustomTabBar: Bool
   public let tabBar: TabBar<TabEntry>?
