@@ -129,6 +129,24 @@ class ArraySliceTest: XCTestCase {
       ]
     ))
   }
+
+  func testArraySliceGroup7() {
+    let grouped = [
+      Dummy(value: 0, marker: true),
+
+      Dummy(value: 0, marker: true),
+      Dummy(value: 0, marker: false),
+
+      Dummy(value: 0, marker: true),
+    ][1...2].groupedRanges { element in element.marker }
+
+    expect(grouped).to(equal(
+      [
+        1...1,
+        2...2
+      ]
+    ))
+  }
 }
 
 class SwiftCommonsTest: XCTestCase {

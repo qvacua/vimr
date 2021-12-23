@@ -15,16 +15,11 @@ public extension Array where Element: Hashable {
 }
 
 public extension Array {
-  func data() -> Data {
-    self.withUnsafeBufferPointer(Data.init)
-  }
+  func data() -> Data { self.withUnsafeBufferPointer(Data.init) }
 }
 
 public extension RandomAccessCollection where Index == Int {
-  func parallelMap<T>(
-    chunkSize: Int = 1,
-    _ transform: @escaping (Element) -> T
-  ) -> [T] {
+  func parallelMap<T>(chunkSize: Int = 1, _ transform: @escaping (Element) -> T) -> [T] {
     let count = self.count
     guard count > chunkSize else { return self.map(transform) }
 
@@ -34,9 +29,7 @@ public extension RandomAccessCollection where Index == Int {
     // then we get crashes.
     result.withUnsafeMutableBufferPointer { pointer in
       if chunkSize == 1 {
-        DispatchQueue.concurrentPerform(iterations: count) { i in
-          pointer[i] = transform(self[i])
-        }
+        DispatchQueue.concurrentPerform(iterations: count) { i in pointer[i] = transform(self[i]) }
       } else {
         let chunkCount = Int(ceil(Double(self.count) / Double(chunkSize)))
         DispatchQueue.concurrentPerform(iterations: chunkCount) { chunkIndex in
@@ -51,45 +44,7 @@ public extension RandomAccessCollection where Index == Int {
     return result.map { $0! }
   }
 
-  func groupedRangesOriginal<T: Equatable>(
-    with marker: (Index, Element) -> T
-  ) -> [CountableClosedRange<Index>] {
-    if self.isEmpty { return [] }
-    if self.count == 1 { return [self.startIndex...self.startIndex] }
-
-    var result = [CountableClosedRange<Index>]()
-    result.reserveCapacity(self.count / 2)
-
-    let inclusiveEndIndex = self.endIndex - 1
-    var lastStartIndex = self.startIndex
-    var lastEndIndex = self.startIndex
-    var lastMarker = marker(0, self.first!) // self is not empty!
-    for i in self.startIndex..<self.endIndex {
-      let currentMarker = marker(i, self[i])
-
-      if lastMarker == currentMarker {
-        if i == inclusiveEndIndex {
-          result.append(lastStartIndex...i)
-        }
-      } else {
-        result.append(lastStartIndex...lastEndIndex)
-        lastMarker = currentMarker
-        lastStartIndex = i
-
-        if i == inclusiveEndIndex {
-          result.append(i...i)
-        }
-      }
-
-      lastEndIndex = i
-    }
-
-    return result
-  }
-
-  func groupedRanges<T: Equatable>(
-    with marker: (Element) -> T
-  ) -> [CountableClosedRange<Index>] {
+  func groupedRanges<T: Equatable>(with marker: (Element) -> T) -> [ClosedRange<Index>] {
     if self.isEmpty { return [] }
     if self.count == 1 { return [self.startIndex...self.startIndex] }
 
