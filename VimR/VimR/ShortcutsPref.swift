@@ -264,14 +264,6 @@ extension ShortcutsPref {
 // MARK: - NSOutlineViewDelegate
 
 extension ShortcutsPref {
-  private func isUppercase(_ str: String) -> Bool {
-    for c in str.unicodeScalars {
-      if !CharacterSet.uppercaseLetters.contains(c) { return false }
-    }
-
-    return true
-  }
-
   func outlineView(_: NSOutlineView, rowViewForItem _: Any) -> NSTableRowView? {
     let view = self.shortcutList.makeView(
       withIdentifier: NSUserInterfaceItemIdentifier("shortcut-row-view"),
