@@ -24,14 +24,14 @@ public class NvimView: NSView,
 
   public static let rpcEventName = "com.qvacua.NvimView"
 
-  public static let minFontSize = 4.cgf
-  public static let maxFontSize = 128.cgf
+  public static let minFontSize = 4.0
+  public static let maxFontSize = 128.0
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
-  public static let defaultLinespacing = 1.cgf
-  public static let defaultCharacterspacing = 1.cgf
+  public static let defaultLinespacing = 1.0
+  public static let defaultCharacterspacing = 1.0
 
-  public static let minLinespacing = 0.5.cgf
-  public static let maxLinespacing = 8.cgf
+  public static let minLinespacing = 0.5
+  public static let maxLinespacing = 8.0
 
   public weak var delegate: NvimViewDelegate?
 

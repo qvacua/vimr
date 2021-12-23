@@ -7,12 +7,6 @@ import Foundation
 
 public func identity<T>(_ input: T) -> T { input }
 
-public extension BinaryFloatingPoint {
-  @inlinable
-  @inline(__always)
-  var cgf: CGFloat { CGFloat(self) }
-}
-
 public extension FixedWidthInteger {
   @inlinable
   @inline(__always)

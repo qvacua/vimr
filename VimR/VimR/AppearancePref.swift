@@ -346,12 +346,12 @@ extension AppearancePref {
   }
 
   func linespacingAction() {
-    let newLinespacing = self.cappedLinespacing(self.linespacingField.floatValue)
+    let newLinespacing = self.cappedLinespacing(self.linespacingField.doubleValue)
     self.emit(.setLinespacing(newLinespacing))
   }
 
-  private func cappedLinespacing(_ linespacing: Float) -> CGFloat {
-    let cgfLinespacing = linespacing.cgf
+  private func cappedLinespacing(_ linespacing: Double) -> CGFloat {
+    let cgfLinespacing = linespacing
 
     guard cgfLinespacing >= NvimView.minLinespacing else { return NvimView.defaultLinespacing }
     guard cgfLinespacing <= NvimView.maxLinespacing else { return NvimView.maxLinespacing }
@@ -360,16 +360,14 @@ extension AppearancePref {
   }
 
   func characterspacingAction() {
-    let newCharacterspacing = self.cappedCharacterspacing(self.characterspacingField.floatValue)
+    let newCharacterspacing = self.cappedCharacterspacing(self.characterspacingField.doubleValue)
     self.emit(.setCharacterspacing(newCharacterspacing))
   }
 
-  private func cappedCharacterspacing(_ characterspacing: Float) -> CGFloat {
-    let cgfCharacterspacing = characterspacing.cgf
+  private func cappedCharacterspacing(_ characterspacing: Double) -> Double {
+    guard characterspacing >= 0.0 else { return NvimView.defaultCharacterspacing }
 
-    guard cgfCharacterspacing >= 0.0 else { return NvimView.defaultCharacterspacing }
-
-    return cgfCharacterspacing
+    return characterspacing
   }
 
   private func cappedFontSize(_ size: Int) -> CGFloat {

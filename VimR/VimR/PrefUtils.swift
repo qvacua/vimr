@@ -67,8 +67,8 @@ class PrefUtils {
     return editorFont
   }
 
-  static func saneLinespacing(_ fLinespacing: Float) -> CGFloat {
-    let linespacing = fLinespacing.cgf
+  static func saneLinespacing(_ fLinespacing: Double) -> Double {
+    let linespacing = fLinespacing
     guard linespacing >= NvimView.minLinespacing, linespacing <= NvimView.maxLinespacing else {
       return NvimView.defaultLinespacing
     }
@@ -76,8 +76,8 @@ class PrefUtils {
     return linespacing
   }
 
-  static func saneCharacterspacing(_ fCharacterspacing: Float) -> CGFloat {
-    let characterspacing = fCharacterspacing.cgf
+  static func saneCharacterspacing(_ fCharacterspacing: Double) -> Double {
+    let characterspacing = fCharacterspacing
     guard characterspacing >= 0.0 else {
       return NvimView.defaultCharacterspacing
     }

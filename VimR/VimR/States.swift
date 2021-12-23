@@ -198,8 +198,8 @@ struct AppearanceState: Codable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
     if let fontName = try container.decodeIfPresent(String.self, forKey: .editorFontName),
-       let fontSize = try container.decodeIfPresent(Float.self, forKey: .editorFontSize),
-       let font = NSFont(name: fontName, size: fontSize.cgf)
+       let fontSize = try container.decodeIfPresent(Double.self, forKey: .editorFontSize),
+       let font = NSFont(name: fontName, size: fontSize)
     {
       self.font = font
     } else {
@@ -207,13 +207,12 @@ struct AppearanceState: Codable {
     }
 
     self
-      .linespacing = (try container.decodeIfPresent(Float.self, forKey: .editorLinespacing) ?? 1.0)
-      .cgf
+      .linespacing = (try container.decodeIfPresent(Double.self, forKey: .editorLinespacing) ?? 1.0)
     self
       .characterspacing = (
         try container
-          .decodeIfPresent(Float.self, forKey: .editorCharacterspacing) ?? 1.0
-      ).cgf
+          .decodeIfPresent(Double.self, forKey: .editorCharacterspacing) ?? 1.0
+      )
     self.usesLigatures = try container
       .decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
 
@@ -477,7 +476,7 @@ struct WorkspaceToolState: Codable {
     self.dimension = try container.decode(
       forKey: .dimension,
       default: WorkspaceToolState.default.dimension
-    ).cgf
+    )
     self.open = try container.decode(
       forKey: .open,
       default: WorkspaceToolState.default.open

@@ -147,6 +147,6 @@ extension MainWindow {
   }
 }
 
-private let repIconToTitleGap = 4.0.cgf
+private let repIconToTitleGap = 4.0
 private let titleBarHeight
   = CGFloat(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 ? 28 : 22)

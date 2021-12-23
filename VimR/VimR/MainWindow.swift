@@ -429,7 +429,7 @@ class MainWindow: NSObject,
         self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
 
         if self.neoVimView.trackpadScrollResistance
-          != state.trackpadScrollResistance.cgf
+          != state.trackpadScrollResistance
         {
           self.neoVimView.trackpadScrollResistance = CGFloat(
             state.trackpadScrollResistance
