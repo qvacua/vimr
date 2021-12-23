@@ -19,7 +19,10 @@ public extension NvimView {
 
     if !isMeta {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
-      if self.hasMarkedText() { self.keyDownDone = true } // mark state ignore Down,Up,Left,Right,=,- etc keys
+      if self.hasMarkedText() {
+        // mark state ignore Down,Up,Left,Right,=,- etc keys
+        self.keyDownDone = true
+      }
       if self.keyDownDone, cocoaHandledEvent { return }
     }
 
@@ -59,7 +62,7 @@ public extension NvimView {
       .deleteCharacters(0, andInputEscapedString: self.vimPlainString(text))
       .wait()
 
-    if self.hasMarkedText() { _unmarkText() }
+    if self.hasMarkedText() { self._unmarkText() }
     self.keyDownDone = true
   }
 
@@ -167,33 +170,34 @@ public extension NvimView {
     }
 
     if replacementRange != .notFound {
-      guard self.ugrid.firstPosition(fromFlatCharIndex: replacementRange.location) != nil else { return }
+      guard self.ugrid.firstPosition(fromFlatCharIndex: replacementRange.location) != nil
+      else { return }
       // FIXME: here not validate location, only delete by length.
       // after delete, cusor should be the location
     }
     if replacementRange.length > 0 {
       try? self.bridge
-      .deleteCharacters(replacementRange.length, andInputEscapedString: "")
-      .wait()
+        .deleteCharacters(replacementRange.length, andInputEscapedString: "")
+        .wait()
     }
 
     // delay to wait async gui update handled.
     // this avoid insert and then delete flicker
     // the markedPosition is not needed since marked Text should always following cursor..
     DispatchQueue.main.async { [self, markedText] in
-        ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
-        markForRender(region: regionForRow(at: ugrid.cursorPosition))
+      ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
+      markForRender(region: regionForRow(at: ugrid.cursorPosition))
     }
     self.keyDownDone = true
   }
 
   func unmarkText() {
-    _unmarkText()
+    self._unmarkText()
     self.keyDownDone = true
   }
 
   func _unmarkText() {
-    guard hasMarkedText() else { return }
+    guard self.hasMarkedText() else { return }
     // wait inserted text gui update event, so hanji in korean get right previous string and can popup candidate window
     DispatchQueue.main.async { [self] in
       if let markedInfo = self.ugrid.markedInfo {
@@ -220,7 +224,9 @@ public extension NvimView {
 
     let result: NSRange
     result = NSRange(
-      location: self.ugrid.flatCharIndex(forPosition: self.ugrid.cursorPositionWithMarkedInfo(allowOverflow: true)),
+      location: self.ugrid.flatCharIndex(
+        forPosition: self.ugrid.cursorPositionWithMarkedInfo(allowOverflow: true)
+      ),
       length: 0
     )
 
