@@ -78,7 +78,20 @@ public extension NvimView {
 
   override func performKeyEquivalent(with event: NSEvent) -> Bool {
     if event.type != .keyDown { return false }
+
+    // Cocoa first calls this method to ask whether a subview implements the key equivalent
+    // in question. For example, if we have ⌘-. as shortcut for a menu item, which is the case
+    // for "Tools -> Focus Neovim View" by default, at some point in the event processing chain
+    // this method will be called. If we want to forward the event to Neovim because the user
+    // could have set it for some action, that menu item shortcut will not work. To work around
+    // this, we ask NvimViewDelegate whether the event is a shortcut of a menu item. The delegate
+    // has to be implemented by the user of NvimView.
+    if self.delegate?.isMenuItemKeyEquivalent(event) == true { return false }
+
     let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+
+    // Emoji menu: Cmd-Ctrl-Space
+    if flags.contains([.command, .control]), event.keyCode == spaceKeyChar { return false }
 
     // <C-Tab> & <C-S-Tab> do not trigger keyDown events.
     // Catch the key event here and pass it to keyDown.
@@ -89,13 +102,10 @@ public extension NvimView {
       return true
     }
 
-    // Emoji menu: Cmd-Ctrl-Space
-    if flags.contains([.command, .control]), event.keyCode == 49 { return false }
-
     // Space key (especially in combination with modifiers) can result in
     // unexpected chars (e.g. ctrl-space = \0), so catch the event early and
     // pass it to keyDown.
-    if event.keyCode == 49 {
+    if event.keyCode == spaceKeyChar {
       self.keyDown(with: event)
       return true
     }
@@ -315,3 +325,5 @@ public extension NvimView {
     string.replacingOccurrences(of: "<", with: self.wrapNamedKeys("lt"))
   }
 }
+
+private let spaceKeyChar = 49
