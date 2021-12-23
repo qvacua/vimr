@@ -21,8 +21,8 @@ open class CustomToolBar: NSView {
 public class InnerToolBar: NSView, NSUserInterfaceValidations {
   // MARK: - Public
 
-  public static let iconDimension = 16.cgf
-  public static let itemPadding = 4.cgf
+  public static let iconDimension = 16.0
+  public static let itemPadding = 4.0
 
   public static func configureToStandardIconButton(
     button: NSButton,
@@ -114,7 +114,7 @@ public class InnerToolBar: NSView, NSUserInterfaceValidations {
     }
   }
 
-  private static let separatorThickness = 1.cgf
+  private static let separatorThickness = 1.0
   private static let height = InnerToolBar.iconDimension + 2 + 2 + InnerToolBar.separatorThickness
 
   private let titleField = NSTextField(forAutoLayout: ())

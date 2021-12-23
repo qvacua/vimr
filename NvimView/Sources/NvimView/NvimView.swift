@@ -49,7 +49,7 @@ public class NvimView: NSView,
 
   public internal(set) var theme = Theme.default
 
-  public var trackpadScrollResistance = 5.cgf
+  public var trackpadScrollResistance = 5.0
 
   public var usesLiveResize = false
 
@@ -251,7 +251,7 @@ public class NvimView: NSView,
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
   let drawer: AttributesRunDrawer
-  var baselineOffset = 0.cgf
+  var baselineOffset = 0.0
 
   /// We store the last marked text because Cocoa's text input system does the following:
   /// 하 -> hanja popup -> insertText(하) -> attributedSubstring...() -> setMarkedText(下) -> ...
@@ -269,7 +269,7 @@ public class NvimView: NSView,
   var scrollGuardCounterY = 5
 
   var isCurrentlyPinching = false
-  var pinchTargetScale = 1.cgf
+  var pinchTargetScale = 1.0
   var pinchBitmap: NSBitmapImageRep?
 
   var currentlyResizing = false

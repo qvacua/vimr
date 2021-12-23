@@ -38,8 +38,8 @@ final class Typesetter {
         CTRunGetStringIndices(run, .zero, &indices)
 
         var column = -1
-        var columnPosition = 0.cgf
-        var deltaX = 0.cgf
+        var columnPosition = 0.0
+        var deltaX = 0.0
 
         positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
           for i in 0..<positionsPtr.count {

@@ -463,7 +463,7 @@ struct WorkspaceToolState: Codable {
   }
 
   var location = WorkspaceBarLocation.left
-  var dimension = 200.cgf
+  var dimension = 200.0
   var open = false
 
   init(from decoder: Decoder) throws {

@@ -173,7 +173,7 @@ class FileOutlineView: NSOutlineView,
   private let treeController = NSTreeController()
   private let fileMonitor = FileMonitor()
 
-  private var cachedColumnWidth = 20.cgf
+  private var cachedColumnWidth = 20.0
   private var usesTheme: Bool
   private var lastFileSystemUpdateMark = Token()
   private var showsFileIcon: Bool
@@ -524,5 +524,5 @@ private extension NSTreeNode {
   var node: Node? { self.representedObject as? Node }
 }
 
-private let columnWidthRightPadding = 40.cgf
-private let triangleImageSize = 18.cgf
+private let columnWidthRightPadding = 40.0
+private let triangleImageSize = 18.0
