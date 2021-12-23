@@ -14,6 +14,7 @@
 		1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */; };
 		1929B223C6E97C090474B2C2 /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BC40B7B7708D8BE3A272 /* Resources.swift */; };
 		1929B250DB3FB395A700FE8C /* RpcEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BBF0944940845485A512 /* RpcEvents.swift */; };
+		1929B28EF1D4135A94C07558 /* ShortcutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD2195B8D7B87B2069C4 /* ShortcutService.swift */; };
 		1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B457B9D0FA4D21F3751E /* UiRootReducer.swift */; };
 		1929B29FF537A339CF4075BD /* CssUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA05F1FE30CA74F006C4 /* CssUtils.swift */; };
 		1929B2D56C4652E251C23AD4 /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */; };
@@ -250,6 +251,7 @@
 		1929BC40B7B7708D8BE3A272 /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */ = {isa = PBXFileReference; lastKnownFileType = file.vim; path = com.qvacua.VimR.vim; sourceTree = "<group>"; };
 		1929BCE3E156C06EDF1F2806 /* FileOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOutlineView.swift; sourceTree = "<group>"; };
+		1929BD2195B8D7B87B2069C4 /* ShortcutService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutService.swift; sourceTree = "<group>"; };
 		1929BD2CA8DD198A6BCDBCB7 /* ThemedTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableSubviews.swift; sourceTree = "<group>"; };
 		1929BD4149D5A25C82064DD8 /* UiRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiRoot.swift; sourceTree = "<group>"; };
 		1929BD83A13BF133741766CC /* MainWindowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowReducer.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				1929BFA93DC859DD76C46192 /* Middlewares */,
 				1929BFC0A5A9C6DB09BE1368 /* Types.swift */,
 				1929BE4A67D96BD8BD8168C3 /* Epics */,
+				1929BD2195B8D7B87B2069C4 /* ShortcutService.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -849,7 +852,7 @@
 				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
 				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
 				4BD5657924E8448300D52809 /* XCRemoteSwiftPackageReference "FSEvents" */,
-				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */,
+				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack.swift" */,
 				4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
 				4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */,
@@ -1048,6 +1051,7 @@
 				1929BC64D3C195A92BE3FD64 /* HtmlPreviewMiddleware.swift in Sources */,
 				1929B29FF537A339CF4075BD /* CssUtils.swift in Sources */,
 				1929B805633C40EC1642121C /* RxCommons.swift in Sources */,
+				1929B28EF1D4135A94C07558 /* ShortcutService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1376,7 +1380,7 @@
 				version = 0.1.0;
 			};
 		};
-		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
+		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/a2/MessagePack.swift";
 			requirement = {
@@ -1485,7 +1489,7 @@
 		};
 		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
+			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack.swift" */;
 			productName = MessagePack;
 		};
 		4B9BC42624EB2E51000209B5 /* NvimView */ = {

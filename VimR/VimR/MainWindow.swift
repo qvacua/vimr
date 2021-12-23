@@ -15,7 +15,8 @@ class MainWindow: NSObject,
   UiComponent,
   NSWindowDelegate,
   NSUserInterfaceValidations,
-  WorkspaceDelegate
+  WorkspaceDelegate,
+  NvimViewDelegate
 {
   typealias StateType = State
 
@@ -29,6 +30,8 @@ class MainWindow: NSObject,
 
   let workspace: Workspace
   let neoVimView: NvimView
+
+  weak var shortcutService: ShortcutService?
 
   let scrollDebouncer = Debouncer<Action>(interval: .milliseconds(750))
   let cursorDebouncer = Debouncer<Action>(interval: .milliseconds(750))
@@ -202,6 +205,7 @@ class MainWindow: NSObject,
     )
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.neoVimView.drawsParallel = self.drawsParallel
+    self.neoVimView.delegate = self
     self.updateNeoVimAppearance()
 
     self.setupScrollAndCursorDebouncers()
@@ -598,5 +602,12 @@ class MainWindow: NSObject,
     alert.beginSheetModal(for: self.window) { _ in
       Swift.print("fdsfd")
     }
+  }
+}
+
+// NvimViewDelegate
+extension MainWindow {
+  func isMenuItemKeyEquivalent(_ event: NSEvent) -> Bool {
+    self.shortcutService?.isMenuItemShortcut(event) == true
   }
 }
