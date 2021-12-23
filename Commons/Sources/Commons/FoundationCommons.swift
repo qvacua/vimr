@@ -54,13 +54,8 @@ public extension RandomAccessCollection where Index == Int {
   func groupedRanges<T: Equatable>(
     with marker: (Index, Element) -> T
   ) -> [CountableClosedRange<Index>] {
-    if self.isEmpty {
-      return []
-    }
-
-    if self.count == 1 {
-      return [self.startIndex...self.startIndex]
-    }
+    if self.isEmpty { return [] }
+    if self.count == 1 { return [self.startIndex...self.startIndex] }
 
     var result = [CountableClosedRange<Index>]()
     result.reserveCapacity(self.count / 2)
@@ -70,8 +65,6 @@ public extension RandomAccessCollection where Index == Int {
     var lastEndIndex = self.startIndex
     var lastMarker = marker(0, self.first!) // self is not empty!
     for i in self.startIndex..<self.endIndex {
-      defer { lastEndIndex = i }
-
       let currentMarker = marker(i, self[i])
 
       if lastMarker == currentMarker {
@@ -87,6 +80,8 @@ public extension RandomAccessCollection where Index == Int {
           result.append(i...i)
         }
       }
+
+      lastEndIndex = i
     }
 
     return result
