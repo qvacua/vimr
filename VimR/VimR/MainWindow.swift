@@ -192,6 +192,7 @@ class MainWindow: NSObject,
     }
 
     self.windowController.window?.delegate = self
+    self.windowController.nextResponder = NSApplication.shared
     self.workspace.delegate = self
 
     self.addViews(withTopInset: 0)
