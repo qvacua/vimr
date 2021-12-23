@@ -62,9 +62,7 @@ public class NvimView: NSView,
     get { self._linespacing }
 
     set {
-      guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else {
-        return
-      }
+      guard newValue >= NvimView.minLinespacing, newValue <= NvimView.maxLinespacing else { return }
 
       self._linespacing = newValue
       self.updateFontMetaData(self._font)
@@ -226,9 +224,7 @@ public class NvimView: NSView,
   }
 
   @available(*, unavailable)
-  public required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  public required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   @IBAction public func debug1(_: Any?) {
     #if DEBUG
