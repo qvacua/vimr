@@ -8,6 +8,9 @@ import NvimView
 import os
 import PureLayout
 import RxSwift
+#if FRAMERATE
+  import SpriteKit
+#endif
 import Tabs
 import Workspace
 
@@ -216,6 +219,16 @@ class MainWindow: NSObject,
     self.window.makeFirstResponder(self.neoVimView)
 
     self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
+
+    // Framerate measurement; from https://stackoverflow.com/a/34039775
+    #if FRAMERATE
+      let sk = SKView(forAutoLayout: ())
+      sk.showsFPS = true
+      self.neoVimView.addSubview(sk)
+      sk.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+      sk.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+      sk.autoSetDimensions(to: CGSize(width: 60, height: 15))
+    #endif
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
