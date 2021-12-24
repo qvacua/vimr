@@ -1,13 +1,24 @@
-disabled_rules:
-  - opening_brace
-  - trailing_comma
-  - orphaned_doc_comment
-  - identifier_name
-  - statement_position
-nesting:
-  type_level: 3
-identifier_name:
-  min_length: 2
+only_rules:
+  - colon
+  - fatal_error_message
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_nsgeometry_functions
+  - operator_usage_whitespace
+  - redundant_string_enum_value
+  - return_arrow_whitespace
+  - trailing_newline
+  - type_name
+  - unused_optional_binding
+  - vertical_whitespace
+  - void_return
+  - custom_rules
+
 excluded:
   - Carthage
   - .build
@@ -16,3 +27,22 @@ excluded:
   - NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift
   - NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift
   - RxPack/Sources/RxPack/RxNeovimApi.generated.swift
+
+colon:
+  apply_to_dictionaries: false
+
+indentation: 2
+
+custom_rules:
+  no_objcMembers:
+    name: "@objcMembers"
+    regex: "@objcMembers"
+    message: "Explicitly use @objc on each member you want to expose to Objective-C"
+    severity: error
+  no_direct_standard_out_logs:
+    name: "Writing log messages directly to standard out is disallowed"
+    regex: "(\\bprint|\\bdebugPrint|\\bdump|Swift\\.print|Swift\\.debugPrint|Swift\\.dump)\\s*\\("
+    match_kinds:
+    - identifier
+    message: "Don't commit `print(…)`, `debugPrint(…)`, or `dump(…)` as they write to standard out in release. Either log to a dedicated logging system or silence this warning in debug-only scenarios explicitly using `// swiftlint:disable:next no_direct_standard_out_logs`"
+    severity: warning
