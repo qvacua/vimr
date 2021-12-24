@@ -205,4 +205,4 @@ class MyView: NSView {
   }
 }
 
-private let fira = NSFont(name: "FiraCode-Regular", size: 36)!
+private let fira = NSFont(name: "FiraCodeRoman-Regular", size: 36)!
