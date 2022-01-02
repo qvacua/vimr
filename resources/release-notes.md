@@ -1,6 +1,9 @@
 # Next
 
-* 0.36.0-...
+* ...
+
+#  0.36.0-20220102.161018
+
 * Neovim 0.6.1 😀
 * GH-876: Forward `Cmd-.` to Neovim. Thank you @imkerberos!
 * GH-881: Make the `ESC` key cancel "Not yet saved"-dialogs. Thank you @jasonm!
