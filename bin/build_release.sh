@@ -9,7 +9,7 @@ readonly upload=${upload:?"true or false"}
 readonly update_appcast=${update_appcast:?"true or false"}
 readonly build_folder_path="./build/Build/Products/Release"
 readonly vimr_artifact_path="${build_folder_path}/VimR-${marketing_version}.tar.bz2"
-readonly GH_REPO="qvacua/vimr"
+declare -r -x GH_REPO="qvacua/vimr"
 
 prepare_bin() {
   pushd ./bin >/dev/null
@@ -36,8 +36,10 @@ check_version() {
 
 check_upload() {
   if [[ "${upload}" == true ]]; then
-    if ! gh release list | grep -q "${tag}"; then
-      echo "Release with tag ${tag} does not exit!"
+    if gh release list | grep "${tag}"; then
+      echo "Release with tag ${tag} found"
+    else
+      echo "Release with tag ${tag} does not exist!"
       exit 1
     fi
   fi
