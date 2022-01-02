@@ -53,7 +53,11 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 * Tag with the name `nvimserver-x.y.z-n`. GitHub actions will build the `x86_64` version,
   create a release and upload it.
-* Build the `arm64` version locally and upload it.
+* Build the `arm64` version locally and upload it:
+  ```bash
+  download_gettext=true clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
+  ```
+* Update `NvimServer/Resources/nvimserver-for-download.txt`.
 
 ### VimR
 
