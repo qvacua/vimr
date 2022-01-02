@@ -1,7 +1,7 @@
 # Next
 
-* ...
-* Neovim 0.6.0 😀
+* 0.36.0-...
+* Neovim 0.6.1 😀
 * GH-876: Forward `Cmd-.` to Neovim. Thank you @imkerberos!
 * GH-881: Make the `ESC` key cancel "Not yet saved"-dialogs. Thank you @jasonm!
 * GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolaWing!

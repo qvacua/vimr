@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.6.0.
+// Auto generated for nvim version 0.6.1.
 // See bin/generate_api_methods.py
 
 import Foundation

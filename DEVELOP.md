@@ -58,6 +58,10 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
   download_gettext=true clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
   ```
 * Update `NvimServer/Resources/nvimserver-for-download.txt`.
+* Build a universal binary by the following and upload the artefact:
+  ```bash
+  ./NvimServer/bin/build_release.sh
+  ```
 
 ### VimR
 
