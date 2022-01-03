@@ -47,6 +47,9 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 Clone this repository. Install `homebrew`, then in the project root:
 
 ```bash
+git submodule init
+git submodule update
+
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle
 
