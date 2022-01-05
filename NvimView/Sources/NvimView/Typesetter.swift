@@ -20,6 +20,8 @@ final class Typesetter {
     let ctRuns = self.ctRuns(from: utf16Chars, font: font)
 
     return ctRuns.withUnsafeBufferPointer { pointer -> [FontGlyphRun] in
+      // Tried to use Array(unsafeUninitializedCapacity, initializingWith:) for result,
+      // but I get EXC_BAD_ACCESS, I don't know why.
       var result: [FontGlyphRun] = []
       result.reserveCapacity(pointer.count)
 
@@ -49,7 +51,7 @@ final class Typesetter {
         var columnPosition = 0.0
         var deltaX = 0.0
 
-        positions.withUnsafeMutableBufferPointer { positionsPtr -> Void in
+        positions.withUnsafeMutableBufferPointer { positionsPtr in
           for i in 0..<positionsPtr.count {
             let newColumn = cellIndices[indices[i]] + startColumn
             if newColumn != column {
