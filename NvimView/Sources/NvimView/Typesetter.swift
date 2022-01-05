@@ -28,14 +28,22 @@ final class Typesetter {
 
         let glyphCount = CTRunGetGlyphCount(run)
 
-        var glyphs = Array(repeating: CGGlyph(), count: glyphCount)
-        CTRunGetGlyphs(run, .zero, &glyphs)
+        // swiftlint:disable force_unwrapping
+        let glyphs = [CGGlyph](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetGlyphs(run, .zero, buffer.baseAddress!)
+          count = glyphCount
+        }
 
-        var positions = Array(repeating: CGPoint.zero, count: glyphCount)
-        CTRunGetPositions(run, .zero, &positions)
+        var positions = [CGPoint](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetPositions(run, .zero, buffer.baseAddress!)
+          count = glyphCount
+        }
 
-        var indices = Array(repeating: CFIndex(), count: glyphCount)
-        CTRunGetStringIndices(run, .zero, &indices)
+        let indices = [CFIndex](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetStringIndices(run, .zero, buffer.baseAddress!)
+          count = glyphCount
+        }
+        // swiftlint:enable force_unwrapping
 
         var column = -1
         var columnPosition = 0.0
