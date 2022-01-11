@@ -130,9 +130,7 @@ final class Typesetter {
             CGPoint(x: offset.x + i.cgf * cellWidth, y: offset.y)
           }
 
-          return [
-            FontGlyphRun(font: font, glyphs: Array(glyphs[range]), positions: positions),
-          ]
+          return [FontGlyphRun(font: font, glyphs: Array(glyphs[range]), positions: positions)]
         }
       }
 
@@ -257,9 +255,7 @@ final class Typesetter {
     nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
       let count = pointer.reduce(0) { acc, elem in acc + elem.count }
 
-      return [Unicode.UTF16.CodeUnit](
-        unsafeUninitializedCapacity: count
-      ) { resultPtr, initCount in
+      return [Unicode.UTF16.CodeUnit](unsafeUninitializedCapacity: count) { resultPtr, initCount in
         var i = 0
         for k in 0..<pointer.count {
           let element = pointer[k]
