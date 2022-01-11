@@ -1,0 +1,10 @@
+{
+  "deploymentTargets": {
+    "x86_64": "10.13",
+    "arm64": "11.00"
+  },
+  "dependencies": {
+    "vimrDeps": "vimr-deps-2021-12-12",
+    "nvimServer": "nvimserver-0.6.1-0"
+  }
+}
