@@ -8,7 +8,7 @@ readonly compressed_file_name="${file_name}.tar.bz2"
 download_vimr_deps() {
   echo "### Downloading ${file_name}"
   local version
-  version=$(cat ./resources/vimr-deps_version.txt)
+  version="$(jq -r .dependencies.vimrDeps ./resources/buildInfo.json)"
   readonly version
 
   echo "#### Downloading ${version}"

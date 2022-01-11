@@ -7,7 +7,7 @@ readonly nvimserver_dir_path="${target_dir_path}/NvimServer"
 download_nvimserver() {
   echo "### Downloading NvimServer"
   local version
-  version=$(cat ./resources/nvimserver_version.txt)
+  version="$(jq -r .dependencies.nvimServer ./resources/buildInfo.json)"
   readonly version
 
   echo "#### Downloading ${version}"
