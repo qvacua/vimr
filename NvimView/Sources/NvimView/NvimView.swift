@@ -3,6 +3,7 @@
  * See LICENSE
  */
 
+import Carbon
 import Cocoa
 import Commons
 import MessagePack
@@ -213,6 +214,9 @@ public class NvimView: NSView,
     self.cellSize = FontUtils.cellSize(
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
+
+    self.asciiImSource = nil
+    self.lastImSource = nil
   }
 
   override public convenience init(frame rect: NSRect) {
@@ -296,6 +300,9 @@ public class NvimView: NSView,
   let nvimExitedCondition = ConditionVariable()
 
   var tabEntries = [TabEntry]()
+
+  var asciiImSource : TISInputSource?
+  var lastImSource : TISInputSource?
 
   // MARK: - Private
 
