@@ -3,7 +3,9 @@
  * See LICENSE
  */
 
+import Carbon
 import Cocoa
+import Foundation
 import MessagePack
 import NvimServerTypes
 import RxPack
@@ -47,10 +49,28 @@ extension NvimView {
     }
   }
 
+  private func activateIm(enabled: Bool) {
+    if (self.asciiImSource == nil) {
+      self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
+      // self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeUnretainedValue()
+      self.bridgeLogger.info("ascii IME id: \(asciiImSource!.id), source: \(asciiImSource)")
+    }
+
+    if enabled {
+      // In insert mode, set ime to last ime source 
+      TISSelectInputSource(self.lastImSource)
+    } else {
+      // In normal mode, se ime to ascii input source
+      self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+      TISSelectInputSource(self.asciiImSource)
+    }
+
+    self.bridgeLogger.debug("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
+  }
+
   final func modeChange(_ value: MessagePackValue) {
     guard let mode = MessagePackUtils.value(
       from: value, conversion: { v -> CursorModeShape? in
-
         guard let rawValue = v.intValue else { return nil }
         return CursorModeShape(rawValue: UInt(rawValue))
       }
@@ -60,11 +80,20 @@ extension NvimView {
     }
 
     self.bridgeLogger.debug(self.name(ofCursorMode: mode))
+    // self.bridgeLogger.info(self.name(ofCursorMode: mode))
     gui.async {
       self.mode = mode
       self.markForRender(
         region: self.cursorRegion(for: self.ugrid.cursorPosition)
       )
+
+      if self.name(ofCursorMode: mode) == "Normal" {
+        self.activateIm(enabled: false)
+      }
+
+      if self.name(ofCursorMode: mode) == "Insert" {
+        self.activateIm(enabled: true)
+      }
     }
   }
 
@@ -673,5 +702,44 @@ extension NvimView {
     self.updateTouchBarCurrentBuffer()
   }
 }
+
+extension TISInputSource {
+    enum Category {
+        static var keyboardInputSource: String {
+            return kTISCategoryKeyboardInputSource as String
+        }
+    }
+
+    private func getProperty(_ key: CFString) -> AnyObject? {
+        let cfType = TISGetInputSourceProperty(self, key)
+        if (cfType != nil) {
+            return Unmanaged<AnyObject>.fromOpaque(cfType!)
+            .takeUnretainedValue()
+        } else {
+            return nil
+        }
+    }
+
+    var id: String {
+        return getProperty(kTISPropertyInputSourceID) as! String
+    }
+
+    var name: String {
+        return getProperty(kTISPropertyLocalizedName) as! String
+    }
+
+    var category: String {
+        return getProperty(kTISPropertyInputSourceCategory) as! String
+    }
+
+    var isSelectable: Bool {
+        return getProperty(kTISPropertyInputSourceIsSelectCapable) as! Bool
+    }
+
+    var sourceLanguages: [String] {
+        return getProperty(kTISPropertyInputSourceLanguages) as! [String]
+    }
+}
+
 
 private let gui = DispatchQueue.main
