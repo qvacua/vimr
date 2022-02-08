@@ -8,6 +8,7 @@ import Cocoa
 import Foundation
 import MessagePack
 import NvimServerTypes
+import os
 import RxPack
 import RxSwift
 
@@ -49,25 +50,6 @@ extension NvimView {
     }
   }
 
-  private func activateIm(enabled: Bool) {
-    if (self.asciiImSource == nil) {
-      self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
-      // self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeUnretainedValue()
-      self.bridgeLogger.info("ascii IME id: \(asciiImSource!.id), source: \(asciiImSource)")
-    }
-
-    if enabled {
-      // In insert mode, set ime to last ime source 
-      TISSelectInputSource(self.lastImSource)
-    } else {
-      // In normal mode, se ime to ascii input source
-      self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
-      TISSelectInputSource(self.asciiImSource)
-    }
-
-    self.bridgeLogger.debug("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
-  }
-
   final func modeChange(_ value: MessagePackValue) {
     guard let mode = MessagePackUtils.value(
       from: value, conversion: { v -> CursorModeShape? in
@@ -79,8 +61,8 @@ extension NvimView {
       return
     }
 
-    self.bridgeLogger.debug(self.name(ofCursorMode: mode))
-    // self.bridgeLogger.info(self.name(ofCursorMode: mode))
+    // self.bridgeLogger.debug(self.name(ofCursorMode: mode))
+    self.bridgeLogger.info(self.name(ofCursorMode: mode))
     gui.async {
       self.mode = mode
       self.markForRender(
@@ -92,6 +74,7 @@ extension NvimView {
       }
 
       if self.name(ofCursorMode: mode) == "Insert" {
+        self.is_insert_mode = true
         self.activateIm(enabled: true)
       }
     }
@@ -414,6 +397,34 @@ extension NvimView {
     self.eventsSubject.onNext(.scroll)
 
     return min(0, top)
+  }
+
+  private func activateIm(enabled: Bool) {
+    if (self.asciiImSource == nil) {
+      self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
+      // self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeUnretainedValue()
+      self.bridgeLogger.info("ascii IME id: \(asciiImSource!.id), source: \(asciiImSource)")
+    }
+
+    if enabled {
+      // In insert mode, set ime to last ime source 
+      TISSelectInputSource(self.lastImSource)
+    } else {
+      // In normal mode, set ime to ascii input source
+      if self.is_insert_mode {
+        self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+        self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
+
+        // Set is_insert_mode flag to avoid copy the wrong input source.
+        // We could enter Normal mode from Visual and OperaterPending mode.
+        self.is_insert_mode = false
+      }
+
+      TISSelectInputSource(self.asciiImSource)
+    }
+
+    // self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
+    // os_log("lastImSource id: %@, source: %@", log: self.bridgeLogger, type: .debug, lastImSource!.id, lastImSource!.sourceLanguages)
   }
 }
 
