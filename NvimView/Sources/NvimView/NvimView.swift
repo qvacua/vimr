@@ -304,6 +304,7 @@ public class NvimView: NSView,
   var asciiImSource : TISInputSource?
   var lastImSource : TISInputSource?
 
+  var is_insert_mode  = false
   // MARK: - Private
 
   private var _linespacing = NvimView.defaultLinespacing
