@@ -61,22 +61,19 @@ extension NvimView {
       return
     }
 
+    self.lastMode = self.currentMode
+    self.currentMode = self.name(ofCursorMode: mode)
+
+    self.bridgeLogger.info("\(self.lastMode) -> \(self.currentMode)")
     // self.bridgeLogger.debug(self.name(ofCursorMode: mode))
-    self.bridgeLogger.info(self.name(ofCursorMode: mode))
+
     gui.async {
       self.mode = mode
       self.markForRender(
         region: self.cursorRegion(for: self.ugrid.cursorPosition)
       )
 
-      if self.name(ofCursorMode: mode) == "Normal" {
-        self.activateIm(enabled: false)
-      }
-
-      if self.name(ofCursorMode: mode) == "Insert" {
-        self.is_insert_mode = true
-        self.activateIm(enabled: true)
-      }
+      self.activateIm()
     }
   }
 
@@ -399,32 +396,25 @@ extension NvimView {
     return min(0, top)
   }
 
-  private func activateIm(enabled: Bool) {
+  private func activateIm() {
     if (self.asciiImSource == nil) {
       self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
-      // self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeUnretainedValue()
       self.bridgeLogger.info("ascii IME id: \(asciiImSource!.id), source: \(asciiImSource)")
     }
 
-    if enabled {
-      // In insert mode, set ime to last ime source 
-      TISSelectInputSource(self.lastImSource)
-    } else {
-      // In normal mode, set ime to ascii input source
-      if self.is_insert_mode {
-        self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
-        self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
-
-        // Set is_insert_mode flag to avoid copy the wrong input source.
-        // We could enter Normal mode from Visual and OperaterPending mode.
-        self.is_insert_mode = false
-      }
-
+    // Exit from Insert mode, save ime used in Insert mode.
+    if self.lastMode == "Insert" && self.currentMode == "Normal" {
+      self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
       TISSelectInputSource(self.asciiImSource)
+      self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
     }
 
-    // self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
-    // os_log("lastImSource id: %@, source: %@", log: self.bridgeLogger, type: .debug, lastImSource!.id, lastImSource!.sourceLanguages)
+    // Enter into Insert mode, set ime to last used ime in Insert mode.
+    // Visual -> Insert
+    // Normal -> Insert
+    if self.currentMode == "Insert" {
+      TISSelectInputSource(self.lastImSource)
+    }
   }
 }
 
