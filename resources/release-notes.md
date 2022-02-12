@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* GH-895: Add support for right and middle mouse buttons. Thank you @atishay!
 
 #  0.36.0-20220102.161018
 
