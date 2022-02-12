@@ -1,6 +1,7 @@
-# Next
+# 0.36.1-20220212.162106
 
-* ...
+* GH-895: Add support for right and middle mouse buttons. Thank you @atishay!
+* GH-880: Copying non-ASCII characters results in garbled text.
 
 #  0.36.0-20220102.161018
 
