@@ -1,3 +1,8 @@
+# Next
+
+* Dependencies updates:
+  - ReactiveX/RxSwift@6.5.0
+
 # 0.36.1-20220212.162106
 
 * GH-895: Add support for right and middle mouse buttons. Thank you @atishay!
