@@ -7,31 +7,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.36.0-20220102.161018</title>
+      <title>v0.36.1-20220212.162106</title>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.6.1 😀</li>
-<li>GH-876: Forward <code>Cmd-.</code> to Neovim. Thank you @imkerberos!</li>
-<li>GH-881: Make the <code>ESC</code> key cancel "Not yet saved"-dialogs. Thank you @jasonm!</li>
-<li>GH-874: Make Chinese input possible (and simplify input method handling in general), thank you very much, @SolaWing!</li>
-<li>GH-805 (GH-415): Vertically center-align text. Thank you @apaleslimghost!</li>
-<li>Improve menu item key equivalent handling.</li>
-<li>Dependencies updates:<ul>
-<li>sindresorhus/github-markdown-css@5.0.0</li>
-</ul>
-</li>
+<li>GH-895: Add support for right and middle mouse buttons. Thank you @atishay!</li>
+<li>GH-880: Copying non-ASCII characters results in garbled text.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.36.0-20220102.161018
+        https://github.com/qvacua/vimr/releases/tag/v0.36.1-20220212.162106
       </releaseNotesLink>
-      <pubDate>2022-01-02T16:35:58.588674</pubDate>
+      <pubDate>2022-02-12T16:33:38.198231</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.36.0-20220102.161018/VimR-v0.36.0.tar.bz2"
-                 sparkle:version="20220102.161018"
-                 sparkle:shortVersionString="v0.36.0"
-                 sparkle:dsaSignature="MC0CFHEvyyzD8q1zajoK6VMcs/khEl5ZAhUAmmKdj0mxp2lSCEc0u3HOKFXmgnc="
-                 length="20298797"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.36.1-20220212.162106/VimR-v0.36.1.tar.bz2"
+                 sparkle:version="20220212.162106"
+                 sparkle:shortVersionString="v0.36.1"
+                 sparkle:dsaSignature="MCwCFDtkwhCVfdhg8GaWnpHAonQHjuuDAhQ7eH/GAv+Gezl+aWsklABiI4H48g=="
+                 length="20300968"
                  type="application/octet-stream"/>
     </item>
   </channel>

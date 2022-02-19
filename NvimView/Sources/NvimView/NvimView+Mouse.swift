@@ -19,6 +19,30 @@ extension NvimView {
     self.mouse(event: event, vimName: "LeftDrag")
   }
 
+  override public func rightMouseDown(with event: NSEvent) {
+    self.mouse(event: event, vimName: "RightMouse")
+  }
+
+  override public func rightMouseUp(with event: NSEvent) {
+    self.mouse(event: event, vimName: "RightRelease")
+  }
+
+  override public func rightMouseDragged(with event: NSEvent) {
+    self.mouse(event: event, vimName: "RightDrag")
+  }
+
+  override public func otherMouseUp(with event: NSEvent) {
+    self.mouse(event: event, vimName: "MiddleMouse")
+  }
+
+  override public func otherMouseDown(with event: NSEvent) {
+    self.mouse(event: event, vimName: "MiddleRelease")
+  }
+
+  override public func otherMouseDragged(with event: NSEvent) {
+    self.mouse(event: event, vimName: "MiddleDrag")
+  }
+
   override public func scrollWheel(with event: NSEvent) {
     let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
     if deltaX == 0, deltaY == 0 { return }
