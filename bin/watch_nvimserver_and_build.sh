@@ -4,7 +4,6 @@ set -Eeuo pipefail
 readonly clean_initial_build=${clean_inital_build:-false}
 
 clean_build() {
-  local -r -x download_gettext=true
   local -r -x clean=true
   local -r -x build_libnvim=true
   ./bin/build_nvimserver_for_local_dev.sh

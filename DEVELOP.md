@@ -23,10 +23,9 @@ e.g. `NvimServer` binary.
 This can be done with the following:
 
 ```bash
-build_libnvim=true clean=true download_gettext=true ./bin/build_nvimserver_for_local_dev.sh
+build_libnvim=true clean=true ./bin/build_nvimserver_for_local_dev.sh
 ```
 
-Set `download_gettext` to true when you are building NvimServer locally for the first time.
 See the `build_nvimserver_for_local_dev` script for default values of the env vars.
 You can also use a watch script as follows (it uses `entr`):
 
@@ -34,22 +33,12 @@ You can also use a watch script as follows (it uses `entr`):
 clean_initial_build=true ./bin/watch_nvimserver_and_build
 ```
 
-When `clean_initial_build` is `true`, the script will download `gettext`, clean, and build,
+When `clean_initial_build` is `true`, the script will clean and build,
 then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 ## How to release
 
 ### NvimServer
-
-#### Dependencies
-
-* Tag with the name `nvimserver-deps-yyyy-mm-dd`. GitHub actions will build the `x86_64` version,
-  create a release and upload it.
-* Build the `arm64` version locally (on an Apple Silicon machine since I could not find out
-  how to cross-compile `libnvim`) and upload it.
-* Update `NvimServer/Resources/nvimserver-deps-for-download.txt` and push.
-
-#### Executable
 
 * Tag with the name `nvimserver-x.y.z-n`. GitHub actions will build the `x86_64` version,
   create a release and upload it.
@@ -57,10 +46,9 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
   ```bash
   download_gettext=true clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
   ```
-* Update `NvimServer/Resources/nvimserver-for-download.txt`.
 * Build a universal binary by the following and upload the artefact:
   ```bash
-  ./NvimServer/bin/build_release.sh
+  tag=nvimserver-x.y.z-n ./NvimServer/bin/build_release.sh
   ```
 
 ### VimR
