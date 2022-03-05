@@ -129,7 +129,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     cliToolButton.target = self
     cliToolButton.action = #selector(GeneralPref.copyCliTool(_:))
     let cliToolInfo = self.infoTextField(
-      markdown: "Put the executable `vimr` in your `$PATH` and execute `vimr -h` for help."
+      markdown: #"""
+      Put the executable `vimr` in your `$PATH` and execute `vimr -h` for help.\
+      You need `python3` executable in your `$PATH`.
+      """#
     )
 
     let vcsIg = self.defaultUsesVcsIgnoresCheckbox
