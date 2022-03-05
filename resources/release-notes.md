@@ -1,5 +1,6 @@
 # Next
 
+* GH-899: The CLI tool `vimr` now uses `python3`. Thanks @imajes for the PR!
 * Dependencies updates:
   - ReactiveX/RxSwift@6.5.0
 
