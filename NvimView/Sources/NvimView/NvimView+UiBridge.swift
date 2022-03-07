@@ -3,9 +3,12 @@
  * See LICENSE
  */
 
+import Carbon
 import Cocoa
+import Foundation
 import MessagePack
 import NvimServerTypes
+import os
 import RxPack
 import RxSwift
 
@@ -50,7 +53,6 @@ extension NvimView {
   final func modeChange(_ value: MessagePackValue) {
     guard let mode = MessagePackUtils.value(
       from: value, conversion: { v -> CursorModeShape? in
-
         guard let rawValue = v.intValue else { return nil }
         return CursorModeShape(rawValue: UInt(rawValue))
       }
@@ -59,12 +61,19 @@ extension NvimView {
       return
     }
 
-    self.bridgeLogger.debug(self.name(ofCursorMode: mode))
+    self.lastMode = self.currentMode
+    self.currentMode = self.name(ofCursorMode: mode)
+
+    self.bridgeLogger.info("\(self.lastMode) -> \(self.currentMode)")
+    // self.bridgeLogger.debug(self.name(ofCursorMode: mode))
+
     gui.async {
       self.mode = mode
       self.markForRender(
         region: self.cursorRegion(for: self.ugrid.cursorPosition)
       )
+
+      self.activateIm()
     }
   }
 
@@ -386,6 +395,27 @@ extension NvimView {
 
     return min(0, top)
   }
+
+  private func activateIm() {
+    if (self.asciiImSource == nil) {
+      self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
+      self.bridgeLogger.info("ascii IME id: \(asciiImSource!.id), source: \(asciiImSource)")
+    }
+
+    // Exit from Insert mode, save ime used in Insert mode.
+    if self.lastMode == "Insert" && self.currentMode == "Normal" {
+      self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+      TISSelectInputSource(self.asciiImSource)
+      self.bridgeLogger.info("lastImSource id: \(lastImSource!.id), source: \(lastImSource)")
+    }
+
+    // Enter into Insert mode, set ime to last used ime in Insert mode.
+    // Visual -> Insert
+    // Normal -> Insert
+    if self.currentMode == "Insert" {
+      TISSelectInputSource(self.lastImSource)
+    }
+  }
 }
 
 // MARK: - Simple
@@ -673,5 +703,44 @@ extension NvimView {
     self.updateTouchBarCurrentBuffer()
   }
 }
+
+extension TISInputSource {
+    enum Category {
+        static var keyboardInputSource: String {
+            return kTISCategoryKeyboardInputSource as String
+        }
+    }
+
+    private func getProperty(_ key: CFString) -> AnyObject? {
+        let cfType = TISGetInputSourceProperty(self, key)
+        if (cfType != nil) {
+            return Unmanaged<AnyObject>.fromOpaque(cfType!)
+            .takeUnretainedValue()
+        } else {
+            return nil
+        }
+    }
+
+    var id: String {
+        return getProperty(kTISPropertyInputSourceID) as! String
+    }
+
+    var name: String {
+        return getProperty(kTISPropertyLocalizedName) as! String
+    }
+
+    var category: String {
+        return getProperty(kTISPropertyInputSourceCategory) as! String
+    }
+
+    var isSelectable: Bool {
+        return getProperty(kTISPropertyInputSourceIsSelectCapable) as! Bool
+    }
+
+    var sourceLanguages: [String] {
+        return getProperty(kTISPropertyInputSourceLanguages) as! [String]
+    }
+}
+
 
 private let gui = DispatchQueue.main
