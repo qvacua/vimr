@@ -42,6 +42,8 @@ public class NvimView: NSView,
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
 
+  public var activateAsciiImInNormalMode = true
+
   public let uuid = UUID()
   public let api = RxNeovimApi()
 
@@ -151,6 +153,9 @@ public class NvimView: NSView,
     if self.usesCustomTabBar { self.tabBar = TabBar<TabEntry>(withTheme: .default) }
     else { self.tabBar = nil }
 
+    self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
+    self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+
     super.init(frame: .zero)
 
     self.api.streamResponses = true
@@ -214,9 +219,6 @@ public class NvimView: NSView,
     self.cellSize = FontUtils.cellSize(
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
-
-    self.asciiImSource = nil
-    self.lastImSource = nil
   }
 
   override public convenience init(frame rect: NSRect) {
@@ -301,11 +303,11 @@ public class NvimView: NSView,
 
   var tabEntries = [TabEntry]()
 
-  var asciiImSource : TISInputSource?
-  var lastImSource : TISInputSource?
+  var asciiImSource: TISInputSource
+  var lastImSource: TISInputSource
 
-  var lastMode = ""
-  var currentMode = "Normal"
+  var lastMode = CursorModeShape.normal
+
   // MARK: - Private
 
   private var _linespacing = NvimView.defaultLinespacing

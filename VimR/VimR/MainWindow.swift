@@ -34,6 +34,10 @@ class MainWindow: NSObject,
   let workspace: Workspace
   let neoVimView: NvimView
 
+  var activateAsciiImInInsertMode = true {
+    didSet { self.neoVimView.activateAsciiImInNormalMode = self.activateAsciiImInInsertMode }
+  }
+
   weak var shortcutService: ShortcutService?
 
   let scrollDebouncer = Debouncer<Action>(interval: .milliseconds(750))
