@@ -116,8 +116,8 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let asciiInfo =
       self.infoTextField(markdown: #"""
       When checked, VimR will automatically select the last ASCII-compatible input method\
-      when you enter Normal mode. When you re-enter Insert mode, VimR will select the last\
-      input method used in the Insert mode.
+      when you enter Normal mode. When you re-enter Insert mode, VimR will select\
+      the last input method used in the Insert mode.
       """#)
 
     let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
@@ -161,6 +161,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.addSubview(activateAsciiImTitle)
     self.addSubview(asciiIm)
+    self.addSubview(asciiInfo)
 
     self.addSubview(cliToolTitle)
     self.addSubview(cliToolButton)
@@ -207,6 +208,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     asciiIm.autoPinEdge(.left, to: .right, of: activateAsciiImTitle, withOffset: 5)
     asciiIm.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
+    asciiInfo.autoPinEdge(.top, to: .bottom, of: asciiIm, withOffset: 5)
+    asciiInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    asciiInfo.autoPinEdge(.left, to: .left, of: asciiIm)
+
     ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: vcsIg)
     ignoreListTitle.autoPinEdge(.right, to: .right, of: activateAsciiImTitle)
     ignoreListTitle.autoPinEdge(
@@ -215,7 +220,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       relation: .greaterThanOrEqual
     )
 
-    vcsIg.autoPinEdge(.top, to: .bottom, of: asciiIm, withOffset: 18)
+    vcsIg.autoPinEdge(.top, to: .bottom, of: asciiInfo, withOffset: 18)
     vcsIg.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
     ignoreInfo.autoPinEdge(.top, to: .bottom, of: vcsIg, withOffset: 5)
