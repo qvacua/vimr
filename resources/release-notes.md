@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# 0.37.0-20220308.223757
+
 * GH-900: Auto-switch to an ASCII-compatible input method when entering the Normal mode and switch back to the last used input method when re-entering the Insert mode. Thanks @georgealbert for the PR!
 * GH-899: The CLI tool `vimr` now uses `python3`. Thanks @imajes for the PR!
 * Dependencies updates:
