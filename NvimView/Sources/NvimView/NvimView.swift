@@ -3,6 +3,7 @@
  * See LICENSE
  */
 
+import Carbon
 import Cocoa
 import Commons
 import MessagePack
@@ -40,6 +41,8 @@ public class NvimView: NSView,
 
   public var isLeftOptionMeta = false
   public var isRightOptionMeta = false
+
+  public var activateAsciiImInNormalMode = true
 
   public let uuid = UUID()
   public let api = RxNeovimApi()
@@ -149,6 +152,9 @@ public class NvimView: NSView,
     self.usesCustomTabBar = config.usesCustomTabBar
     if self.usesCustomTabBar { self.tabBar = TabBar<TabEntry>(withTheme: .default) }
     else { self.tabBar = nil }
+
+    self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
+    self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
 
     super.init(frame: .zero)
 
@@ -296,6 +302,11 @@ public class NvimView: NSView,
   let nvimExitedCondition = ConditionVariable()
 
   var tabEntries = [TabEntry]()
+
+  var asciiImSource: TISInputSource
+  var lastImSource: TISInputSource
+
+  var lastMode = CursorModeShape.normal
 
   // MARK: - Private
 

@@ -3,9 +3,12 @@
  * See LICENSE
  */
 
+import Carbon
 import Cocoa
+import Foundation
 import MessagePack
 import NvimServerTypes
+import os
 import RxPack
 import RxSwift
 
@@ -50,7 +53,6 @@ extension NvimView {
   final func modeChange(_ value: MessagePackValue) {
     guard let mode = MessagePackUtils.value(
       from: value, conversion: { v -> CursorModeShape? in
-
         guard let rawValue = v.intValue else { return nil }
         return CursorModeShape(rawValue: UInt(rawValue))
       }
@@ -59,12 +61,13 @@ extension NvimView {
       return
     }
 
-    self.bridgeLogger.debug(self.name(ofCursorMode: mode))
     gui.async {
+      self.lastMode = self.mode
       self.mode = mode
-      self.markForRender(
-        region: self.cursorRegion(for: self.ugrid.cursorPosition)
-      )
+      self.bridgeLogger.debug("\(self.lastMode) -> \(self.mode)")
+      self.handleInputMethodSource()
+
+      self.markForRender(region: self.cursorRegion(for: self.ugrid.cursorPosition))
     }
   }
 
@@ -298,11 +301,11 @@ extension NvimView {
     )
 
     if count > 0 {
-      if row == self.ugrid.markedInfo?.position.row  {
+      if row == self.ugrid.markedInfo?.position.row {
         self.markForRender(region: Region(
           top: row, bottom: row,
           left: startCol, right: self.ugrid.size.width
-          ))
+        ))
       } else if self.usesLigatures {
         let leftBoundary = self.ugrid.leftBoundaryOfWord(
           at: Position(row: row, column: startCol)
@@ -330,12 +333,7 @@ extension NvimView {
   }
 
   func regionForRow(at: Position) -> Region {
-    return Region(
-      top: at.row,
-      bottom: at.row,
-      left: at.column,
-      right: ugrid.size.width
-      )
+    Region(top: at.row, bottom: at.row, left: at.column, right: ugrid.size.width)
   }
 
   private func doGoto(position: Position, textPosition: Position) -> Int? {
@@ -385,6 +383,24 @@ extension NvimView {
     self.eventsSubject.onNext(.scroll)
 
     return min(0, top)
+  }
+
+  private func handleInputMethodSource() {
+    // Exit from Insert mode, save ime used in Insert mode.
+    if case self.lastMode = CursorModeShape.insert, case self.mode = CursorModeShape.normal {
+      self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+      self.bridgeLogger.debug("lastImSource id: \(lastImSource.id), source: \(lastImSource)")
+
+      if self.activateAsciiImInNormalMode { TISSelectInputSource(self.asciiImSource) }
+      return
+    }
+
+    // Enter into Insert mode, set ime to last used ime in Insert mode.
+    // Visual -> Insert
+    // Normal -> Insert
+    if case self.mode = CursorModeShape.insert, self.activateAsciiImInNormalMode {
+      TISSelectInputSource(self.lastImSource)
+    }
   }
 }
 
@@ -672,6 +688,27 @@ extension NvimView {
     self.eventsSubject.onNext(.bufferListChanged)
     self.updateTouchBarCurrentBuffer()
   }
+}
+
+extension TISInputSource {
+  enum Category {
+    static var keyboardInputSource: String { kTISCategoryKeyboardInputSource as String }
+  }
+
+  private func getProperty(_ key: CFString) -> AnyObject? {
+    let cfType = TISGetInputSourceProperty(self, key)
+    if cfType != nil {
+      return Unmanaged<AnyObject>.fromOpaque(cfType!).takeUnretainedValue()
+    } else {
+      return nil
+    }
+  }
+
+  var id: String { self.getProperty(kTISPropertyInputSourceID) as! String }
+  var name: String { self.getProperty(kTISPropertyLocalizedName) as! String }
+  var category: String { self.getProperty(kTISPropertyInputSourceCategory) as! String }
+  var isSelectable: Bool { self.getProperty(kTISPropertyInputSourceIsSelectCapable) as! Bool }
+  var sourceLanguages: [String] { self.getProperty(kTISPropertyInputSourceLanguages) as! [String] }
 }
 
 private let gui = DispatchQueue.main

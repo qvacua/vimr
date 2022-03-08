@@ -7,23 +7,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.36.1-20220212.162106</title>
+      <title>v0.37.0-20220308.223757</title>
       <description><![CDATA[
     <ul>
-<li>GH-895: Add support for right and middle mouse buttons. Thank you @atishay!</li>
-<li>GH-880: Copying non-ASCII characters results in garbled text.</li>
+<li>GH-900: Auto-switch to an ASCII-compatible input method when entering the Normal mode and switch back to the last used input method when re-entering the Insert mode. Thanks @georgealbert for the PR!</li>
+<li>GH-899: The CLI tool <code>vimr</code> now uses <code>python3</code>. Thanks @imajes for the PR!</li>
+<li>Dependencies updates:</li>
+<li>ReactiveX/RxSwift@6.5.0</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.36.1-20220212.162106
+        https://github.com/qvacua/vimr/releases/tag/v0.37.0-20220308.223757
       </releaseNotesLink>
-      <pubDate>2022-02-12T16:33:38.198231</pubDate>
+      <pubDate>2022-03-08T22:46:19.178647</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.36.1-20220212.162106/VimR-v0.36.1.tar.bz2"
-                 sparkle:version="20220212.162106"
-                 sparkle:shortVersionString="v0.36.1"
-                 sparkle:dsaSignature="MCwCFDtkwhCVfdhg8GaWnpHAonQHjuuDAhQ7eH/GAv+Gezl+aWsklABiI4H48g=="
-                 length="20300968"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.37.0-20220308.223757/VimR-v0.37.0.tar.bz2"
+                 sparkle:version="20220308.223757"
+                 sparkle:shortVersionString="v0.37.0"
+                 sparkle:dsaSignature="MC0CFQDEkXdQUYRF8FcwUZaqmcEFptuOHAIUNdvxvBwn2nOoOSCv/AexeNgZ9uA="
+                 length="20877924"
                  type="application/octet-stream"/>
     </item>
   </channel>

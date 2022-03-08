@@ -19,6 +19,9 @@ class GeneralPrefReducer: ReducerType {
     case let .setAfterLastWindowAction(action):
       state.afterLastWindowAction = action
 
+    case let .setActivateAsciiImInNormalModeAction(value):
+      state.activateAsciiImInNormalMode = value
+
     case let .setOpenOnReactivation(value):
       state.openNewMainWindowOnReactivation = value
 

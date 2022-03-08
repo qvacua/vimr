@@ -26,6 +26,8 @@ class UiRoot: UiComponent {
     self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
     self.prefWindow.shortcutService = self.shortcutService
 
+    self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
+
     source
       .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
@@ -51,6 +53,12 @@ class UiRoot: UiComponent {
         self.mainWindows.keys
           .filter { !uuidsInState.contains($0) }
           .forEach(self.removeMainWindow)
+
+        if self.activateAsciiImInInsertMode != state.activateAsciiImInNormalMode {
+          self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
+          self.mainWindows.values
+            .forEach { $0.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode }
+        }
 
         guard self.mainWindows.isEmpty else { return }
 
@@ -94,6 +102,8 @@ class UiRoot: UiComponent {
   private let shortcutService = ShortcutService()
   private let openQuicklyWindow: OpenQuicklyWindow
   private let prefWindow: PrefWindow
+
+  private var activateAsciiImInInsertMode = true
 
   private var mainWindows = [UUID: MainWindow]()
   private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
