@@ -22,6 +22,7 @@ struct AppState: Codable {
     case openNewMainWindowOnLaunch = "open-new-window-when-launching"
     case openNewMainWindowOnReactivation = "open-new-window-on-reactivation"
     case afterLastWindowAction = "after-last-window-action"
+    case activateAsciiImInNormalMode = "activate-ascii-im-in-normal-mode"
     case useSnapshotUpdate = "use-snapshot-update-channel"
 
     case openQuickly = "open-quickly"
@@ -32,6 +33,8 @@ struct AppState: Codable {
   var openNewMainWindowOnReactivation = true
 
   var afterLastWindowAction = AfterLastWindowAction.doNothing
+
+  var activateAsciiImInNormalMode = true
 
   var useSnapshotUpdate = false
 
@@ -55,8 +58,7 @@ struct AppState: Codable {
 
     self.openNewMainWindowOnLaunch = try container.decode(
       forKey: .openNewMainWindowOnLaunch,
-      default: AppState.default
-        .openNewMainWindowOnLaunch
+      default: AppState.default.openNewMainWindowOnLaunch
     )
     self.openNewMainWindowOnReactivation = try container.decode(
       forKey: .openNewMainWindowOnReactivation,
@@ -65,6 +67,10 @@ struct AppState: Codable {
     self.afterLastWindowAction = try container.decode(
       forKey: .afterLastWindowAction,
       default: .doNothing
+    )
+    self.activateAsciiImInNormalMode = try container.decode(
+       forKey: .activateAsciiImInNormalMode,
+       default: true
     )
     self.useSnapshotUpdate = try container.decode(
       forKey: .useSnapshotUpdate,

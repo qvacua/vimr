@@ -13,17 +13,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   enum Action {
     case setOpenOnLaunch(Bool)
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
+    case setActivateAsciiImInNormalModeAction(Bool)
     case setOpenOnReactivation(Bool)
     case setDefaultUsesVcsIgnores(Bool)
   }
 
-  override var displayName: String {
-    "General"
-  }
-
-  override var pinToContainer: Bool {
-    true
-  }
+  override var displayName: String { "General" }
+  override var pinToContainer: Bool { true }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -33,6 +29,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addViews()
 
     self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
+    self.activateAsciiImInNormalModeCheckbox.boolState = state.activateAsciiImInNormalMode
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
     self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
@@ -66,6 +63,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private var lastWindowAction = AppState.AfterLastWindowAction.doNothing
 
+  private let activateAsciiImInNormalModeCheckbox = NSButton(forAutoLayout: ())
   private let openWhenLaunchingCheckbox = NSButton(forAutoLayout: ())
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
   private let defaultUsesVcsIgnoresCheckbox = NSButton(forAutoLayout: ())
@@ -73,9 +71,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
   @available(*, unavailable)
-  required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
     let paneTitle = self.paneTitleTextField(title: "General")
@@ -109,6 +105,20 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       "Hide",
       "Quit",
     ])
+
+    let activateAsciiImTitle = self.titleTextField(title: "When entering Normal Mode:")
+    self.configureCheckbox(
+      button: self.activateAsciiImInNormalModeCheckbox,
+      title: "Activate ASCII-compatible Input Method",
+      action: #selector(GeneralPref.activateAsciiImInNormalModeAction)
+    )
+    let asciiIm = self.activateAsciiImInNormalModeCheckbox
+    let asciiInfo =
+      self.infoTextField(markdown: #"""
+      When checked, VimR will automatically select the last ASCII-compatible input method\
+      when you enter Normal mode. When you re-enter Insert mode, VimR will select\
+      the last input method used in the Insert mode.
+      """#)
 
     let ignoreListTitle = self.titleTextField(title: "Open Quickly:")
     let ignoreInfo =
@@ -149,6 +159,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(afterLastWindowTitle)
     self.addSubview(lastWindow)
 
+    self.addSubview(activateAsciiImTitle)
+    self.addSubview(asciiIm)
+    self.addSubview(asciiInfo)
+
     self.addSubview(cliToolTitle)
     self.addSubview(cliToolButton)
     self.addSubview(cliToolInfo)
@@ -179,19 +193,34 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     afterLastWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: lastWindow)
     afterLastWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-
     lastWindow.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
     lastWindow.autoPinEdge(.left, to: .right, of: afterLastWindowTitle, withOffset: 5)
 
+    activateAsciiImTitle.autoAlignAxis(.baseline, toSameAxisOf: asciiIm, withOffset: 0)
+    activateAsciiImTitle.autoPinEdge(.right, to: .right, of: afterLastWindowTitle)
+    activateAsciiImTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
+
+    asciiIm.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
+    asciiIm.autoPinEdge(.left, to: .right, of: activateAsciiImTitle, withOffset: 5)
+    asciiIm.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
+
+    asciiInfo.autoPinEdge(.top, to: .bottom, of: asciiIm, withOffset: 5)
+    asciiInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    asciiInfo.autoPinEdge(.left, to: .left, of: asciiIm)
+
     ignoreListTitle.autoAlignAxis(.baseline, toSameAxisOf: vcsIg)
-    ignoreListTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
+    ignoreListTitle.autoPinEdge(.right, to: .right, of: activateAsciiImTitle)
     ignoreListTitle.autoPinEdge(
       toSuperviewEdge: .left,
       withInset: 18,
       relation: .greaterThanOrEqual
     )
 
-    vcsIg.autoPinEdge(.top, to: .bottom, of: lastWindow, withOffset: 18)
+    vcsIg.autoPinEdge(.top, to: .bottom, of: asciiInfo, withOffset: 18)
     vcsIg.autoPinEdge(.left, to: .right, of: ignoreListTitle, withOffset: 5)
 
     ignoreInfo.autoPinEdge(.top, to: .bottom, of: vcsIg, withOffset: 5)
@@ -272,6 +301,14 @@ extension GeneralPref {
     self.emit(.setAfterLastWindowAction(self.lastWindowAction))
   }
 
+  @objc func activateAsciiImInNormalModeAction(_: NSButton) {
+    self.emit(
+      .setActivateAsciiImInNormalModeAction(
+        self.activateAsciiImInNormalModeCheckbox.boolState
+      )
+    )
+  }
+
   private func alert(title: String, info: String) {
     let alert = NSAlert()
     alert.alertStyle = .warning
@@ -281,5 +318,6 @@ extension GeneralPref {
   }
 }
 
-private let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [.doNothing, .hide,
-                                                                              .quit]
+private let indexToAfterLastWindowAction: [AppState.AfterLastWindowAction] = [
+  .doNothing, .hide, .quit,
+]
