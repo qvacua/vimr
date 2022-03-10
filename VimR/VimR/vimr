@@ -36,7 +36,7 @@ def call_open(action, query_params, args):
     if args.wait:
         query_params[QueryParamKey.WAIT] = "true"
 
-    url = "vimr://{0}?{1}".format(action, urllib.parse.urlencode(query_params, True))
+    url = "vimr://{0}?{1}".format(action, urllib.parse.urlencode(query_params, True).replace('+', '%20'))
 
     if args.dry_run:
         print("/usr/bin/open {0}".format(url))
