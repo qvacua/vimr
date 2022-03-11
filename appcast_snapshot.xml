@@ -7,25 +7,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.37.0-20220308.223757</title>
+      <title>v0.37.1-20220311.174922</title>
       <description><![CDATA[
     <ul>
-<li>GH-900: Auto-switch to an ASCII-compatible input method when entering the Normal mode and switch back to the last used input method when re-entering the Insert mode. Thanks @georgealbert for the PR!</li>
-<li>GH-899: The CLI tool <code>vimr</code> now uses <code>python3</code>. Thanks @imajes for the PR!</li>
-<li>Dependencies updates:</li>
-<li>ReactiveX/RxSwift@6.5.0</li>
+<li>GH-913: Bugfix: Spaces in the file names are not correctly handled by <code>vimr</code>. Please re-install the CLI <code>vimr</code> tool. Thanks @edgarcosta for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.37.0-20220308.223757
+        https://github.com/qvacua/vimr/releases/tag/v0.37.1-20220311.174922
       </releaseNotesLink>
-      <pubDate>2022-03-08T22:46:19.178647</pubDate>
+      <pubDate>2022-03-11T18:03:56.807623</pubDate>
       <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.37.0-20220308.223757/VimR-v0.37.0.tar.bz2"
-                 sparkle:version="20220308.223757"
-                 sparkle:shortVersionString="v0.37.0"
-                 sparkle:dsaSignature="MC0CFQDEkXdQUYRF8FcwUZaqmcEFptuOHAIUNdvxvBwn2nOoOSCv/AexeNgZ9uA="
-                 length="20877924"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.37.1-20220311.174922/VimR-v0.37.1.tar.bz2"
+                 sparkle:version="20220311.174922"
+                 sparkle:shortVersionString="v0.37.1"
+                 sparkle:dsaSignature="MCwCFCJnw2hBuMFp9tixDk7WNuOzQybAAhQ4+/eIuYAdf5rRbF+E9ZQi2StUww=="
+                 length="20878295"
                  type="application/octet-stream"/>
     </item>
   </channel>
