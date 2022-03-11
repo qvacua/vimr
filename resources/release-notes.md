@@ -1,6 +1,8 @@
 # Next
 
-* ...
+# 0.37.1-20220311.174922
+
+* GH-913: Bugfix: Spaces in the file names are not correctly handled by `vimr`. Thanks @edgarcosta for the PR!
 
 # 0.37.0-20220308.223757
 
