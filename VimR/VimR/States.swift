@@ -10,6 +10,10 @@ import RxSwift
 import Workspace
 
 struct AppState: Codable {
+  enum OpenFilesFromApplicationsAction: String, Codable, CaseIterable {
+    case inNewWindow
+    case inCurrentWindow
+  }
   enum AfterLastWindowAction: String, Codable {
     case doNothing = "do-nothing"
     case hide
@@ -21,6 +25,7 @@ struct AppState: Codable {
   enum CodingKeys: String, CodingKey {
     case openNewMainWindowOnLaunch = "open-new-window-when-launching"
     case openNewMainWindowOnReactivation = "open-new-window-on-reactivation"
+    case openFilesFromApplicationsAction = "open-files-from-applications-action"
     case afterLastWindowAction = "after-last-window-action"
     case activateAsciiImInNormalMode = "activate-ascii-im-in-normal-mode"
     case useSnapshotUpdate = "use-snapshot-update-channel"
@@ -32,6 +37,7 @@ struct AppState: Codable {
   var openNewMainWindowOnLaunch = true
   var openNewMainWindowOnReactivation = true
 
+  var openFilesFromApplicationsAction = OpenFilesFromApplicationsAction.inNewWindow
   var afterLastWindowAction = AfterLastWindowAction.doNothing
 
   var activateAsciiImInNormalMode = true
@@ -63,6 +69,10 @@ struct AppState: Codable {
     self.openNewMainWindowOnReactivation = try container.decode(
       forKey: .openNewMainWindowOnReactivation,
       default: AppState.default.openNewMainWindowOnReactivation
+    )
+    self.openFilesFromApplicationsAction = try container.decode(
+      forKey: .openFilesFromApplicationsAction,
+      default: .inNewWindow
     )
     self.afterLastWindowAction = try container.decode(
       forKey: .afterLastWindowAction,

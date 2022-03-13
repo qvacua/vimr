@@ -12,6 +12,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   enum Action {
     case setOpenOnLaunch(Bool)
+    case setOpenFilesFromApplications(AppState.OpenFilesFromApplicationsAction)
     case setAfterLastWindowAction(AppState.AfterLastWindowAction)
     case setActivateAsciiImInNormalModeAction(Bool)
     case setOpenOnReactivation(Bool)
@@ -33,6 +34,9 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
     self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
+    self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
+    self.openFilesFromApplicationsPopup.selectItem(at: AppState.OpenFilesFromApplicationsAction.allCases.firstIndex(of: state.openFilesFromApplicationsAction) ?? 0)
+
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup
       .selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
@@ -48,6 +52,13 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
           self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
         }
 
+        if self.openFilesFromApplicationsAction != state.openFilesFromApplicationsAction {
+            self.openFilesFromApplicationsPopup.selectItem(
+                at: AppState.OpenFilesFromApplicationsAction.allCases.firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
+            )
+            self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
+        }
+
         if self.lastWindowAction != state.afterLastWindowAction {
           self.afterLastWindowPopup.selectItem(
             at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0
@@ -61,6 +72,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let emit: (Action) -> Void
   private let disposeBag = DisposeBag()
 
+  private var openFilesFromApplicationsAction = AppState.OpenFilesFromApplicationsAction.inNewWindow
   private var lastWindowAction = AppState.AfterLastWindowAction.doNothing
 
   private let activateAsciiImInNormalModeCheckbox = NSButton(forAutoLayout: ())
@@ -68,6 +80,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let openOnReactivationCheckbox = NSButton(forAutoLayout: ())
   private let defaultUsesVcsIgnoresCheckbox = NSButton(forAutoLayout: ())
 
+  private let openFilesFromApplicationsPopup = NSPopUpButton(forAutoLayout: ())
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
 
   @available(*, unavailable)
@@ -95,6 +108,20 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     let whenLaunching = self.openWhenLaunchingCheckbox
     let onReactivation = self.openOnReactivationCheckbox
+
+    let openFilesFromApplicationsTitle = self.titleTextField(title: "Open files from applications:")
+    openFilesFromApplicationsPopup.target = self
+    openFilesFromApplicationsPopup.action = #selector(GeneralPref.afterOpenFilesFromApplicationsAction)
+    openFilesFromApplicationsPopup.addItems(withTitles: [
+        "In a New Window",
+        "In the Current Window",
+    ])
+    let openFilesFromApplicationsInfo =
+        self.infoTextField(markdown: #"""
+        This applies to files opened from the Finder \
+        (e.g. by double-clicking on a file or by dragging a file onto the VimR dock icon) \
+        or from external programs such as Xcode.
+        """#)
 
     let afterLastWindowTitle = self.titleTextField(title: "After Last Window Closes:")
     let lastWindow = self.afterLastWindowPopup
@@ -156,6 +183,10 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(ignoreListTitle)
     self.addSubview(ignoreInfo)
 
+    self.addSubview(openFilesFromApplicationsTitle)
+    self.addSubview(openFilesFromApplicationsPopup)
+    self.addSubview(openFilesFromApplicationsInfo)
+
     self.addSubview(afterLastWindowTitle)
     self.addSubview(lastWindow)
 
@@ -191,9 +222,18 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       relation: .greaterThanOrEqual
     )
 
+    openFilesFromApplicationsTitle.autoAlignAxis(.baseline, toSameAxisOf: openFilesFromApplicationsPopup)
+    openFilesFromApplicationsTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
+    openFilesFromApplicationsTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    openFilesFromApplicationsPopup.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
+    openFilesFromApplicationsPopup.autoPinEdge(.left, to: .right, of: openFilesFromApplicationsTitle, withOffset: 5)
+    openFilesFromApplicationsInfo.autoPinEdge(.top, to: .bottom, of: openFilesFromApplicationsPopup, withOffset: 5)
+    openFilesFromApplicationsInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    openFilesFromApplicationsInfo.autoPinEdge(.left, to: .left, of: openFilesFromApplicationsPopup)
+
     afterLastWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: lastWindow)
     afterLastWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-    lastWindow.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
+    lastWindow.autoPinEdge(.top, to: .bottom, of: openFilesFromApplicationsInfo, withOffset: 18)
     lastWindow.autoPinEdge(.left, to: .right, of: afterLastWindowTitle, withOffset: 5)
 
     activateAsciiImTitle.autoAlignAxis(.baseline, toSameAxisOf: asciiIm, withOffset: 0)
@@ -288,6 +328,16 @@ extension GeneralPref {
 
   @objc func openUntitledWindowOnReactivationAction(_: NSButton) {
     self.emit(.setOpenOnReactivation(self.openOnReactivationCheckbox.boolState))
+  }
+
+  @objc func afterOpenFilesFromApplicationsAction(_ sender: NSPopUpButton) {
+    let index = sender.indexOfSelectedItem
+
+    guard AppState.OpenFilesFromApplicationsAction.allCases.indices.contains(index) else {
+        return
+    }
+    self.openFilesFromApplicationsAction = AppState.OpenFilesFromApplicationsAction.allCases[index]
+    self.emit(.setOpenFilesFromApplications(self.openFilesFromApplicationsAction))
   }
 
   @objc func afterLastWindowAction(_ sender: NSPopUpButton) {
