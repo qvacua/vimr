@@ -213,7 +213,12 @@ extension AppDelegate {
       urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil,
       line: nil
     )
-    self.emit(.newMainWindow(config: config))
+    switch self.context.state.openFilesFromApplicationsAction {
+    case .inCurrentWindow:
+        self.emit(.openInKeyWindow(config: config))
+    default:
+        self.emit(.newMainWindow(config: config))
+    }
 
     sender.reply(toOpenOrPrint: .success)
   }

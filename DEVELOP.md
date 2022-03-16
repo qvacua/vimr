@@ -69,7 +69,7 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
   `build_release.sh` script later.
 * Tag with the name
     - Snapshot: `snapshot/yyyymmdd.HHMMSS`
-    - Release: `vX.Y.Z`
+    - Release: `vX.Y.Z-yyyymmdd.HHMMSS`
 * Push, create a release and add release notes.
 * Build, package and upload via
     ```bash

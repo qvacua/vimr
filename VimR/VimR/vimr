@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
+import tempfile
 import urllib.parse
 import subprocess
 import argparse
 import os
 import uuid
 import json
+from enum import Enum
 
-class Action:
+
+class Action(Enum):
     ACTIVATE = "activate"
     OPEN = "open"
     NEW_WINDOW = "open-in-new-window"
@@ -15,7 +18,7 @@ class Action:
     NVIM = "nvim"
 
 
-class QueryParamKey:
+class QueryParamKey(Enum):
     PIPE_PATH = "pipe-path"
     ENV_PATH = "env-path"
     CWD = "cwd"
@@ -36,10 +39,10 @@ def call_open(action, query_params, args):
     if args.wait:
         query_params[QueryParamKey.WAIT] = "true"
 
-    url = "vimr://{0}?{1}".format(action, urllib.parse.urlencode(query_params, True).replace('+', '%20'))
+    url = f"vimr://{action}?{urllib.parse.urlencode(query_params, True).replace('+', '%20')}"
 
     if args.dry_run:
-        print("/usr/bin/open {0}".format(url))
+        print(f"/usr/bin/open {url}")
     else:
         subprocess.call(["/usr/bin/open", url])
 
@@ -72,17 +75,19 @@ def vimr(action, args, query_params):
 
 
 def main(args):
+    temp_dir_path = tempfile.gettempdir()
     uuid_str = str(uuid.uuid4())
-    pipe_path = "/tmp/com_qvacua_vimr_cli_pipe_{0}".format(uuid_str)
+
+    pipe_path = f"/{temp_dir_path}/com_qvacua_vimr_cli_pipe_{uuid_str}"
     if os.path.exists(pipe_path):
         os.remove(pipe_path)
 
     try:
         os.mkfifo(pipe_path, 0o600)
     except OSError as error:
-        print("ERROR: {0}\n"
-              "{1} could not be mkfifo'ed.\n"
-              "Please go to https://github.com/qvacua/vimr and create an issue.".format(error, pipe_path))
+        print(f"ERROR: {error}\n"
+              f"{pipe_path} could not be mkfifo'ed.\n"
+              f"Please go to https://github.com/qvacua/vimr and create an issue.")
         raise
 
     query_params = {
@@ -93,7 +98,7 @@ def main(args):
         query_params[QueryParamKey.LINE] = args.line
 
     if args.cur_env:
-        env_file = "/tmp/com_qvacua_vimr_env_{0}".format(uuid_str)
+        env_file = f"/{temp_dir_path}/com_qvacua_vimr_env_{uuid_str}"
         with open(env_file, "w") as f:
             f.write(json.dumps({k: v for (k, v) in os.environ.items()}))
             os.chmod(env_file, 0o600)

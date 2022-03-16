@@ -6,7 +6,7 @@ marketing_version=${marketing_version:-""}
 
 main() {
   if [[ "${is_snapshot}" == false && -z "${marketing_version}" ]]; then
-    echo "When no snapshot, you have to set 'marketing_version', eg 0.38.1"
+    echo "When no snapshot, you have to set 'marketing_version', eg v0.38.1"
 
     if [[ "${marketing_version}" =~ ^v.* ]]; then
       echo "### marketing_version must not begin with v!"
@@ -38,9 +38,9 @@ main() {
 
   local tag
   if [[ "${is_snapshot}" == true ]]; then
-    tag="tag=snapshot/${bundle_version}"
+    tag="snapshot/${bundle_version}"
   else
-    tag="tag=v${marketing_version}"
+    tag="v${marketing_version}-${bundle_version}"
   fi
   echo "bundle_version=${bundle_version} marketing_version=${marketing_version} tag=${tag}"
 }
