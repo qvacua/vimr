@@ -16,6 +16,9 @@ class GeneralPrefReducer: ReducerType {
     case let .setOpenOnLaunch(value):
       state.openNewMainWindowOnLaunch = value
 
+    case let .setOpenFilesFromApplications(action):
+      state.openFilesFromApplicationsAction = action
+
     case let .setAfterLastWindowAction(action):
       state.afterLastWindowAction = action
 
