@@ -1,5 +1,11 @@
 # Next
 
+* ...
+
+# 0.38.0-20220317.192248
+
+* GH-914: Add option to open files from applications in current window. Thanks @SolaWing for the PR!
+
 # 0.37.1-20220311.174922
 
 * GH-913: Bugfix: Spaces in the file names are not correctly handled by `vimr`. Thanks @edgarcosta for the PR!
