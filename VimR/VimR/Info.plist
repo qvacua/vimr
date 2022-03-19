@@ -1277,9 +1277,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>VimR.Application</string>
-	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>sparkle_pub.pem</string>
+	<key>SUPublicEDKey</key>
+	<string>G37CFFnc1dSRxbsuzquapWYKBVaEatiParffxNIvghI=</string>
 </dict>
 </plist>

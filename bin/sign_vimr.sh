@@ -4,6 +4,13 @@ set -Eeuo pipefail
 readonly vimr_app_path=${vimr_app_path:?"Path to VimR.app"}
 readonly identity="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
 
+remove_sparkle_xpc () {
+  # VimR is not sandboxed, so, remove the XPCs
+  # https://sparkle-project.org/documentation/sandboxing/#removing-xpc-services
+  rm -rf "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/org.sparkle-project.InstallerLauncher.xpc"
+  rm -rf "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/org.sparkle-project.Downloader.xpc"
+}
+
 main () {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
     echo "### Signing VimR"
@@ -11,10 +18,16 @@ main () {
     entitlements_path=$(realpath ./Carthage/Build/Mac/NvimServer/NvimServer.entitlements)
     readonly entitlements_path
 
-    codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime \
-      "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/Autoupdate.app"
+    remove_sparkle_xpc
+
     codesign --verbose --force -s "${identity}" --timestamp --options=runtime \
-      "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/A"
+      "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
+
+    codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime \
+      "${vimr_app_path}/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
+
+    codesign --verbose --force -s "${identity}" --options=runtime \
+      "${vimr_app_path}/Contents/Frameworks/Sparkle.framework"
 
     codesign --verbose --force -s "${identity}" --timestamp --options=runtime \
       --entitlements="${entitlements_path}" \

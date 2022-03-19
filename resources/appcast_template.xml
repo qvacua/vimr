@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
-     xmlns:dc="http://purl.org/dc/elements/1.1/">
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>VimR with NeoVim</title>
-    <link>http://vimr.org</link>
+    <link>https://twitter.com/vimrefined</link>
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
       <title>${title}</title>
+      <link>https://twitter.com/vimrefined</link>
+      <sparkle:version>${bundle_version}</sparkle:version>
+      <sparkle:shortVersionString>${marketing_version}</sparkle:shortVersionString>
       <description><![CDATA[
     ${release_notes}
   ]]></description>
@@ -15,12 +17,9 @@
         ${release_notes_link}
       </releaseNotesLink>
       <pubDate>${publication_date}</pubDate>
-      <minimumSystemVersion>10.12.0</minimumSystemVersion>
+      <minimumSystemVersion>10.13.0</minimumSystemVersion>
       <enclosure url="${file_url}"
-                 sparkle:version="${bundle_version}"
-                 sparkle:shortVersionString="${marketing_version}"
-                 sparkle:dsaSignature="${signature}"
-                 length="${file_length}"
+                 ${signature_output}
                  type="application/octet-stream"/>
     </item>
   </channel>
