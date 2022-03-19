@@ -41,6 +41,190 @@ extension RxNeovimApi {
 
 extension RxNeovimApi {
 
+  public func getAutocmds(
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_autocmds", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_autocmds", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func createAutocmd(
+    event: RxNeovimApi.Value,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        event,
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> Int {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_create_autocmd", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_create_autocmd", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func delAutocmd(
+    id: Int,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(id)),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_del_autocmd", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_del_autocmd", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  public func createAugroup(
+    name: String,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> Int {
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_create_augroup", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_create_augroup", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func delAugroupById(
+    id: Int,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(id)),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_del_augroup_by_id", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_del_augroup_by_id", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  public func delAugroupByName(
+    name: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_del_augroup_by_name", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_del_augroup_by_name", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  public func doAutocmd(
+    event: RxNeovimApi.Value,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        event,
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_do_autocmd", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_do_autocmd", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
   public func bufLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
@@ -231,6 +415,46 @@ extension RxNeovimApi {
     return self
       .rpc(method: "nvim_buf_set_text", params: params, expectsReturnValue: expectsReturnValue)
       .asCompletable()
+  }
+
+  public func bufGetText(
+    buffer: RxNeovimApi.Buffer,
+    start_row: Int,
+    start_col: Int,
+    end_row: Int,
+    end_col: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<[String]> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(start_row)),
+        .int(Int64(start_col)),
+        .int(Int64(end_row)),
+        .int(Int64(end_col)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> [String] {
+      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+        throw RxNeovimApi.Error.conversion(type: [String].self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_text", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_get_text", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 
   public func bufGetOffset(
