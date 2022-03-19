@@ -42,7 +42,7 @@ main() {
   else
     tag="v${marketing_version}-${bundle_version}"
   fi
-  echo "bundle_version=${bundle_version} marketing_version=${marketing_version} tag=${tag}"
+  echo "bundle_version=${bundle_version} marketing_version=v${marketing_version} tag=${tag}"
 }
 
 main
