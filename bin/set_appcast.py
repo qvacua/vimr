@@ -5,19 +5,17 @@
 
 # We use python of brew due to some pip packages.
 
-import os
 import io
-import sys
-import subprocess
-import requests
 import json
-import markdown
+import subprocess
+import sys
 from datetime import datetime
 from string import Template
 
-SIGN_UPDATE = './bin/sign_update'
-PRIVATE_KEY_PATH = os.path.expanduser('~/.local/secrets/sparkle_priv.pem')
-GITHUB_TOKEN_PATH = os.path.expanduser('~/.local/secrets/github.qvacua.release.token')
+import markdown
+import requests
+
+SIGN_UPDATE = './build/SourcePackages/artifacts/sparkle/bin/sign_update'
 
 file_path = sys.argv[1]
 bundle_version = sys.argv[2]
@@ -25,19 +23,13 @@ marketing_version = sys.argv[3]
 tag_name = sys.argv[4]
 is_snapshot = True if len(sys.argv) > 5 and sys.argv[5] == "true" else False
 
-file_size = os.stat(file_path).st_size
-file_signature = subprocess.check_output([SIGN_UPDATE, file_path, PRIVATE_KEY_PATH]).decode('utf-8').strip()
+file_signature = subprocess.check_output([SIGN_UPDATE, file_path]).decode('utf-8').strip()
 
 appcast_template_file = open('resources/appcast_template.xml', 'r')
 appcast_template = Template(appcast_template_file.read())
 appcast_template_file.close()
 
-token_file = open(GITHUB_TOKEN_PATH, 'r')
-token = token_file.read().strip()
-token_file.close()
-
-release_response = requests.get('https://api.github.com/repos/qvacua/vimr/releases/tags/{0}'.format(tag_name),
-                                headers={'Authorization': f"token {token}"})
+release_response = requests.get('https://api.github.com/repos/qvacua/vimr/releases/tags/{0}'.format(tag_name))
 release_json = json.loads(release_response.content)
 
 title = release_json['name']
@@ -53,8 +45,7 @@ appcast = appcast_template.substitute(
     file_url=download_url,
     bundle_version=bundle_version,
     marketing_version=marketing_version,
-    file_length=file_size,
-    signature=file_signature
+    signature_output=file_signature
 )
 
 appcast_file_name = 'appcast_snapshot.xml' if is_snapshot else 'appcast.xml'
