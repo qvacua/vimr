@@ -2,7 +2,7 @@
 
 * ...
 * Dependencies updates:
-  - sparkle-project/Sparkle@1.27.1
+  - sparkle-project/Sparkle@2.1.0
 
 # 0.38.1-20220319.090018
 
