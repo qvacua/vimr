@@ -225,6 +225,7 @@ class MainWindow: NSObject,
     self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
 
     // Framerate measurement; from https://stackoverflow.com/a/34039775
+    // Add `-D FRAMERATE` to "Other Swift Flags" of the VimR target.
     #if FRAMERATE
       let sk = SKView(forAutoLayout: ())
       sk.showsFPS = true
