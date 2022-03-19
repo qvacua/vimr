@@ -37,9 +37,9 @@ def wait_for_ui_to_close(pipe_path):
 
 def call_open(action, query_params, args):
     if args.wait:
-        query_params[QueryParamKey.WAIT] = "true"
+        query_params[QueryParamKey.WAIT.value] = "true"
 
-    url = f"vimr://{action}?{urllib.parse.urlencode(query_params, True).replace('+', '%20')}"
+    url = f"vimr://{action.value}?{urllib.parse.urlencode(query_params, True).replace('+', '%20')}"
 
     if args.dry_run:
         print(f"/usr/bin/open {url}")
@@ -52,10 +52,10 @@ def abspath(path):
 
 
 def vimr_nvim(other_args, nvim_args, query_params):
-    query_params[QueryParamKey.CWD] = os.getcwd()
+    query_params[QueryParamKey.CWD.value] = os.getcwd()
 
     if nvim_args:
-        query_params[QueryParamKey.NVIM_ARGS] = nvim_args
+        query_params[QueryParamKey.NVIM_ARGS.value] = nvim_args
 
     call_open(Action.NVIM, query_params, other_args)
 
@@ -65,11 +65,11 @@ def vimr(action, args, query_params):
     if args.cwd is not None:
         cwd = abspath(args.cwd)
 
-    query_params[QueryParamKey.CWD] = cwd
+    query_params[QueryParamKey.CWD.value] = cwd
 
     files = args.file
     if files:
-        query_params[QueryParamKey.FILE] = [abspath(f) for f in files]
+        query_params[QueryParamKey.FILE.value] = [abspath(f) for f in files]
 
     call_open(action, query_params, args)
 
@@ -91,18 +91,18 @@ def main(args):
         raise
 
     query_params = {
-        QueryParamKey.PIPE_PATH: pipe_path
+        QueryParamKey.PIPE_PATH.value: pipe_path
     }
 
     if args.line is not None:
-        query_params[QueryParamKey.LINE] = args.line
+        query_params[QueryParamKey.LINE.value] = args.line
 
     if args.cur_env:
         env_file = f"/{temp_dir_path}/com_qvacua_vimr_env_{uuid_str}"
         with open(env_file, "w") as f:
             f.write(json.dumps({k: v for (k, v) in os.environ.items()}))
             os.chmod(env_file, 0o600)
-            query_params[QueryParamKey.ENV_PATH] = env_file
+            query_params[QueryParamKey.ENV_PATH.value] = env_file
 
     if args.nvim:
         nvim_parser = argparse.ArgumentParser()
