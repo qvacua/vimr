@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* GH-919: Bugfix: The CLI tool `vimr` hangs. Thanks @archoversight for the PR!
 
 # 0.38.0-20220317.192248
 
