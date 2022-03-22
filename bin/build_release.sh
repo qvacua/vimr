@@ -102,6 +102,8 @@ main() {
     fi
 
     if [[ "${update_appcast}" == true ]]; then
+      # Sometimes GitHub is not yet up-to-date with the uploaded asset.
+      sleep 5
       update_appcast_file
     fi
   popd >/dev/null
