@@ -1,29 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
-     xmlns:dc="http://purl.org/dc/elements/1.1/">
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>VimR with NeoVim</title>
-    <link>http://vimr.org</link>
+    <link>https://twitter.com/vimrefined</link>
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.38.1-20220319.090018</title>
+      <title>v0.38.2-20220322.172923</title>
+      <link>https://twitter.com/vimrefined</link>
+      <sparkle:version>20220322.172923</sparkle:version>
+      <sparkle:shortVersionString>v0.38.2</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-919: Bugfix: The CLI tool <code>vimr</code> hangs. Thanks @archoversight for the PR!</li>
+<li>GH-923: Bugfix: Input method auto-switch is not handled correctly. Thanks @SolaWing for the PR!</li>
+<li>Dependencies updates:</li>
+<li>sparkle-project/Sparkle@2.1.0</li>
 </ul>
-<p>Please re-install the CLI tool!</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.38.1-20220319.090018
+        https://github.com/qvacua/vimr/releases/tag/v0.38.2-20220322.172923
       </releaseNotesLink>
-      <pubDate>2022-03-19T09:13:09.030298</pubDate>
-      <minimumSystemVersion>10.12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.38.1-20220319.090018/VimR-v0.38.1.tar.bz2"
-                 sparkle:version="20220319.090018"
-                 sparkle:shortVersionString="v0.38.1"
-                 sparkle:dsaSignature="MC0CFGoLlD8pIkOM9cgrp+pEfTiSi5mdAhUAyRnqQSMWyf68dSA8pyBCvxkBOAU="
-                 length="20593136"
+      <pubDate>2022-03-22T17:39:51.234569</pubDate>
+      <minimumSystemVersion>10.13.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.38.2-20220322.172923/VimR-v0.38.2.tar.bz2"
+                 sparkle:edSignature="k5nhgUUp/lwL9FriV+a8aqXNG46Bqtq5puvbxUeFbdu+9W4oNBI8ghrm0YCuSz/gs17IxKRnpKdN5GMLJvSmCQ==" length="20903432"
                  type="application/octet-stream"/>
     </item>
   </channel>
