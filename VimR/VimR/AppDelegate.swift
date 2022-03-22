@@ -67,7 +67,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
+
     self.updaterDelegate.useSnapshotChannel = initialAppState.useSnapshotUpdate
+    self.updaterController = SPUStandardUpdaterController(
+      startingUpdater: false,
+      updaterDelegate: self.updaterDelegate,
+      userDriverDelegate: nil
+    )
 
     super.init()
 
@@ -121,6 +127,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
   private var launching = true
 
+  private let updaterController: SPUStandardUpdaterController
   private let updaterDelegate = UpdaterDelegate()
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
@@ -144,7 +151,7 @@ extension AppDelegate {
   func applicationDidFinishLaunching(_: Notification) {
     self.launching = false
 
-    updaterController.startUpdater()
+    self.updaterController.startUpdater()
 
     #if DEBUG
       NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
@@ -396,7 +403,7 @@ extension AppDelegate {
 
 extension AppDelegate {
   @IBAction func checkForUpdates(_ sender: Any?) {
-    updaterController.checkForUpdates(sender)
+    self.updaterController.checkForUpdates(sender)
   }
 
   @IBAction func newDocument(_: Any?) {
@@ -446,12 +453,6 @@ private enum VimRUrlAction: String {
   case separateWindows = "open-in-separate-windows"
   case nvim
 }
-
-private let updaterController = SPUStandardUpdaterController(
-  startingUpdater: false,
-  updaterDelegate: nil,
-  userDriverDelegate: nil
-)
 
 // Keep in sync with QueryParamKey in the `vimr` Python script.
 private let filePrefix = "file="
