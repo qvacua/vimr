@@ -120,7 +120,9 @@ class UiRoot: UiComponent {
       emitter: self.emitter,
       state: state
     )
+    // sync global self state to child window
     mainWin.shortcutService = self.shortcutService
+    mainWin.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode
 
     return mainWin
   }
