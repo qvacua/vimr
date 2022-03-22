@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* GH-923: Bugfix: Input method auto-switch is not handled correctly. Thanks @SolaWing for the PR!
 * Dependencies updates:
   - sparkle-project/Sparkle@2.1.0
 
