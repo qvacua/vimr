@@ -99,10 +99,12 @@ main() {
 
     if [[ "${upload}" == true ]]; then
       upload_artifact
+    fi
 
-      if [[ "${update_appcast}" == true ]]; then
-        update_appcast_file
-      fi
+    if [[ "${update_appcast}" == true ]]; then
+      # Sometimes GitHub is not yet up-to-date with the uploaded asset.
+      sleep 5
+      update_appcast_file
     fi
   popd >/dev/null
 }

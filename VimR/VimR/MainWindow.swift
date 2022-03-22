@@ -34,8 +34,9 @@ class MainWindow: NSObject,
   let workspace: Workspace
   let neoVimView: NvimView
 
-  var activateAsciiImInInsertMode = true {
-    didSet { self.neoVimView.activateAsciiImInNormalMode = self.activateAsciiImInInsertMode }
+  var activateAsciiImInInsertMode: Bool {
+      get { self.neoVimView.activateAsciiImInNormalMode }
+      set { self.neoVimView.activateAsciiImInNormalMode = newValue }
   }
 
   weak var shortcutService: ShortcutService?

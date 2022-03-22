@@ -1,5 +1,15 @@
 # Next
 
+* ...
+
+# 0.38.2-20220322.180037
+
+* GH-923: Bugfix: Input method auto-switch is not handled correctly. Thanks @SolaWing for the PR!
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.1.0
+
+# 0.38.1-20220319.090018
+
 * GH-919: Bugfix: The CLI tool `vimr` hangs. Thanks @archoversight for the PR!
 
 # 0.38.0-20220317.192248

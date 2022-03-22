@@ -90,7 +90,6 @@
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
-		4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE2267C71ED00F77527 /* RxCocoa */; };
 		4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE4267C71ED00F77527 /* RxRelay */; };
@@ -270,7 +269,6 @@
 		4B238BE01D3BF24200CBDD98 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		4B2A2C0D1D0353750074CE9A /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		4B37ADB81D6E471B00970D55 /* vimr */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text.script.python; path = vimr; sourceTree = "<group>"; };
-		4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */ = {isa = PBXFileReference; fileEncoding = 1; lastKnownFileType = text; path = sparkle_pub.pem; sourceTree = "<group>"; };
 		4B6A70931D60E04200E12030 /* AppKitCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitCommons.swift; sourceTree = "<group>"; };
 		4B8C64CD23F02259008733D8 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		4B8C64CE23F022C2008733D8 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -658,7 +656,6 @@
 				4BF07EE61D51326A009BECEB /* Credits.rtf */,
 				4BEBA50F1CFF374B00673FDF /* Info.plist */,
 				4B37ADB81D6E471B00970D55 /* vimr */,
-				4B3AC8931DB031C600AC5823 /* sparkle_pub.pem */,
 				1929BC6D45B7E14D4D75D4E6 /* com.qvacua.VimR.vim */,
 			);
 			name = resources;
@@ -941,7 +938,6 @@
 				4B19BEFD1E110183007E823C /* preview in Resources */,
 				4B9433EE20B95EC7005807BA /* MacVim-vim.icns in Resources */,
 				4B9433F020B95EC7005807BA /* MacVim-py.icns in Resources */,
-				4B3AC8941DB031C600AC5823 /* sparkle_pub.pem in Resources */,
 				4B9433E620B95EC6005807BA /* MacVim-log.icns in Resources */,
 				4B94340D20B95EC7005807BA /* MacVim-dtd.icns in Resources */,
 				4B9433DF20B95EC6005807BA /* MacVim-lisp.icns in Resources */,
@@ -1157,7 +1153,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20220319.090018;
+				CURRENT_PROJECT_VERSION = 20220322.180037;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1218,7 +1214,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20220319.090018;
+				CURRENT_PROJECT_VERSION = 20220322.180037;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1247,7 +1243,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20220319.090018;
+				CURRENT_PROJECT_VERSION = 20220322.180037;
 				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
@@ -1275,7 +1271,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20220319.090018;
+				CURRENT_PROJECT_VERSION = 20220322.180037;
 				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
@@ -1417,7 +1413,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 1.27.0;
+				version = 2.1.0;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {

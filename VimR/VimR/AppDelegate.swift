@@ -14,6 +14,18 @@ import Sparkle
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
+class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
+  var useSnapshotChannel = false
+
+  func feedURLString(for _: SPUUpdater) -> String? {
+    if self.useSnapshotChannel {
+      return "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
+    } else {
+      return "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
+    }
+  }
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
   struct OpenConfig {
@@ -55,7 +67,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
     self.openNewMainWindowOnReactivation = initialAppState.openNewMainWindowOnReactivation
-    self.useSnapshot = initialAppState.useSnapshotUpdate
+
+    self.updaterDelegate.useSnapshotChannel = initialAppState.useSnapshotUpdate
+    self.updaterController = SPUStandardUpdaterController(
+      startingUpdater: false,
+      updaterDelegate: self.updaterDelegate,
+      userDriverDelegate: nil
+    )
 
     super.init()
 
@@ -85,9 +103,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
         self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
 
-        if self.useSnapshot != appState.useSnapshotUpdate {
-          self.useSnapshot = appState.useSnapshotUpdate
-          self.setSparkleUrl(self.useSnapshot)
+        if self.updaterDelegate.useSnapshotChannel != appState.useSnapshotUpdate {
+          self.updaterDelegate.useSnapshotChannel = appState.useSnapshotUpdate
         }
 
         if appState.quit { NSApp.terminate(self) }
@@ -105,25 +122,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
   private var openNewMainWindowOnLaunch: Bool
   private var openNewMainWindowOnReactivation: Bool
-  private var useSnapshot: Bool
 
   private let disposeBag = DisposeBag()
 
   private var launching = true
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
+  private let updaterController: SPUStandardUpdaterController
+  private let updaterDelegate = UpdaterDelegate()
 
-  private func setSparkleUrl(_ snapshot: Bool) {
-    if snapshot {
-      updater.feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
-      )
-    } else {
-      updater.feedURL = URL(
-        string: "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
-      )
-    }
-  }
+  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
 }
 
 // MARK: - NSApplicationDelegate
@@ -143,6 +150,8 @@ extension AppDelegate {
 
   func applicationDidFinishLaunching(_: Notification) {
     self.launching = false
+
+    self.updaterController.startUpdater()
 
     #if DEBUG
       NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
@@ -215,9 +224,9 @@ extension AppDelegate {
     )
     switch self.context.state.openFilesFromApplicationsAction {
     case .inCurrentWindow:
-        self.emit(.openInKeyWindow(config: config))
+      self.emit(.openInKeyWindow(config: config))
     default:
-        self.emit(.newMainWindow(config: config))
+      self.emit(.newMainWindow(config: config))
     }
 
     sender.reply(toOpenOrPrint: .success)
@@ -378,10 +387,11 @@ extension AppDelegate {
     return nil
   }
 
-  private func queryParam<T>(_ prefix: String,
-                             from rawParams: [String],
-                             transforming transform: (String) -> T) -> [T]
-  {
+  private func queryParam<T>(
+    _ prefix: String,
+    from rawParams: [String],
+    transforming transform: (String) -> T
+  ) -> [T] {
     rawParams
       .filter { $0.hasPrefix(prefix) }
       .compactMap { $0.without(prefix: prefix).removingPercentEncoding }
@@ -393,7 +403,7 @@ extension AppDelegate {
 
 extension AppDelegate {
   @IBAction func checkForUpdates(_ sender: Any?) {
-    updater.checkForUpdates(sender)
+    self.updaterController.checkForUpdates(sender)
   }
 
   @IBAction func newDocument(_: Any?) {
@@ -443,8 +453,6 @@ private enum VimRUrlAction: String {
   case separateWindows = "open-in-separate-windows"
   case nvim
 }
-
-private let updater = SUUpdater()
 
 // Keep in sync with QueryParamKey in the `vimr` Python script.
 private let filePrefix = "file="

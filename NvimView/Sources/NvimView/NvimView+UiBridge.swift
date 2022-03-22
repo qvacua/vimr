@@ -398,7 +398,8 @@ extension NvimView {
     // Enter into Insert mode, set ime to last used ime in Insert mode.
     // Visual -> Insert
     // Normal -> Insert
-    if case self.mode = CursorModeShape.insert, self.activateAsciiImInNormalMode {
+    // avoid insert -> insert
+    if case self.mode = CursorModeShape.insert, self.lastMode != self.mode, self.activateAsciiImInNormalMode {
       TISSelectInputSource(self.lastImSource)
     }
   }
