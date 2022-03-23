@@ -34,6 +34,9 @@ class AppearancePrefReducer: ReducerType {
 
     case let .setCharacterspacing(characterspacing):
       appearance.characterspacing = characterspacing
+
+    case let .setFontSmoothing(fontSmoothing):
+      appearance.fontSmoothing = fontSmoothing
     }
 
     self.modify(state: &state, with: appearance)

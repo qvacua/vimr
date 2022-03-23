@@ -19,6 +19,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     case setFont(NSFont)
     case setLinespacing(CGFloat)
     case setCharacterspacing(CGFloat)
+    case setFontSmoothing(FontSmoothing)
   }
 
   override var displayName: String { "Appearance" }
@@ -44,6 +45,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.usesColorscheme = state.mainWindowTemplate.appearance.usesTheme
     self.showsFileIcon = state.mainWindowTemplate.appearance.showsFileIcon
     self.usesCustomTab = state.mainWindowTemplate.appearance.usesCustomTab
+    self.fontSmoothing = state.mainWindowTemplate.appearance.fontSmoothing
 
     super.init(frame: .zero)
 
@@ -60,6 +62,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
         guard self.font != appearance.font
           || self.linespacing != appearance.linespacing
           || self.characterspacing != appearance.characterspacing
+          || self.fontSmoothing != appearance.fontSmoothing
           || self.usesLigatures != appearance.usesLigatures
           || self.usesColorscheme != appearance.usesTheme
           || self.showsFileIcon != appearance.showsFileIcon
@@ -68,6 +71,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
         self.font = appearance.font
         self.linespacing = appearance.linespacing
         self.characterspacing = appearance.characterspacing
+        self.fontSmoothing = appearance.fontSmoothing
         self.usesLigatures = appearance.usesLigatures
         self.usesColorscheme = appearance.usesTheme
         self.showsFileIcon = appearance.showsFileIcon
@@ -87,6 +91,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private var usesColorscheme: Bool
   private var showsFileIcon: Bool
   private var usesCustomTab: Bool
+  private var fontSmoothing: FontSmoothing
 
   private let customTabCheckbox = NSButton(forAutoLayout: ())
   private let colorschemeCheckbox = NSButton(forAutoLayout: ())
@@ -94,6 +99,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
   private let fontPanelButton = NSButton(forAutoLayout: ())
   private let linespacingField = NSTextField(forAutoLayout: ())
   private let characterspacingField = NSTextField(forAutoLayout: ())
+  private let fontSmoothingPopup = NSPopUpButton(forAutoLayout: ())
   private let ligatureCheckbox = NSButton(forAutoLayout: ())
   private let previewArea = NSTextView(frame: .zero)
 
@@ -173,6 +179,17 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       action: #selector(AppearancePref.usesLigaturesAction(_:))
     )
 
+    let fontSmoothingPopup = self.fontSmoothingPopup
+    let fontSmoothingTitle = self.titleTextField(title: "Font Smoothing:")
+    fontSmoothingPopup.target = self
+    fontSmoothingPopup.action = #selector(AppearancePref.fontSmoothingAction)
+    fontSmoothingPopup.addItems(withTitles: self.fontSmoothingTitles)
+    let fontSmoothingInfo = self.infoTextField(markdown: #"""
+    "No Font Smoothing" may result in better rendering for non-Retina displays.\
+    If you're still using Monaco-9pt, choose "No Anti Aliasing" 😀 (you may want\
+    to set character spacing to 1.2 then).
+    """#)
+
     let previewArea = self.previewArea
     previewArea.isEditable = true
     previewArea.maxSize = CGSize(
@@ -215,6 +232,9 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.addSubview(characterspacingField)
     self.addSubview(characterspacingInfo)
     self.addSubview(ligatureCheckbox)
+    self.addSubview(fontSmoothingTitle)
+    self.addSubview(fontSmoothingPopup)
+    self.addSubview(fontSmoothingInfo)
     self.addSubview(previewScrollView)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
@@ -281,10 +301,19 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
     characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
 
-    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: characterspacingInfo, withOffset: 18)
+    fontSmoothingTitle.autoPinEdge(.right, to: .right, of: characterspacingTitle)
+    fontSmoothingTitle.autoAlignAxis(.baseline, toSameAxisOf: fontSmoothingPopup)
+
+    fontSmoothingPopup.autoPinEdge(.top, to: .bottom, of: characterspacingInfo, withOffset: 18)
+    fontSmoothingPopup.autoPinEdge(.left, to: .right, of: fontSmoothingTitle, withOffset: 5)
+
+    fontSmoothingInfo.autoPinEdge(.left, to: .left, of: fontSmoothingPopup)
+    fontSmoothingInfo.autoPinEdge(.top, to: .bottom, of: fontSmoothingPopup, withOffset: 5)
+
+    ligatureCheckbox.autoPinEdge(.top, to: .bottom, of: fontSmoothingInfo, withOffset: 18)
     ligatureCheckbox.autoPinEdge(.left, to: .right, of: fontTitle, withOffset: 5)
 
-    previewScrollView.autoSetDimension(.height, toSize: 200, relation: .greaterThanOrEqual)
+    previewScrollView.autoSetDimension(.height, toSize: 120, relation: .greaterThanOrEqual)
     previewScrollView.autoPinEdge(.top, to: .bottom, of: ligatureCheckbox, withOffset: 18)
     previewScrollView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
     previewScrollView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
@@ -298,6 +327,7 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures
+    self.fontSmoothingPopup.selectItem(at: self.fontSmoothingToIndex(self.fontSmoothing))
     self.previewArea.font = self.font
     self.customTabCheckbox.boolState = self.usesCustomTab
     self.colorschemeCheckbox.boolState = self.usesColorscheme
@@ -307,6 +337,34 @@ class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate
       self.previewArea.useAllLigatures(self)
     } else {
       self.previewArea.turnOffLigatures(self)
+    }
+  }
+
+  // Keep the index in sync with indexToFontSmoothing() and fontSmoothingToIndex().
+  private let fontSmoothingTitles = [
+    "System Setting",
+    "With Font Smoothing",
+    "No Font Smoothing",
+    "No Anti Aliasing",
+  ]
+
+  private func indexToFontSmoothing(_ index: Int) -> FontSmoothing {
+    switch index {
+    case 0: return .systemSetting
+    case 1: return .withFontSmoothing
+    case 2: return .noFontSmoothing
+    case 3: return .noAntiAliasing
+
+    default: return .systemSetting
+    }
+  }
+
+  private func fontSmoothingToIndex(_ fontSmoothing: FontSmoothing) -> Int {
+    switch fontSmoothing {
+    case .systemSetting: return 0
+    case .withFontSmoothing: return 1
+    case .noFontSmoothing: return 2
+    case .noAntiAliasing: return 3
     }
   }
 }
@@ -348,6 +406,14 @@ extension AppearancePref {
   func linespacingAction() {
     let newLinespacing = self.cappedLinespacing(self.linespacingField.doubleValue)
     self.emit(.setLinespacing(newLinespacing))
+  }
+
+  @objc func fontSmoothingAction(_: NSPopUpButton) {
+    let index = self.fontSmoothingPopup.indexOfSelectedItem
+
+    guard FontSmoothing.allCases.indices.contains(index) else { return }
+    self.fontSmoothing = self.indexToFontSmoothing(index)
+    self.emit(.setFontSmoothing(self.fontSmoothing))
   }
 
   private func cappedLinespacing(_ linespacing: Double) -> CGFloat {

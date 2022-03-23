@@ -35,8 +35,8 @@ class MainWindow: NSObject,
   let neoVimView: NvimView
 
   var activateAsciiImInInsertMode: Bool {
-      get { self.neoVimView.activateAsciiImInNormalMode }
-      set { self.neoVimView.activateAsciiImInNormalMode = newValue }
+    get { self.neoVimView.activateAsciiImInNormalMode }
+    set { self.neoVimView.activateAsciiImInNormalMode = newValue }
   }
 
   weak var shortcutService: ShortcutService?
@@ -166,6 +166,7 @@ class MainWindow: NSObject,
 
     self.window.tabbingMode = .disallowed
 
+    self.fontSmoothing = state.appearance.fontSmoothing
     self.defaultFont = state.appearance.font
     self.linespacing = state.appearance.linespacing
     self.characterspacing = state.appearance.characterspacing
@@ -265,6 +266,7 @@ class MainWindow: NSObject,
 
   private var goToLineFromCli: Marked<Int>?
 
+  private var fontSmoothing = FontSmoothing.systemSetting
   private var defaultFont = NvimView.defaultFont
   private var linespacing = NvimView.defaultLinespacing
   private var characterspacing = NvimView.defaultCharacterspacing
@@ -468,7 +470,9 @@ class MainWindow: NSObject,
           || self.linespacing != state.appearance.linespacing
           || self.characterspacing != state.appearance.characterspacing
           || self.usesLigatures != state.appearance.usesLigatures
+          || self.fontSmoothing != state.appearance.fontSmoothing
         {
+          self.fontSmoothing = state.appearance.fontSmoothing
           self.defaultFont = state.appearance.font
           self.linespacing = state.appearance.linespacing
           self.characterspacing = state.appearance.characterspacing
@@ -495,6 +499,7 @@ class MainWindow: NSObject,
   }
 
   private func updateNeoVimAppearance() {
+    self.neoVimView.fontSmoothing = self.fontSmoothing
     self.neoVimView.font = self.defaultFont
     self.neoVimView.linespacing = self.linespacing
     self.neoVimView.characterspacing = self.characterspacing
