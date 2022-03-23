@@ -14,6 +14,7 @@ struct AppState: Codable {
     case inNewWindow
     case inCurrentWindow
   }
+
   enum AfterLastWindowAction: String, Codable {
     case doNothing = "do-nothing"
     case hide
@@ -79,8 +80,8 @@ struct AppState: Codable {
       default: .doNothing
     )
     self.activateAsciiImInNormalMode = try container.decode(
-       forKey: .activateAsciiImInNormalMode,
-       default: true
+      forKey: .activateAsciiImInNormalMode,
+      default: true
     )
     self.useSnapshotUpdate = try container.decode(
       forKey: .useSnapshotUpdate,
@@ -198,12 +199,14 @@ struct AppearanceState: Codable {
     case editorLinespacing = "editor-linespacing"
     case editorCharacterspacing = "editor-characterspacing"
     case editorUsesLigatures = "editor-uses-ligatures"
+    case editorFontSmoothing = "editor-font-smoothing"
   }
 
   var font = NSFont.userFixedPitchFont(ofSize: 13)!
   var linespacing: CGFloat = 1
   var characterspacing: CGFloat = 1
   var usesLigatures = true
+  var fontSmoothing = FontSmoothing.systemSetting
 
   var usesCustomTab = true
   var usesTheme = true
@@ -231,6 +234,10 @@ struct AppearanceState: Codable {
       )
     self.usesLigatures = try container
       .decodeIfPresent(Bool.self, forKey: .editorUsesLigatures) ?? true
+    self.fontSmoothing = try container.decodeIfPresent(
+      FontSmoothing.self,
+      forKey: .editorFontSmoothing
+    ) ?? .systemSetting
 
     self.usesTheme = try container.decodeIfPresent(Bool.self, forKey: .usesTheme) ?? true
     self.usesCustomTab = try container.decodeIfPresent(Bool.self, forKey: .usesCustomTab) ?? true
@@ -247,6 +254,7 @@ struct AppearanceState: Codable {
     try container.encode(self.font.pointSize, forKey: .editorFontSize)
     try container.encode(self.linespacing, forKey: .editorLinespacing)
     try container.encode(self.characterspacing, forKey: .editorCharacterspacing)
+    try container.encode(self.fontSmoothing, forKey: .editorFontSmoothing)
     try container.encode(self.usesLigatures, forKey: .editorUsesLigatures)
   }
 

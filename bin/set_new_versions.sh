@@ -39,10 +39,11 @@ main() {
   local tag
   if [[ "${is_snapshot}" == true ]]; then
     tag="snapshot/${bundle_version}"
+    echo "bundle_version=${bundle_version} marketing_version=${marketing_version} tag=${tag}"
   else
     tag="v${marketing_version}-${bundle_version}"
+    echo "bundle_version=${bundle_version} marketing_version=v${marketing_version} tag=${tag}"
   fi
-  echo "bundle_version=${bundle_version} marketing_version=v${marketing_version} tag=${tag}"
 }
 
 main

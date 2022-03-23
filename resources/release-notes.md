@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* GH-922: Add an option to set font smoothing.
 
 # 0.38.2-20220322.180037
 

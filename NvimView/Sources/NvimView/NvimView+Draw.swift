@@ -25,10 +25,20 @@ extension NvimView {
       return
     }
 
-    // When both anti-aliasing and font smoothing is turned on,
-    // then the "Use LCD font smoothing when available" setting is used
-    // to render texts, cf. chapter 11 from "Programming with Quartz".
-    context.setShouldSmoothFonts(true)
+    // See chapter 11 from "Programming with Quartz".
+    switch self.fontSmoothing {
+    case .noAntiAliasing:
+      context.setShouldAntialias(false)
+      context.setShouldSmoothFonts(false)
+    case .noFontSmoothing:
+      context.setShouldAntialias(true)
+      context.setShouldSmoothFonts(false)
+    case .withFontSmoothing:
+      context.setShouldAntialias(true)
+      context.setShouldSmoothFonts(true)
+    case .systemSetting:
+      break
+    }
     context.setTextDrawingMode(.fill)
 
     let dirtyRects = self.rectsBeingDrawn()

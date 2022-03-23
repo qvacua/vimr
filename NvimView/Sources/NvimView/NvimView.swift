@@ -12,6 +12,13 @@ import RxPack
 import RxSwift
 import Tabs
 
+public enum FontSmoothing: String, Codable, CaseIterable {
+  case systemSetting
+  case withFontSmoothing
+  case noFontSmoothing
+  case noAntiAliasing
+}
+
 public protocol NvimViewDelegate: AnyObject {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
 }
@@ -61,6 +68,10 @@ public class NvimView: NSView,
       self.drawer.usesLigatures = self.usesLigatures
       self.markForRenderWholeView()
     }
+  }
+
+  public var fontSmoothing = FontSmoothing.systemSetting {
+    didSet { self.markForRenderWholeView() }
   }
 
   public var drawsParallel = false {

@@ -35,7 +35,11 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.defaultUsesVcsIgnoresCheckbox.boolState = state.openQuickly.defaultUsesVcsIgnores
 
     self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
-    self.openFilesFromApplicationsPopup.selectItem(at: AppState.OpenFilesFromApplicationsAction.allCases.firstIndex(of: state.openFilesFromApplicationsAction) ?? 0)
+    self.openFilesFromApplicationsPopup
+      .selectItem(
+        at: AppState.OpenFilesFromApplicationsAction.allCases
+          .firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
+      )
 
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup
@@ -53,10 +57,11 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
         }
 
         if self.openFilesFromApplicationsAction != state.openFilesFromApplicationsAction {
-            self.openFilesFromApplicationsPopup.selectItem(
-                at: AppState.OpenFilesFromApplicationsAction.allCases.firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
-            )
-            self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
+          self.openFilesFromApplicationsPopup.selectItem(
+            at: AppState.OpenFilesFromApplicationsAction.allCases
+              .firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
+          )
+          self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
         }
 
         if self.lastWindowAction != state.afterLastWindowAction {
@@ -110,18 +115,19 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     let onReactivation = self.openOnReactivationCheckbox
 
     let openFilesFromApplicationsTitle = self.titleTextField(title: "Open files from applications:")
-    openFilesFromApplicationsPopup.target = self
-    openFilesFromApplicationsPopup.action = #selector(GeneralPref.afterOpenFilesFromApplicationsAction)
-    openFilesFromApplicationsPopup.addItems(withTitles: [
-        "In a New Window",
-        "In the Current Window",
+    self.openFilesFromApplicationsPopup.target = self
+    self.openFilesFromApplicationsPopup
+      .action = #selector(GeneralPref.afterOpenFilesFromApplicationsAction)
+    self.openFilesFromApplicationsPopup.addItems(withTitles: [
+      "In a New Window",
+      "In the Current Window",
     ])
     let openFilesFromApplicationsInfo =
-        self.infoTextField(markdown: #"""
-        This applies to files opened from the Finder \
-        (e.g. by double-clicking on a file or by dragging a file onto the VimR dock icon) \
-        or from external programs such as Xcode.
-        """#)
+      self.infoTextField(markdown: #"""
+      This applies to files opened from the Finder \
+      (e.g. by double-clicking on a file or by dragging a file onto the VimR dock icon) \
+      or from external programs such as Xcode.
+      """#)
 
     let afterLastWindowTitle = self.titleTextField(title: "After Last Window Closes:")
     let lastWindow = self.afterLastWindowPopup
@@ -184,7 +190,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(ignoreInfo)
 
     self.addSubview(openFilesFromApplicationsTitle)
-    self.addSubview(openFilesFromApplicationsPopup)
+    self.addSubview(self.openFilesFromApplicationsPopup)
     self.addSubview(openFilesFromApplicationsInfo)
 
     self.addSubview(afterLastWindowTitle)
@@ -222,14 +228,40 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       relation: .greaterThanOrEqual
     )
 
-    openFilesFromApplicationsTitle.autoAlignAxis(.baseline, toSameAxisOf: openFilesFromApplicationsPopup)
+    openFilesFromApplicationsTitle.autoAlignAxis(
+      .baseline,
+      toSameAxisOf: self.openFilesFromApplicationsPopup
+    )
     openFilesFromApplicationsTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
-    openFilesFromApplicationsTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
-    openFilesFromApplicationsPopup.autoPinEdge(.top, to: .bottom, of: onReactivation, withOffset: 18)
-    openFilesFromApplicationsPopup.autoPinEdge(.left, to: .right, of: openFilesFromApplicationsTitle, withOffset: 5)
-    openFilesFromApplicationsInfo.autoPinEdge(.top, to: .bottom, of: openFilesFromApplicationsPopup, withOffset: 5)
+    openFilesFromApplicationsTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
+    self.openFilesFromApplicationsPopup.autoPinEdge(
+      .top,
+      to: .bottom,
+      of: onReactivation,
+      withOffset: 18
+    )
+    self.openFilesFromApplicationsPopup.autoPinEdge(
+      .left,
+      to: .right,
+      of: openFilesFromApplicationsTitle,
+      withOffset: 5
+    )
+    openFilesFromApplicationsInfo.autoPinEdge(
+      .top,
+      to: .bottom,
+      of: self.openFilesFromApplicationsPopup,
+      withOffset: 5
+    )
     openFilesFromApplicationsInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    openFilesFromApplicationsInfo.autoPinEdge(.left, to: .left, of: openFilesFromApplicationsPopup)
+    openFilesFromApplicationsInfo.autoPinEdge(
+      .left,
+      to: .left,
+      of: self.openFilesFromApplicationsPopup
+    )
 
     afterLastWindowTitle.autoAlignAxis(.baseline, toSameAxisOf: lastWindow)
     afterLastWindowTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -334,7 +366,7 @@ extension GeneralPref {
     let index = sender.indexOfSelectedItem
 
     guard AppState.OpenFilesFromApplicationsAction.allCases.indices.contains(index) else {
-        return
+      return
     }
     self.openFilesFromApplicationsAction = AppState.OpenFilesFromApplicationsAction.allCases[index]
     self.emit(.setOpenFilesFromApplications(self.openFilesFromApplicationsAction))

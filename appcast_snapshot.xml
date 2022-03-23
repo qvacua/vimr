@@ -6,24 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.38.2-20220322.180037</title>
+      <title>SNAPSHOT-20220323.180713</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220322.180037</sparkle:version>
-      <sparkle:shortVersionString>v0.38.2</sparkle:shortVersionString>
+      <sparkle:version>20220323.180713</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20220323.180713</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-923: Bugfix: Input method auto-switch is not handled correctly. Thanks @SolaWing for the PR!</li>
-<li>Dependencies updates:</li>
-<li>sparkle-project/Sparkle@2.1.0</li>
+<li>GH-922: Add an option to set font smoothing.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.38.2-20220322.180037
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20220323.180713
       </releaseNotesLink>
-      <pubDate>2022-03-22T18:11:14.469533</pubDate>
+      <pubDate>2022-03-23T18:16:10.030704</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.38.2-20220322.180037/VimR-v0.38.2.tar.bz2"
-                 sparkle:edSignature="5BHazAjBSiSSb0AmKoU4VA3+5Vuq6EEfVYi+To8AtRIDDpJQOgsPfO7OfPAjNrQ0l242FB/mnu4rgVjtIkXfBQ==" length="20900652"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20220323.180713/VimR-SNAPSHOT-20220323.180713.tar.bz2"
+                 sparkle:edSignature="CrbUdpVuXgNRQyslJ+e10me48AqhOup1cffCJRuSVDoY+MvHeAJ6MGfqQWh8Am1vFUc3dn2NtZt7GbzH4E87Cw==" length="20911862"
                  type="application/octet-stream"/>
     </item>
   </channel>
