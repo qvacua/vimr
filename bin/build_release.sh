@@ -1,12 +1,21 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-readonly is_snapshot=${is_snapshot:?"true or false"}
-readonly bundle_version=${bundle_version:?"date '+%Y%m%d.%H%M%S'"}
-readonly tag=${tag:?"snapshot/xyz or v0.35.0"}
-readonly marketing_version=${marketing_version:?"SNAPSHOT-xyz or v0.35.0 (mind the v-prefix when not snapshot"}
+readonly create_gh_release=${create_gh_release:?"true or false"}
 readonly upload=${upload:?"true or false"}
 readonly update_appcast=${update_appcast:?"true or false"}
+
+# The release spec file should export the following env vars:
+# is_snapshot
+# bundle_version
+# marketing_version
+# tag
+# github_release_name
+# release_notes
+readonly release_spec_file=${release_spec_file:?"path to release spec sh file (output by set_new_versions.sh script"}
+
+source "${release_spec_file}"
+
 readonly build_folder_path="./build/Build/Products/Release"
 readonly vimr_artifact_path="${build_folder_path}/VimR-${marketing_version}.tar.bz2"
 declare -r -x GH_REPO="qvacua/vimr"
@@ -34,7 +43,7 @@ check_version() {
   fi
 }
 
-check_upload() {
+check_gh_release_present() {
   if [[ "${upload}" == true ]]; then
     if gh release list | grep "${tag}"; then
       echo "Release with tag ${tag} found"
@@ -55,6 +64,23 @@ build_release() {
     tar cjf "VimR-${marketing_version}.tar.bz2" VimR.app
   popd >/dev/null
   echo "### Built (signed and notarized) release: ${vimr_artifact_path}"
+}
+
+create_gh_release() {
+  if [[ "${is_snapshot}" == true ]]; then
+    gh release create \
+      --discussion-category "general" \
+      --prerelease \
+      --target "${tag}" \
+      --title "${github_release_name}" \
+      --notes "${release_notes}"
+  else
+    gh release create \
+      --discussion-category "general" \
+      --target "${tag}" \
+      --title "${github_release_name}" \
+      --notes "${release_notes}"
+  fi
 }
 
 upload_artifact() {
@@ -86,18 +112,24 @@ update_appcast_file() {
 }
 
 main() {
-  echo "is_snapshot=${is_snapshot} bundle_version=${bundle_version}" \
-      "tag=${tag} marketing_version=${marketing_version}" \
-      "upload=${upload} update_appcast=${update_appcast}" \
-      "vimr_artifact_path=${vimr_artifact_path}"
+  echo "create_gh_release=${create_gh_release} \\"
+  echo "upload=${upload} update_appcast=${update_appcast} \\"
+  echo "vimr_artifact_path=${vimr_artifact_path}"
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
+
     check_version
-    check_upload
     prepare_bin
     build_release
 
+    if [[ "${create_gh_release}" == true ]]; then
+      create_gh_release
+    fi
+
     if [[ "${upload}" == true ]]; then
+      # Give GitHub some time.
+      sleep 5
+      check_gh_release_present
       upload_artifact
     fi
 
@@ -106,6 +138,7 @@ main() {
       sleep 5
       update_appcast_file
     fi
+
   popd >/dev/null
 }
 
