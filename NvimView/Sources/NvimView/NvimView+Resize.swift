@@ -76,7 +76,11 @@ extension NvimView {
       .andThen(self.api.run(at: sockPath))
       .andThen(
         self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-          prev.andThen(self.api.exec(src: "source \(url.path)", output: true).asCompletable())
+          prev
+            .andThen(
+              self.api.exec(src: "source \(url.shellEscapedPath)", output: true)
+                .asCompletable()
+            )
         }
       )
       .andThen(self.api.subscribe(event: NvimView.rpcEventName))

@@ -206,7 +206,7 @@ extension NvimView {
             let loadGinit = FileManager.default.fileExists(atPath: ginitPath)
             if loadGinit {
               self.bridgeLogger.debug("Source'ing ginit.vim")
-              return self.api.command(command: "source \(ginitPath)")
+              return self.api.command(command: "source \(ginitPath.shellEscapedPath)")
             } else {
               return .empty()
             }
