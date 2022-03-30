@@ -68,16 +68,14 @@ build_release() {
 
 create_gh_release() {
   if [[ "${is_snapshot}" == true ]]; then
-    gh release create \
+    gh release create "${tag}" \
       --discussion-category "general" \
       --prerelease \
-      --target "${tag}" \
       --title "${github_release_name}" \
       --notes "${release_notes}"
   else
-    gh release create \
+    gh release create "${tag}" \
       --discussion-category "general" \
-      --target "${tag}" \
       --title "${github_release_name}" \
       --notes "${release_notes}"
   fi
@@ -118,9 +116,9 @@ main() {
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 
-    check_version
-    prepare_bin
-    build_release
+#    check_version
+#    prepare_bin
+#    build_release
 
     if [[ "${create_gh_release}" == true ]]; then
       create_gh_release
