@@ -37,13 +37,43 @@ main() {
   echo "### Set versions of VimR"
 
   local tag
+  local github_release_name
+  local version_marker
   if [[ "${is_snapshot}" == true ]]; then
     tag="snapshot/${bundle_version}"
-    echo "bundle_version=${bundle_version} marketing_version=${marketing_version} tag=${tag}"
+    github_release_name="${marketing_version}"
+    version_marker="snapshot"
   else
     tag="v${marketing_version}-${bundle_version}"
-    echo "bundle_version=${bundle_version} marketing_version=v${marketing_version} tag=${tag}"
+    github_release_name="$tag"
+    version_marker="release"
   fi
+  readonly tag
+  readonly github_release_name
+  readonly version_marker
+
+  local output
+  output=$(cat <<-END
+declare -r -x is_snapshot=${is_snapshot}
+declare -r -x bundle_version=${bundle_version}
+declare -r -x marketing_version=${marketing_version}
+declare -r -x tag=${tag}
+declare -r -x github_release_name=${github_release_name}
+declare -r -x release_notes=\$(cat <<-ENDRN
+replace-me
+ENDRN
+)
+END
+)
+  readonly output
+
+  echo "${output}" > "${bundle_version}-${version_marker}.sh"
+
+  echo "### Tag, commit and push with ${tag}"
+  echo "### Use the following to build a release:"
+  echo "release_spec_file=${bundle_version}-${version_marker}.sh \\"
+  echo "create_gh_release=true upload=true update_appcast=true \\"
+  echo "./bin/build_release.sh"
 }
 
 main

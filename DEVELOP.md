@@ -63,20 +63,20 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 * Set a new version of VimR via
     ```bash
-    is_snapshot=true ./bin/set_new_versions.sh
+    is_snapshot=true ./bin/set_new_versions.sh # for snapshot or
+    is_snapshot=false marketing_version=0.38.3 ./bin/set_new_versions.sh # for release
     ```
-  and commit. This will print out some environment variables you can use when invoking the
-  `build_release.sh` script later.
+  and commit. This will create a `${bundle_version}-snapshot/release.sh` file to be used
+  with `build_release.sh`.
 * Tag with the name
     - Snapshot: `snapshot/yyyymmdd.HHMMSS`
     - Release: `vX.Y.Z-yyyymmdd.HHMMSS`
-* Push, create a release and add release notes.
+* Push
 * Build, package and upload via
     ```bash
-    is_snapshot=true \
-    bundle_version=20211212.213543 tag=snapshot/20211212.213543 marketing_version=SNAPSHOT-20211212.213543 \
-    upload=true update_appcast=true \
+    create_gh_release=true upload=true update_appcast=true \
+    release_spec_file=....sh \
     ./bin/build_release.sh
     ```
 * The `appcast{-snapshot}.xml` file is modified. Check and push.
-  
+

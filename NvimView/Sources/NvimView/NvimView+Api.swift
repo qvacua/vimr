@@ -154,7 +154,7 @@ public extension NvimView {
 
   func saveCurrentTab(url: URL) -> Completable {
     self.api
-      .command(command: "w \(url.path)")
+      .command(command: "w \(url.shellEscapedPath)")
       .subscribe(on:self.scheduler)
   }
 
@@ -222,7 +222,7 @@ public extension NvimView {
 
   private func open(_ url: URL, cmd: String) -> Completable {
     self.api
-      .command(command: "\(cmd) \(url.path)")
+      .command(command: "\(cmd) \(url.shellEscapedPath)")
       .subscribe(on:self.scheduler)
   }
 

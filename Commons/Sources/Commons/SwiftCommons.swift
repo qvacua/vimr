@@ -20,6 +20,20 @@ public extension String {
     let idx = self.index(self.startIndex, offsetBy: prefix.count)
     return String(self[idx..<self.endIndex])
   }
+
+  // From https://stackoverflow.com/a/56391610
+  @inlinable
+  @inline(__always)
+  var fullRange: NSRange { NSRange(self.startIndex..., in: self) }
+
+  // From https://stackoverflow.com/a/55560988
+  var shellEscapedPath: String {
+    shellEscapeRegex.stringByReplacingMatches(
+      in: self,
+      range: self.fullRange,
+      withTemplate: "\\\\$1"
+    )
+  }
 }
 
 public extension Array where Element: Equatable {
@@ -99,3 +113,9 @@ public extension Sequence {
     return self
   }
 }
+
+// From https://stackoverflow.com/a/55560988
+private let shellEscapeRegex = try! NSRegularExpression(
+  // We know that the following regex is valid.
+  pattern: "([ !\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\,\\:\\;\\<\\=\\>\\?\\[\\]\\`\\{\\|\\}\\~])"
+)

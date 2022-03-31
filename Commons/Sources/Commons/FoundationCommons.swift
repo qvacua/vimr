@@ -123,6 +123,8 @@ public extension URL {
     return self.deletingLastPathComponent()
   }
 
+  var shellEscapedPath: String { self.path.shellEscapedPath }
+
   var isDir: Bool { self.resourceValue(URLResourceKey.isDirectoryKey.rawValue) }
 
   var isHidden: Bool { self.resourceValue(URLResourceKey.isHiddenKey.rawValue) }
