@@ -60,6 +60,8 @@ public class NvimView: NSView,
   public internal(set) var theme = Theme.default
 
   public var trackpadScrollResistance = 5.0
+  public var trackpadScrollDeltaX = 0.0
+  public var trackpadScrollDeltaY = 0.0
 
   public var usesLiveResize = false
 
