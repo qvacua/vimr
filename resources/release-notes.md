@@ -1,5 +1,6 @@
-# Next
+# 0.39.0-20220416.182927
 
+* Neovim 0.7.0 😀
 * GH-922: Add an option to set font smoothing.
 * GH-928: Bugfix: Files containing some special characters in their names cannot be opened.
 

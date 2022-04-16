@@ -44,7 +44,7 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
   create a release and upload it.
 * Build the `arm64` version locally and upload it:
   ```bash
-  download_gettext=true clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
+  clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
   ```
 * Build a universal binary by the following and upload the artefact:
   ```bash
