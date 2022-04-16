@@ -26,7 +26,6 @@ main() {
     if [[ "${is_snapshot}" == true ]]; then
         marketing_version="SNAPSHOT-${bundle_version}"
     fi
-    readonly marketing_version
 
     pushd VimR >/dev/null
       agvtool new-version -all "${bundle_version}"
@@ -47,10 +46,12 @@ main() {
     tag="v${marketing_version}-${bundle_version}"
     github_release_name="$tag"
     version_marker="release"
+    marketing_version="v${marketing_version}"
   fi
   readonly tag
   readonly github_release_name
   readonly version_marker
+  readonly marketing_version
 
   local output
   output=$(cat <<-END
