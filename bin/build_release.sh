@@ -116,9 +116,9 @@ main() {
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 
-#    check_version
-#    prepare_bin
-#    build_release
+    check_version
+    prepare_bin
+    build_release
 
     if [[ "${create_gh_release}" == true ]]; then
       create_gh_release
