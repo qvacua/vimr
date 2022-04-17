@@ -60,8 +60,6 @@ public class NvimView: NSView,
   public internal(set) var theme = Theme.default
 
   public var trackpadScrollResistance = 5.0
-  public var trackpadScrollDeltaX = 0.0
-  public var trackpadScrollDeltaY = 0.0
 
   public var usesLiveResize = false
 
@@ -286,6 +284,9 @@ public class NvimView: NSView,
 
   var scrollGuardCounterX = 5
   var scrollGuardCounterY = 5
+
+  var trackpadScrollDeltaX = 0.0
+  var trackpadScrollDeltaY = 0.0
 
   var isCurrentlyPinching = false
   var pinchTargetScale = 1.0
