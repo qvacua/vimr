@@ -209,9 +209,6 @@ class MainWindow: NSObject,
 
     self.addViews(withTopInset: 0)
 
-    self.neoVimView.trackpadScrollResistance = CGFloat(
-      state.trackpadScrollResistance
-    )
     self.neoVimView.usesLiveResize = state.useLiveResize
     self.neoVimView.drawsParallel = self.drawsParallel
     self.neoVimView.delegate = self
@@ -448,14 +445,6 @@ class MainWindow: NSObject,
 
         self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
         self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
-
-        if self.neoVimView.trackpadScrollResistance
-          != state.trackpadScrollResistance
-        {
-          self.neoVimView.trackpadScrollResistance = CGFloat(
-            state.trackpadScrollResistance
-          )
-        }
 
         if self.neoVimView.usesLiveResize != state.useLiveResize {
           self.neoVimView.usesLiveResize = state.useLiveResize

@@ -300,7 +300,6 @@ extension MainWindow {
 
     var fileBrowserShowHidden = false
 
-    var trackpadScrollResistance = 5.0
     var useLiveResize = false
     var drawsParallel = false
 
@@ -346,7 +345,6 @@ extension MainWindow {
       case isLeftOptionMeta = "is-left-option-meta"
       case isRightOptionMeta = "is-right-option-meta"
 
-      case trackpadScrollResistance = "trackpad-scroll-resistance"
       case useInteractiveZsh = "use-interactive-zsh"
       case useLiveResize = "use-live-resize"
       case drawsParallel = "draws-parallel"
@@ -371,11 +369,6 @@ extension MainWindow {
       self.useInteractiveZsh = try container.decode(
         forKey: .useInteractiveZsh,
         default: State.default.useInteractiveZsh
-      )
-      self.trackpadScrollResistance = try container.decode(
-        forKey: .trackpadScrollResistance,
-        default: State.default
-          .trackpadScrollResistance
       )
       self.useLiveResize = try container.decode(
         forKey: .useLiveResize,
@@ -452,7 +445,6 @@ extension MainWindow {
       try container.encode(self.isAllToolsVisible, forKey: .allToolsVisible)
       try container.encode(self.isToolButtonsVisible, forKey: .toolButtonsVisible)
       try container.encode(NSStringFromRect(self.frame), forKey: .frame)
-      try container.encode(self.trackpadScrollResistance, forKey: .trackpadScrollResistance)
       try container.encode(self.useLiveResize, forKey: .useLiveResize)
       try container.encode(self.drawsParallel, forKey: .drawsParallel)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)

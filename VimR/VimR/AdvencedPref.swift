@@ -13,7 +13,6 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   enum Action {
     case setUseInteractiveZsh(Bool)
     case setUseSnapshotUpdate(Bool)
-    case setTrackpadScrollResistance(Double)
     case setUseLiveResize(Bool)
     case setDrawsParallel(Bool)
   }
@@ -31,7 +30,6 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate
-    self.sensitivity = 1 / state.mainWindowTemplate.trackpadScrollResistance
     self.useLiveResize = state.mainWindowTemplate.useLiveResize
     self.drawsParallel = state.mainWindowTemplate.drawsParallel
 
@@ -66,13 +64,11 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useSnapshotUpdate: Bool
   private var useLiveResize: Bool
   private var drawsParallel: Bool
-  private var sensitivity: Double
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
   private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
-  private let sensitivitySlider = NSSlider(forAutoLayout: ())
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
@@ -84,8 +80,6 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
     self.drawsParallelCheckbox.boolState = self.drawsParallel
-
-    // We don't update the value of the NSSlider since we don't know when events are fired.
   }
 
   private func addViews() {
@@ -142,29 +136,12 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     when scrolling very fast.
     """#)
 
-    let sensitivityTitle = self.titleTextField(title: "Scroll Sensitivity:")
-    let sensitivity = self.sensitivitySlider
-    sensitivity.maxValue = 1 / 5.0
-    sensitivity.minValue = 1 / 500
-    sensitivity.target = self
-    sensitivity.action = #selector(sensitivitySliderAction)
-    let sensitivityInfo = self.infoTextField(markdown: #"""
-    Trackpad scroll sensitivity is yet experimental. You may experience some issues.\
-    If you do, please report them at [GitHub issue #572](https://github.com/qvacua/vimr/issues/572).
-    """#)
-
-    // We set the value of the NSSlider only at the beginning.
-    self.sensitivitySlider.doubleValue = self.sensitivity
-
     self.addSubview(paneTitle)
 
     self.addSubview(useSnapshotUpdate)
     self.addSubview(useSnapshotUpdateInfo)
     self.addSubview(useInteractiveZsh)
     self.addSubview(useInteractiveZshInfo)
-    self.addSubview(sensitivityTitle)
-    self.addSubview(self.sensitivitySlider)
-    self.addSubview(sensitivityInfo)
     self.addSubview(useLiveResize)
     self.addSubview(useLiveResizeInfo)
     self.addSubview(drawsParallelBox)
@@ -174,36 +151,26 @@ class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    sensitivityTitle.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
-    sensitivityTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-
-    sensitivity.autoSetDimension(.width, toSize: 150)
-    sensitivity.autoAlignAxis(.baseline, toSameAxisOf: sensitivityTitle)
-    sensitivity.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
-
-    sensitivityInfo.autoPinEdge(.top, to: .bottom, of: self.sensitivitySlider, withOffset: 5)
-    sensitivityInfo.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
-
-    useLiveResize.autoPinEdge(.top, to: .bottom, of: sensitivityInfo, withOffset: 18)
-    useLiveResize.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+    useLiveResize.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    useLiveResize.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
     useLiveResizeInfo.autoPinEdge(.top, to: .bottom, of: useLiveResize, withOffset: 5)
     useLiveResizeInfo.autoPinEdge(.left, to: .left, of: useLiveResize)
 
     drawsParallelBox.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
-    drawsParallelBox.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+    drawsParallelBox.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
 
     drawsParallelInfo.autoPinEdge(.top, to: .bottom, of: drawsParallelBox, withOffset: 5)
     drawsParallelInfo.autoPinEdge(.left, to: .left, of: drawsParallelBox)
 
     useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: drawsParallelInfo, withOffset: 18)
-    useSnapshotUpdate.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+    useSnapshotUpdate.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
 
     useSnapshotUpdateInfo.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdate, withOffset: 5)
     useSnapshotUpdateInfo.autoPinEdge(.left, to: .left, of: useSnapshotUpdate)
 
     useInteractiveZsh.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdateInfo, withOffset: 18)
-    useInteractiveZsh.autoPinEdge(.left, to: .right, of: sensitivityTitle, withOffset: 5)
+    useInteractiveZsh.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
 
     useInteractiveZshInfo.autoPinEdge(.top, to: .bottom, of: useInteractiveZsh, withOffset: 5)
     useInteractiveZshInfo.autoPinEdge(.left, to: .left, of: useInteractiveZsh)
@@ -219,10 +186,6 @@ extension AdvancedPref {
 
   @objc func drawParallelAction(_ sender: NSButton) {
     self.emit(.setDrawsParallel(sender.boolState))
-  }
-
-  @objc func sensitivitySliderAction(_ sender: NSSlider) {
-    self.emit(.setTrackpadScrollResistance(1 / sender.doubleValue))
   }
 
   @objc func useInteractiveZshAction(_ sender: NSButton) {
