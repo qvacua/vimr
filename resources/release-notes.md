@@ -1,3 +1,8 @@
+# Next
+
+* Improved tracpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!
+* ...
+
 # 0.39.0-20220416.182927
 
 * Neovim 0.7.0 😀
