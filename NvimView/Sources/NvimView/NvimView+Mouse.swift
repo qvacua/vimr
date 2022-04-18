@@ -68,11 +68,25 @@ extension NvimView {
       return
     }
 
-    let (absDeltaX, absDeltaY) = (
-      min(Int(ceil(abs(deltaX) / self.trackpadScrollResistance)), maxScrollDeltaX),
-      min(Int(ceil(abs(deltaY) / self.trackpadScrollResistance)), maxScrollDeltaY)
+    if event.phase == .began {
+        self.trackpadScrollDeltaX = 0
+        self.trackpadScrollDeltaY = 0
+    }
+
+    self.trackpadScrollDeltaX += deltaX
+    self.trackpadScrollDeltaY += deltaY
+    let (deltaCellX, deltaCellY) = (
+        (self.trackpadScrollDeltaX / self.cellSize.width).rounded(.toNearestOrEven),
+        (self.trackpadScrollDeltaY / self.cellSize.height).rounded(.toNearestOrEven)
     )
-    let (horizSign, vertSign) = (deltaX > 0 ? 1 : -1, deltaY > 0 ? 1 : -1)
+    self.trackpadScrollDeltaX.formRemainder(dividingBy: self.cellSize.width)
+    self.trackpadScrollDeltaY.formRemainder(dividingBy: self.cellSize.height)
+
+    let (absDeltaX, absDeltaY) = (
+      min(Int(abs(deltaCellX)), maxScrollDeltaX),
+      min(Int(abs(deltaCellY)), maxScrollDeltaY)
+    )
+    let (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? 1 : -1)
     self.bridge
       .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
       .subscribe(onError: { [weak self] error in
