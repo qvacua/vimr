@@ -6,24 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.39.0-20220416.182927</title>
+      <title>SNAPSHOT-20220419.180005</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220416.182927</sparkle:version>
-      <sparkle:shortVersionString>v0.39.0</sparkle:shortVersionString>
+      <sparkle:version>20220419.180005</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20220419.180005</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.7.0 😀</li>
-<li>GH-922: Add an option to set font smoothing.</li>
-<li>GH-928: Bugfix: Files containing some special characters in their names cannot be opened.</li>
+<li>Improved tracpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.39.0-20220416.182927
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20220419.180005
       </releaseNotesLink>
-      <pubDate>2022-04-16T18:43:41.274166</pubDate>
+      <pubDate>2022-04-19T18:07:05.128691</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.39.0-20220416.182927/VimR-v0.39.0.tar.bz2"
-                 sparkle:edSignature="Q5XobuaNiJUk8pFNsCwT+fUX4DnmHcKuWXosQj3imOb0UHY+EdWhyqgK0ERDQ51pSonerMZxJ0C+nolcCdXfBQ==" length="20982344"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20220419.180005/VimR-SNAPSHOT-20220419.180005.tar.bz2"
+                 sparkle:edSignature="MBXpZfvD/qaXWkqpFM8eeeTxXOnEcjiBGzRRJxpj88DepCbES/diPnNECk832A5TS0clt2j/iyzDq7nxFzzCCw==" length="20981009"
                  type="application/octet-stream"/>
     </item>
   </channel>
