@@ -5,10 +5,33 @@
 
 import Cocoa
 import MessagePack
+import PureLayout
 import RxPack
 import RxSwift
+import SpriteKit
 
 public extension NvimView {
+  func toggleFramerateView() {
+    // Framerate measurement; from https://stackoverflow.com/a/34039775
+    if self.framerateView == nil {
+      let sk = SKView(forAutoLayout: ())
+      sk.showsFPS = true
+
+      self.framerateView = sk
+      self.addSubview(sk)
+
+      sk.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
+      sk.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
+      sk.autoSetDimensions(to: CGSize(width: 60, height: 15))
+
+      return
+    }
+
+    self.framerateView?.removeAllConstraints()
+    self.framerateView?.removeFromSuperview()
+    self.framerateView = nil
+  }
+
   func isBlocked() -> Single<Bool> {
     self.api.getMode().map { dict in dict["blocking"]?.boolValue ?? false }
   }
@@ -36,7 +59,7 @@ public extension NvimView {
     self.api
       .getCurrentBuf()
       .flatMap { self.neoVimBuffer(for: $0, currentBuffer: $0) }
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func allBuffers() -> Single<[NvimView.Buffer]> {
@@ -46,14 +69,14 @@ public extension NvimView {
         self.neoVimBuffer(for: buf, currentBuffer: tuple.curBuf)
       } }
       .flatMap(Single.fromSinglesToSingleOfArray)
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func isCurrentBufferDirty() -> Single<Bool> {
     self
       .currentBuffer()
       .map(\.isDirty)
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func allTabs() -> Single<[NvimView.Tabpage]> {
@@ -68,13 +91,13 @@ public extension NvimView {
         }
       }
       .flatMap(Single.fromSinglesToSingleOfArray)
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func newTab() -> Completable {
     self.api
       .command(command: "tabe")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func open(urls: [URL]) -> Completable {
@@ -96,13 +119,13 @@ public extension NvimView {
           }
         )
       }
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func openInNewTab(urls: [URL]) -> Completable {
     Completable
       .concat(urls.map { url in self.open(url, cmd: "tabe") })
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func openInCurrentTab(url: URL) -> Completable {
@@ -112,13 +135,13 @@ public extension NvimView {
   func openInHorizontalSplit(urls: [URL]) -> Completable {
     Completable
       .concat(urls.map { url in self.open(url, cmd: "sp") })
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func openInVerticalSplit(urls: [URL]) -> Completable {
     Completable
       .concat(urls.map { url in self.open(url, cmd: "vsp") })
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func select(buffer: NvimView.Buffer) -> Completable {
@@ -132,7 +155,7 @@ public extension NvimView {
 
         return self.api.command(command: "tab sb \(buffer.handle)")
       }
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func goTo(line: Int) -> Completable {
@@ -143,37 +166,37 @@ public extension NvimView {
   func closeCurrentTab() -> Completable {
     self.api
       .command(command: "q")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func saveCurrentTab() -> Completable {
     self.api
       .command(command: "w")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func saveCurrentTab(url: URL) -> Completable {
     self.api
       .command(command: "w \(url.shellEscapedPath)")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func closeCurrentTabWithoutSaving() -> Completable {
     self.api
       .command(command: "q!")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func quitNeoVimWithoutSaving() -> Completable {
     self.api
       .command(command: "qa!")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func vimOutput(of command: String) -> Single<String> {
     self.api
       .exec(src: command, output: true)
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func cursorGo(to position: Position) -> Completable {
@@ -182,7 +205,7 @@ public extension NvimView {
       .flatMapCompletable { curWin in
         self.api.winSetCursor(window: curWin, pos: [position.row, position.column])
       }
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   func didBecomeMain() -> Completable { self.bridge.focusGained(true) }
@@ -217,13 +240,13 @@ public extension NvimView {
           isListed: listed
         )
       }
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   private func open(_ url: URL, cmd: String) -> Completable {
     self.api
       .command(command: "\(cmd) \(url.shellEscapedPath)")
-      .subscribe(on:self.scheduler)
+      .subscribe(on: self.scheduler)
   }
 
   private func neoVimWindow(

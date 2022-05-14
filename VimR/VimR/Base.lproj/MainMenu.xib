@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="Application" customModule="VimR" customModuleProvider="target">
@@ -278,10 +278,16 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Debug" id="FMz-3N-3Eu">
                         <items>
-                            <menuItem title="Debug 1" id="IFh-6Q-w93">
+                            <menuItem title="Toggle framerate" id="IFh-6Q-w93">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="debug1:" target="-1" id="OSW-j0-HVo"/>
+                                    <action selector="toggleFramerate:" target="-1" id="aiC-vI-URv"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Debug 1" id="xDg-6f-7Ea">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="debug1:" target="-1" id="mc6-WI-31Q"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Debug 2" id="tWe-ll-a9P">
