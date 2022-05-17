@@ -11,6 +11,7 @@ import os
 import RxPack
 import RxSwift
 import Tabs
+import SpriteKit
 
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting
@@ -319,6 +320,8 @@ public class NvimView: NSView,
   var lastImSource: TISInputSource
 
   var lastMode = CursorModeShape.normal
+
+  var framerateView: SKView?
 
   // MARK: - Private
 
