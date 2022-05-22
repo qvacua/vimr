@@ -5,6 +5,6 @@
   },
   "dependencies": {
     "vimrDeps": "vimr-deps-2021-12-12",
-    "nvimServer": "nvimserver-0.7.0-0"
+    "nvimServer": "nvimserver-0.7.0-1"
   }
 }
