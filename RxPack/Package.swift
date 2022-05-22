@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -10,26 +10,16 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.5.0")),
-    .package(
-      name: "MessagePack",
-      url: "https://github.com/a2/MessagePack.swift",
-      .upToNextMinor(from: "4.0.0")
-    ),
-    .package(
-      name: "Socket",
-      url: "https://github.com/IBM-Swift/BlueSocket",
-      .upToNextMinor(from: "2.0.2")
-    ),
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.1")),
+    .package(url: "https://github.com/a2/MessagePack.swift", from: "4.0.0"),
+    .package(url: "https://github.com/IBM-Swift/BlueSocket", from: "2.0.2"),
+    .package(url: "https://github.com/Quick/Nimble", from: "10.0.0"),
   ],
   targets: [
-    .target(
-      name: "RxPack",
-      dependencies: ["RxSwift", "MessagePack", "Socket"]
-    ),
-    .testTarget(
-      name: "RxPackTests",
-      dependencies: ["RxPack", "Nimble"]
-    ),
+    .target(name: "RxPack", dependencies: [
+      "RxSwift",
+      .product(name: "MessagePack", package: "MessagePack.swift"),
+      .product(name: "Socket", package: "BlueSocket"),
+    ]),
+    .testTarget(name: "RxPackTests", dependencies: ["RxPack", "Nimble"]),
   ]
 )

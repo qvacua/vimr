@@ -2,6 +2,8 @@
 
 * Improved trackpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!
 * ...
+* Dependencies updates
+  - Quick/Nimble@10.0.0
 
 # 0.39.0-20220416.182927
 

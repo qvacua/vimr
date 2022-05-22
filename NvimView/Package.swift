@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -9,13 +9,9 @@ let package = Package(
     .library(name: "NvimView", targets: ["NvimView"]),
   ],
   dependencies: [
-    .package(
-      name: "MessagePack",
-      url: "https://github.com/a2/MessagePack.swift",
-      .upToNextMinor(from: "4.0.0")
-    ),
-    .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.5.0")),
-    .package(url: "https://github.com/Quick/Nimble", .upToNextMinor(from: "9.2.1")),
+    .package(url: "https://github.com/a2/MessagePack.swift", from: "4.0.0"),
+    .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.5.0"),
+    .package(url: "https://github.com/Quick/Nimble", from: "10.0.0"),
     .package(name: "NvimServer", path: "../NvimServer"),
     .package(name: "RxPack", path: "../RxPack"),
     .package(name: "Commons", path: "../Commons"),
@@ -29,7 +25,7 @@ let package = Package(
         "RxPack",
         "Tabs",
         .product(name: "NvimServerTypes", package: "NvimServer"),
-        "MessagePack",
+        .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",
       ],
       // com.qvacua.NvimView.vim is copied by the download NvimServer script.
@@ -39,9 +35,6 @@ let package = Package(
         .copy("Resources/NvimServer"),
       ]
     ),
-    .testTarget(
-      name: "NvimViewTests",
-      dependencies: ["NvimView", "Nimble"]
-    ),
+    .testTarget(name: "NvimViewTests", dependencies: ["NvimView", "Nimble"]),
   ]
 )
