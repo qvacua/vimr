@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="FileItem" representedClassName="FileItem" syncable="YES" codeGenerationType="class">
         <attribute name="direntType" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="isHidden" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isPackage" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="needsScanChildren" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="pathStart" attributeType="String"/>
         <attribute name="url" attributeType="URI"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FileItem" inverseName="parent" inverseEntity="FileItem"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FileItem" inverseName="children" inverseEntity="FileItem"/>
@@ -19,6 +18,6 @@
         </fetchIndex>
     </entity>
     <elements>
-        <element name="FileItem" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="FileItem" positionX="-63" positionY="-18" width="128" height="134"/>
     </elements>
 </model>

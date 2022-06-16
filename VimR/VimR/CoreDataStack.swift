@@ -62,7 +62,7 @@ class CoreDataStack {
       guard fileManager.fileExists(atPath: path) else { throw Error.pathDoesNotExit }
 
       let parentFolder = URL(fileURLWithPath: path)
-      guard parentFolder.isDir else { throw Error.pathNotFolder }
+      guard parentFolder.hasDirectoryPath else { throw Error.pathNotFolder }
 
       url = parentFolder.appendingPathComponent(modelName)
     }

@@ -386,7 +386,7 @@ extension FileOutlineView {
   @IBAction func setAsWorkingDirectory(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
 
-    guard node.url.isDir else { return }
+    guard node.url.hasDirectoryPath else { return }
 
     self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(node.url)))
   }
@@ -461,7 +461,7 @@ extension FileOutlineView {
   override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     guard let clickedNode = self.node(from: self.clickedItem) else { return true }
 
-    if item.action == #selector(self.setAsWorkingDirectory(_:)) { return clickedNode.url.isDir }
+    if item.action == #selector(self.setAsWorkingDirectory(_:)) { return clickedNode.url.hasDirectoryPath }
 
     return true
   }
@@ -483,7 +483,7 @@ extension FileOutlineView {
 
     switch char {
     case " ", "\r": // Why "\r" and not "\n"?
-      if node.url.isDir || node.url.isPackage {
+      if node.url.hasDirectoryPath || node.url.isPackage {
         self.toggle(item: node)
       } else {
         self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab)))
@@ -515,7 +515,7 @@ class Node: NSObject, Comparable {
 
   init(url: URL) {
     self.url = url
-    self.isLeaf = !url.isDir
+    self.isLeaf = !url.hasDirectoryPath
     self.isHidden = url.isHidden
   }
 }

@@ -125,34 +125,13 @@ public extension URL {
 
   var shellEscapedPath: String { self.path.shellEscapedPath }
 
-  var isDir: Bool { self.resourceValue(URLResourceKey.isDirectoryKey.rawValue) }
-
-  var isHidden: Bool { self.resourceValue(URLResourceKey.isHiddenKey.rawValue) }
-
-  var isPackage: Bool { self.resourceValue(URLResourceKey.isPackageKey.rawValue) }
-
-  /// Wrapper function for NSURL.getResourceValue for Bool values.
-  /// Returns also `false` when
-  /// - there is no value for the given `key` or
-  /// - the value cannot be converted to `NSNumber`.
-  ///
-  /// - parameters:
-  ///   - key: The `key`-parameter of `NSURL.getResourceValue`.
-  private func resourceValue(_ key: String) -> Bool {
-    var rsrc: AnyObject?
-
-    do {
-      try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey(rawValue: key))
-    } catch let error as NSError {
-      // FIXME: How to error handle?
-      log.error("ERROR while getting \(key): \(error)")
-      return false
-    }
-
-    if let result = rsrc as? NSNumber { return result.boolValue }
-
-    return false
+  var isRegularFile: Bool {
+    (try? self.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile ?? false
   }
+
+  var isHidden: Bool { (try? self.resourceValues(forKeys: [.isHiddenKey]))?.isHidden ?? false }
+
+  var isPackage: Bool { (try? self.resourceValues(forKeys: [.isPackageKey]))?.isPackage ?? false }
 }
 
 public extension ValueTransformer {

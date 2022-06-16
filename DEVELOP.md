@@ -53,14 +53,6 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 ### VimR
 
-#### Dependencies
-
-* Tag with the name `vimr-deps-yyyy-mm-dd`. GitHub actions will build the universal version,
-  create a release and upload it.
-* Update `resources/vimr-deps_version.txt` and push.
-
-#### Executable
-
 * Set a new version of VimR via
     ```bash
     is_snapshot=true ./bin/set_new_versions.sh # for snapshot or

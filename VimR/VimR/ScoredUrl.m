@@ -31,8 +31,8 @@
 }
 
 - (NSUInteger)hash {
-  NSUInteger hash = [self.url hash];
-  hash = hash * 31u + self.score;
+  NSUInteger hash = self.url.hash;
+  hash = hash * 31u + @(self.score).hash;
   return hash;
 }
 
@@ -40,12 +40,12 @@
   NSMutableString *description
       = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
   [description appendFormat:@"self.url=%@", self.url.path];
-  [description appendFormat:@", self.score=%li", self.score];
+  [description appendFormat:@", self.score=%f", self.score];
   [description appendString:@">"];
   return description;
 }
 
-- (instancetype)initWithUrl:(NSURL *)url score:(NSInteger)score {
+- (instancetype)initWithUrl:(NSURL *)url score:(double)score {
   self = [super init];
   if (!self) { return nil; }
 
@@ -53,10 +53,6 @@
   _score = score;
 
   return self;
-}
-
-+ (instancetype)urlWithUrl:(NSURL *)url score:(NSInteger)score {
-  return [[self alloc] initWithUrl:url score:score];
 }
 
 @end

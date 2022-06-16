@@ -10,10 +10,10 @@ private let iconsCache = NSCache<NSURL, NSImage>()
 
 public final class FileUtils {
   private static let keysToGet: [URLResourceKey] = [
+    .isRegularFileKey,
     .isDirectoryKey,
+    .isPackageKey,
     .isHiddenKey,
-    .isAliasFileKey,
-    .isSymbolicLinkKey,
   ]
 
   private static let scanOptions: FileManager.DirectoryEnumerationOptions = [
@@ -56,7 +56,7 @@ public final class FileUtils {
     let result = pathCompsOnlyMin[0]
     let possibleParent = NSURL.fileURL(withPathComponents: Array(result[0...commonIdx]))!
 
-    return possibleParent.isDir ? possibleParent : possibleParent.parent
+    return possibleParent.hasDirectoryPath ? possibleParent : possibleParent.parent
   }
 
   public static func icon(forType type: String) -> NSImage { workspace.icon(forFileType: type) }

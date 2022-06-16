@@ -73,6 +73,15 @@
       }
     },
     {
+      "identity" : "misc.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/qvacua/misc.swift",
+      "state" : {
+        "revision" : "e963af99e5eddc14b0f28c5c87a1f582c88bf128",
+        "version" : "0.0.1"
+      }
+    },
+    {
       "identity" : "nimble",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
@@ -124,6 +133,15 @@
       "state" : {
         "revision" : "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
         "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
+        "version" : "1.0.2"
       }
     },
     {

@@ -56,7 +56,7 @@ check_gh_release_present() {
 
 build_release() {
   echo "### Building release"
-  code_sign=true use_carthage_cache=false download_deps=true ./bin/build_vimr.sh
+  code_sign=true use_carthage_cache=false ./bin/build_vimr.sh
 
   vimr_app_path="${build_folder_path}/VimR.app" ./bin/notarize_vimr.sh
 

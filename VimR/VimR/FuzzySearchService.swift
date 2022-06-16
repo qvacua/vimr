@@ -6,7 +6,9 @@
 import Commons
 import CoreData
 import Foundation
+import Ignore
 import os
+import Misc
 
 class FuzzySearchService {
   typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void
@@ -64,13 +66,13 @@ class FuzzySearchService {
         self.stop = false
         self.stopLock.unlock()
 
-        let matcherPool = FuzzyMatcherPool(pattern: pattern, initialPoolSize: 2)
+        let matcher = FzyMatcher(needle: pattern)
 
-        self.scanScoreSavedFiles(matcherPool: matcherPool, context: ctx, callback: callback)
+        self.scanScoreSavedFiles(matcher: matcher, context: ctx, callback: callback)
 
         if self.shouldStop() { return }
 
-        self.scanScoreFilesNeedScanning(matcherPool: matcherPool, context: ctx, callback: callback)
+        self.scanScoreFilesNeedScanning(matcher: matcher, context: ctx, callback: callback)
       }
 
       self.log.info("Finished fuzzy search for \(pattern) in \(self.root)")
@@ -78,7 +80,7 @@ class FuzzySearchService {
   }
 
   private func scanScoreSavedFiles(
-    matcherPool: FuzzyMatcherPool,
+    matcher: FzyMatcher,
     context: NSManagedObjectContext,
     callback: ScoredUrlsCallback
   ) {
@@ -91,7 +93,7 @@ class FuzzySearchService {
       self.log.error("Could not get count of Files")
       return
     }
-    self.log.info("Scoring \(count) Files for pattern \(matcherPool.pattern)")
+    self.log.info("Scoring \(count) Files for pattern \(matcher.needle)")
 
     let urlSorter = NSSortDescriptor(key: "url", ascending: true)
     let fetchReq = FileItem.fetchRequest()
@@ -107,7 +109,7 @@ class FuzzySearchService {
       fetchReq.fetchOffset = start
       do {
         self.scoreFiles(
-          matcherPool: matcherPool,
+          matcher: matcher,
           files: try context.fetch(fetchReq),
           callback: callback
         )
@@ -120,7 +122,7 @@ class FuzzySearchService {
   }
 
   private func scanScoreFilesNeedScanning(
-    matcherPool: FuzzyMatcherPool,
+    matcher: FzyMatcher,
     context: NSManagedObjectContext,
     callback: ([ScoredUrl]) -> Void
   ) {
@@ -131,7 +133,7 @@ class FuzzySearchService {
       // foldersToScan after first folderToScan.
       foldersToScan.forEach { folder in
         self.scanScore(
-          matcherPool: matcherPool,
+          matcher: matcher,
           folderId: folder.objectID,
           context: context,
           callback: callback
@@ -143,7 +145,7 @@ class FuzzySearchService {
   }
 
   private func scanScore(
-    matcherPool: FuzzyMatcherPool,
+    matcher: FzyMatcher,
     folderId: NSManagedObjectID,
     context: NSManagedObjectContext,
     callback: ([ScoredUrl]) -> Void
@@ -156,9 +158,8 @@ class FuzzySearchService {
       return
     }
 
-    let (initialBaton, initialBatons) = self.baton(for: folder.url!)
+    let initialBaton = self.ignoreService.ignoreCollection(forUrl: folder.url!)
     let testIgnores = self.usesVcsIgnores
-    var batons = initialBatons
     var stack = [(initialBaton, folder)]
     while let iterElement = stack.popLast() {
       if self.shouldStop({ self.saveAndReset(context: context) }) { return }
@@ -172,16 +173,16 @@ class FuzzySearchService {
         let childUrls = FileUtils
           .directDescendants(of: urlToScan)
           .filter {
-            let keep = testIgnores ? baton.test($0) : true
-            if !keep { self.log.debug("Ignoring \($0.path)") }
-            return keep
+            guard testIgnores, let ignore = baton else { return true }
+
+            let isExcluded = ignore.excludes($0)
+            if isExcluded { self.log.debug("Ignoring \($0.path)") }
+            return !isExcluded
           }
 
         let childFiles = childUrls
           .filter { !$0.isPackage }
-          .map { url -> FileItem in
-            self.file(fromUrl: url, pathStart: baton.pathStart, in: context)
-          }
+          .map { url -> FileItem in self.file(fromUrl: url, in: context) }
         saveCounter += childFiles.count
         counter += childFiles.count
 
@@ -189,9 +190,8 @@ class FuzzySearchService {
         folder.needsScanChildren = false
 
         let childFolders = childFiles.filter { $0.direntType == DT_DIR }
-        let childBatons = childFolders.map { FileScanBaton(parent: baton, url: $0.url!) }
+        let childBatons = childFolders.map { self.ignoreService.ignoreCollection(forUrl: $0.url!) }
 
-        batons.append(contentsOf: childBatons)
         stack.append(contentsOf: zip(childBatons, childFolders))
 
         if saveCounter > coreDataBatchSize {
@@ -199,7 +199,7 @@ class FuzzySearchService {
             "Flushing and scoring \(saveCounter) Files, stack has \(stack.count) Files"
           )
           self.scoreAllRegisteredFiles(
-            matcherPool: matcherPool,
+            matcher: matcher,
             context: context,
             callback: callback
           )
@@ -220,7 +220,7 @@ class FuzzySearchService {
     }
 
     self.log.debug("Flushing and scoring last \(saveCounter) Files")
-    self.scoreAllRegisteredFiles(matcherPool: matcherPool, context: context, callback: callback)
+    self.scoreAllRegisteredFiles(matcher: matcher, context: context, callback: callback)
     self.saveAndReset(context: context)
 
     self.log.debug("Stored \(counter) Files")
@@ -248,7 +248,7 @@ class FuzzySearchService {
   }
 
   private func scoreAllRegisteredFiles(
-    matcherPool: FuzzyMatcherPool,
+    matcher: FzyMatcher,
     context: NSManagedObjectContext,
     callback: ([ScoredUrl]) -> Void
   ) {
@@ -257,32 +257,33 @@ class FuzzySearchService {
       .filter { $0.direntType != DT_DIR }
 
     self.log.debug("Scoring \(files.count) Files")
-    self.scoreFiles(matcherPool: matcherPool, files: files, callback: callback)
+    self.scoreFiles(matcher: matcher, files: files, callback: callback)
   }
 
   private func scoreFiles(
-    matcherPool: FuzzyMatcherPool,
+    matcher: FzyMatcher,
     files: [FileItem],
     callback: ScoredUrlsCallback
   ) {
-    let matchFullPath = matcherPool.pattern.contains("/")
+    let matchFullPath = matcher.needle.contains("/")
     let count = files.count
 
     let chunkCount = Int(ceil(Double(count) / Double(fuzzyMatchChunkSize)))
     DispatchQueue.concurrentPerform(iterations: chunkCount) { chunkIndex in
-      let matcher = matcherPool.request()
-      defer { matcherPool.giveBack(matcher) }
-
       let start = Swift.min(chunkIndex * fuzzyMatchChunkSize, count)
       let end = Swift.min(start + fuzzyMatchChunkSize, count)
 
       if self.shouldStop() { return }
 
-      let scoreThreshold = FuzzyMatcher.minScore() + 1
+      let scoreThreshold = 1.0
       callback(files[start..<end].compactMap { file in
         let url = file.url!
-        let score = matcher.score(matchFullPath ? url.path : url.lastPathComponent)
-        if score <= scoreThreshold { return nil }
+        let haystack = matchFullPath ? url.path : url.lastPathComponent
+
+        guard matcher.hasMatch(haystack) else { return nil }
+
+        let score = matcher.score(haystack)
+        if score < scoreThreshold { return nil }
 
         return ScoredUrl(url: url, score: score)
       })
@@ -298,6 +299,8 @@ class FuzzySearchService {
     self.root = root
     self.writeContext = self.coreDataStack.newBackgroundContext()
 
+    self.ignoreService = IgnoreService(count: 500, root: root)
+
     self.queue.sync { self.ensureRootFileInStore() }
     try self.fileMonitor.monitor(url: root) { [weak self] url in self?.handleChange(in: url) }
   }
@@ -310,7 +313,7 @@ class FuzzySearchService {
         do {
           let files = try ctx.fetch(req)
           guard files.isEmpty else { return }
-          _ = self.file(fromUrl: self.root, pathStart: ".", in: ctx)
+          _ = self.file(fromUrl: self.root, in: ctx)
           try ctx.save()
         } catch {
           self.log.error("Could not ensure root File in Core Data: \(error)")
@@ -374,45 +377,13 @@ class FuzzySearchService {
     }
   }
 
-  private func baton(for url: URL) -> (FileScanBaton, [FileScanBaton]) {
-    assert(self.root.isAncestor(of: url) || url == self.root)
-
-    if url == self.root {
-      let rootBaton = FileScanBaton(baseUrl: self.root)
-      return (rootBaton, [rootBaton])
-    }
-
-    let rootBaton = FileScanBaton(baseUrl: self.root)
-    var batons = [rootBaton]
-
-    var pathComps = url.pathComponents.suffix(from: self.root.pathComponents.count)
-
-    var lastBaton = rootBaton
-    var lastUrl = self.root
-    while let pathComp = pathComps.popFirst() {
-      let childUrl = lastUrl.appendingPathComponent(pathComp)
-      let childBaton = FileScanBaton(parent: lastBaton, url: childUrl)
-      batons.append(childBaton)
-
-      lastBaton = childBaton
-      lastUrl = childUrl
-    }
-
-    return (lastBaton, batons)
-  }
-
-  private func file(
-    fromUrl url: URL,
-    pathStart: String,
-    in context: NSManagedObjectContext
-  ) -> FileItem {
+  private func file(fromUrl url: URL, in context: NSManagedObjectContext) -> FileItem {
     let file = FileItem(context: context)
     file.url = url
-    file.direntType = Int16(url.direntType)
+    file.direntType = url.direntType
     file.isHidden = url.isHidden
     file.isPackage = url.isPackage
-    file.pathStart = pathStart
-    if url.isDir { file.needsScanChildren = true }
+    if url.hasDirectoryPath { file.needsScanChildren = true }
 
     return file
   }
@@ -446,6 +417,7 @@ class FuzzySearchService {
 
   private let fileMonitor = FileMonitor()
   private let writeContext: NSManagedObjectContext
+  private let ignoreService: IgnoreService
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }

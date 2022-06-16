@@ -158,9 +158,7 @@ class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       self.infoTextField(markdown: #"""
       When checked, the ignore files of VCSs, e.g. `gitignore`, will we used to ignore files.\
       This checkbox will set the initial value for each VimR window.\
-      You can change this setting for each VimR window in the Open Quickly window.\
-      The behavior should be almost identical to that of
-      [The Silver Searcher](https://github.com/ggreer/the_silver_searcher).
+      You can change this setting for each VimR window in the Open Quickly window.
       """#)
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")

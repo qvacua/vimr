@@ -53,7 +53,7 @@ git submodule update
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle
 
-code_sign=false use_carthage_cache=false download_deps=true ./bin/build_vimr.sh
+code_sign=false use_carthage_cache=false ./bin/build_vimr.sh
 # VimR.app will be placed in ./build/Build/Products/Release/
 ```
 
