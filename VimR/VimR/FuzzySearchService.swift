@@ -32,8 +32,6 @@ class FuzzySearchService {
     }
   }
 
-  let coreDataStack: CoreDataStack
-
   func cleanUp() {
     do {
       try self.coreDataStack.deleteStore()
@@ -416,6 +414,8 @@ class FuzzySearchService {
   )
 
   private let fileMonitor = FileMonitor()
+
+  private let coreDataStack: CoreDataStack
   private let writeContext: NSManagedObjectContext
   private let ignoreService: IgnoreService
 
