@@ -24,7 +24,6 @@
 		1929B3A6C332FFAAEC7FD219 /* MainWindow+CustomTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */; };
 		1929B3AC66EFE35D68C020E3 /* MarkdownToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BFB0F294F3714D5E095F /* MarkdownToolReducer.swift */; };
 		1929B4219A68586E2CED6E96 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B333D8752E2E68F35122 /* FileMonitor.swift */; };
-		1929B443B7AB2176A7818CA1 /* fuzzy_match.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */; };
 		1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE5AEA3D0980860EED50 /* HtmlPreviewToolReducer.swift */; };
 		1929B4B70926DE113E6BF990 /* MarkdownPreviewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE37AA2843779CAFA76F /* MarkdownPreviewReducer.swift */; };
 		1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B67A10E6BB2986B2416E /* BufferListReducer.swift */; };
@@ -43,6 +42,7 @@
 		1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */; };
 		1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */; };
 		1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BDC8F5D48578A90236E9 /* FileBrowserReducer.swift */; };
+		1929B7D1665BBB75DC89E391 /* IgnoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71F6A82A34F16BB52BE /* IgnoreService.swift */; };
 		1929B805633C40EC1642121C /* RxCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B7609C0C23AC29BDC09B /* RxCommons.swift */; };
 		1929B8DDACEB28E6672AEC42 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */; };
 		1929B8F498D1E7C53F572CE2 /* KeysPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B14A5949FB64C4B2646F /* KeysPref.swift */; };
@@ -70,7 +70,6 @@
 		1929BEDE1BE950EDA9497363 /* GeneralPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB55946DAEBF55D24048 /* GeneralPref.swift */; };
 		1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BB2AD21A10A0ECA66A5E /* ToolsPref.swift */; };
 		1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */; };
-		1929BF5D0EFCC56A733BB4B7 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */; };
 		1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */; };
 		4B029F1A1D45E349004EE0D3 /* PrefWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B029F1C1D45E349004EE0D3 /* PrefWindow.xib */; };
 		4B0B36202595236000B06899 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
@@ -155,17 +154,17 @@
 		4B94341620B95EC7005807BA /* MacVim-css.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B9433DB20B95EC6005807BA /* MacVim-css.icns */; };
 		4B97E2CC1D33F53D00FC0660 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B97E2CE1D33F53D00FC0660 /* MainWindow.xib */; };
 		4B9D049D273481AD007E8614 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9D049C273481AD007E8614 /* Down */; };
+		4BA19812285B4BA600B49309 /* Misc in Frameworks */ = {isa = PBXBuildFile; productRef = 4BA19811285B4BA600B49309 /* Misc */; };
+		4BA19817285B599400B49309 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */; };
+		4BADD55B283A847100C6B16D /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55A283A847100C6B16D /* Ignore */; };
+		4BADD55E283ABD0200C6B16D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55D283ABD0200C6B16D /* OrderedCollections */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEBA5081CFF374B00673FDF /* AppDelegate.swift */; };
 		4BEBA50B1CFF374B00673FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50A1CFF374B00673FDF /* Assets.xcassets */; };
 		4BEBA50E1CFF374B00673FDF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BEBA50C1CFF374B00673FDF /* MainMenu.xib */; };
 		4BF07EE41D51326A009BECEB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF07EE61D51326A009BECEB /* Credits.rtf */; };
-		4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */; };
-		4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */; };
-		4BF70ED223D1B4AF009E51E9 /* FoundationCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */; };
 		4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */; };
-		4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */; };
 		4BF70EE523D1B5EC009E51E9 /* FuzzySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */; };
 		4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
@@ -196,17 +195,13 @@
 		1929B067B3247675BCD09218 /* MainWindow+Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Actions.swift"; sourceTree = "<group>"; };
 		1929B07A4A9209C88380E015 /* PrefPane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefPane.swift; sourceTree = "<group>"; };
 		1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsTableSubviews.swift; sourceTree = "<group>"; };
-		1929B0E63986F95E2F8DFF21 /* FileItem+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FileItem+CoreDataClass.h"; sourceTree = "<group>"; };
 		1929B0E9B2F018D3E31D4B0B /* ShortcutsPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortcutsPref.swift; sourceTree = "<group>"; };
 		1929B0EB3F49C42A57D083AF /* GeneralPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPrefReducer.swift; sourceTree = "<group>"; };
 		1929B0FBFB766042CF06E463 /* AppearancePref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearancePref.swift; sourceTree = "<group>"; };
 		1929B12CE56A9B36980288A4 /* OpenQuicklyReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyReducer.swift; sourceTree = "<group>"; };
 		1929B14A5949FB64C4B2646F /* KeysPref.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPref.swift; sourceTree = "<group>"; };
-		1929B1534B8857C519D7C0FB /* FileItem+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FileItem+CoreDataProperties.h"; sourceTree = "<group>"; };
 		1929B1558455B3A74D93EF2A /* OpenQuicklyFileViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyFileViewRow.swift; sourceTree = "<group>"; };
-		1929B17B1BC7CA08DC76495C /* FileItem+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FileItem+CoreDataProperties.m"; sourceTree = "<group>"; };
 		1929B18E9BE35750BF2BA571 /* HtmlPreviewMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewMiddleware.swift; sourceTree = "<group>"; };
-		1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fuzzy_match.cc; path = FuzzyMatcher/fuzzy_match.cc; sourceTree = "<group>"; };
 		1929B1DC584C89C477E83FA2 /* HttpServerMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerMiddleware.swift; sourceTree = "<group>"; };
 		1929B230EE8F1428980988F0 /* RpcAppearanceEpic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RpcAppearanceEpic.swift; sourceTree = "<group>"; };
 		1929B333D8752E2E68F35122 /* FileMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
@@ -218,7 +213,6 @@
 		1929B617C229B19DB3E987B8 /* MarkdownPreviewMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownPreviewMiddleware.swift; sourceTree = "<group>"; };
 		1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FuzzySearch.xcdatamodel; sourceTree = "<group>"; };
 		1929B66A5E2D00EA143AFD86 /* RxRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxRedux.swift; sourceTree = "<group>"; };
-		1929B672CE187B4D3EA1D3EE /* fuzzy_match.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fuzzy_match.hh; path = FuzzyMatcher/fuzzy_match.hh; sourceTree = "<group>"; };
 		1929B67A10E6BB2986B2416E /* BufferListReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferListReducer.swift; sourceTree = "<group>"; };
 		1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsPrefReducer.swift; sourceTree = "<group>"; };
 		1929B6AD3396160AA2C46919 /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
@@ -229,6 +223,7 @@
 		1929B714EB137AE448CE8ABD /* MainWindow+Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+Delegates.swift"; sourceTree = "<group>"; };
 		1929B71A92C24FEFE79A851E /* OpenQuicklyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenQuicklyWindow.swift; sourceTree = "<group>"; };
 		1929B71B4BB6550F5BC6D4CF /* MainWindow+CustomTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainWindow+CustomTitle.swift"; sourceTree = "<group>"; };
+		1929B71F6A82A34F16BB52BE /* IgnoreService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IgnoreService.swift; sourceTree = "<group>"; };
 		1929B7609C0C23AC29BDC09B /* RxCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCommons.swift; sourceTree = "<group>"; };
 		1929B7A68B7109CEFAF105E8 /* AppDelegateReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateReducer.swift; sourceTree = "<group>"; };
 		1929B7F7A4B3FD52263D211D /* Defs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defs.swift; sourceTree = "<group>"; };
@@ -236,7 +231,6 @@
 		1929B85023B042C485409CE1 /* HtmlPreviewTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HtmlPreviewTool.swift; sourceTree = "<group>"; };
 		1929B88B5FA08E897A3C2168 /* KeysPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysPrefReducer.swift; sourceTree = "<group>"; };
 		1929B93256AF7F9137223E36 /* DefaultShortcuts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultShortcuts.swift; sourceTree = "<group>"; };
-		1929B98192F6873508F8D76A /* FileItem+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FileItem+CoreDataClass.m"; sourceTree = "<group>"; };
 		1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationCommons.swift; sourceTree = "<group>"; };
 		1929BA05F1FE30CA74F006C4 /* CssUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CssUtils.swift; sourceTree = "<group>"; };
 		1929BA43449BA41666CD55ED /* BufferList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferList.swift; sourceTree = "<group>"; };
@@ -342,16 +336,8 @@
 		4BEBA5141CFF374B00673FDF /* VimRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VimRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BEBA51A1CFF374B00673FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BF07EE51D51326A009BECEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
-		4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Carthage/Build/Mac/Sparkle.framework; sourceTree = "<group>"; };
-		4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FuzzyMatcher.mm; path = FuzzyMatcher/FuzzyMatcher.mm; sourceTree = "<group>"; };
-		4BF70EC123D1B3F9009E51E9 /* FuzzyMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FuzzyMatcher.h; path = FuzzyMatcher/FuzzyMatcher.h; sourceTree = "<group>"; };
-		4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FuzzyMatcherPool.swift; path = FuzzyMatcher/FuzzyMatcherPool.swift; sourceTree = "<group>"; };
-		4BF70ED023D1B4AF009E51E9 /* FoundationCommons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationCommons.h; sourceTree = "<group>"; };
-		4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoundationCommons.m; sourceTree = "<group>"; };
 		4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoredUrl.h; sourceTree = "<group>"; };
 		4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScoredUrl.m; sourceTree = "<group>"; };
-		4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileScanBaton.m; sourceTree = "<group>"; };
-		4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileScanBaton.h; sourceTree = "<group>"; };
 		4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuzzySearchService.swift; sourceTree = "<group>"; };
 		4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -361,9 +347,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BA19812285B4BA600B49309 /* Misc in Frameworks */,
 				4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */,
 				4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */,
 				4B9D049D273481AD007E8614 /* Down in Frameworks */,
+				4BADD55E283ABD0200C6B16D /* OrderedCollections in Frameworks */,
 				4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */,
 				4B0B36212595236000B06899 /* PureLayout in Frameworks */,
 				4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */,
@@ -371,6 +359,7 @@
 				4B0B362C2595236000B06899 /* Commons in Frameworks */,
 				4B0B36202595236000B06899 /* Swifter in Frameworks */,
 				4B0B362F2595236000B06899 /* Sparkle in Frameworks */,
+				4BADD55B283A847100C6B16D /* Ignore in Frameworks */,
 				4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */,
 				4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */,
 				4B6C6AE7267C71ED00F77527 /* RxSwift in Frameworks */,
@@ -453,18 +442,6 @@
 			name = Commons;
 			sourceTree = "<group>";
 		};
-		1929BA1E1547FE22A342BFD4 /* Core Data */ = {
-			isa = PBXGroup;
-			children = (
-				1929B17B1BC7CA08DC76495C /* FileItem+CoreDataProperties.m */,
-				1929B1534B8857C519D7C0FB /* FileItem+CoreDataProperties.h */,
-				1929B98192F6873508F8D76A /* FileItem+CoreDataClass.m */,
-				1929B0E63986F95E2F8DFF21 /* FileItem+CoreDataClass.h */,
-				1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */,
-			);
-			name = "Core Data";
-			sourceTree = "<group>";
-		};
 		1929BA652D3B88FC071531EC /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -478,15 +455,6 @@
 				1929BD2195B8D7B87B2069C4 /* ShortcutService.swift */,
 			);
 			name = UI;
-			sourceTree = "<group>";
-		};
-		1929BAD7FC1CCB6E95D6C098 /* ccls */ = {
-			isa = PBXGroup;
-			children = (
-				1929B1B01340283D6AAD6B06 /* fuzzy_match.cc */,
-				1929B672CE187B4D3EA1D3EE /* fuzzy_match.hh */,
-			);
-			name = ccls;
 			sourceTree = "<group>";
 		};
 		1929BB4CF1C1FFEE6CCDD6FD /* Preferences */ = {
@@ -556,14 +524,6 @@
 				1929B18E9BE35750BF2BA571 /* HtmlPreviewMiddleware.swift */,
 			);
 			name = Middlewares;
-			sourceTree = "<group>";
-		};
-		4B5012001EBA791000F76C46 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4BF18C371FD2E2AB00DF95D1 /* Sparkle.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		4B8C64D023F024D9008733D8 /* Build configurations */ = {
@@ -661,11 +621,16 @@
 			name = resources;
 			sourceTree = "<group>";
 		};
+		4BADD559283A847100C6B16D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4BDF50101D760AB700D8FBC3 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
-				4BF70ED023D1B4AF009E51E9 /* FoundationCommons.h */,
-				4BF70ED123D1B4AF009E51E9 /* FoundationCommons.m */,
 				4B6A70931D60E04200E12030 /* AppKitCommons.swift */,
 				1929B9AF20D7BD6E5C975128 /* FoundationCommons.swift */,
 				1929B7609C0C23AC29BDC09B /* RxCommons.swift */,
@@ -679,8 +644,8 @@
 				4B8C64D023F024D9008733D8 /* Build configurations */,
 				4BEBA5071CFF374B00673FDF /* VimR */,
 				4BEBA5171CFF374B00673FDF /* VimRTests */,
-				4B5012001EBA791000F76C46 /* Frameworks */,
 				4BEBA5061CFF374B00673FDF /* Products */,
+				4BADD559283A847100C6B16D /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -725,17 +690,12 @@
 		4BF70ECB23D1B40A009E51E9 /* Fuzzy Search */ = {
 			isa = PBXGroup;
 			children = (
+				1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */,
 				4BF70EE923D1B5FF009E51E9 /* CoreDataStack.swift */,
 				4BF70EE323D1B5EC009E51E9 /* FuzzySearchService.swift */,
 				4BF70ED423D1B54F009E51E9 /* ScoredUrl.h */,
 				4BF70ED523D1B54F009E51E9 /* ScoredUrl.m */,
-				4BF70EC123D1B3F9009E51E9 /* FuzzyMatcher.h */,
-				4BF70EBF23D1B3F9009E51E9 /* FuzzyMatcher.mm */,
-				4BF70EC323D1B3F9009E51E9 /* FuzzyMatcherPool.swift */,
-				4BF70EE023D1B5B3009E51E9 /* FileScanBaton.h */,
-				4BF70EDF23D1B5B3009E51E9 /* FileScanBaton.m */,
-				1929BAD7FC1CCB6E95D6C098 /* ccls */,
-				1929BA1E1547FE22A342BFD4 /* Core Data */,
+				1929B71F6A82A34F16BB52BE /* IgnoreService.swift */,
 			);
 			name = "Fuzzy Search";
 			sourceTree = "<group>";
@@ -785,6 +745,9 @@
 				4B6C6AE4267C71ED00F77527 /* RxRelay */,
 				4B6C6AE6267C71ED00F77527 /* RxSwift */,
 				4B9D049C273481AD007E8614 /* Down */,
+				4BADD55A283A847100C6B16D /* Ignore */,
+				4BADD55D283ABD0200C6B16D /* OrderedCollections */,
+				4BA19811285B4BA600B49309 /* Misc */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -820,7 +783,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4BEBA5041CFF374B00673FDF = {
@@ -856,6 +819,8 @@
 				4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */,
 				4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */,
+				4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */,
+				4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -975,6 +940,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BA19817285B599400B49309 /* FuzzySearch.xcdatamodel in Sources */,
 				4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */,
 				4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */,
 				4BEBA5091CFF374B00673FDF /* AppDelegate.swift in Sources */,
@@ -986,7 +952,6 @@
 				1929B29B95AD176D57942E08 /* UiRootReducer.swift in Sources */,
 				1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */,
 				4BF70ED623D1B54F009E51E9 /* ScoredUrl.m in Sources */,
-				4BF70EC823D1B3F9009E51E9 /* FuzzyMatcherPool.swift in Sources */,
 				1929B8FB248D71BF88A35761 /* MarkdownTool.swift in Sources */,
 				1929B4B70926DE113E6BF990 /* MarkdownPreviewReducer.swift in Sources */,
 				1929B5C1BABBC0D09D97C3EF /* MarkdownPreviewMiddleware.swift in Sources */,
@@ -994,7 +959,6 @@
 				1929B3AC66EFE35D68C020E3 /* MarkdownToolReducer.swift in Sources */,
 				1929B59FA5C286E010F70BEE /* Types.swift in Sources */,
 				1929B6D8F5FC723B7109031F /* OpenQuicklyReducer.swift in Sources */,
-				4BF70EE123D1B5B3009E51E9 /* FileScanBaton.m in Sources */,
 				1929B71381946860626E5224 /* FileBrowserReducer.swift in Sources */,
 				1929BA715337FE26155B2071 /* BufferList.swift in Sources */,
 				1929B4E54E2F13A7F5F2B682 /* BufferListReducer.swift in Sources */,
@@ -1015,12 +979,10 @@
 				1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
-				4BF70ED223D1B4AF009E51E9 /* FoundationCommons.m in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
 				1929BF03FD6465F289AA80B2 /* ToolsPref.swift in Sources */,
 				1929B6C0393DE40E34F4A49A /* ToolsPrefReducer.swift in Sources */,
 				1929B542A071BD03C846F6EF /* PrefUtils.swift in Sources */,
-				4BF70EC423D1B3F9009E51E9 /* FuzzyMatcher.mm in Sources */,
 				1929BE2F3E0182CC51F2763A /* ThemedTableSubviews.swift in Sources */,
 				1929B6460862447A31B5B082 /* ImageAndTextTableCell.swift in Sources */,
 				1929BBE28654E4307AF1E2FD /* Theme.swift in Sources */,
@@ -1040,14 +1002,13 @@
 				1929BF3253594E5B1908C6CE /* RpcAppearanceEpic.swift in Sources */,
 				1929B5A0EDD1119CFF7BB84C /* Defs.swift in Sources */,
 				1929B376DB09AB5FDBF42BA1 /* MainWindow+Types.swift in Sources */,
-				1929B443B7AB2176A7818CA1 /* fuzzy_match.cc in Sources */,
-				1929BF5D0EFCC56A733BB4B7 /* FuzzySearch.xcdatamodel in Sources */,
 				1929B4219A68586E2CED6E96 /* FileMonitor.swift in Sources */,
 				1929B223C6E97C090474B2C2 /* Resources.swift in Sources */,
 				1929BC64D3C195A92BE3FD64 /* HtmlPreviewMiddleware.swift in Sources */,
 				1929B29FF537A339CF4075BD /* CssUtils.swift in Sources */,
 				1929B805633C40EC1642121C /* RxCommons.swift in Sources */,
 				1929B28EF1D4135A94C07558 /* ShortcutService.swift in Sources */,
+				1929B7D1665BBB75DC89E391 /* IgnoreService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1153,7 +1114,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20220419.180005;
+				CURRENT_PROJECT_VERSION = 20220616.153112;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1214,7 +1175,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20220419.180005;
+				CURRENT_PROJECT_VERSION = 20220616.153112;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1243,21 +1204,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20220419.180005;
+				CURRENT_PROJECT_VERSION = 20220616.153112;
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/.deps/lib/liblzma.a",
-					"$(PROJECT_DIR)/.deps/lib/libpcre.a",
-					"$(PROJECT_DIR)/.deps/lib/libag.a",
-					"-pthread",
-				);
+				OTHER_LDFLAGS = "-pthread";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_MODULE_NAME = VimR;
 				PRODUCT_NAME = "$(VIMR_DISPLAY_NAME)";
@@ -1271,21 +1226,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20220419.180005;
+				CURRENT_PROJECT_VERSION = 20220616.153112;
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.deps/include";
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				OTHER_LDFLAGS = (
-					"$(PROJECT_DIR)/.deps/lib/liblzma.a",
-					"$(PROJECT_DIR)/.deps/lib/libpcre.a",
-					"$(PROJECT_DIR)/.deps/lib/libag.a",
-					"-pthread",
-				);
+				OTHER_LDFLAGS = "-pthread";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_MODULE_NAME = VimR;
 				PRODUCT_NAME = "$(VIMR_DISPLAY_NAME)";
@@ -1408,12 +1357,28 @@
 				version = 0.11.0;
 			};
 		};
+		4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qvacua/misc.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 0.0.1;
+			};
+		};
 		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
 				version = 2.1.0;
+			};
+		};
+		4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
@@ -1453,7 +1418,7 @@
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 9.2.1;
+				minimumVersion = 10.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1502,10 +1467,24 @@
 			package = 4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */;
 			productName = Down;
 		};
+		4BA19811285B4BA600B49309 /* Misc */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */;
+			productName = Misc;
+		};
 		4BA284B1256471ED00CFDF7F /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
+		};
+		4BADD55A283A847100C6B16D /* Ignore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Ignore;
+		};
+		4BADD55D283ABD0200C6B16D /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;

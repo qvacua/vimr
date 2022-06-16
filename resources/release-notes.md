@@ -1,7 +1,12 @@
 # Next
 
 * Improved trackpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!
-* ...
+* Refactor open quickly:
+  - Use [fzy](https://github.com/jhawthorn/fzy) instead of [ccls](https://github.com/MaskRay/ccls)
+  - Replace [The Silver Searcher](https://github.com/ggreer/the_silver_searcher)'s ignore mechanism with own implementation in Swift using [wildmatch](https://github.com/davvid/wildmatch)
+* Dependencies updates
+  - Quick/Nimble@10.0.0
+  - qvacua/misc.swift@0.0.1
 
 # 0.39.0-20220416.182927
 

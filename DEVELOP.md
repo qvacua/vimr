@@ -53,25 +53,18 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 ### VimR
 
-#### Dependencies
-
-* Tag with the name `vimr-deps-yyyy-mm-dd`. GitHub actions will build the universal version,
-  create a release and upload it.
-* Update `resources/vimr-deps_version.txt` and push.
-
-#### Executable
-
 * Set a new version of VimR via
     ```bash
     is_snapshot=true ./bin/set_new_versions.sh # for snapshot or
     is_snapshot=false marketing_version=0.38.3 ./bin/set_new_versions.sh # for release
     ```
   and commit. This will create a `${bundle_version}-snapshot/release.sh` file to be used
-  with `build_release.sh`.
+  with `build_release.sh` and `release-notes.temp.md` for release notes.
 * Tag with the name
     - Snapshot: `snapshot/yyyymmdd.HHMMSS`
     - Release: `vX.Y.Z-yyyymmdd.HHMMSS`
 * Push
+* Add release notes to `release-notes.temp.md`.
 * Build, package and upload via
     ```bash
     create_gh_release=true upload=true update_appcast=true \

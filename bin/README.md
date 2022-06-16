@@ -12,38 +12,5 @@
 * Install the requirements
     ```bash
     pip install -r requirements.txt
-    python setup.py develop
     ```
-
-## How to build third party dependencies
-
-* Run `build.py` with, for example, the following arguments
-    ```
-    $ python build.py --arm64-deployment-target=11.00 --x86_64-deployment-target=10.13 \
-                      --xz-version 5.2.4 --pcre-version 8.43 --ag-version 2.2.0
-    ```
-
-### Built artifacts
-
-The resulting artifacts are structured as follows
-
-```
-./third_party
-    vimr-deps
-        lib
-            liba.a
-            libb.a
-            ...
-        include
-            a.h
-            b.h
-            ...
-    liba
-        include
-            a.h
-            ...
-    libb
-        include
-            b.h
-            ...
-```
+  

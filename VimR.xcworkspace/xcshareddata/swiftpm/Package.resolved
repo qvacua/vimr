@@ -1,142 +1,158 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Socket",
-        "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
-        "state": {
-          "branch": null,
-          "revision": "dd924c3bc2c1c144c42b8dda3896f1a03115ded4",
-          "version": "2.0.2"
-        }
-      },
-      {
-        "package": "CwlCatchException",
-        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
-        "state": {
-          "branch": null,
-          "revision": "f809deb30dc5c9d9b78c872e553261a61177721a",
-          "version": "2.0.0"
-        }
-      },
-      {
-        "package": "CwlPreconditionTesting",
-        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
-        "state": {
-          "branch": null,
-          "revision": "fb7a26374e8570ff5c68142e5c83406d6abae0d8",
-          "version": "2.0.2"
-        }
-      },
-      {
-        "package": "DictionaryCoding",
-        "repositoryURL": "https://github.com/elegantchaos/DictionaryCoding",
-        "state": {
-          "branch": null,
-          "revision": "ae19e456bd550fed8f341e5bae4318333c53a5b4",
-          "version": "1.0.9"
-        }
-      },
-      {
-        "package": "Down",
-        "repositoryURL": "https://github.com/johnxnguyen/Down",
-        "state": {
-          "branch": null,
-          "revision": "f34b166be1f1db4aa8f573067e901d72f2a6be57",
-          "version": "0.11.0"
-        }
-      },
-      {
-        "package": "EonilFSEvents",
-        "repositoryURL": "https://github.com/eonil/FSEvents",
-        "state": {
-          "branch": null,
-          "revision": "e6b7cdfa2754454e194a45ee6c2004d0f630fe88",
-          "version": "0.1.7"
-        }
-      },
-      {
-        "package": "MaterialIcons",
-        "repositoryURL": "https://github.com/qvacua/material-icons",
-        "state": {
-          "branch": null,
-          "revision": "c3db645060fd27df5f7e0a9873c2af22c280725e",
-          "version": "0.1.0"
-        }
-      },
-      {
-        "package": "MessagePack",
-        "repositoryURL": "https://github.com/a2/MessagePack.swift",
-        "state": {
-          "branch": null,
-          "revision": "27b35fd49e92fcae395bf8ccb233499d89cc7890",
-          "version": "4.0.0"
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble",
-        "state": {
-          "branch": null,
-          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
-          "version": "9.2.1"
-        }
-      },
-      {
-        "package": "PureLayout",
-        "repositoryURL": "https://github.com/PureLayout/PureLayout",
-        "state": {
-          "branch": null,
-          "revision": "5561683c96dc49b023c1299bfe4f6fbeed5f8199",
-          "version": "3.1.9"
-        }
-      },
-      {
-        "package": "RxSwift",
-        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
-        "state": {
-          "branch": null,
-          "revision": "b4307ba0b6425c0ba4178e138799946c3da594f8",
-          "version": "6.5.0"
-        }
-      },
-      {
-        "package": "ShortcutRecorder",
-        "repositoryURL": "https://github.com/Kentzo/ShortcutRecorder",
-        "state": {
-          "branch": null,
-          "revision": "07b065085e172d85b7b5a0f3cc05f6ed47ad5af1",
-          "version": "3.3.0"
-        }
-      },
-      {
-        "package": "Sparkle",
-        "repositoryURL": "https://github.com/sparkle-project/Sparkle",
-        "state": {
-          "branch": null,
-          "revision": "286edd1fa22505a9e54d170e9fd07d775ea233f2",
-          "version": "2.1.0"
-        }
-      },
-      {
-        "package": "swift-argument-parser",
-        "repositoryURL": "https://github.com/apple/swift-argument-parser",
-        "state": {
-          "branch": null,
-          "revision": "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
-          "version": "0.5.0"
-        }
-      },
-      {
-        "package": "Swifter",
-        "repositoryURL": "https://github.com/httpswift/swifter",
-        "state": {
-          "branch": null,
-          "revision": "9483a5d459b45c3ffd059f7b55f9638e268632fd",
-          "version": "1.5.0"
-        }
+  "pins" : [
+    {
+      "identity" : "bluesocket",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/IBM-Swift/BlueSocket",
+      "state" : {
+        "revision" : "dd924c3bc2c1c144c42b8dda3896f1a03115ded4",
+        "version" : "2.0.2"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "cwlcatchexception",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattgallagher/CwlCatchException.git",
+      "state" : {
+        "revision" : "f809deb30dc5c9d9b78c872e553261a61177721a",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "cwlpreconditiontesting",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattgallagher/CwlPreconditionTesting.git",
+      "state" : {
+        "revision" : "c21f7bab5ca8eee0a9998bbd17ca1d0eb45d4688",
+        "version" : "2.1.0"
+      }
+    },
+    {
+      "identity" : "dictionarycoding",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elegantchaos/DictionaryCoding",
+      "state" : {
+        "revision" : "ae19e456bd550fed8f341e5bae4318333c53a5b4",
+        "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "down",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnxnguyen/Down",
+      "state" : {
+        "revision" : "f34b166be1f1db4aa8f573067e901d72f2a6be57",
+        "version" : "0.11.0"
+      }
+    },
+    {
+      "identity" : "fsevents",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eonil/FSEvents",
+      "state" : {
+        "revision" : "e6b7cdfa2754454e194a45ee6c2004d0f630fe88",
+        "version" : "0.1.7"
+      }
+    },
+    {
+      "identity" : "material-icons",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/qvacua/material-icons",
+      "state" : {
+        "revision" : "c3db645060fd27df5f7e0a9873c2af22c280725e",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "messagepack.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/a2/MessagePack.swift",
+      "state" : {
+        "revision" : "27b35fd49e92fcae395bf8ccb233499d89cc7890",
+        "version" : "4.0.0"
+      }
+    },
+    {
+      "identity" : "misc.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/qvacua/misc.swift",
+      "state" : {
+        "revision" : "e963af99e5eddc14b0f28c5c87a1f582c88bf128",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "nimble",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Quick/Nimble",
+      "state" : {
+        "revision" : "1f3bde57bde12f5e7b07909848c071e9b73d6edc",
+        "version" : "10.0.0"
+      }
+    },
+    {
+      "identity" : "purelayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PureLayout/PureLayout",
+      "state" : {
+        "revision" : "5561683c96dc49b023c1299bfe4f6fbeed5f8199",
+        "version" : "3.1.9"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift",
+      "state" : {
+        "revision" : "b4307ba0b6425c0ba4178e138799946c3da594f8",
+        "version" : "6.5.0"
+      }
+    },
+    {
+      "identity" : "shortcutrecorder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kentzo/ShortcutRecorder",
+      "state" : {
+        "revision" : "07b065085e172d85b7b5a0f3cc05f6ed47ad5af1",
+        "version" : "3.3.0"
+      }
+    },
+    {
+      "identity" : "sparkle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparkle-project/Sparkle",
+      "state" : {
+        "revision" : "286edd1fa22505a9e54d170e9fd07d775ea233f2",
+        "version" : "2.1.0"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
+        "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swifter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/httpswift/swifter",
+      "state" : {
+        "revision" : "9483a5d459b45c3ffd059f7b55f9638e268632fd",
+        "version" : "1.5.0"
+      }
+    }
+  ],
+  "version" : 2
 }

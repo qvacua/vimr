@@ -60,14 +60,15 @@ declare -r -x bundle_version=${bundle_version}
 declare -r -x marketing_version=${marketing_version}
 declare -r -x tag=${tag}
 declare -r -x github_release_name=${github_release_name}
-declare -r -x release_notes=\$(cat <<-ENDRN
-replace-me
-ENDRN
-)
+declare -r -x release_notes=\$(cat release-notes.temp.md)
+
+# Add release notes to release-notes.temp.md and issue
+# create_gh_release=true upload=true update_appcast=true release_spec_file=${bundle_version}-${version_marker}.sh ./bin/build_release.sh
 END
 )
   readonly output
 
+  echo "Release notes" > release-notes.temp.md
   echo "${output}" > "${bundle_version}-${version_marker}.sh"
 
   echo "### Tag, commit and push with ${tag}"

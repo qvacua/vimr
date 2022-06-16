@@ -1,5 +1,4 @@
-// swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -10,25 +9,17 @@ let package = Package(
     .library(name: "Tabs", targets: ["Tabs"]),
   ],
   dependencies: [
-    .package(
-      name: "MaterialIcons",
-      url: "https://github.com/qvacua/material-icons",
-      .upToNextMinor(from: "0.1.0")
-    ),
-    .package(
-      name: "PureLayout",
-      url: "https://github.com/PureLayout/PureLayout",
-      .upToNextMinor(from: "3.1.9")
-    ),
+    .package(url: "https://github.com/qvacua/material-icons", from: "0.1.0"),
+    .package(url: "https://github.com/PureLayout/PureLayout", from: "3.1.9"),
   ],
   targets: [
     .target(
       name: "Tabs",
-      dependencies: ["PureLayout", "MaterialIcons"]
+      dependencies: [
+        "PureLayout",
+        .product(name: "MaterialIcons", package: "material-icons"),
+      ]
     ),
-    .testTarget(
-      name: "TabsTests",
-      dependencies: ["Tabs"]
-    ),
+    .testTarget(name: "TabsTests", dependencies: ["Tabs"]),
   ]
 )

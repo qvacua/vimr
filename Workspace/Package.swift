@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -9,22 +9,18 @@ let package = Package(
     .library(name: "Workspace", targets: ["Workspace"]),
   ],
   dependencies: [
-    .package(
-      name: "PureLayout",
-      url: "https://github.com/PureLayout/PureLayout",
-      .upToNextMinor(from: "3.1.9")
-    ),
-    .package(
-      name: "MaterialIcons",
-      url: "https://github.com/qvacua/material-icons",
-      .upToNextMinor(from: "0.1.0")
-    ),
+    .package(url: "https://github.com/PureLayout/PureLayout", from: "3.1.9"),
+    .package(url: "https://github.com/qvacua/material-icons", from: "0.1.0"),
     .package(path: "../Commons"),
   ],
   targets: [
     .target(
       name: "Workspace",
-      dependencies: ["PureLayout", "MaterialIcons", "Commons"]
+      dependencies: [
+        "PureLayout",
+        .product(name: "MaterialIcons", package: "material-icons"),
+        "Commons",
+      ]
     ),
     .testTarget(
       name: "WorkspaceTests",

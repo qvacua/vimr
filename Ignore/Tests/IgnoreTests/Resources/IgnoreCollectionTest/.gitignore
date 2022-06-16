@@ -1,0 +1,8 @@
+*.png
+
+# will be included below
+include-me
+
+vendor/
+**/ignore-me
+
