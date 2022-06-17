@@ -7,6 +7,7 @@
 import Cocoa
 import RxPack
 import RxSwift
+import RxNeovim
 
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
   override public func makeTouchBar() -> NSTouchBar? {

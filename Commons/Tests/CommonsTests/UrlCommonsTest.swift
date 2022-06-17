@@ -51,18 +51,6 @@ class UrlCommonsTest: XCTestCase {
     expect(URL(fileURLWithPath: "/").parent).to(equal(URL(fileURLWithPath: "/")))
   }
 
-  func testIsDir() {
-    let resourceUrl = Bundle.module.url(
-      forResource: "UrlCommonsTest",
-      withExtension: "",
-      subdirectory: "Resources"
-    )!
-    let hidden = resourceUrl.appendingPathComponent(".dot-hidden-file")
-
-    expect(resourceUrl.isDir).to(beTrue())
-    expect(hidden.isDir).to(beFalse())
-  }
-
   func testIsHidden() {
     let resourceUrl = Bundle.module.url(
       forResource: "UrlCommonsTest",

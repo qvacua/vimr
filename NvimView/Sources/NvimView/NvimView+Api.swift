@@ -8,6 +8,7 @@ import MessagePack
 import PureLayout
 import RxPack
 import RxSwift
+import RxNeovim
 import SpriteKit
 
 public extension NvimView {

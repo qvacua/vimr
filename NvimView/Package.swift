@@ -24,6 +24,7 @@ let package = Package(
         "RxSwift",
         "RxPack",
         "Tabs",
+        .product(name: "RxNeovim", package: "NvimServer"),
         .product(name: "NvimServerTypes", package: "NvimServer"),
         .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",

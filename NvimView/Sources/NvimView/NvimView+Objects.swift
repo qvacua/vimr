@@ -5,6 +5,7 @@
 
 import Foundation
 import RxPack
+import RxNeovim
 
 public extension NvimView {
   struct Buffer: Equatable {

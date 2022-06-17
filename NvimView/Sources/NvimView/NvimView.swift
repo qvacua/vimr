@@ -9,6 +9,7 @@ import Commons
 import MessagePack
 import os
 import RxPack
+import RxNeovim
 import RxSwift
 import Tabs
 import SpriteKit

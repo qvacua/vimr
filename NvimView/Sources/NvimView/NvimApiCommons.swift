@@ -5,6 +5,7 @@
 
 import Foundation
 import RxPack
+import RxNeovim
 import RxSwift
 
 public extension RxNeovimApi {

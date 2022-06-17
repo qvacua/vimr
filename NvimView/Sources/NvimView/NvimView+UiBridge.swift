@@ -11,6 +11,7 @@ import NvimServerTypes
 import os
 import RxPack
 import RxSwift
+import RxNeovim
 
 extension NvimView {
   final func initVimError() {
