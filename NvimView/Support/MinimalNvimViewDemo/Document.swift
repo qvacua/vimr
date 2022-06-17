@@ -22,7 +22,7 @@ class Document: NSDocument, NSWindowDelegate {
 
     self.nvimView
       .events
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { event in
         switch event {
         case .neoVimStopped: self.close()

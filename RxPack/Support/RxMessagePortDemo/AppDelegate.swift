@@ -36,14 +36,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     self.logClient("Sending msg (\(self.msgid), \(text))")
     self.client.send(msgid: self.msgid, data: text.data(using: .utf8)!, expectsReply: true)
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onSuccess: { data in
         if let d = data {
           self.logClient("Got reply from server: \(String(data: d, encoding: .utf8)!)")
         } else {
           self.logClient("Got reply from server: nil")
         }
-      }, onError: { error in
+      }, onFailure: { error in
         self.logClient("Could not send msg: \(error)")
       })
       .disposed(by: self.disposeBag)
@@ -78,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     self.logServer("Starting server...")
 
     self.server.stream
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { message in
         self.logServer("Got event in stream \(message)")
       })
