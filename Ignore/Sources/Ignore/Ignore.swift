@@ -25,7 +25,7 @@ public class Ignore {
     return Ignore(base: base, parent: nil, ignoreFileUrls: urls, prepend: vcsFolderFilters)
   }
 
-  public let ignores: [Filter]
+  public let filters: [Filter]
 
   /// `ignoreFileUrls[n]` overrides `ignoreFileUrls[n + 1]`.
   /// `Ignore`s of `parent` are overridden, if applicable, by the `Ignore`s found in `base`.
@@ -39,7 +39,7 @@ public class Ignore {
     if ignoreFileUrls.isEmpty { return nil }
     let urls = ignoreFileUrls.filter { fm.fileExists(atPath: $0.path) }.reversed()
 
-    self.ignores = (parent?.ignores ?? [])
+    self.filters = (parent?.filters ?? [])
       + prepend.reversed()
       + urls.flatMap {
         FileLineReader(url: $0, encoding: .utf8)
@@ -49,19 +49,19 @@ public class Ignore {
       }
       + append.reversed()
 
-    if self.ignores.isEmpty { return nil }
+    if self.filters.isEmpty { return nil }
 
-    if let lastAllowIndex = self.ignores
+    if let lastAllowIndex = self.filters
       .enumerated()
       .filter({ _, ignore in ignore.isAllow })
       .map(\.offset)
       .max()
     {
-      self.mixedIgnores = self.ignores[0...lastAllowIndex]
-      self.remainingDisallowIgnores = self.ignores[(lastAllowIndex + 1)...]
+      self.mixedIgnores = self.filters[0...lastAllowIndex]
+      self.remainingDisallowIgnores = self.filters[(lastAllowIndex + 1)...]
     } else {
       self.mixedIgnores = ArraySlice()
-      self.remainingDisallowIgnores = self.ignores[0...]
+      self.remainingDisallowIgnores = self.filters[0...]
     }
   }
 
