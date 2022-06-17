@@ -7,7 +7,7 @@ public class Ignore {
   public static let defaultIgnoreFileNames = [".ignore", ".gitignore"]
   public static let vcsFolderPattern = [".svn/", ".hg/", ".git/"]
 
-  public static func globalGitignoreCollection(base: URL) -> Ignore? {
+  public static func globalGitignore(base: URL) -> Ignore? {
     let gitRoot = GitUtils.gitRootUrl(base: base)
     let urls = [
       GitUtils.gitDirInfoExcludeUrl(base: base, gitRoot: gitRoot),
@@ -23,6 +23,20 @@ public class Ignore {
 
     let vcsFolderFilters = self.vcsFolderPattern.map { Filter(base: base, pattern: $0) }
     return Ignore(base: base, parent: nil, ignoreFileUrls: urls, prepend: vcsFolderFilters)
+  }
+
+  public static func parentOrIgnore(
+    for base: URL,
+    withParent parent: Ignore?,
+    ignoreFileNames: [String] = defaultIgnoreFileNames
+  ) -> Ignore? {
+    let urls = ignoreFileNames
+      .map { base.appendingPathComponent($0) }
+      .filter { fm.fileExists(atPath: $0.path) }
+      .reversed()
+
+    if urls.isEmpty { return parent }
+    return Ignore(base: base, parent: parent, ignoreFileUrls: Array(urls))
   }
 
   public let filters: [Filter]

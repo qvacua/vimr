@@ -7,15 +7,6 @@ import Foundation
 import os
 import RxSwift
 
-public extension ObservableType {
-  func compactMap<R>(_ transform: @escaping (Element) throws -> R?) -> Observable<R> {
-    self
-      .map(transform)
-      .filter { $0 != nil }
-      .map { $0! }
-  }
-}
-
 public extension PrimitiveSequence where Element == Never, Trait == CompletableTrait {
   func andThen(using body: () -> Completable) -> Completable { self.andThen(body()) }
 

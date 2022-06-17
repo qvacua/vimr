@@ -1,6 +1,7 @@
 /// Tae Won Ha - http://taewon.de - @hataewon
 /// See LICENSE
 
+import Commons
 import Foundation
 import Ignore
 import OrderedCollections
@@ -8,10 +9,7 @@ import OrderedCollections
 class IgnoreService {
   var root: URL {
     didSet {
-      self.rootIgnore = Ignore(
-        base: self.root,
-        parent: Ignore.globalGitignoreCollection(base: self.root)
-      )
+      self.rootIgnore = Ignore(base: self.root, parent: Ignore.globalGitignore(base: self.root))
     }
   }
 
@@ -25,22 +23,18 @@ class IgnoreService {
     )
     self.storage = OrderedDictionary(minimumCapacity: count)
 
-    self.rootIgnore = Ignore(
-      base: root,
-      parent: Ignore.globalGitignoreCollection(base: root)
-    )
+    self.rootIgnore = Ignore(base: root, parent: Ignore.globalGitignore(base: root))
   }
 
-  func ignoreCollection(forUrl url: URL) -> Ignore? {
+  func ignore(for url: URL) -> Ignore? {
     self.queue.sync {
       if self.root == url { return self.rootIgnore }
       guard self.root.isAncestor(of: url) else { return nil }
 
-      if url == self.root { return self.rootIgnore }
       if let ignore = self.storage[url] { return ignore }
 
       if let parentIgnore = self.storage[url.parent] {
-        let ignore = Ignore(base: url, parent: parentIgnore)
+        let ignore = Ignore.parentOrIgnore(for: url, withParent: parentIgnore)
         self.storage[url] = ignore
 
         return ignore
@@ -49,22 +43,25 @@ class IgnoreService {
       // Since we descend the directory structure step by step, the ignore of the parent should
       // already be present. Most probably we won't land here...
       let rootPathComp = self.root.pathComponents
-      let pathComp = url.pathComponents.dropLast()
+      let pathComp = url.pathComponents
       let lineage = pathComp.suffix(from: rootPathComp.count)
       var ancestorUrl = self.root
-      var ancestorIc = self.rootIgnore
+      var ancestorIgnore = self.rootIgnore
       for ancestorComponent in lineage {
         ancestorUrl = ancestorUrl.appendingPathComponent(ancestorComponent, isDirectory: true)
-        if self.storage[ancestorUrl] == nil {
-          guard let ignore = Ignore(base: ancestorUrl, parent: ancestorIc) else {
-            return nil
-          }
-          self.set(ignoreCollection: ignore, forUrl: url)
-          ancestorIc = ignore
+        if let cachedAncestorIc = self.storage[ancestorUrl] { ancestorIgnore = cachedAncestorIc }
+        else {
+          guard let ignore = Ignore.parentOrIgnore(
+            for: ancestorUrl,
+            withParent: ancestorIgnore
+          ) else { return nil }
+
+          self.set(ignoreCollection: ignore, forUrl: ancestorUrl)
+          ancestorIgnore = ignore
         }
       }
 
-      return ancestorIc
+      return ancestorIgnore
     }
   }
 
