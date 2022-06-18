@@ -7,7 +7,7 @@ public class Ignore {
   public static let defaultIgnoreFileNames = [".ignore", ".gitignore"]
   public static let vcsFolderPattern = [".svn/", ".hg/", ".git/"]
 
-  public static func globalGitignoreCollection(base: URL) -> Ignore? {
+  public static func globalGitignore(base: URL) -> Ignore? {
     let gitRoot = GitUtils.gitRootUrl(base: base)
     let urls = [
       GitUtils.gitDirInfoExcludeUrl(base: base, gitRoot: gitRoot),
@@ -25,7 +25,21 @@ public class Ignore {
     return Ignore(base: base, parent: nil, ignoreFileUrls: urls, prepend: vcsFolderFilters)
   }
 
-  public let ignores: [Filter]
+  public static func parentOrIgnore(
+    for base: URL,
+    withParent parent: Ignore?,
+    ignoreFileNames: [String] = defaultIgnoreFileNames
+  ) -> Ignore? {
+    let urls = ignoreFileNames
+      .map { base.appendingPathComponent($0) }
+      .filter { fm.fileExists(atPath: $0.path) }
+      .reversed()
+
+    if urls.isEmpty { return parent }
+    return Ignore(base: base, parent: parent, ignoreFileUrls: Array(urls))
+  }
+
+  public let filters: [Filter]
 
   /// `ignoreFileUrls[n]` overrides `ignoreFileUrls[n + 1]`.
   /// `Ignore`s of `parent` are overridden, if applicable, by the `Ignore`s found in `base`.
@@ -39,7 +53,7 @@ public class Ignore {
     if ignoreFileUrls.isEmpty { return nil }
     let urls = ignoreFileUrls.filter { fm.fileExists(atPath: $0.path) }.reversed()
 
-    self.ignores = (parent?.ignores ?? [])
+    self.filters = (parent?.filters ?? [])
       + prepend.reversed()
       + urls.flatMap {
         FileLineReader(url: $0, encoding: .utf8)
@@ -49,19 +63,19 @@ public class Ignore {
       }
       + append.reversed()
 
-    if self.ignores.isEmpty { return nil }
+    if self.filters.isEmpty { return nil }
 
-    if let lastAllowIndex = self.ignores
+    if let lastAllowIndex = self.filters
       .enumerated()
       .filter({ _, ignore in ignore.isAllow })
       .map(\.offset)
       .max()
     {
-      self.mixedIgnores = self.ignores[0...lastAllowIndex]
-      self.remainingDisallowIgnores = self.ignores[(lastAllowIndex + 1)...]
+      self.mixedIgnores = self.filters[0...lastAllowIndex]
+      self.remainingDisallowIgnores = self.filters[(lastAllowIndex + 1)...]
     } else {
       self.mixedIgnores = ArraySlice()
-      self.remainingDisallowIgnores = self.ignores[0...]
+      self.remainingDisallowIgnores = self.filters[0...]
     }
   }
 

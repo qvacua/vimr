@@ -32,8 +32,6 @@ class FuzzySearchService {
     }
   }
 
-  let coreDataStack: CoreDataStack
-
   func cleanUp() {
     do {
       try self.coreDataStack.deleteStore()
@@ -158,7 +156,7 @@ class FuzzySearchService {
       return
     }
 
-    let initialBaton = self.ignoreService.ignoreCollection(forUrl: folder.url!)
+    let initialBaton = self.ignoreService.ignore(for: folder.url!)
     let testIgnores = self.usesVcsIgnores
     var stack = [(initialBaton, folder)]
     while let iterElement = stack.popLast() {
@@ -190,7 +188,7 @@ class FuzzySearchService {
         folder.needsScanChildren = false
 
         let childFolders = childFiles.filter { $0.direntType == DT_DIR }
-        let childBatons = childFolders.map { self.ignoreService.ignoreCollection(forUrl: $0.url!) }
+        let childBatons = childFolders.map { self.ignoreService.ignore(for: $0.url!) }
 
         stack.append(contentsOf: zip(childBatons, childFolders))
 
@@ -416,6 +414,8 @@ class FuzzySearchService {
   )
 
   private let fileMonitor = FileMonitor()
+
+  private let coreDataStack: CoreDataStack
   private let writeContext: NSManagedObjectContext
   private let ignoreService: IgnoreService
 

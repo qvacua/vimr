@@ -7,6 +7,7 @@ import Cocoa
 import NvimView
 import RxPack
 import RxSwift
+import RxNeovim
 import Workspace
 
 // MARK: - NvimViewDelegate
