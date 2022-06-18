@@ -159,6 +159,7 @@
 		4BADD55B283A847100C6B16D /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55A283A847100C6B16D /* Ignore */; };
 		4BADD55E283ABD0200C6B16D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55D283ABD0200C6B16D /* OrderedCollections */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
+		4BCB697F285DD4C400BDD358 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BCB697E285DD4C400BDD358 /* RxPack */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BE73F99285C9A9A00B63585 /* IgnoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71F6A82A34F16BB52BE /* IgnoreService.swift */; };
 		4BE73F9B285C9AC100B63585 /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BE73F9A285C9AC100B63585 /* Ignore */; };
@@ -355,6 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BA19812285B4BA600B49309 /* Misc in Frameworks */,
+				4BCB697F285DD4C400BDD358 /* RxPack in Frameworks */,
 				4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */,
 				4B0B36242595236000B06899 /* EonilFSEvents in Frameworks */,
 				4B9D049D273481AD007E8614 /* Down in Frameworks */,
@@ -751,6 +753,7 @@
 				4BADD55A283A847100C6B16D /* Ignore */,
 				4BADD55D283ABD0200C6B16D /* OrderedCollections */,
 				4BA19811285B4BA600B49309 /* Misc */,
+				4BCB697E285DD4C400BDD358 /* RxPack */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -827,6 +830,7 @@
 				4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */,
 				4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */,
 				4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */,
+				4BCB697D285DD4C400BDD358 /* XCRemoteSwiftPackageReference "RxPack" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1378,6 +1382,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		4BCB697D285DD4C400BDD358 /* XCRemoteSwiftPackageReference "RxPack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qvacua/RxPack.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 0.1.0;
+			};
+		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
@@ -1482,6 +1494,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		4BCB697E285DD4C400BDD358 /* RxPack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BCB697D285DD4C400BDD358 /* XCRemoteSwiftPackageReference "RxPack" */;
+			productName = RxPack;
 		};
 		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
