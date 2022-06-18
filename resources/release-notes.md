@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# 0.40.0-20220618.161750
+
 * Improved trackpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!
 * Refactor open quickly:
   - Use [fzy](https://github.com/jhawthorn/fzy) instead of [ccls](https://github.com/MaskRay/ccls)
