@@ -19,7 +19,7 @@ final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
 
   func feedURLString(for _: SPUUpdater) -> String? {
     if self.useSnapshotChannel {
-      return "https://raw.githubusercontent.com/qvacua/vimr/develop/appcast_snapshot.xml"
+      return "https://raw.githubusercontent.com/qvacua/vimr/master/appcast_snapshot.xml"
     } else {
       return "https://raw.githubusercontent.com/qvacua/vimr/master/appcast.xml"
     }
