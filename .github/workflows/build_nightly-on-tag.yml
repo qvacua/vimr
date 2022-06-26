@@ -1,0 +1,36 @@
+name: "Build VimR nightly on tag"
+on:
+  push:
+    tags:
+      - 'nightly'
+
+jobs:
+  Build-universal:
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: Install brew packages
+        run: |
+          brew update >/dev/null
+          brew upgrade
+          brew install automake ninja coreutils
+      - name: Build VimR
+        run: |
+          code_sign=false clean=true use_carthage_cache=false ./bin/build_nightly.sh
+          #- name: Create release and upload artifact
+          #  env:
+          #    GH_REPO: ${{ github.repository }}
+          #    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #  run: |
+          #    gh release create ${{ github.ref_name }}
+          #    gh release upload ${{ github.ref_name }} .build/x86_64-apple-macosx/release/NvimServer-x86_64.tar.bz2
+          #- uses: actions/upload-artifact@v2
+          #  with:
+          #    name: NvimServer-x86_64
+          #    path: .build/x86_64-apple-macosx/release/NvimServer-x86_64.tar.bz2
+          #    if-no-files-found: error
+          #    retention-days: 7
+
