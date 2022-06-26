@@ -18,6 +18,7 @@ prepare_nvimserver() {
   install_path="$(/usr/bin/mktemp -d -t 'nvim-runtime')"
   nvim_install_path="${install_path}" ./NvimServer/NvimServer/bin/build_runtime.sh
   cp -r "${install_path}/share/nvim/runtime" "${resources_folder}"
+  rm -rf "${install_path}"
 
   # Copy VimR specific vim file to runtime/plugin folder
   cp "${resources_folder}/com.qvacua.NvimView.vim" "${resources_folder}/runtime/plugin"

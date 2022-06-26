@@ -56,7 +56,7 @@ check_gh_release_present() {
 
 build_release() {
   echo "### Building release"
-  notarize=true use_carthage_cache=false ./bin/build_vimr.sh
+  clean=true notarize=true use_carthage_cache=false ./bin/build_vimr.sh
 
   pushd "${build_folder_path}" >/dev/null
     tar cjf "VimR-${marketing_version}.tar.bz2" VimR.app
