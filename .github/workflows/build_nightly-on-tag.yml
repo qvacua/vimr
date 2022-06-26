@@ -26,5 +26,5 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release ${{ github.ref_name }} ./build/Build/Products/ReleaseVimR-neovim-nightly-unsigned.tar.bz2 --clobber
+          gh release upload ${{ github.ref_name }} ./build/Build/Products/ReleaseVimR-neovim-nightly-unsigned.tar.bz2 --clobber
 

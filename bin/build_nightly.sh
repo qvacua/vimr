@@ -10,6 +10,10 @@ prepare_nvimserver() {
   rm -rf "${resources_folder}/NvimServer"
   rm -rf "${resources_folder}/runtime"
 
+  # Build NvimServer and copy
+  build_libnvim=true ./NvimServer/NvimServer/bin/build_nvimserver.sh
+  cp ./NvimServer/.build/apple/Products/Release/NvimServer "${resources_folder}"
+
   # Create and copy runtime folder
   install_path="$(/usr/bin/mktemp -d -t 'nvim-runtime')"
   nvim_install_path="${install_path}" ./NvimServer/NvimServer/bin/build_runtime.sh
@@ -17,10 +21,6 @@ prepare_nvimserver() {
 
   # Copy VimR specific vim file to runtime/plugin folder
   cp "${resources_folder}/com.qvacua.NvimView.vim" "${resources_folder}/runtime/plugin"
-
-  # Build NvimServer and copy
-  build_libnvim=true ./NvimServer/NvimServer/bin/build_nvimserver.sh
-  cp ./NvimServer/.build/apple/Products/Release/NvimServer "${resources_folder}"
 }
 
 main () {
@@ -42,9 +42,7 @@ main () {
   echo "### Xcodebuilding"
   rm -rf ${build_path}
 
-  deployment_target="$(jq -r .deploymentTargets.nightly ./resources/buildInfo.json)"
   xcodebuild \
-    MACOSX_DEPLOYMENT_TARGET="${deployment_target}" \
     -configuration Release -derivedDataPath ${build_path} \
     -workspace VimR.xcworkspace -scheme VimR \
     clean build
