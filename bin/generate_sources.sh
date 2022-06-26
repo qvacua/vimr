@@ -1,6 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+readonly clean=${clean:?"true or false"}
 readonly use_committed_nvim=${use_committed_nvim:?"If true, checkout the committed version of nvim, otherwise use the workspace."}
 
 main() {
@@ -23,7 +24,6 @@ main() {
       nvim_version="v$major.$minor.$patch$prerelease"
       echo "### Using nvim version: $nvim_version"
 
-      local -r -x build_deps=false
       ./NvimServer/bin/build_libnvim.sh
     popd > /dev/null
 
