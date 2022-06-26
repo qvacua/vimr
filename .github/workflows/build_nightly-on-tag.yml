@@ -2,7 +2,7 @@ name: "Build VimR nightly on tag"
 on:
   push:
     tags:
-      - 'nightly'
+      - 'neovim-nightly'
 
 jobs:
   Build-universal:
@@ -20,17 +20,10 @@ jobs:
       - name: Build VimR
         run: |
           code_sign=false clean=true use_carthage_cache=false ./bin/build_nightly.sh
-          #- name: Create release and upload artifact
-          #  env:
-          #    GH_REPO: ${{ github.repository }}
-          #    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #  run: |
-          #    gh release create ${{ github.ref_name }}
-          #    gh release upload ${{ github.ref_name }} .build/x86_64-apple-macosx/release/NvimServer-x86_64.tar.bz2
-          #- uses: actions/upload-artifact@v2
-          #  with:
-          #    name: NvimServer-x86_64
-          #    path: .build/x86_64-apple-macosx/release/NvimServer-x86_64.tar.bz2
-          #    if-no-files-found: error
-          #    retention-days: 7
+      - name: Replace artifact
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release ${{ github.ref_name }} ./build/Build/Products/ReleaseVimR-neovim-nightly-unsigned.tar.bz2 --clobber
 

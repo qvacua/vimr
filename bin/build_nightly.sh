@@ -54,7 +54,12 @@ main () {
       ./bin/sign_vimr.sh
   fi
 
-  echo "### Built VimR target"
+  pushd "${build_path}/Build/Products/Release" >/dev/null
+    tar cjf "VimR-neovim-nightly-unsigned.tar.bz2" VimR.app
+    echo "### VimR nightly packaged to ${build_path}/Build/Products/ReleaseVimR-neovim-nightly-unsigned.tar.bz2"
+  popd >/dev/null
+
+  echo "### Built VimR nightly"
   popd >/dev/null
 }
 
