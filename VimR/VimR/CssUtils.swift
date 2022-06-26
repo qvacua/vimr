@@ -5,7 +5,7 @@
 
 import Cocoa
 
-class CssUtils {
+final class CssUtils {
   static let cssOverridesTemplate: String = try! String(
     contentsOf: Resources.cssOverridesTemplateUrl
   )

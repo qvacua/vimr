@@ -11,7 +11,7 @@
 
 import Cocoa
 
-class DraggingSingleRowStackView: NSStackView {
+final class DraggingSingleRowStackView: NSStackView {
   var postDraggingHandler: ((NSStackView, NSView) -> Void)?
 
   override func mouseDragged(with event: NSEvent) {

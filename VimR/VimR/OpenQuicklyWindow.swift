@@ -10,7 +10,7 @@ import PureLayout
 import RxCocoa
 import RxSwift
 
-class OpenQuicklyWindow: NSObject,
+final class OpenQuicklyWindow: NSObject,
   UiComponent,
   NSWindowDelegate,
   NSTextFieldDelegate,

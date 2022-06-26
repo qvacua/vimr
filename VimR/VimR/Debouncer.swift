@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class Debouncer<T> {
+final class Debouncer<T> {
   let observable: Observable<T>
 
   init(interval: RxTimeInterval) {

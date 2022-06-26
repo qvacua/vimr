@@ -5,7 +5,7 @@
 
 import Foundation
 
-class AppearancePrefReducer: ReducerType {
+final class AppearancePrefReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = AppearancePref.Action
 

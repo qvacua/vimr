@@ -12,7 +12,7 @@ extension ReduxTypes {
   typealias ActionType = AnyAction
 }
 
-class Context: ReduxContext {
+final class Context: ReduxContext {
   // The following should only be used when Cmd-Q'ing
   func savePrefs() { self.prefMiddleware.applyPref(from: self.state) }
 

@@ -10,7 +10,7 @@ import Ignore
 import os
 import Misc
 
-class FuzzySearchService {
+final class FuzzySearchService {
   typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void
 
   var root: URL {

@@ -5,7 +5,7 @@
 
 import Foundation
 
-class BuffersListReducer: ReducerType {
+final class BuffersListReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<BuffersList.Action>
 

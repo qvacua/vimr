@@ -10,7 +10,7 @@ import PureLayout
 import RxSwift
 import WebKit
 
-class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
+final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
     case refreshNow
     case reverseSearch(to: Position)

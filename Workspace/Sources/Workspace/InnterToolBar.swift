@@ -18,7 +18,7 @@ open class CustomToolBar: NSView {
  - Close button
  - Cog button: not shown when there's no menu
  */
-public class InnerToolBar: NSView, NSUserInterfaceValidations {
+public final class InnerToolBar: NSView, NSUserInterfaceValidations {
   // MARK: - Public
 
   public static let iconDimension = 16.0

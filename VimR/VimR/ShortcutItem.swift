@@ -5,7 +5,7 @@
 
 import Cocoa
 
-class ShortcutItem: NSObject, Comparable {
+final class ShortcutItem: NSObject, Comparable {
   static func < (lhs: ShortcutItem, rhs: ShortcutItem) -> Bool { lhs.title < rhs.title }
 
   @objc dynamic var title: String

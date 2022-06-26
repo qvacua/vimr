@@ -5,7 +5,7 @@
 
 import Foundation
 
-class ToolsPrefReducer: ReducerType {
+final class ToolsPrefReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = ToolsPref.Action
 

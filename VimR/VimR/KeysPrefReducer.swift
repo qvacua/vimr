@@ -5,7 +5,7 @@
 
 import Foundation
 
-class KeysPrefReducer: ReducerType {
+final class KeysPrefReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = KeysPref.Action
 

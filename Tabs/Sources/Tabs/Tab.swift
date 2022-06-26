@@ -13,7 +13,7 @@ struct TabPosition: OptionSet {
   let rawValue: Int
 }
 
-class Tab<Rep: TabRepresentative>: NSView {
+final class Tab<Rep: TabRepresentative>: NSView {
   var title: String { self.tabRepresentative.title }
 
   var tabRepresentative: Rep {

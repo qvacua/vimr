@@ -25,7 +25,7 @@ public protocol NvimViewDelegate: AnyObject {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
 }
 
-public class NvimView: NSView,
+public final class NvimView: NSView,
   UiBridgeConsumer,
   NSUserInterfaceValidations,
   NSTextInputClient

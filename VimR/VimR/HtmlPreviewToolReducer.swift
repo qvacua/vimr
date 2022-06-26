@@ -5,7 +5,7 @@
 
 import Foundation
 
-class HtmlPreviewReducer {
+final class HtmlPreviewReducer {
   static let basePath = "tools/html-preview"
 
   static func serverUrl(baseUrl: URL, uuid: UUID) -> URL {

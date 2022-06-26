@@ -38,21 +38,6 @@ then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 ## How to release
 
-### NvimServer
-
-* Tag with the name `nvimserver-x.y.z-n`. GitHub actions will build the `x86_64` version,
-  create a release and upload it.
-* Build the `arm64` version locally and upload it:
-  ```bash
-  clean=true build_libnvim=true ./NvimServer/bin/build_nvimserver.sh
-  ```
-* Build a universal binary by the following and upload the artefact:
-  ```bash
-  tag=nvimserver-x.y.z-n ./NvimServer/bin/build_release.sh
-  ```
-
-### VimR
-
 * Set a new version of VimR via
     ```bash
     is_snapshot=true ./bin/set_new_versions.sh # for snapshot or

@@ -2,6 +2,10 @@
 
 * ...
 
+# 0.41.0-20220626.182832
+
+* Neovim 0.7.2 😀
+
 # 0.40.0-20220618.161750
 
 * Improved trackpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!

@@ -6,7 +6,7 @@
 import Foundation
 import RxSwift
 
-class OpenQuicklyReducer: ReducerType {
+final class OpenQuicklyReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = OpenQuicklyWindow.Action
 

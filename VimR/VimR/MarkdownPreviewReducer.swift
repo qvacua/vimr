@@ -7,7 +7,7 @@ import Cocoa
 import Commons
 import NvimView
 
-class MarkdownPreviewReducer {
+final class MarkdownPreviewReducer {
   private static func previewState(
     for uuid: UUID,
     baseUrl: URL,

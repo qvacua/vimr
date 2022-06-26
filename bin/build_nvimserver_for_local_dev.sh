@@ -11,7 +11,7 @@ main() {
 
   pushd "./NvimServer"
     ./NvimServer/bin/build_nvimserver.sh
-    cp ./.build/release/NvimServer ../NvimView/Sources/NvimView/Resources
+    cp ./.build/apple/Products/Release/NvimServer ../NvimView/Sources/NvimView/Resources
     cp -r ./runtime ../NvimView/Sources/NvimView/Resources
     cp ../NvimView/Sources/NvimView/Resources/com.qvacua.NvimView.vim ../NvimView/Sources/NvimView/Resources/runtime/plugin
   popd >/dev/null

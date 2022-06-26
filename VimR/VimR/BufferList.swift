@@ -9,7 +9,7 @@ import NvimView
 import PureLayout
 import RxSwift
 
-class BuffersList: NSView,
+final class BuffersList: NSView,
   UiComponent,
   NSTableViewDataSource,
   NSTableViewDelegate,

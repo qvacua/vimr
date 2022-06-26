@@ -16,7 +16,7 @@ protocol UuidTagged {
   var uuid: UUID { get }
 }
 
-class UuidAction<A>: UuidTagged, CustomStringConvertible {
+final class UuidAction<A>: UuidTagged, CustomStringConvertible {
   let uuid: UUID
   let payload: A
 
@@ -30,7 +30,7 @@ class UuidAction<A>: UuidTagged, CustomStringConvertible {
   }
 }
 
-class UuidState<S>: UuidTagged, CustomStringConvertible {
+final class UuidState<S>: UuidTagged, CustomStringConvertible {
   let uuid: UUID
   let payload: S
 
@@ -44,7 +44,7 @@ class UuidState<S>: UuidTagged, CustomStringConvertible {
   }
 }
 
-class Token: Hashable, CustomStringConvertible {
+final class Token: Hashable, CustomStringConvertible {
   func hash(into hasher: inout Hasher) {
     hasher.combine(ObjectIdentifier(self))
   }
@@ -58,7 +58,7 @@ class Token: Hashable, CustomStringConvertible {
   }
 }
 
-class Marked<T>: CustomStringConvertible {
+final class Marked<T>: CustomStringConvertible {
   let mark: Token
   let payload: T
 
@@ -80,7 +80,7 @@ class Marked<T>: CustomStringConvertible {
   }
 }
 
-class UiComponentTemplate: UiComponent {
+final class UiComponentTemplate: UiComponent {
   typealias StateType = State
 
   struct State {

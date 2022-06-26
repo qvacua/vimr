@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
+final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   typealias StateType = AppState
 
   enum Action {

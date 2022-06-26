@@ -10,7 +10,7 @@ protocol WorkspaceToolDelegate: AnyObject {
   func toggle(_ tool: WorkspaceTool)
 }
 
-public class WorkspaceTool: NSView {
+public final class WorkspaceTool: NSView {
   public var dimension: CGFloat
 
   // MARK: - Public

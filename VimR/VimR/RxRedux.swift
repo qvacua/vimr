@@ -40,7 +40,7 @@ protocol ReduxContextType {
 /**
  `typealias` `StateType` and `ActionType` either within the class definition or in an extension.
  */
-class ReduxTypes: ReduxContextType {}
+final class ReduxTypes: ReduxContextType {}
 
 protocol ReducerType {
   associatedtype StateType
@@ -110,7 +110,7 @@ protocol UiComponent {
   init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType)
 }
 
-class ActionEmitter {
+final class ActionEmitter {
   var observable: Observable<ReduxTypes.ActionType> {
     self.subject.asObservable().observe(on: self.scheduler)
   }

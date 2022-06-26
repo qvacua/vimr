@@ -8,7 +8,9 @@ import NvimView
 import PureLayout
 import RxSwift
 
-class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate, NSFontChanging {
+final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate,
+  NSFontChanging
+{
   typealias StateType = AppState
 
   enum Action {

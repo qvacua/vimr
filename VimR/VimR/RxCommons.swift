@@ -10,7 +10,7 @@ extension Observable {
   func completableSubject() -> CompletableSubject<Element> { CompletableSubject(source: self) }
 }
 
-class CompletableSubject<T> {
+final class CompletableSubject<T> {
   func asObservable() -> Observable<T> { self.subject.asObservable() }
 
   init(source: Observable<T>) {

@@ -10,7 +10,7 @@ import PureLayout
 import RxSwift
 import Workspace
 
-class FileBrowser: NSView,
+final class FileBrowser: NSView,
   UiComponent
 {
   typealias StateType = MainWindow.State

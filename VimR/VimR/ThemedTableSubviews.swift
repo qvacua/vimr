@@ -12,7 +12,7 @@ protocol ThemedView: AnyObject {
   var lastThemeMark: Token { get }
 }
 
-class ThemedTableRow: NSTableRowView {
+final class ThemedTableRow: NSTableRowView {
   weak var triangleView: NSButton?
   var themeToken: Token
 
@@ -32,7 +32,7 @@ class ThemedTableRow: NSTableRowView {
     }
   }
 
-  override open func drawBackground(in dirtyRect: NSRect) {
+  override func drawBackground(in dirtyRect: NSRect) {
     if let cell = self.view(atColumn: 0) as? ThemedTableCell {
       if cell.isDir {
         cell.textField?.textColor
@@ -62,7 +62,7 @@ class ThemedTableRow: NSTableRowView {
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
-class ThemedTableCell: NSTableCellView {
+final class ThemedTableCell: NSTableCellView {
   // MARK: - API
 
   static let font = NSFont.systemFont(ofSize: 12)

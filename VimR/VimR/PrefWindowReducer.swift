@@ -5,7 +5,7 @@
 
 import Foundation
 
-class PrefWindowReducer: ReducerType {
+final class PrefWindowReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = PrefWindow.Action
 

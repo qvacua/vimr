@@ -11,7 +11,7 @@ public protocol TabRepresentative: Hashable {
   var isSelected: Bool { get }
 }
 
-public class TabBar<Rep: TabRepresentative>: NSView {
+public final class TabBar<Rep: TabRepresentative>: NSView {
   public typealias TabCallback = (Int, Rep, [Rep]) -> Void
 
   public var theme: Theme { self._theme }

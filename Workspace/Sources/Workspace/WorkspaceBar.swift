@@ -45,7 +45,7 @@ private class ProxyBar: NSView {
   }
 }
 
-class WorkspaceBar: NSView, WorkspaceToolDelegate {
+final class WorkspaceBar: NSView, WorkspaceToolDelegate {
   private static let separatorThickness = 1.0
 
   fileprivate(set) var tools = [WorkspaceTool]()

@@ -5,7 +5,7 @@
 
 import Foundation
 
-class UiRootReducer: ReducerType {
+final class UiRootReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = UiRoot.Action
 

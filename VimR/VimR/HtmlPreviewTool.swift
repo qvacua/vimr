@@ -14,7 +14,7 @@ import Workspace
 
 private let fileSystemEventsLatency = 1.0
 
-class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
+final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   enum Action {
     case selectHtmlFile(URL)
   }
