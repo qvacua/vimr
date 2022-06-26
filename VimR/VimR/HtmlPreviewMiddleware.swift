@@ -6,7 +6,7 @@
 import Commons
 import Foundation
 
-class HtmlPreviewMiddleware: MiddlewareType {
+final class HtmlPreviewMiddleware: MiddlewareType {
   static func selectFirstHtmlUrl(uuid: UUID) -> URL {
     FileUtils.tempDir().appendingPathComponent("\(uuid)-select-first.html")
   }

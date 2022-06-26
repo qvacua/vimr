@@ -6,7 +6,7 @@
 import Cocoa
 import PureLayout
 
-class ImageAndTextTableCell: NSTableCellView {
+final class ImageAndTextTableCell: NSTableCellView {
   private let _textField = NSTextField(forAutoLayout: ())
   private let _imageView = NSImageView(forAutoLayout: ())
 

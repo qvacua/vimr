@@ -5,7 +5,7 @@
 
 import Cocoa
 
-class HorizontalOnlyScrollView: NSScrollView {
+final class HorizontalOnlyScrollView: NSScrollView {
   // Needed to be able to override scrollWheel(with:)
   // https://stackoverflow.com/a/31201614
   override static var isCompatibleWithResponsiveScrolling: Bool { true }

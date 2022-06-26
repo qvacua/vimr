@@ -5,7 +5,7 @@
 
 import Foundation
 
-class RpcAppearanceEpic: EpicType {
+final class RpcAppearanceEpic: EpicType {
   typealias StateType = AppState
   typealias ActionType = UuidAction<MainWindow.Action>
   typealias EmitActionType = AppearancePref.Action

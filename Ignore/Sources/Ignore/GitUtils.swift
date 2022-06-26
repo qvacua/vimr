@@ -3,7 +3,7 @@
 
 import Foundation
 
-public class GitUtils {
+public final class GitUtils {
   static func globalGitignoreFileUrl() -> URL? {
     guard let path = shellCommandOutput(
       "git config --get core.excludesFile",

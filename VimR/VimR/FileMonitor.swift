@@ -8,7 +8,7 @@ import EonilFSEvents
 import Foundation
 import os
 
-class FileMonitor {
+final class FileMonitor {
   static let fileSystemEventsLatency = 1.0
 
   private(set) var urlToMonitor = FileUtils.userHomeUrl

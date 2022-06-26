@@ -14,7 +14,7 @@ import Sparkle
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
-class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
+final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
   var useSnapshotChannel = false
 
   func feedURLString(for _: SPUUpdater) -> String? {
@@ -27,7 +27,7 @@ class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
 }
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
   struct OpenConfig {
     var urls: [URL]
     var cwd: URL

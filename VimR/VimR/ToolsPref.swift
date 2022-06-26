@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-class ToolsPref: PrefPane, UiComponent {
+final class ToolsPref: PrefPane, UiComponent {
   typealias StateType = AppState
 
   enum Action {

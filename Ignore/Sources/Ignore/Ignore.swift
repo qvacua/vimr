@@ -3,7 +3,7 @@
 
 import Foundation
 
-public class Ignore {
+public final class Ignore {
   public static let defaultIgnoreFileNames = [".ignore", ".gitignore"]
   public static let vcsFolderPattern = [".svn/", ".hg/", ".git/"]
 

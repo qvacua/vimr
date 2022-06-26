@@ -5,7 +5,7 @@
 
 import Foundation
 
-class AppDelegateReducer: ReducerType {
+final class AppDelegateReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = AppDelegate.Action
 

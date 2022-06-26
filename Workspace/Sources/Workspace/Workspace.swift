@@ -21,7 +21,7 @@ public protocol WorkspaceDelegate: AnyObject {
   func moved(tool: WorkspaceTool)
 }
 
-public class Workspace: NSView, WorkspaceBarDelegate {
+public final class Workspace: NSView, WorkspaceBarDelegate {
   // MARK: - Public
 
   public struct Config {

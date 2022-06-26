@@ -11,7 +11,7 @@ import RxSwift
 import Tabs
 import Workspace
 
-class MainWindow: NSObject,
+final class MainWindow: NSObject,
   UiComponent,
   NSWindowDelegate,
   NSUserInterfaceValidations,

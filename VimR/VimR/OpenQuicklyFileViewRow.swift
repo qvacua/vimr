@@ -5,7 +5,7 @@
 
 import Cocoa
 
-class OpenQuicklyFileViewRow: NSTableRowView {
+final class OpenQuicklyFileViewRow: NSTableRowView {
   override func drawSelection(in dirtyRect: NSRect) {
     if self.isSelected {
       NSColor.selectedControlColor.set()

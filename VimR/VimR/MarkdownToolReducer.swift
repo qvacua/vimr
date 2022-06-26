@@ -5,7 +5,7 @@
 
 import Foundation
 
-class MarkdownToolReducer: ReducerType {
+final class MarkdownToolReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<MarkdownTool.Action>
 

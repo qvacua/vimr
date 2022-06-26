@@ -6,7 +6,7 @@
 import Cocoa
 import RxSwift
 
-class UiRoot: UiComponent {
+final class UiRoot: UiComponent {
   typealias StateType = AppState
 
   enum Action {

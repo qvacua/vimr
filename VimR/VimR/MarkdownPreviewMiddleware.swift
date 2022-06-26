@@ -7,7 +7,7 @@ import Down
 import Foundation
 import os
 
-class MarkdownPreviewMiddleware {
+final class MarkdownPreviewMiddleware {
   let markdownTool: MarkdownToolMiddleware
   let mainWindow: MainWindowMiddleware
 

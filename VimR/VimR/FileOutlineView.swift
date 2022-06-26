@@ -11,7 +11,7 @@ import os
 import PureLayout
 import RxSwift
 
-class FileOutlineView: NSOutlineView,
+final class FileOutlineView: NSOutlineView,
   UiComponent,
   NSOutlineViewDelegate,
   ThemedView
@@ -495,7 +495,7 @@ extension FileOutlineView {
   }
 }
 
-class Node: NSObject, Comparable {
+final class Node: NSObject, Comparable {
   static func < (lhs: Node, rhs: Node) -> Bool { lhs.displayName < rhs.displayName }
 
   @objc dynamic var url: URL

@@ -6,7 +6,7 @@
 import Cocoa
 import ShortcutRecorder
 
-class ShortcutService {
+final class ShortcutService {
   func update(shortcuts: [Shortcut]) {
     self.shortcuts = shortcuts
   }

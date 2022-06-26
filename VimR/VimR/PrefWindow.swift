@@ -7,7 +7,7 @@ import Cocoa
 import PureLayout
 import RxSwift
 
-class PrefWindow: NSObject,
+final class PrefWindow: NSObject,
   UiComponent,
   NSWindowDelegate,
   NSTableViewDataSource, NSTableViewDelegate

@@ -7,7 +7,7 @@ import Foundation
 import os
 import Swifter
 
-class HttpServerMiddleware {
+final class HttpServerMiddleware {
   let htmlPreviewTool: HtmlPreviewToolMiddleware
   let htmlPreviewMainWindow: HtmlPreviewMainWindowMiddleware
   let markdownPreview: MarkdownPreviewMiddleware

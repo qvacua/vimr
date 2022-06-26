@@ -6,7 +6,7 @@
 import Cocoa
 import Commons
 
-public class WorkspaceToolButton: NSView, NSDraggingSource {
+public final class WorkspaceToolButton: NSView, NSDraggingSource {
   private static let titlePadding = CGSize(width: 8, height: 2)
   private static let dummyButton = WorkspaceToolButton(title: "Dummy")
 

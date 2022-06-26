@@ -6,7 +6,7 @@
 import Cocoa
 import ShortcutRecorder
 
-class ShortcutTableRow: NSTableRowView {
+final class ShortcutTableRow: NSTableRowView {
   init(withIdentifier identifier: String) {
     super.init(frame: .zero)
     self.identifier = NSUserInterfaceItemIdentifier(identifier)
@@ -18,7 +18,7 @@ class ShortcutTableRow: NSTableRowView {
   }
 }
 
-class ShortcutTableCell: NSTableCellView {
+final class ShortcutTableCell: NSTableCellView {
   static let font = NSFont.systemFont(ofSize: 13)
   static let boldFont = NSFont.boldSystemFont(ofSize: 13)
 

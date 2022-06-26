@@ -41,7 +41,7 @@ protocol UiBridgeConsumer: AnyObject {
   func suspend()
 }
 
-class UiBridge {
+final class UiBridge {
   weak var consumer: UiBridgeConsumer?
 
   init(uuid: UUID, config: NvimView.Config) {

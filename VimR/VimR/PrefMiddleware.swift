@@ -7,7 +7,7 @@ import Cocoa
 import DictionaryCoding
 import os
 
-class PrefMiddleware: MiddlewareType {
+final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
   typealias ActionType = AnyAction
 

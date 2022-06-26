@@ -9,7 +9,7 @@ import PureLayout
 /**
  This class is used to display the placeholder bar when a tool is drag & dropped to a location with no existing tools.
  */
-class ProxyWorkspaceBar: NSView {
+final class ProxyWorkspaceBar: NSView {
   var theme = Workspace.Theme.default
 
   @available(*, unavailable)

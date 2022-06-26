@@ -6,7 +6,7 @@ import Foundation
 import Ignore
 import OrderedCollections
 
-class IgnoreService {
+final class IgnoreService {
   var root: URL {
     didSet {
       self.rootIgnore = Ignore(base: self.root, parent: Ignore.globalGitignore(base: self.root))

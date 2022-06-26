@@ -8,7 +8,7 @@ import CoreData
 import Foundation
 import os
 
-class CoreDataStack {
+final class CoreDataStack {
   enum Error: Swift.Error {
     case noCacheFolder
     case pathDoesNotExit

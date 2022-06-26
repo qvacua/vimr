@@ -5,7 +5,7 @@
 
 import Foundation
 
-class MainWindowReducer: ReducerType {
+final class MainWindowReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<MainWindow.Action>
 

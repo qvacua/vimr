@@ -8,7 +8,7 @@ import PureLayout
 import RxSwift
 import ShortcutRecorder
 
-class ShortcutsPref: PrefPane,
+final class ShortcutsPref: PrefPane,
   UiComponent,
   NSOutlineViewDelegate,
   RecorderControlDelegate

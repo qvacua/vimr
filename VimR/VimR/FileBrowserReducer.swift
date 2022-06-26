@@ -5,7 +5,7 @@
 
 import Foundation
 
-class FileBrowserReducer: ReducerType {
+final class FileBrowserReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<FileBrowser.Action>
 
