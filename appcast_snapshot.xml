@@ -6,32 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.40.0-20220618.161750</title>
+      <title>v0.41.0-20220626.182832</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220618.161750</sparkle:version>
-      <sparkle:shortVersionString>v0.40.0</sparkle:shortVersionString>
+      <sparkle:version>20220626.182832</sparkle:version>
+      <sparkle:shortVersionString>v0.41.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Improved trackpad scrolling sensitivity (removed the option for customizing the sensitivity). Thanks @tsung-ju for the PR!</li>
-<li>Refactor open quickly:<ul>
-<li>Use <a href="https://github.com/jhawthorn/fzy">fzy</a> instead of <a href="https://github.com/MaskRay/ccls">ccls</a></li>
-<li>Replace <a href="https://github.com/ggreer/the_silver_searcher">The Silver Searcher</a>'s ignore mechanism with own implementation in Swift using <a href="https://github.com/davvid/wildmatch">wildmatch</a></li>
-</ul>
-</li>
-<li>Dependencies updates<ul>
-<li>Quick/Nimble@10.0.0</li>
-<li>qvacua/misc.swift@0.0.1</li>
-</ul>
-</li>
+<li>Neovim 0.7.2 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.40.0-20220618.161750
+        https://github.com/qvacua/vimr/releases/tag/v0.41.0-20220626.182832
       </releaseNotesLink>
-      <pubDate>2022-06-18T16:26:12.761684</pubDate>
+      <pubDate>2022-06-26T18:52:31.247376</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.40.0-20220618.161750/VimR-v0.40.0.tar.bz2"
-                 sparkle:edSignature="ajaCAcCSK14qN1Fo7zGWM5p+GdkID9S+14tHPjJWGJg9ZyA7qCM0j+FPE8WRpRc9ymvs77zxxTPcEL8qwLpDCg==" length="21435446"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.41.0-20220626.182832/VimR-v0.41.0.tar.bz2"
+                 sparkle:edSignature="IUqDBwkTsTFh6M//X1AL21+4q2CbiBjv1PZZDdp3tqP84iwBq9VIauTY4sw07PrRE3xZ09w+CwZ/BNeVKGzfDg==" length="21355568"
                  type="application/octet-stream"/>
     </item>
   </channel>
