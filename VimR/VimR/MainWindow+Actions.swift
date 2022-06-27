@@ -23,6 +23,10 @@ extension MainWindow {
     let params = Array(rawParams.suffix(from: 1))
 
     switch event {
+
+    case .revealCurrentBufferInFileBrowser:
+        self.revealCurrentBufferInFileBrowser()
+
     case .makeSessionTemporary:
       self.emit(self.uuidAction(for: .makeSessionTemporary))
 
