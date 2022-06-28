@@ -2,6 +2,10 @@
 
 * ...
 
+# 0.41.1-20220628.205401
+
+* Bugfix: Sometimes macOS returns a weird locale, e.g., `en_DE.UTF-8`, which Neovim does not understand.
+
 # 0.41.0-20220626.182832
 
 * Neovim 0.7.2 😀
