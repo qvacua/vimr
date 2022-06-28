@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.41.1-20220628.205401</title>
+      <title>v0.41.0-20220626.182832</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220628.205401</sparkle:version>
-      <sparkle:shortVersionString>v0.41.1</sparkle:shortVersionString>
+      <sparkle:version>20220626.182832</sparkle:version>
+      <sparkle:shortVersionString>v0.41.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Sometimes macOS returns a weird locale, e.g., <code>en_DE.UTF-8</code>, which Neovim does not understand.</li>
+<li>Neovim 0.7.2 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.41.1-20220628.205401
+        https://github.com/qvacua/vimr/releases/tag/v0.41.0-20220626.182832
       </releaseNotesLink>
-      <pubDate>2022-06-28T21:02:41.775822</pubDate>
+      <pubDate>2022-06-26T18:52:31.247376</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.41.1-20220628.205401/VimR-v0.41.1.tar.bz2"
-                 sparkle:edSignature="fPmEbs53SlkvnIQsBBgdGS3Br7ujmWM4kipy92/rto3f84LyFuVVGSL+HFUcx2PLrFMT59wv+3NhJd41OH87Dw==" length="21355496"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.41.0-20220626.182832/VimR-v0.41.0.tar.bz2"
+                 sparkle:edSignature="IUqDBwkTsTFh6M//X1AL21+4q2CbiBjv1PZZDdp3tqP84iwBq9VIauTY4sw07PrRE3xZ09w+CwZ/BNeVKGzfDg==" length="21355568"
                  type="application/octet-stream"/>
     </item>
   </channel>
