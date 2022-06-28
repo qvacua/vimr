@@ -1,7 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-declare -x target; target="$(uname -m)"; readonly target
 declare -r -x clean=${clean:-false}
 declare -r -x build_libnvim=${build_libnvim:-true}
 declare -r -x build_dir=${build_dir:-"./.build"}
