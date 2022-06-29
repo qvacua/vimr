@@ -599,6 +599,10 @@ final class MainWindow: NSObject,
   func revealCurrentBufferInFileBrowser() {
     self.fileBrowser?.scrollToSourceAction(nil)
   }
+
+  func refreshFileBrowser() {
+    self.fileBrowser?.refreshAction(nil)
+  }
 }
 
 // NvimViewDelegate

@@ -21,14 +21,19 @@ function! s:VimRToggleToolButtons(value) abort
 	call rpcnotify(0, 'com.qvacua.NvimView', 'toggle-tool-buttons', a:value)
 endfunction
 
-function! s:VimRRevealCurrentBufferInFileExplorer() abort
-  " case revealCurrentBufferInFileBrowser = "com.qvacua.vimr.rpc-events.reveal-current-buffer-in-browser"
-	call rpcnotify(0, 'com.qvacua.NvimView', 'reveal-current-buffer-in-browser')
-endfunction
-command! -nargs=0 VimRRevealCurrentBuffer call s:VimRRevealCurrentBufferInFileExplorer()
 command! -nargs=0 VimRHideToolButtons call s:VimRToggleToolButtons(-1)
 command! -nargs=0 VimRToggleToolButtons call s:VimRToggleToolButtons(0)
 command! -nargs=0 VimRShowToolButtons call s:VimRToggleToolButtons(1)
+
+function! s:VimRRevealCurrentBufferInFileBrowser() abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'reveal-current-buffer-in-file-browser')
+endfunction
+command! -nargs=0 VimRRevealCurrentBuffer call s:VimRRevealCurrentBufferInFileBrowser()
+
+function! s:VimRRefreshFileBrowser() abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'refresh-file-browser')
+endfunction
+command! -nargs=0 VimRRefreshFileBrowser call s:VimRRefreshFileBrowser()
 
 function! s:VimRToggleFullscreen() abort
 	call rpcnotify(0, 'com.qvacua.NvimView', 'toggle-fullscreen')

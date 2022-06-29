@@ -72,5 +72,4 @@ let legacyDefaultShortcuts = [
   "com.qvacua.vimr.menuitems.window.bring-all-to-front",
   "com.qvacua.vimr.menuitems.window.minimize",
   "com.qvacua.vimr.menuitems.window.zoom",
-  "com.qvacua.vimr.file-browser.tools.reveal-current-buffer"
 ]

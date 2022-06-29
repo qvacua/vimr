@@ -24,6 +24,9 @@ extension MainWindow {
 
     switch event {
 
+    case .refreshFileBrowser:
+        self.refreshFileBrowser()
+
     case .revealCurrentBufferInFileBrowser:
         self.revealCurrentBufferInFileBrowser()
 
