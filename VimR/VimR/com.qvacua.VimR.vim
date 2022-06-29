@@ -26,7 +26,9 @@ command! -nargs=0 VimRToggleToolButtons call s:VimRToggleToolButtons(0)
 command! -nargs=0 VimRShowToolButtons call s:VimRToggleToolButtons(1)
 
 function! s:VimRRevealCurrentBufferInFileBrowser() abort
-	call rpcnotify(0, 'com.qvacua.NvimView', 'reveal-current-buffer-in-file-browser')
+	if filereadable(expand('%'))
+		call rpcnotify(0, 'com.qvacua.NvimView', 'reveal-current-buffer-in-file-browser')
+	endif
 endfunction
 command! -nargs=0 VimRRevealCurrentBuffer call s:VimRRevealCurrentBufferInFileBrowser()
 
