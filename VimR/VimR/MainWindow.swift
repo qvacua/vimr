@@ -595,6 +595,14 @@ final class MainWindow: NSObject,
       Swift.print("fdsfd")
     }
   }
+  
+  func revealCurrentBufferInFileBrowser() {
+    self.fileBrowser?.scrollToSourceAction(nil)
+  }
+
+  func refreshFileBrowser() {
+    self.fileBrowser?.refreshAction(nil)
+  }
 }
 
 // NvimViewDelegate
