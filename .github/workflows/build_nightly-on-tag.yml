@@ -26,5 +26,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ github.ref_name }} ./build/Build/Products/Release/VimR-neovim-nightly-unsigned.tar.bz2 --clobber
+          gh release delete ${{ github.ref_name }} -y
+          gh release create ${{ github.ref_name }} -p -t "VimR with neovim nightly" -F resources/nightly-release-notes
+          gh release upload ${{ github.ref_name }} ./build/Build/Products/Release/VimR-neovim-nightly-unsigned.tar.bz2
 
