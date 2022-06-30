@@ -17,4 +17,7 @@ enum RpcEvent: String, CaseIterable {
   case setFont = "com.qvacua.vimr.rpc-events.set-font"
   case setLinespacing = "com.qvacua.vimr.rpc-events.set-linespacing"
   case setCharacterspacing = "com.qvacua.vimr.rpc-events.set-characterspacing"
+  
+  case revealCurrentBufferInFileBrowser = "com.qvacua.vimr.rpc-events.reveal-current-buffer-in-file-browser"
+  case refreshFileBrowser = "com.qvacua.vimr.rpc-events.refresh-file-browser"
 }

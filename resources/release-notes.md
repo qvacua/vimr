@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* Add `VimRRefreshFileBrowser` and `VimRRevealCurrentBufferInFileBrowser` functions. Thanks @jaanauati for the PR!
 
 # 0.41.2-20220628.220813
 
