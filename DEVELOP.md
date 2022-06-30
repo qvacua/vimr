@@ -1,32 +1,12 @@
 ## How to develop
 
-### No change in NvimServer
-
-If you did not change NvimServer, i.e. NvimServer, NvimServerTypes, and neovim,
-then, do the following to run VimR:
-
-* `./bin/download_nvimserver.sh`
-* Run VimR scheme in Xcode
-
-A development version of VimR will be built and run,
-i.e. the bundle identifier will be `com.qvacua.VimR.dev` and the name of the app will be `VimR-dev`.
-If you want to build a development version as a release build, then use the following:
+To build NvimServer, do the following
 
 ```bash
-clean=true ./bin/build_vimr_dev.sh
+build_libnvim=true clean=false ./bin/build_nvimserver_for_local_dev.sh
 ```
 
-### Changes in NvimServer
-
-Since SwiftPM does not support a script phase, we have to copy some files manually,
-e.g. `NvimServer` binary.
-This can be done with the following:
-
-```bash
-build_libnvim=true clean=true ./bin/build_nvimserver_for_local_dev.sh
-```
-
-See the `build_nvimserver_for_local_dev` script for default values of the env vars.
+You can set `clean=true` if you want to clean the existing build.
 You can also use a watch script as follows (it uses `entr`):
 
 ```bash
