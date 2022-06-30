@@ -16,6 +16,14 @@ clean_initial_build=true ./bin/watch_nvimserver_and_build
 When `clean_initial_build` is `true`, the script will clean and build,
 then continuously invoke the `build_nvimserver_for_local_dev` script.
 
+## How to build nightly
+
+```bash
+git tag -f neovim-nightly; git push -f origin neovim-nightly
+```
+
+Then, GitHub actions will build and re-create the release.
+
 ## How to release
 
 * Set a new version of VimR via
