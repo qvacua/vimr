@@ -1,6 +1,7 @@
 # Next
 
 * Add `VimRRefreshFileBrowser` and `VimRRevealCurrentBufferInFileBrowser` functions. Thanks @jaanauati for the PR!
+* Include `libintl` again.
 
 # 0.41.2-20220628.220813
 
