@@ -9,9 +9,9 @@ import Foundation
 import MessagePack
 import NvimServerTypes
 import os
+import RxNeovim
 import RxPack
 import RxSwift
-import RxNeovim
 
 extension NvimView {
   final func initVimError() {
@@ -400,9 +400,10 @@ extension NvimView {
     // Visual -> Insert
     // Normal -> Insert
     // avoid insert -> insert
-    if case self.mode = CursorModeShape.insert, self.lastMode != self.mode, self.activateAsciiImInNormalMode {
-      TISSelectInputSource(self.lastImSource)
-    }
+    if case self.mode = CursorModeShape.insert,
+       self.lastMode != self.mode,
+       self.activateAsciiImInNormalMode
+    { TISSelectInputSource(self.lastImSource) }
   }
 }
 

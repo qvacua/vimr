@@ -8,11 +8,11 @@ import Cocoa
 import Commons
 import MessagePack
 import os
-import RxPack
 import RxNeovim
+import RxPack
 import RxSwift
-import Tabs
 import SpriteKit
+import Tabs
 
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting
@@ -25,11 +25,7 @@ public protocol NvimViewDelegate: AnyObject {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
 }
 
-public final class NvimView: NSView,
-  UiBridgeConsumer,
-  NSUserInterfaceValidations,
-  NSTextInputClient
-{
+public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
 
   public static let rpcEventName = "com.qvacua.NvimView"
