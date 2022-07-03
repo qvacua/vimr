@@ -11,38 +11,8 @@ import os
 import RxPack
 import RxSwift
 
-protocol UiBridgeConsumer: AnyObject {
-  func initVimError()
-  func resize(_ value: MessagePackValue)
-  func clear()
-  func modeChange(_ value: MessagePackValue)
-  func modeInfoSet(_ value: MessagePackValue)
-  func flush(_ renderData: [MessagePackValue])
-  func setTitle(with value: MessagePackValue)
-  func stop()
-  func autoCommandEvent(_ value: MessagePackValue)
-  func ipcBecameInvalid(_ error: Swift.Error)
-  func bell()
-  func cwdChanged(_ value: MessagePackValue)
-  func colorSchemeChanged(_ value: MessagePackValue)
-  func defaultColorsChanged(_ value: MessagePackValue)
-  func optionSet(_ value: MessagePackValue)
-  func setDirty(with value: MessagePackValue)
-  func rpcEventSubscribed()
-  func event(_ value: MessagePackValue)
-  func bridgeHasFatalError(_ value: MessagePackValue?)
-  func setAttr(with value: MessagePackValue)
-  func updateMenu()
-  func busyStart()
-  func busyStop()
-  func mouseOn()
-  func mouseOff()
-  func visualBell()
-  func suspend()
-}
-
 final class UiBridge {
-  weak var consumer: UiBridgeConsumer?
+  weak var consumer: NvimView?
 
   init(uuid: UUID, config: NvimView.Config) {
     self.uuid = uuid
