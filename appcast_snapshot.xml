@@ -6,22 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.41.2-20220628.220813</title>
+      <title>v0.42.0-20220703.104316</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220628.220813</sparkle:version>
-      <sparkle:shortVersionString>v0.41.2</sparkle:shortVersionString>
+      <sparkle:version>20220703.104316</sparkle:version>
+      <sparkle:shortVersionString>v0.42.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Sometimes macOS returns a weird locale, e.g., <code>en_DE.UTF-8</code>, which Neovim does not understand.</li>
+<li>Add <code>VimRRefreshFileBrowser</code> and <code>VimRRevealCurrentBufferInFileBrowser</code> functions. Thanks @jaanauati for the PR!</li>
+<li>Include <code>libintl</code> again.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.41.2-20220628.220813
+        https://github.com/qvacua/vimr/releases/tag/v0.42.0-20220703.104316
       </releaseNotesLink>
-      <pubDate>2022-06-28T22:18:04.371001</pubDate>
+      <pubDate>2022-07-03T10:54:09.065903</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.41.2-20220628.220813/VimR-v0.41.2.tar.bz2"
-                 sparkle:edSignature="Z2HBQgMm6Dp9PRLbK8UKE1YgxfHVp1OdYgc8eUhLyafDL9SHlnr4oxJN4OQo4wYxGRTVgxBZUSCjy2Y3FzzpCg==" length="21353975"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.0-20220703.104316/VimR-v0.42.0.tar.bz2"
+                 sparkle:edSignature="QK450vv5rdWyzpT7lJ9f4aFeL8VNbb1Izr/fb7wSVZhrIsNXn5tNI8p5ERiY+R1GxQFK5AWKYuvBDHwdYEuHDQ==" length="21355522"
                  type="application/octet-stream"/>
     </item>
   </channel>
