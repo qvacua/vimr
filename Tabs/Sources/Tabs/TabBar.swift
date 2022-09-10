@@ -115,21 +115,21 @@ extension TabBar {
     stack.autoPinEdge(toSuperviewEdge: .bottom)
 
     stack.spacing = self._theme.tabSpacing
-    stack.postDraggingHandler = { stackView, draggedView in
-      self.tabs = stackView.arrangedSubviews.compactMap { $0 as? Tab<Rep> }
+    stack.postDraggingHandler = { [weak self] stackView, draggedView in
+      self?.tabs = stackView.arrangedSubviews.compactMap { $0 as? Tab<Rep> }
 
       if let draggedTab = draggedView as? Tab<Rep>,
-         let indexOfDraggedTab = self.tabs.firstIndex(where: { $0 == draggedTab })
+         let indexOfDraggedTab = self?.tabs.firstIndex(where: { $0 == draggedTab })
       {
-        self.reorderHandler?(
+        self?.reorderHandler?(
           indexOfDraggedTab,
           draggedTab.tabRepresentative,
-          self.tabs.map(\.tabRepresentative)
+          self?.tabs.map(\.tabRepresentative) ?? []
         )
       }
 
       let endIndex = stackView.arrangedSubviews.endIndex - 1
-      self.tabs.enumerated().forEach { index, tab in
+      self?.tabs.enumerated().forEach { index, tab in
         tab.position = []
         if index == 0 { tab.position.insert(.first) }
         if index == endIndex { tab.position.insert(.last) }

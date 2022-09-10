@@ -1,5 +1,9 @@
 # Next
 
+* Bugfix: Memory leak (custom tabs).
+
+# 0.42.0-20220703.104316
+
 * Add `VimRRefreshFileBrowser` and `VimRRevealCurrentBufferInFileBrowser` functions. Thanks @jaanauati for the PR!
 * Include `libintl` again.
 
