@@ -6,23 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.42.0-20220703.104316</title>
+      <title>v0.42.1-20220910.153746</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220703.104316</sparkle:version>
-      <sparkle:shortVersionString>v0.42.0</sparkle:shortVersionString>
+      <sparkle:version>20220910.153746</sparkle:version>
+      <sparkle:shortVersionString>v0.42.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Add <code>VimRRefreshFileBrowser</code> and <code>VimRRevealCurrentBufferInFileBrowser</code> functions. Thanks @jaanauati for the PR!</li>
-<li>Include <code>libintl</code> again.</li>
+<li>Bugfix: Memory leak (custom tabs).</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.42.0-20220703.104316
+        https://github.com/qvacua/vimr/releases/tag/v0.42.1-20220910.153746
       </releaseNotesLink>
-      <pubDate>2022-07-03T10:54:09.065903</pubDate>
+      <pubDate>2022-09-10T15:46:20.838961</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.0-20220703.104316/VimR-v0.42.0.tar.bz2"
-                 sparkle:edSignature="QK450vv5rdWyzpT7lJ9f4aFeL8VNbb1Izr/fb7wSVZhrIsNXn5tNI8p5ERiY+R1GxQFK5AWKYuvBDHwdYEuHDQ==" length="21355522"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.1-20220910.153746/VimR-v0.42.1.tar.bz2"
+                 sparkle:edSignature="TVgFx+Ceev99TOq4Xc1iSu4uh7Ko+sS2tiyyM607inTsxbDNL3lr+Cm/WzloyNdrLC85ifMSq6AhPfAwkJaQCQ==" length="21437371"
                  type="application/octet-stream"/>
     </item>
   </channel>
