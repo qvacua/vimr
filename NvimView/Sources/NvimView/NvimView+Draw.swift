@@ -222,8 +222,7 @@ extension NvimView {
     columnRange: ClosedRange<Int>
   ) -> [AttributesRun] {
     rowRange.map { row in
-      self.ugrid.cells[row][columnRange]
-        .groupedRanges(with: { cell in cell.attrId })
+      groupedRanges(of: self.ugrid.cells[row][columnRange])
         .compactMap { range in
           let cells = self.ugrid.cells[row][range]
 
@@ -273,3 +272,38 @@ private let infoTextAttrs = [
 ]
 
 private let colorSpace = NSColorSpace.sRGB
+
+/// When we use the following private function instead of the public extension function in
+/// Commons.FoundationCommons.swift.groupedRanges(with:), then, according to Instruments
+/// the percentage of the function is reduced from ~ 15% to 0%.
+/// Keep the logic in sync with Commons.FoundationCommons.swift.groupedRanges(with:). Tests are
+/// present in Commons lib.
+private func groupedRanges(of cells: ArraySlice<UCell>) -> [ClosedRange<Int>] {
+  if cells.isEmpty { return [] }
+  if cells.count == 1 { return [cells.startIndex...cells.startIndex] }
+
+  var result = [ClosedRange<Int>]()
+  result.reserveCapacity(cells.count / 2)
+
+  let inclusiveEndIndex = cells.endIndex - 1
+  var lastStartIndex = cells.startIndex
+  var lastEndIndex = cells.startIndex
+  var lastMarker = cells.first!.attrId // cells is not empty!
+  for i in cells.startIndex..<cells.endIndex {
+    let currentMarker = cells[i].attrId
+
+    if lastMarker == currentMarker {
+      if i == inclusiveEndIndex { result.append(lastStartIndex...i) }
+    } else {
+      result.append(lastStartIndex...lastEndIndex)
+      lastMarker = currentMarker
+      lastStartIndex = i
+
+      if i == inclusiveEndIndex { result.append(i...i) }
+    }
+
+    lastEndIndex = i
+  }
+
+  return result
+}

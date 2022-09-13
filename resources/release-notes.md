@@ -1,5 +1,13 @@
 # Next
 
+* ...
+
+# 0.42.2-20220913.230838
+
+* Improve rendering performance.
+
+# 0.42.1-20220910.153746
+
 * Bugfix: Memory leak (custom tabs).
 
 # 0.42.0-20220703.104316
