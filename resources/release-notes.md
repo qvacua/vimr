@@ -1,5 +1,6 @@
 # Next
 
+* Improve rendering performance.
 * ...
 
 # 0.42.1-20220910.153746
