@@ -1,7 +1,10 @@
 # Next
 
-* Improve rendering performance.
 * ...
+
+# 0.42.2-20220913.230838
+
+* Improve rendering performance.
 
 # 0.42.1-20220910.153746
 
