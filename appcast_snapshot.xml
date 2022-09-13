@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.42.1-20220910.153746</title>
+      <title>v0.42.2-20220913.230838</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220910.153746</sparkle:version>
-      <sparkle:shortVersionString>v0.42.1</sparkle:shortVersionString>
+      <sparkle:version>20220913.230838</sparkle:version>
+      <sparkle:shortVersionString>v0.42.2</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Bugfix: Memory leak (custom tabs).</li>
+<li>Improve rendering performance.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.42.1-20220910.153746
+        https://github.com/qvacua/vimr/releases/tag/v0.42.2-20220913.230838
       </releaseNotesLink>
-      <pubDate>2022-09-10T15:46:20.838961</pubDate>
+      <pubDate>2022-09-13T23:18:03.725690</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.1-20220910.153746/VimR-v0.42.1.tar.bz2"
-                 sparkle:edSignature="TVgFx+Ceev99TOq4Xc1iSu4uh7Ko+sS2tiyyM607inTsxbDNL3lr+Cm/WzloyNdrLC85ifMSq6AhPfAwkJaQCQ==" length="21437371"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.2-20220913.230838/VimR-v0.42.2.tar.bz2"
+                 sparkle:edSignature="AbabQPPjogx60fPES3jGH0aqiko9Vc6d2+i+h6vycAlX8GQKNIGRjeEe7gx17pSrvfdMmHdztGE5hETOI6reBw==" length="21682056"
                  type="application/octet-stream"/>
     </item>
   </channel>
