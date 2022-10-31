@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.42.2-20220913.230838</title>
+      <title>SNAPSHOT-20221031.204527</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220913.230838</sparkle:version>
-      <sparkle:shortVersionString>v0.42.2</sparkle:shortVersionString>
+      <sparkle:version>20221031.204527</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20221031.204527</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Improve rendering performance.</li>
+<li>Neovim 0.8.0</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.42.2-20220913.230838
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20221031.204527
       </releaseNotesLink>
-      <pubDate>2022-09-13T23:18:03.725690</pubDate>
+      <pubDate>2022-10-31T20:54:28.306288</pubDate>
       <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.2-20220913.230838/VimR-v0.42.2.tar.bz2"
-                 sparkle:edSignature="AbabQPPjogx60fPES3jGH0aqiko9Vc6d2+i+h6vycAlX8GQKNIGRjeEe7gx17pSrvfdMmHdztGE5hETOI6reBw==" length="21682056"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20221031.204527/VimR-SNAPSHOT-20221031.204527.tar.bz2"
+                 sparkle:edSignature="9JXjUVgUTB+/jjY0GvO2tVcnroQ2e1XqI2YFaDUnFdaQaIghk/pElOmnsWuUXaVG3UdVSmHM3+aW0El9fmyxAA==" length="18772257"
                  type="application/octet-stream"/>
     </item>
   </channel>
