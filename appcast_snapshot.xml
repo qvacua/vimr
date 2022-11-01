@@ -22,7 +22,7 @@
         https://github.com/qvacua/vimr/releases/tag/snapshot/20221101.101711
       </releaseNotesLink>
       <pubDate>2022-11-01T10:27:24.105407</pubDate>
-      <minimumSystemVersion>10.13.0</minimumSystemVersion>
+      <minimumSystemVersion>10.15.0</minimumSystemVersion>
       <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20221101.101711/VimR-SNAPSHOT-20221101.101711.tar.bz2"
                  sparkle:edSignature="ZbniyF8M4oMRgvWMJw4U5x6e0Y1ImUpR9hgUCHc6ZWrOkdRj+nYHrUtlziVDGO5nGfOy8vN1Y7j+gwWzFVx9AA==" length="18760570"
                  type="application/octet-stream"/>
