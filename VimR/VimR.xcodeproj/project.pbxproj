@@ -1127,7 +1127,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20221031.204527;
+				CURRENT_PROJECT_VERSION = 20221101.101711;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1188,7 +1188,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20221031.204527;
+				CURRENT_PROJECT_VERSION = 20221101.101711;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1217,7 +1217,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20221031.204527;
+				CURRENT_PROJECT_VERSION = 20221101.101711;
 				DEFINES_MODULE = YES;
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
@@ -1239,7 +1239,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20221031.204527;
+				CURRENT_PROJECT_VERSION = 20221101.101711;
 				DEFINES_MODULE = YES;
 				IBC_MODULE = VimR;
 				INFOPLIST_FILE = VimR/Info.plist;
@@ -1347,7 +1347,7 @@
 			repositoryURL = "https://github.com/Kentzo/ShortcutRecorder";
 			requirement = {
 				kind = exactVersion;
-				version = 3.3.0;
+				version = 3.4.0;
 			};
 		};
 		4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */ = {
@@ -1371,7 +1371,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 2.1.0;
+				version = 2.3.0;
 			};
 		};
 		4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
