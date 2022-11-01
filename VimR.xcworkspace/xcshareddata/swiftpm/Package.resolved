@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kentzo/ShortcutRecorder",
       "state" : {
-        "revision" : "07b065085e172d85b7b5a0f3cc05f6ed47ad5af1",
-        "version" : "3.3.0"
+        "revision" : "c86ce0f9be5353ba998966121c7631602a9a36f7",
+        "version" : "3.4.0"
       }
     },
     {
