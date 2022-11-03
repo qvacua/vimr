@@ -56,6 +56,16 @@ check_gh_release_present() {
 
 build_release() {
   echo "### Building release"
+
+  # Check whether NvimServer submodule is clean
+  git submodule update
+  pushd NvimServer >/dev/null
+    if [[ ! -z "$(git status --porcelain)" ]]; then
+      echo "NvimServer submodule not clean!"
+      exit 1
+    fi
+  popd >/dev/null
+
   clean=true notarize=true use_carthage_cache=false ./bin/build_vimr.sh
 
   pushd "${build_folder_path}" >/dev/null
