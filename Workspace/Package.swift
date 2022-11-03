@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "Workspace",
-  platforms: [.macOS(.v10_13)],
+  platforms: [.macOS(.v10_15)],
   products: [
     .library(name: "Workspace", targets: ["Workspace"]),
   ],

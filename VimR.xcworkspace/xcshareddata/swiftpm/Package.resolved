@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/misc.swift",
       "state" : {
-        "revision" : "e963af99e5eddc14b0f28c5c87a1f582c88bf128",
-        "version" : "0.0.1"
+        "revision" : "7edc70087f16fdc411d24b0fe726e55f9d65d982",
+        "version" : "0.2.0"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "revision" : "1f3bde57bde12f5e7b07909848c071e9b73d6edc",
-        "version" : "10.0.0"
+        "revision" : "96f0ee4751318a5b3c36f347522cfacfd5aa1473",
+        "version" : "11.1.0"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/RxPack.swift",
       "state" : {
-        "revision" : "c47c1a1bf33f6f8380bc74fb788d9b5554c09f93",
-        "version" : "0.1.0"
+        "revision" : "c6ac590f28d16f1f4e37e737b226fd4229f24a98",
+        "version" : "0.2.0"
       }
     },
     {
