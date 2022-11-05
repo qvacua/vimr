@@ -40,7 +40,7 @@ final class ShortcutTableCell: NSTableCellView {
       .value,
       to: content,
       withKeyPath: keypath,
-      options: [.valueTransformer: ValueTransformer.keyedUnarchiveFromDataTransformer]
+      options: [.valueTransformer: ShortcutValueTransformer.shared]
     )
   }
 

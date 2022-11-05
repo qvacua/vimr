@@ -63,8 +63,10 @@ public extension NSColor {
   }
 
   convenience init?(hex: String) {
-    var result: UInt32 = 0
-    guard hex.count == 6, Scanner(string: hex).scanHexInt32(&result) else { return nil }
+    guard hex.count == 6,
+          let uint64 = Scanner(string: hex).scanUInt64(representation: .hexadecimal)
+    else { return nil }
+    let result = UInt32(uint64)
 
     let r = (result & 0xFF0000) >> 16
     let g = (result & 0x00FF00) >> 8
@@ -126,7 +128,7 @@ public extension NSView {
   /// - Warning: Call only in drawRect()
   func rectsBeingDrawn() -> [CGRect] {
     var rectsPtr: UnsafePointer<CGRect>?
-    var count: Int = 0
+    var count = 0
     self.getRectsBeingDrawn(&rectsPtr, count: &count)
 
     return Array(UnsafeBufferPointer(start: rectsPtr, count: count))
@@ -134,7 +136,8 @@ public extension NSView {
 }
 
 public extension NSEvent.ModifierFlags {
-  // Values are from https://github.com/SFML/SFML/blob/master/src/SFML/Window/OSX/SFKeyboardModifiersHelper.mm
+  // Values are from
+  // https://github.com/SFML/SFML/blob/master/src/SFML/Window/OSX/SFKeyboardModifiersHelper.mm
   static let rightShift = NSEvent.ModifierFlags(rawValue: 0x020004)
   static let leftShift = NSEvent.ModifierFlags(rawValue: 0x020002)
   static let rightCommand = NSEvent.ModifierFlags(rawValue: 0x100010)
