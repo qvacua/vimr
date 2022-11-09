@@ -8,6 +8,24 @@ import PureLayout
 import RxSwift
 import ShortcutRecorder
 
+final class ShortcutValueTransformer: ValueTransformer {
+  static let shared = ShortcutValueTransformer()
+
+  override class func allowsReverseTransformation() -> Bool { true }
+
+  /// Data to Shortcut
+  override func transformedValue(_ value: Any?) -> Any? {
+    guard let value, let data = value as? Data else { return nil }
+    return try? NSKeyedUnarchiver.unarchivedObject(ofClass: Shortcut.self, from: data)
+  }
+
+  /// Shortcut to Data
+  override func reverseTransformedValue(_ value: Any?) -> Any? {
+    guard let value, let shortcut = value as? Shortcut else { return nil }
+    return try? NSKeyedArchiver.archivedData(withRootObject: shortcut, requiringSecureCoding: true)
+  }
+}
+
 final class ShortcutsPref: PrefPane,
   UiComponent,
   NSOutlineViewDelegate,
@@ -93,9 +111,7 @@ final class ShortcutsPref: PrefPane,
         shortcut = defaultShortcuts[id] ?? nil
       }
 
-      let data = ValueTransformer
-        .keyedUnarchiveFromDataTransformer
-        .reverseTransformedValue(shortcut) as? NSData
+      let data = ShortcutValueTransformer.shared.reverseTransformedValue(shortcut) as? NSData
       self.shortcutsUserDefaults?.set(data, forKey: id)
     }
 
@@ -103,7 +119,7 @@ final class ShortcutsPref: PrefPane,
   }
 
   private func initShortcutUserDefaults() {
-    let transformer = ValueTransformer.keyedUnarchiveFromDataTransformer
+    let transformer = ShortcutValueTransformer.shared
     defaultShortcuts.forEach { id, shortcut in
       if self.shortcutsUserDefaults?.value(forKey: id) == nil {
         let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
@@ -206,7 +222,7 @@ final class ShortcutsPref: PrefPane,
   }
 
   private func updateShortcutService() {
-    let transformer = ValueTransformer.keyedUnarchiveFromDataTransformer
+    let transformer = ShortcutValueTransformer.shared
     let shortcuts = defaultShortcuts.compactMap { id, shortcut -> Shortcut? in
       if self.shortcutsUserDefaults?.value(forKey: id) == nil { return shortcut }
 
@@ -269,9 +285,7 @@ extension ShortcutsPref {
       guard response == .alertSecondButtonReturn else { return }
       self.traverseMenuItems { identifier, _ in
         let shortcut = defaultShortcuts[identifier] ?? Shortcut(keyEquivalent: "")
-        let valueToWrite = ValueTransformer
-          .keyedUnarchiveFromDataTransformer
-          .reverseTransformedValue(shortcut)
+        let valueToWrite = ShortcutValueTransformer.shared.reverseTransformedValue(shortcut)
 
         self.shortcutsDefaultsController.setValue(valueToWrite, forKeyPath: "values.\(identifier)")
 
@@ -329,8 +343,7 @@ extension ShortcutsPref {
       forKeyPath: "values.\(identifier)"
     ) as? NSData else { return true }
 
-    guard let shortcutFromDefaults = ValueTransformer
-      .keyedUnarchiveFromDataTransformer
+    guard let shortcutFromDefaults = ShortcutValueTransformer.shared
       .transformedValue(dataFromDefaults) as? Shortcut else { return true }
 
     let defaultShortcut = defaultShortcuts[identifier] ?? nil
@@ -353,9 +366,9 @@ private let defaultsVersion = 337
 
 private class DataToKeyEquivalentTransformer: ValueTransformer {
   override func transformedValue(_ value: Any?) -> Any? {
-    guard let shortcut = ValueTransformer
-      .keyedUnarchiveFromDataTransformer
-      .transformedValue(value) as? Shortcut else { return "" }
+    guard let shortcut = ShortcutValueTransformer.shared.transformedValue(value) as? Shortcut else {
+      return ""
+    }
 
     return KeyEquivalentTransformer.shared.transformedValue(shortcut)
   }
@@ -363,8 +376,7 @@ private class DataToKeyEquivalentTransformer: ValueTransformer {
 
 private class DataToKeyEquivalentModifierMaskTransformer: ValueTransformer {
   override func transformedValue(_ value: Any?) -> Any? {
-    guard let shortcut = ValueTransformer
-      .keyedUnarchiveFromDataTransformer
+    guard let shortcut = ShortcutValueTransformer.shared
       .transformedValue(value) as? Shortcut else { return NSNumber(value: 0) }
 
     return KeyEquivalentModifierMaskTransformer.shared.transformedValue(shortcut)

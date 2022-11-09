@@ -134,9 +134,4 @@ public extension URL {
   var isPackage: Bool { (try? self.resourceValues(forKeys: [.isPackageKey]))?.isPackage ?? false }
 }
 
-public extension ValueTransformer {
-  static var keyedUnarchiveFromDataTransformer
-    = ValueTransformer(forName: .keyedUnarchiveFromDataTransformerName)!
-}
-
 private let log = OSLog(subsystem: "com.qvacua.vimr.commons", category: "general")

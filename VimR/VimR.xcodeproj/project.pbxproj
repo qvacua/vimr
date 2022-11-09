@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -933,6 +933,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		4B19BEFF1E110208007E823C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1363,7 +1364,7 @@
 			repositoryURL = "https://github.com/qvacua/misc.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 0.0.1;
+				version = 0.2.0;
 			};
 		};
 		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
@@ -1387,7 +1388,7 @@
 			repositoryURL = "https://github.com/qvacua/RxPack.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 0.1.0;
+				version = 0.2.0;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
@@ -1426,8 +1427,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 10.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
