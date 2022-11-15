@@ -6,25 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20221101.101711</title>
+      <title>v0.43.0-20221115.195322</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20221101.101711</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20221101.101711</sparkle:shortVersionString>
+      <sparkle:version>20221115.195322</sparkle:version>
+      <sparkle:shortVersionString>v0.43.0</sparkle:shortVersionString>
       <description><![CDATA[
-    <p>Since the last snapshot:</p>
-<ul>
-<li>Bugfix: Opening files via file browser or <code>vimr</code> CLI does not work.</li>
-<li>Dependencies updates:</li>
+    <ul>
+<li>Neovim 0.8.1 😀</li>
+<li>Dependencies updates:<ul>
 <li>Kentzo/ShortcutRecorder@3.4.0</li>
+<li>sparkle-project/Sparkle@2.3.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20221101.101711
+        https://github.com/qvacua/vimr/releases/tag/v0.43.0-20221115.195322
       </releaseNotesLink>
-      <pubDate>2022-11-01T10:27:24.105407</pubDate>
+      <pubDate>2022-11-15T20:04:03.244769</pubDate>
       <minimumSystemVersion>10.15.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20221101.101711/VimR-SNAPSHOT-20221101.101711.tar.bz2"
-                 sparkle:edSignature="ZbniyF8M4oMRgvWMJw4U5x6e0Y1ImUpR9hgUCHc6ZWrOkdRj+nYHrUtlziVDGO5nGfOy8vN1Y7j+gwWzFVx9AA==" length="18760570"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.43.0-20221115.195322/VimR-v0.43.0.tar.bz2"
+                 sparkle:edSignature="uzKqhfUxuvdLAc6X8CZftJnIyvqdMpwcN3zeAnD8IS6kHnMJvmPOGwESD4s66mV5K0yESWvOIDIuDmv9gIdGDA==" length="18788291"
                  type="application/octet-stream"/>
     </item>
   </channel>
