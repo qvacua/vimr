@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# 0.43.0-20221115.195322
+
 * Neovim 0.8.1 😀
 * Dependencies updates:
   - Kentzo/ShortcutRecorder@3.4.0
