@@ -6,22 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.42.2-20220913.230838</title>
+      <title>v0.43.0-20221115.195322</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20220913.230838</sparkle:version>
-      <sparkle:shortVersionString>v0.42.2</sparkle:shortVersionString>
+      <sparkle:version>20221115.195322</sparkle:version>
+      <sparkle:shortVersionString>v0.43.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Improve rendering performance.</li>
+<li>Neovim 0.8.1 😀</li>
+<li>Dependencies updates:<ul>
+<li>Kentzo/ShortcutRecorder@3.4.0</li>
+<li>sparkle-project/Sparkle@2.3.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.42.2-20220913.230838
+        https://github.com/qvacua/vimr/releases/tag/v0.43.0-20221115.195322
       </releaseNotesLink>
-      <pubDate>2022-09-13T23:18:03.725690</pubDate>
-      <minimumSystemVersion>10.13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.42.2-20220913.230838/VimR-v0.42.2.tar.bz2"
-                 sparkle:edSignature="AbabQPPjogx60fPES3jGH0aqiko9Vc6d2+i+h6vycAlX8GQKNIGRjeEe7gx17pSrvfdMmHdztGE5hETOI6reBw==" length="21682056"
+      <pubDate>2022-11-15T20:04:03.244769</pubDate>
+      <minimumSystemVersion>10.15.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.43.0-20221115.195322/VimR-v0.43.0.tar.bz2"
+                 sparkle:edSignature="uzKqhfUxuvdLAc6X8CZftJnIyvqdMpwcN3zeAnD8IS6kHnMJvmPOGwESD4s66mV5K0yESWvOIDIuDmv9gIdGDA==" length="18788291"
                  type="application/octet-stream"/>
     </item>
   </channel>
