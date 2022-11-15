@@ -1,10 +1,9 @@
 # Next
 
-* Neovim 0.8.0 😀
+* Neovim 0.8.1 😀
 * Dependencies updates:
   - Kentzo/ShortcutRecorder@3.4.0
   - sparkle-project/Sparkle@2.3.0
-
 
 # 0.42.2-20220913.230838
 
