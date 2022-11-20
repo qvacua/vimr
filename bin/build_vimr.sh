@@ -1,6 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+readonly strip_symbols=${strip_symbols:-true}
 readonly notarize=${notarize:?"true or false"}
 readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
 readonly clean=${clean:?"true or false"}
@@ -52,8 +53,13 @@ main () {
   local -r build_path="./build"
   build_vimr "${build_path}"
 
+  local -r -x vimr_app_path="${build_path}/Build/Products/Release/VimR.app"
+
+  if [[ "${strip_symbols}" == true ]]; then
+    strip -rSTx "${vimr_app_path}/Contents/MacOS/VimR"
+  fi
+
   if [[ "${notarize}" == true ]]; then
-    local -r -x vimr_app_path="${build_path}/Build/Products/Release/VimR.app"
     ./bin/sign_vimr.sh
     ./bin/notarize_vimr.sh
   fi
