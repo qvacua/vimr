@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* Reduce app size (~14MB) by using `strip` on VimR binary.
 
 # 0.43.0-20221115.195322
 
