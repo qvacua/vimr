@@ -126,6 +126,7 @@ enum NvimAutoCommandEvent: Int {
   case winenter = 120
   case winleave = 121
   case winnew = 122
-  case winscrolled = 123
+  case winresized = 123
+  case winscrolled = 124
 }
 
