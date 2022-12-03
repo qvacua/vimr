@@ -154,10 +154,15 @@ public final class RxMessagePortServer {
       target: .global(qos: queueQos.qosClass)
     )
     self.messageHandler = MessageHandler(subject: self.streamSubject)
+
+    self.portQueue = DispatchQueue(
+      label: "\(String(reflecting: RxMessagePortClient.self))-portQueue-\(self.uuid.uuidString)",
+      qos: queueQos
+    )
   }
 
   public func run(as name: String) -> Completable {
-    Completable.create { completable in
+    Completable.create { [unowned self] completable in
       self.queue.async {
         var localCtx = CFMessagePortContext(
           version: 0,
@@ -185,11 +190,7 @@ public final class RxMessagePortServer {
           completable(.error(RxMessagePortClient.Error.serverInit))
         }
 
-        self.portThread = Thread { self.runServer() }
-        self.portThread?.name
-          = "\(String(reflecting: RxMessagePortServer.self))-\(self.uuid.uuidString)"
-        self.portThread?.start()
-
+        self.portQueue.async { self.runServer() }
         completable(.completed)
       }
 
@@ -217,7 +218,7 @@ public final class RxMessagePortServer {
   }
 
   private var port: CFMessagePort?
-  private var portThread: Thread?
+  private let portQueue: DispatchQueue
   private var portRunLoop: CFRunLoop?
 
   private let queue: DispatchQueue

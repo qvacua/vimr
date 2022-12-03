@@ -61,6 +61,10 @@ public final class RxMsgpackRpc {
       qos: queueQos,
       target: .global(qos: queueQos.qosClass)
     )
+    self.dataQueue = DispatchQueue(
+      label: "\(String(reflecting: RxMsgpackRpc.self))-dataQueue-\(self.uuid.uuidString)",
+      qos: queueQos
+    )
   }
 
   public func run(
@@ -166,8 +170,8 @@ public final class RxMsgpackRpc {
   private var nextMsgid: UInt32 = 0
 
   private var socket: Socket?
-  private var thread: Thread?
   private let queue: DispatchQueue
+  private let dataQueue: DispatchQueue
 
   private var singles: [UInt32: SingleResponseObserver] = [:]
 
@@ -180,14 +184,14 @@ public final class RxMsgpackRpc {
   private func cleanUpAndCloseSocket() {
     self.streamSubject.onCompleted()
 
-    self.singles.forEach { msgid, single in single(.failure(Error(msg: "Socket closed"))) }
+    self.singles.forEach { _, single in single(.failure(Error(msg: "Socket closed"))) }
     self.singles.removeAll()
 
     self.socket?.close()
   }
 
   private func setUpThreadAndStartReading() {
-    self.thread = Thread {
+    self.dataQueue.async { [unowned self] in
       guard let socket = self.socket else { return }
 
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
@@ -224,8 +228,6 @@ public final class RxMsgpackRpc {
         }
       } while self.socket?.remoteConnectionClosed == false
     }
-
-    self.thread?.start()
   }
 
   private func processMessage(_ unpacked: Value) {

@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		4B022661224AB1490052362B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B022660224AB1490052362B /* Assets.xcassets */; };
 		4B022664224AB1490052362B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B022662224AB1490052362B /* MainMenu.xib */; };
+		4B2AD136293BC0C4009DA797 /* RxMessagePort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2AD135293BC0C4009DA797 /* RxMessagePort.swift */; };
+		4B2AD13B293BCC4E009DA797 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B2AD13A293BCC4E009DA797 /* RxPack */; };
 		4B7FBFD024EC8632002D12A1 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B7FBFCF24EC8632002D12A1 /* RxSwift */; };
 		4B7FBFD124EC8851002D12A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02265E224AB1490052362B /* AppDelegate.swift */; };
-		4BE73FAB285DC53000B63585 /* RxPack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BE73FAA285DC53000B63585 /* RxPack */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,7 @@
 		4B022660224AB1490052362B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B022663224AB1490052362B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4B022665224AB1490052362B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B2AD135293BC0C4009DA797 /* RxMessagePort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RxMessagePort.swift; path = ../Sources/RxPack/RxMessagePort.swift; sourceTree = "<group>"; };
 		4BE73FA8285DC4DA00B63585 /* RxPack */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = RxPack; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,8 +43,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B2AD13B293BCC4E009DA797 /* RxPack in Frameworks */,
 				4B7FBFD024EC8632002D12A1 /* RxSwift in Frameworks */,
-				4BE73FAB285DC53000B63585 /* RxPack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +54,7 @@
 		4B02263A224AB11A0052362B = {
 			isa = PBXGroup;
 			children = (
+				4B2AD135293BC0C4009DA797 /* RxMessagePort.swift */,
 				4BE73FA7285DC4DA00B63585 /* Packages */,
 				4B02265D224AB1490052362B /* RxMessagePortDemo */,
 				4B022644224AB11A0052362B /* Products */,
@@ -112,7 +115,7 @@
 			name = RxMessagePortDemo;
 			packageProductDependencies = (
 				4B7FBFCF24EC8632002D12A1 /* RxSwift */,
-				4BE73FAA285DC53000B63585 /* RxPack */,
+				4B2AD13A293BCC4E009DA797 /* RxPack */,
 			);
 			productName = RxMessagePortDemo;
 			productReference = 4B02265C224AB1490052362B /* RxMessagePortDemo.app */;
@@ -171,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B2AD136293BC0C4009DA797 /* RxMessagePort.swift in Sources */,
 				4B7FBFD124EC8851002D12A1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -376,14 +380,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B2AD13A293BCC4E009DA797 /* RxPack */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxPack;
+		};
 		4B7FBFCF24EC8632002D12A1 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B7FBFCE24EC8632002D12A1 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
-		};
-		4BE73FAA285DC53000B63585 /* RxPack */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RxPack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
