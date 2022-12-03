@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/IBM-Swift/BlueSocket",
       "state" : {
-        "revision" : "dd924c3bc2c1c144c42b8dda3896f1a03115ded4",
-        "version" : "2.0.2"
+        "revision" : "7b23a867008e0027bfd6f4d398d44720707bc8ca",
+        "version" : "2.0.4"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlCatchException.git",
       "state" : {
-        "revision" : "f809deb30dc5c9d9b78c872e553261a61177721a",
-        "version" : "2.0.0"
+        "revision" : "35f9e770f54ce62dd8526470f14c6e137cef3eea",
+        "version" : "2.1.1"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "revision" : "96f0ee4751318a5b3c36f347522cfacfd5aa1473",
-        "version" : "11.1.0"
+        "revision" : "b7f6c49acdb247e3158198c5448b38c3cc595533",
+        "version" : "11.2.1"
       }
     },
     {
@@ -136,21 +136,12 @@
       }
     },
     {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser",
-      "state" : {
-        "revision" : "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
-        "version" : "0.5.0"
-      }
-    },
-    {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
-        "version" : "1.0.2"
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
       }
     },
     {
