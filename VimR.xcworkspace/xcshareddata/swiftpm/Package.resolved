@@ -48,10 +48,10 @@
     {
       "identity" : "fsevents",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eonil/FSEvents",
+      "location" : "https://github.com/qvacua/FSEvents",
       "state" : {
-        "revision" : "e6b7cdfa2754454e194a45ee6c2004d0f630fe88",
-        "version" : "0.1.7"
+        "branch" : "release-fseventstream",
+        "revision" : "90ed674df15b5e546a061052dad70228b3300fba"
       }
     },
     {
