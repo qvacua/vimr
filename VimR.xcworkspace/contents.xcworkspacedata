@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:RxPack">
+   </FileRef>
+   <FileRef
       location = "group:Ignore">
    </FileRef>
    <FileRef
@@ -18,6 +21,9 @@
    </FileRef>
    <FileRef
       location = "group:NvimView">
+   </FileRef>
+   <FileRef
+      location = "group:RxPack/Support/RxPackSupport.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Commons/Support/CommonsSupport.xcodeproj">

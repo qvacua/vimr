@@ -66,8 +66,9 @@ final class Marked<T>: CustomStringConvertible {
     "Marked<\(mark) -> \(self.payload)>"
   }
 
-  convenience init(_ payload: T) {
-    self.init(mark: Token(), payload: payload)
+  init(_ payload: T) {
+    self.mark = Token()
+    self.payload = payload
   }
 
   init(mark: Token, payload: T) {
