@@ -4,8 +4,8 @@
  */
 
 import Foundation
-import RxPack
 import RxNeovim
+import RxPack
 
 public extension NvimView {
   struct Buffer: Equatable {

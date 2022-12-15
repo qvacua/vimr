@@ -107,10 +107,11 @@ final class UiRootReducer: ReducerType {
       return (appState, tuple.action, true)
     }
 
-    private func mainWindowTemplate(from old: MainWindow.State,
-                                    new: MainWindow.State,
-                                    isFullScreen: Bool) -> MainWindow.State
-    {
+    private func mainWindowTemplate(
+      from old: MainWindow.State,
+      new: MainWindow.State,
+      isFullScreen: Bool
+    ) -> MainWindow.State {
       var result = old
 
       if !isFullScreen {

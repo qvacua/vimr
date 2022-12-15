@@ -5,9 +5,9 @@
  */
 
 import Cocoa
+import RxNeovim
 import RxPack
 import RxSwift
-import RxNeovim
 
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
   override public func makeTouchBar() -> NSTouchBar? {
@@ -66,11 +66,11 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
       .observe(on: MainScheduler.instance)
       .subscribe(onSuccess: { [weak self] in
         self?.tabsCache = $0
-        
+
         guard let tabsControl = self?.getTabsControl() else { return }
-        
+
         tabsControl.reloadData()
-        
+
         let scrubberProportionalLayout = tabsControl.scrubberLayout as! NSScrubberProportionalLayout
         scrubberProportionalLayout.numberOfVisibleItems = tabsControl
           .numberOfItems > 0 ? tabsControl.numberOfItems : 1
@@ -87,9 +87,9 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
       .observe(on: MainScheduler.instance)
       .subscribe(onSuccess: { [weak self] in
         self?.tabsCache = $0
-        
+
         guard let tabsControl = self?.getTabsControl() else { return }
-        
+
         tabsControl.reloadData()
         tabsControl.selectedIndex = self?.selectedTabIndex() ?? tabsControl.selectedIndex
       }, onFailure: { error in

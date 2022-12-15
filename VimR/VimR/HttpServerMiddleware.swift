@@ -71,9 +71,12 @@ final class HttpServerMiddleware {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL,
-                     htmlTemplates _: HtmlTemplates)
-    {
+    fileprivate init(
+      server: HttpServer,
+      baseUrl: URL,
+      cssUrl: URL,
+      htmlTemplates _: HtmlTemplates
+    ) {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl
@@ -122,9 +125,12 @@ final class HttpServerMiddleware {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<HtmlPreviewTool.Action>
 
-    fileprivate init(server: HttpServer, baseUrl: URL, cssUrl: URL,
-                     htmlTemplates _: HtmlTemplates)
-    {
+    fileprivate init(
+      server: HttpServer,
+      baseUrl: URL,
+      cssUrl: URL,
+      htmlTemplates _: HtmlTemplates
+    ) {
       self.server = server
       self.baseUrl = baseUrl
       self.cssUrl = cssUrl

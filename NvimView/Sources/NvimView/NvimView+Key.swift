@@ -204,7 +204,8 @@ public extension NvimView {
 
   func _unmarkText() {
     guard self.hasMarkedText() else { return }
-    // wait inserted text gui update event, so hanji in korean get right previous string and can popup candidate window
+    // wait inserted text gui update event, so hanji in korean get right previous string and can
+    // popup candidate window
     DispatchQueue.main.async { [self] in
       if let markedInfo = self.ugrid.markedInfo {
         self.ugrid.markedInfo = nil

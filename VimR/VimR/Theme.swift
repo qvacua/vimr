@@ -7,9 +7,13 @@ import Cocoa
 import Commons
 import NvimView
 
-func changeTheme(themePrefChanged: Bool, themeChanged: Bool, usesTheme: Bool,
-                 forTheme: () -> Void, forDefaultTheme: () -> Void) -> Bool
-{
+func changeTheme(
+  themePrefChanged: Bool,
+  themeChanged: Bool,
+  usesTheme: Bool,
+  forTheme: () -> Void,
+  forDefaultTheme: () -> Void
+) -> Bool {
   if themePrefChanged, usesTheme {
     forTheme()
     return true

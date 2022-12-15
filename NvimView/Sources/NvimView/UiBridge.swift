@@ -279,7 +279,7 @@ final class UiBridge {
     process.launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
     process
       .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
-    ["--headless"] + self.nvimArgs
+      ["--headless"] + self.nvimArgs
 
     self.log.debug(
       "Launching NvimServer with args: \(String(describing: process.arguments))"

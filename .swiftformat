@@ -1,6 +1,6 @@
 --swiftversion 5.3
 
---exclude Carthage,third-party,**/*.generated.swift
+--exclude Carthage,third-party,**/*.generated.swift,**/*.template.swift
 
 --indent 2
 --maxwidth 100

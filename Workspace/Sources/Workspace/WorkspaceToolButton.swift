@@ -198,7 +198,8 @@ public extension WorkspaceToolButton {
     self.dehighlight()
   }
 
-  // Modified version of snapshot() from https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
+  // Modified version of snapshot() from
+  // https://www.raywenderlich.com/136272/drag-and-drop-tutorial-for-macos
   private func snapshot() -> NSImage {
     let pdfData = self.dataWithPDF(inside: self.bounds)
     guard let image = NSImage(data: pdfData) else {
@@ -223,9 +224,10 @@ public extension WorkspaceToolButton {
 
 public extension WorkspaceToolButton {
   @objc(draggingSession: sourceOperationMaskForDraggingContext:)
-  func draggingSession(_: NSDraggingSession,
-                       sourceOperationMaskFor _: NSDraggingContext) -> NSDragOperation
-  {
+  func draggingSession(
+    _: NSDraggingSession,
+    sourceOperationMaskFor _: NSDraggingContext
+  ) -> NSDragOperation {
     .move
   }
 

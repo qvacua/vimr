@@ -50,13 +50,14 @@ public final class WorkspaceTool: NSView {
     let customToolbar: CustomToolBar?
     let customMenuItems: [NSMenuItem]
 
-    public init(title: String,
-                view: NSView,
-                minimumDimension: CGFloat = 50,
-                withInnerToolbar: Bool = true,
-                customToolbar: CustomToolBar? = nil,
-                customMenuItems: [NSMenuItem] = [])
-    {
+    public init(
+      title: String,
+      view: NSView,
+      minimumDimension: CGFloat = 50,
+      withInnerToolbar: Bool = true,
+      customToolbar: CustomToolBar? = nil,
+      customMenuItems: [NSMenuItem] = []
+    ) {
       self.title = title
       self.view = view
       self.minimumDimension = minimumDimension

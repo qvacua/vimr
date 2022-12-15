@@ -37,6 +37,7 @@ final class KeyUtils {
 
     return key
   }
+
   static func isHalfWidth(char: Character) -> Bool {
     // https://stackoverflow.com/questions/13505075/analyzing-full-width-or-half-width-character-in-java?noredirect=1&lq=1 // swiftlint:disable:this all
     switch char {

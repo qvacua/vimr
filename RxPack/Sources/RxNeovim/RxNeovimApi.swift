@@ -2,8 +2,8 @@
 /// See LICENSE
 
 import Foundation
-import RxSwift
 import RxPack
+import RxSwift
 
 public final class RxNeovimApi {
   public enum Event {

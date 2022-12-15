@@ -52,7 +52,7 @@ final class Context: ReduxContext {
           rpcEpic.apply,
         ]
       )
-      .filter { $0.modified }
+      .filter(\.modified)
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
 
@@ -86,7 +86,7 @@ final class Context: ReduxContext {
           httpMiddleware.htmlPreviewTool.apply,
         ]
       )
-      .filter { $0.modified }
+      .filter(\.modified)
       .subscribe(onNext: self.emitAppState)
       .disposed(by: self.disposeBag)
   }

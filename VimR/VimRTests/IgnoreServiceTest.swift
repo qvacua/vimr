@@ -14,13 +14,13 @@ class IgnoreServiceTest: XCTestCase {
       withExtension: nil,
       subdirectory: "Resources"
     )!
-    self.service = IgnoreService(count: 100, root: base)
+    self.service = IgnoreService(count: 100, root: self.base)
 
     super.setUp()
   }
 
   func testDeepest() {
-    let ignoreAaa = service.ignore(for: base.appendingPathComponent("a/aa/aaa"))!
+    let ignoreAaa = self.service.ignore(for: self.base.appendingPathComponent("a/aa/aaa"))!
 
     expect(ignoreAaa.filters.count).to(beGreaterThanOrEqualTo(4))
     expect(ignoreAaa.filters[back: 0].pattern).to(equal("last-level"))
@@ -30,10 +30,10 @@ class IgnoreServiceTest: XCTestCase {
   }
 
   func testWholeTree() {
-    let ignoreBase = service.ignore(for: base)!
-    let ignoreA = service.ignore(for: base.appendingPathComponent("a/"))!
-    let ignoreAa = service.ignore(for: base.appendingPathComponent("a/aa/"))!
-    let ignoreAaa = service.ignore(for: base.appendingPathComponent("a/aa/aaa"))!
+    let ignoreBase = self.service.ignore(for: self.base)!
+    let ignoreA = self.service.ignore(for: self.base.appendingPathComponent("a/"))!
+    let ignoreAa = self.service.ignore(for: self.base.appendingPathComponent("a/aa/"))!
+    let ignoreAaa = self.service.ignore(for: self.base.appendingPathComponent("a/aa/aaa"))!
 
     expect(ignoreBase.filters.count).to(beGreaterThanOrEqualTo(1))
     expect(ignoreBase.filters[back: 0].pattern).to(equal("root-level"))

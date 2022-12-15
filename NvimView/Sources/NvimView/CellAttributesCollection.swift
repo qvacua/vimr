@@ -26,7 +26,7 @@ final class CellAttributesCollection {
 
   func attributes(of id: Int, withDefaults defaults: CellAttributes) -> CellAttributes? {
     if id == Self.markedAttributesId {
-      var attr = defaultAttributes
+      var attr = self.defaultAttributes
       attr.fontTrait.formUnion(.underline)
       return attr
     }

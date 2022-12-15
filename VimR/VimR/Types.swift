@@ -63,7 +63,7 @@ final class Marked<T>: CustomStringConvertible {
   let payload: T
 
   var description: String {
-    "Marked<\(mark) -> \(self.payload)>"
+    "Marked<\(self.mark) -> \(self.payload)>"
   }
 
   init(_ payload: T) {

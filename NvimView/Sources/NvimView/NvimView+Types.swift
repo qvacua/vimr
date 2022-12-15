@@ -6,8 +6,8 @@
 import Cocoa
 import MessagePack
 import PureLayout
-import RxPack
 import RxNeovim
+import RxPack
 import Tabs
 
 public extension NvimView {

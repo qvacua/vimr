@@ -6,7 +6,8 @@
 import Cocoa
 
 class PrefPane: NSView {
-  // Return true to place this to the upper left corner when the scroll view is bigger than this view.
+  // Return true to place this to the upper left corner when the scroll view is bigger than this
+  // view.
   override var isFlipped: Bool {
     true
   }

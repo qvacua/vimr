@@ -6,9 +6,9 @@
 import Cocoa
 import MessagePack
 import PureLayout
+import RxNeovim
 import RxPack
 import RxSwift
-import RxNeovim
 import SpriteKit
 
 public extension NvimView {

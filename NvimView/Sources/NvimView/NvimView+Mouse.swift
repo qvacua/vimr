@@ -6,44 +6,44 @@
 import Cocoa
 import RxSwift
 
-extension NvimView {
-  override public func mouseDown(with event: NSEvent) {
+public extension NvimView {
+  override func mouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName: "LeftMouse")
   }
 
-  override public func mouseUp(with event: NSEvent) {
+  override func mouseUp(with event: NSEvent) {
     self.mouse(event: event, vimName: "LeftRelease")
   }
 
-  override public func mouseDragged(with event: NSEvent) {
+  override func mouseDragged(with event: NSEvent) {
     self.mouse(event: event, vimName: "LeftDrag")
   }
 
-  override public func rightMouseDown(with event: NSEvent) {
+  override func rightMouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName: "RightMouse")
   }
 
-  override public func rightMouseUp(with event: NSEvent) {
+  override func rightMouseUp(with event: NSEvent) {
     self.mouse(event: event, vimName: "RightRelease")
   }
 
-  override public func rightMouseDragged(with event: NSEvent) {
+  override func rightMouseDragged(with event: NSEvent) {
     self.mouse(event: event, vimName: "RightDrag")
   }
 
-  override public func otherMouseUp(with event: NSEvent) {
+  override func otherMouseUp(with event: NSEvent) {
     self.mouse(event: event, vimName: "MiddleMouse")
   }
 
-  override public func otherMouseDown(with event: NSEvent) {
+  override func otherMouseDown(with event: NSEvent) {
     self.mouse(event: event, vimName: "MiddleRelease")
   }
 
-  override public func otherMouseDragged(with event: NSEvent) {
+  override func otherMouseDragged(with event: NSEvent) {
     self.mouse(event: event, vimName: "MiddleDrag")
   }
 
-  override public func scrollWheel(with event: NSEvent) {
+  override func scrollWheel(with event: NSEvent) {
     let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
     if deltaX == 0, deltaY == 0 { return }
 
@@ -69,15 +69,15 @@ extension NvimView {
     }
 
     if event.phase == .began {
-        self.trackpadScrollDeltaX = 0
-        self.trackpadScrollDeltaY = 0
+      self.trackpadScrollDeltaX = 0
+      self.trackpadScrollDeltaY = 0
     }
 
     self.trackpadScrollDeltaX += deltaX
     self.trackpadScrollDeltaY += deltaY
     let (deltaCellX, deltaCellY) = (
-        (self.trackpadScrollDeltaX / self.cellSize.width).rounded(.toNearestOrEven),
-        (self.trackpadScrollDeltaY / self.cellSize.height).rounded(.toNearestOrEven)
+      (self.trackpadScrollDeltaX / self.cellSize.width).rounded(.toNearestOrEven),
+      (self.trackpadScrollDeltaY / self.cellSize.height).rounded(.toNearestOrEven)
     )
     self.trackpadScrollDeltaX.formRemainder(dividingBy: self.cellSize.width)
     self.trackpadScrollDeltaY.formRemainder(dividingBy: self.cellSize.height)
@@ -95,7 +95,7 @@ extension NvimView {
       .disposed(by: self.disposeBag)
   }
 
-  override public func magnify(with event: NSEvent) {
+  override func magnify(with event: NSEvent) {
     let factor = 1 + event.magnification
     let pinchTargetScale = self.pinchTargetScale * factor
     let resultingFontSize = round(pinchTargetScale * self.font.pointSize)
@@ -123,7 +123,7 @@ extension NvimView {
     self.markForRenderWholeView()
   }
 
-  func position(at location: CGPoint) -> Position {
+  internal func position(at location: CGPoint) -> Position {
     let row = Int((self.bounds.size.height - location.y - self.offset.y) / self.cellSize.height)
     let column = Int((location.x - self.offset.x) / self.cellSize.width)
 

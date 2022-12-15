@@ -139,7 +139,7 @@ class ReduxContext {
     self.actionEmitter.observable
       .map { (state: self.state, action: $0, modified: false) }
       .reduce(by: reducers, middlewares: middlewares)
-      .filter { $0.modified }
+      .filter(\.modified)
       .subscribe(onNext: { tuple in
         self.state = tuple.state
         self.stateSubject.onNext(tuple.state)
