@@ -3,6 +3,7 @@
 * Reduce app size (~14MB) by using `strip` on VimR binary.
 * Dependencies updates
   - Kitura/BlueSocket@2.0.4
+  - sparkle-project/Sparkle@2.3.1
 
 # 0.43.0-20221115.195322
 
