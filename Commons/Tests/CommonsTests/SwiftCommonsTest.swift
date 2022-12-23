@@ -143,7 +143,7 @@ class ArraySliceTest: XCTestCase {
     expect(grouped).to(equal(
       [
         1...1,
-        2...2
+        2...2,
       ]
     ))
   }

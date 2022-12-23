@@ -143,9 +143,11 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.autoPinEdgesToSuperviewEdges()
   }
 
-  func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation!,
-               withError error: Error)
-  {
+  func webView(
+    _: WKWebView,
+    didFailProvisionalNavigation _: WKNavigation!,
+    withError error: Error
+  ) {
     self.log.error("ERROR preview component's webview: \(error)")
   }
 

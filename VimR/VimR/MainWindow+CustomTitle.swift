@@ -93,7 +93,8 @@ extension MainWindow {
 
     if let button = self.window.standardWindowButton(.documentIconButton) {
       button
-        .removeFromSuperview() // remove the rep icon from the original superview and add it to content view
+        .removeFromSuperview() // remove the rep icon from the original superview and add it to
+      // content view
       contentView.addSubview(button)
       button.autoSetDimension(.width, toSize: 16)
       button.autoSetDimension(.height, toSize: 16)
@@ -113,7 +114,8 @@ extension MainWindow {
         constant: repIconToTitleGap
       ))
       contentView.addConstraint(
-        // Here we use title.intrinsicContentSize instead of title.frame because title.frame is still zero.
+        // Here we use title.intrinsicContentSize instead of title.frame because title.frame is
+        // still zero.
         NSLayoutConstraint(
           item: title, attribute: .right,
           relatedBy: .equal,

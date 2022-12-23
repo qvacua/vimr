@@ -84,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       })
       .disposed(by: self.disposeBag)
 
-    self.server.syncReplyBody = { (msgid, data) -> Data? in
+    self.server.syncReplyBody = { msgid, data -> Data? in
       DispatchQueue.main.async {
         self.logServer("Preparing synchronous reply to (\(msgid), \(String(describing: data)))")
       }

@@ -7,8 +7,8 @@ import Commons
 import CoreData
 import Foundation
 import Ignore
-import os
 import Misc
+import os
 
 final class FuzzySearchService {
   typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void

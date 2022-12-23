@@ -5,9 +5,9 @@
 
 import Cocoa
 import NvimView
+import RxNeovim
 import RxPack
 import RxSwift
-import RxNeovim
 import Workspace
 
 // MARK: - NvimViewDelegate
@@ -30,7 +30,8 @@ extension MainWindow {
   func prepareClosing() {
     self.isClosing = true
 
-    // If we close the window in the full screen mode, either by clicking the close button or by invoking :q
+    // If we close the window in the full screen mode, either by clicking the close button or by
+    // invoking :q
     // the main thread crashes. We exit the full screen mode here as a quick and dirty hack.
     if self.window.styleMask.contains(.fullScreen) {
       self.window.toggleFullScreen(nil)
@@ -69,7 +70,7 @@ extension MainWindow {
     self.neoVimView
       .allBuffers()
       .subscribe(onSuccess: { buffers in
-        self.emit(self.uuidAction(for: .setBufferList(buffers.filter { $0.isListed })))
+        self.emit(self.uuidAction(for: .setBufferList(buffers.filter(\.isListed))))
       })
       .disposed(by: self.disposeBag)
   }

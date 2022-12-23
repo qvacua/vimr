@@ -20,7 +20,8 @@ final class ProxyWorkspaceBar: NSView {
   override init(frame: NSRect) {
     super.init(frame: frame)
 
-    // Because other views also want layer, this view also must want layer. Otherwise the z-index ordering is not set
+    // Because other views also want layer, this view also must want layer. Otherwise the z-index
+    // ordering is not set
     // correctly: views w/ wantsLayer = false are behind views w/ wantsLayer = true even when added later.
     self.wantsLayer = true
     self.layer?.backgroundColor = self.theme.background.cgColor

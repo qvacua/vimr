@@ -19,9 +19,11 @@ final class PrefUtils {
     dict[key] as? [String: Any]
   }
 
-  static func float(from dict: [String: Any], for key: String,
-                    default defaultValue: Float) -> Float
-  {
+  static func float(
+    from dict: [String: Any],
+    for key: String,
+    default defaultValue: Float
+  ) -> Float {
     (dict[key] as? NSNumber)?.floatValue ?? defaultValue
   }
 
@@ -49,9 +51,11 @@ final class PrefUtils {
     dict[key] as? String
   }
 
-  static func string(from dict: [String: Any], for key: String,
-                     default defaultValue: String) -> String
-  {
+  static func string(
+    from dict: [String: Any],
+    for key: String,
+    default defaultValue: String
+  ) -> String {
     dict[key] as? String ?? defaultValue
   }
 

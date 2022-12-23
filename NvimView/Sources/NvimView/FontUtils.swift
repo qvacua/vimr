@@ -21,8 +21,7 @@ private struct SizedFontTrait: Hashable {
 
 extension FontTrait: Hashable {}
 
-final class FontUtils {
-
+enum FontUtils {
   static func fontHeight(of font: NSFont) -> CGFloat {
     if let cached = fontHeightCache.valueForKey(font) { return cached }
 

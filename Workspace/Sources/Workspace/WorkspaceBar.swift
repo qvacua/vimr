@@ -274,7 +274,7 @@ extension ProxyBar {
     let locInBar = self.convert(locInProxy, to: self.container)
 
     let currentDraggedOnToolIdx = self.buttonFrames.enumerated()
-      .reduce(nil) { (result, entry) -> Int? in
+      .reduce(nil) { result, entry -> Int? in
         if result != nil {
           return result
         }

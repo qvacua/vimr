@@ -271,7 +271,8 @@ private extension Workspace {
 
   private func relayout() {
     // FIXME: I did not investigate why toggleButtons does not work correctly if we store all constraints in an array
-    // and remove them here by self.removeConstraints(${all constraints). The following seems to work...
+    // and remove them here by self.removeConstraints(${all constraints). The following seems to
+    // work...
     self.subviews.forEach { $0.removeAllConstraints() }
     self.removeAllSubviews()
 

@@ -137,8 +137,8 @@ final class UGrid: CustomStringConvertible, Codable {
       step = -1
     }
     var oldMarkedInfo: MarkedInfo?
-    if let row = self.markedInfo?.position.row, region.top <= row && row <= region.bottom  {
-      oldMarkedInfo = popMarkedInfo()
+    if let row = self.markedInfo?.position.row, region.top <= row, row <= region.bottom {
+      oldMarkedInfo = self.popMarkedInfo()
     }
     defer {
       // keep markedInfo position not changed. markedInfo only following cursor position change
@@ -196,7 +196,7 @@ final class UGrid: CustomStringConvertible, Codable {
       repeating: UCell(string: clearString, attrId: CellAttributesCollection.defaultAttributesId),
       count: self.size.width
     )
-    updateMarkedInfo(newValue: nil) // everything need to be reset
+    self.updateMarkedInfo(newValue: nil) // everything need to be reset
     self.cells = Array(repeating: emptyRow, count: self.size.height)
   }
 
@@ -236,7 +236,7 @@ final class UGrid: CustomStringConvertible, Codable {
     // remove marked patch and recover after modified from vim
     var oldMarkedInfo: MarkedInfo?
     if row == self.markedInfo?.position.row {
-      oldMarkedInfo = popMarkedInfo()
+      oldMarkedInfo = self.popMarkedInfo()
     }
     defer {
       if let oldMarkedInfo = oldMarkedInfo {
@@ -258,73 +258,82 @@ final class UGrid: CustomStringConvertible, Codable {
       )
     }
   }
+
   struct MarkedInfo {
-      var position: Position
-      var markedCell: [UCell]
-      var selectedRange: NSRange // begin from markedCell and calculate by ucell count
+    var position: Position
+    var markedCell: [UCell]
+    var selectedRange: NSRange // begin from markedCell and calculate by ucell count
   }
+
   var _markedInfo: MarkedInfo?
   func popMarkedInfo() -> MarkedInfo? {
-      if let markedInfo = _markedInfo {
-          // true clear or just popup
-          updateMarkedInfo(newValue: nil)
-          return markedInfo
-      }
-      return nil
+    if let markedInfo = _markedInfo {
+      // true clear or just popup
+      self.updateMarkedInfo(newValue: nil)
+      return markedInfo
+    }
+    return nil
   }
+
   // return changedRowStart. Int.max if no change
   @discardableResult
   func updateMarkedInfo(newValue: MarkedInfo?) -> Int {
     assert(Thread.isMainThread, "should occur on main thread!")
     var changedRowStart = Int.max
     if let old = _markedInfo {
-      self.cells[old.position.row].removeSubrange(old.position.column..<(old.position.column+old.markedCell.count))
+      self.cells[old.position.row]
+        .removeSubrange(old.position.column..<(old.position.column + old.markedCell.count))
       changedRowStart = old.position.row
     }
-    _markedInfo = newValue
+    self._markedInfo = newValue
     if let new = newValue {
       self.cells[new.position.row].insert(contentsOf: new.markedCell, at: new.position.column)
       changedRowStart = min(changedRowStart, new.position.row)
     }
     return changedRowStart
   }
+
   var markedInfo: MarkedInfo? {
-      get { _markedInfo }
-      set {
-          let changedRowStart = updateMarkedInfo(newValue: newValue)
-          if changedRowStart < self.size.height {
-            recomputeFlatIndices(rowStart: changedRowStart)
-          }
+    get { self._markedInfo }
+    set {
+      let changedRowStart = self.updateMarkedInfo(newValue: newValue)
+      if changedRowStart < self.size.height {
+        self.recomputeFlatIndices(rowStart: changedRowStart)
       }
+    }
   }
+
   func cursorPositionWithMarkedInfo(allowOverflow: Bool = false) -> Position {
-    var position: Position = cursorPosition
+    var position: Position = self.cursorPosition
     if let markedInfo = markedInfo { position.column += markedInfo.selectedRange.location }
-    if !allowOverflow, position.column >= size.width { position.column = size.width - 1 }
+    if !allowOverflow, position.column >= self.size.width { position.column = self.size.width - 1 }
     return position
   }
 
   // marked text insert into cell directly
   // marked text always following cursor position
   func updateMark(
-      markedText: String,
-      selectedRange: NSRange
+    markedText: String,
+    selectedRange: NSRange
   ) {
-      assert(Thread.isMainThread, "should occur on main thread!")
-      var selectedRangeByCell = selectedRange
-      let markedTextArray: [String] = markedText.enumerated().reduce(into: []) { (array, pair) in
-          array.append(String(pair.element))
-          if !KeyUtils.isHalfWidth(char: pair.element) {
-              array.append("")
-              if pair.offset < selectedRange.location { selectedRangeByCell.location += 1 }
-              else { selectedRangeByCell.length += 1 }
-          }
+    assert(Thread.isMainThread, "should occur on main thread!")
+    var selectedRangeByCell = selectedRange
+    let markedTextArray: [String] = markedText.enumerated().reduce(into: []) { array, pair in
+      array.append(String(pair.element))
+      if !KeyUtils.isHalfWidth(char: pair.element) {
+        array.append("")
+        if pair.offset < selectedRange.location { selectedRangeByCell.location += 1 }
+        else { selectedRangeByCell.length += 1 }
       }
-      let cells = markedTextArray.map {
-          UCell(string: $0, attrId: CellAttributesCollection.markedAttributesId)
-      }
-      self.markedInfo = MarkedInfo(position: cursorPosition, markedCell: cells, selectedRange: selectedRangeByCell)
-
+    }
+    let cells = markedTextArray.map {
+      UCell(string: $0, attrId: CellAttributesCollection.markedAttributesId)
+    }
+    self.markedInfo = MarkedInfo(
+      position: self.cursorPosition,
+      markedCell: cells,
+      selectedRange: selectedRangeByCell
+    )
   }
 
   func recomputeFlatIndices(rowStart: Int) {
@@ -336,7 +345,7 @@ final class UGrid: CustomStringConvertible, Codable {
     }
 
     // should update following char too since previous line is change
-    for row in rowStart...(size.height - 1) {
+    for row in rowStart...(self.size.height - 1) {
       // marked text may overflow size, counter it too
       for column in self.cells[row].indices {
         if self.cells[row][column].string.isEmpty { counter -= 1 }
