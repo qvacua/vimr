@@ -6,27 +6,26 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.43.0-20221115.195322</title>
+      <title>v0.44.0-20230103.174333</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20221115.195322</sparkle:version>
-      <sparkle:shortVersionString>v0.43.0</sparkle:shortVersionString>
+      <sparkle:version>20230103.174333</sparkle:version>
+      <sparkle:shortVersionString>v0.44.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.8.1 😀</li>
-<li>Dependencies updates:<ul>
-<li>Kentzo/ShortcutRecorder@3.4.0</li>
-<li>sparkle-project/Sparkle@2.3.0</li>
-</ul>
-</li>
+<li>Neovim 0.8.2 😀</li>
+<li>Reduce app size (~14MB) by using <code>strip</code> on VimR binary.</li>
+<li>Dependencies updates</li>
+<li>Kitura/BlueSocket@2.0.4</li>
+<li>sparkle-project/Sparkle@2.3.1</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.43.0-20221115.195322
+        https://github.com/qvacua/vimr/releases/tag/v0.44.0-20230103.174333
       </releaseNotesLink>
-      <pubDate>2022-11-15T20:04:03.244769</pubDate>
+      <pubDate>2023-01-03T18:13:33.342174</pubDate>
       <minimumSystemVersion>10.15.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.43.0-20221115.195322/VimR-v0.43.0.tar.bz2"
-                 sparkle:edSignature="uzKqhfUxuvdLAc6X8CZftJnIyvqdMpwcN3zeAnD8IS6kHnMJvmPOGwESD4s66mV5K0yESWvOIDIuDmv9gIdGDA==" length="18788291"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.44.0-20230103.174333/VimR-v0.44.0.tar.bz2"
+                 sparkle:edSignature="IgdSVm/i945fYeKLq6eGQPIfygZ328FXE5ydHaoXN3CNaP72FNCluBWf5tg7ZvBX3oQuq3FWFAb4djHpZXxsCA==" length="16594104"
                  type="application/octet-stream"/>
     </item>
   </channel>
