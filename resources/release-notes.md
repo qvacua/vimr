@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# 0.44.0-20230103.174333
+
 * Neovim 0.8.2 😀
 * Reduce app size (~14MB) by using `strip` on VimR binary.
 * Dependencies updates
