@@ -1,5 +1,6 @@
 # Next
 
+* Neovim 0.8.2 😀
 * Reduce app size (~14MB) by using `strip` on VimR binary.
 * Dependencies updates
   - Kitura/BlueSocket@2.0.4
