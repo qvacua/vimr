@@ -422,7 +422,24 @@ extension FileOutlineView {
   @IBAction func deleteFile(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
     
-    // self.emit(UuidAction(uuid: self.uuid, action: .deleteFile(node.url)))
+    let fileManager = FileManager.default
+    
+    let showAlert: () -> Void = {
+      let alert = NSAlert()
+      alert.addButton(withTitle: "OK")
+      alert.messageText = "Could not move file to Trash"
+      alert.alertStyle = .warning
+
+      alert.runModal()
+    }
+    
+    do{
+      try fileManager.trashItem(at: node.url, resultingItemURL: nil)
+    } catch {
+      showAlert()
+      return
+    }
+    
     self.emit(UuidAction(uuid: self.uuid, action: .refresh))
   }
 
