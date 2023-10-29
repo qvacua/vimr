@@ -5,6 +5,7 @@
 
 import Cocoa
 import RxSwift
+import RxNeovim
 
 extension NvimView {
   override public func setFrameSize(_ newSize: NSSize) {
@@ -13,6 +14,9 @@ extension NvimView {
     if self.isInitialResize {
       self.isInitialResize = false
       self.launchNeoVim(self.discreteSize(size: newSize))
+      // FIXME: not clear why this is needed but otherwise
+      // grid is too large
+      self.resizeNeoVimUi(to: newSize)
       return
     }
 
@@ -53,8 +57,7 @@ extension NvimView {
     self.offset.x = floor((size.width - self.cellSize.width * discreteSize.width.cgf) / 2)
     self.offset.y = floor((size.height - self.cellSize.height * discreteSize.height.cgf) / 2)
 
-    self.bridge
-      .resize(width: discreteSize.width, height: discreteSize.height)
+    self.api.uiTryResize(width: discreteSize.width, height: discreteSize.height)
       .subscribe(onError: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
@@ -63,28 +66,83 @@ extension NvimView {
 
   private func launchNeoVim(_ size: Size) {
     self.log.info("=== Starting neovim...")
-    let sockPath = URL(fileURLWithPath: NSTemporaryDirectory())
-      .appendingPathComponent("vimr_\(self.uuid).sock").path
+    let sockPath = self.bridge.listenAddress
 
     self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
+
+    self.bridge.runLocalServerAndNvim(width: size.width, height: size.height)
+
+    // FIXME: need to wait for listen to occur
+    Thread.sleep(forTimeInterval: 0.1)
 
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...
-    try? self.bridge
-      .runLocalServerAndNvim(width: size.width, height: size.height)
-      .andThen(self.api.run(at: sockPath))
+    try?
+     self.api.run(at: sockPath)
       .andThen(
-        self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-          prev
-            .andThen(
-              self.api.exec(src: "source \(url.shellEscapedPath)", output: true)
-                .asCompletable()
-            )
-        }
-      )
-      .andThen(self.api.subscribe(event: NvimView.rpcEventName))
-      .wait()
+        self.api.getApiInfo().map({
+          value in
+          guard let info = value.arrayValue,
+                info.count == 2,
+                let channel = info[0].int32Value
+          else {
+            throw RxNeovimApi.Error
+              .exception(message: "Could not convert values to api info.")
+          }
+          return channel
+        }).flatMapCompletable({
+          // FIXME: make lua
+          self.api.exec2(src: """
+              ":augroup vimr
+              ":augroup!
+              :autocmd VimEnter * call rpcnotify(\($0), 'autocommand', 'vimenter')
+              :autocmd BufWinEnter * call rpcnotify(\($0), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
+              :autocmd BufWinEnter * call rpcnotify(\($0), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
+              :autocmd TabEnter * call rpcnotify(\($0), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
+              :autocmd BufWritePost * call rpcnotify(\($0), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
+              :autocmd BufEnter * call rpcnotify(\($0), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
+              :autocmd DirChanged * call rpcnotify(\($0), 'autocommand', 'dirchanged', expand('<afile>'))
+              :autocmd ColorScheme * call rpcnotify(\($0), 'autocommand', 'colorscheme', \
+                  nvim_get_hl(0, {'id': hlID('Normal')}).fg, \
+                  nvim_get_hl(0, {'id': hlID('Normal')}).bg, \
+                  nvim_get_hl(0, {'id': hlID('Visual')}).fg, \
+                  nvim_get_hl(0, {'id': hlID('Visual')}).bg, \
+                  nvim_get_hl(0, {'id': hlID('Directory')}).fg)
+              :autocmd ExitPre * call rpcnotify(\($0), 'autocommand', 'exitpre')
+              :autocmd BufModifiedSet * call rpcnotify(\($0), 'autocommand', 'bufmodifiedset', \
+                  str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
+              :let g:gui_vimr = 1
+              ":augroup END
+              """, opts: [:]).asCompletable()
+
+
+          .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
+             "ext_linegrid": true,
+             "ext_multigrid": false,
+             "rgb": true
+           ]))
+          .andThen(
+            self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
+              prev
+                .andThen(
+                  self.api.exec2(src: "source \(url.shellEscapedPath)", opts:["output": true])
+                    .map({
+                      retval in
+                      guard let output_value = retval["output"] ?? retval["output"],
+                            let output = output_value.stringValue
+                      else {
+                        throw RxNeovimApi.Error
+                          .exception(message: "Could not convert values to output.")
+                      }
+                      return output
+                    })
+                    .asCompletable()
+                )
+            }
+          )
+        })
+      ).wait()
   }
 
   private func randomEmoji() -> String {

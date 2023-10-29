@@ -38,7 +38,18 @@ public extension NvimView {
   }
 
   func hasDirtyBuffers() -> Single<Bool> {
-    self.api.getDirtyStatus()
+    self.api
+    .execLua(code: """
+             return vim.fn.getbufinfo({"bufmodified": v:true})
+             """, args: [])
+    .map { result -> Bool in
+      guard let info_array = result.arrayValue
+      else {
+        throw RxNeovimApi.Error
+          .exception(message: "Could not convert values into info array.")
+      }
+      return info_array.count > 0
+    }
   }
 
   func waitTillNvimExits() {
@@ -196,7 +207,17 @@ public extension NvimView {
 
   func vimOutput(of command: String) -> Single<String> {
     self.api
-      .exec(src: command, output: true)
+      .exec2(src: command, opts:["output": true])
+      .map({
+        retval in
+        guard let output_value = retval["output"] ?? retval["output"],
+              let output = output_value.stringValue
+        else {
+          throw RxNeovimApi.Error
+            .exception(message: "Could not convert values to output.")
+        }
+        return output
+      })
       .subscribe(on: self.scheduler)
   }
 
@@ -209,22 +230,53 @@ public extension NvimView {
       .subscribe(on: self.scheduler)
   }
 
-  func didBecomeMain() -> Completable { self.bridge.focusGained(true) }
+  func didBecomeMain() -> Completable {
+    self.focusGained(true)
+  }
 
-  func didResignMain() -> Completable { self.bridge.focusGained(false) }
+  func didResignMain() -> Completable {
+    self.focusGained(false)
+  }
 
   internal func neoVimBuffer(
     for buf: RxNeovimApi.Buffer,
     currentBuffer: RxNeovimApi.Buffer?
   ) -> Single<NvimView.Buffer> {
     self.api
-      .bufGetInfo(buffer: buf)
-      .map { info -> NvimView.Buffer in
+      .execLua(code: """
+               local function map(tbl, f)
+                   local t = {}
+                   for k,v in pairs(tbl) do
+                       t[k] = f(v)
+                   end
+                   return t
+               end
+               return map(vim.fn.getbufinfo(...), function(i)
+                    i.buftype = vim.api.nvim_get_option_value("buftype",
+                      {buf=i.bufnr})
+                    print(i.name, i.buftype)
+                    return i
+                  end)
+               """, args: [MessagePackValue(buf.handle)])
+      .map { result -> NvimView.Buffer in
+        guard let info_array = result.arrayValue,
+                info_array.count == 1,
+              let raw_info = info_array[0].dictionaryValue
+        else {
+          throw RxNeovimApi.Error
+            .exception(message: "Could not convert values into info array.")
+        }
+        let info : [String: MessagePackValue] = Dictionary<String, MessagePackValue>(
+          uniqueKeysWithValues: raw_info.map({
+            (key: MessagePackValue, value: MessagePackValue) in
+            (key.stringValue!, value)
+          }))
+
         let current = buf == currentBuffer
-        guard let path = info["filename"]?.stringValue,
-              let dirty = info["modified"]?.boolValue,
+        guard let path = info["name"]?.stringValue,
+              let dirty = info["changed"]?.intValue,
               let buftype = info["buftype"]?.stringValue,
-              let listed = info["buflisted"]?.boolValue
+              let listed = info["listed"]?.intValue
         else {
           throw RxNeovimApi.Error
             .exception(message: "Could not convert values from the dictionary.")
@@ -236,9 +288,9 @@ public extension NvimView {
           apiBuffer: buf,
           url: url,
           type: buftype,
-          isDirty: dirty,
+          isDirty: dirty != 0,
           isCurrent: current,
-          isListed: listed
+          isListed: listed != 0
         )
       }
       .subscribe(on: self.scheduler)

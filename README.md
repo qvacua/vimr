@@ -5,9 +5,18 @@
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
 ![Screenshot 2](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot2.png)
 
+## Fork differences
+
+Originially and wonderfully by [qvacua](https://github.com/qvacua/) which appears to be unsupported any more.
+
+This version can talk to an arbitrary nvim (once the upstream bits get merged)
+It therefore should be able to keep pace with nvim development better.  Work was done to avoid
+having to modify neovim, and the uibridge mechanism has been replaced with api calls.
+
 ## About
 
 Project VimR is a Neovim GUI for macOS.
+
 The goal is to build an editor that uses Neovim inside with many of the convenience
 GUI features similar to those present in modern editors. We mainly use Swift,
 but also use C/Objective-C when where appropriate.

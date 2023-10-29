@@ -24,6 +24,7 @@ public extension NvimView {
     var usesCustomTabBar: Bool
     var useInteractiveZsh: Bool
     var cwd: URL
+    var nvimBinary: String
     var nvimArgs: [String]?
     var envDict: [String: String]?
     var sourceFiles: [URL]
@@ -32,6 +33,7 @@ public extension NvimView {
       usesCustomTabBar: Bool,
       useInteractiveZsh: Bool,
       cwd: URL,
+      nvimBinary: String,
       nvimArgs: [String]?,
       envDict: [String: String]?,
       sourceFiles: [URL]
@@ -39,6 +41,7 @@ public extension NvimView {
       self.usesCustomTabBar = usesCustomTabBar
       self.useInteractiveZsh = useInteractiveZsh
       self.cwd = cwd
+      self.nvimBinary = nvimBinary
       self.nvimArgs = nvimArgs
       self.envDict = envDict
       self.sourceFiles = sourceFiles
