@@ -11,7 +11,7 @@ final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
   typealias ActionType = AnyAction
 
-  static let compatibleVersion = "168"
+  static let compatibleVersion = "169"
 
   let mainWindow = MainWindowMiddleware()
 
@@ -20,6 +20,7 @@ final class PrefMiddleware: MiddlewareType {
     do {
       let dictionary: [String: Any] = try dictEncoder.encode(appState)
       defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+      defaults.synchronize()
     } catch {
       self.log.error("AppState could not converted to Dictionary: \(error)")
     }
@@ -59,6 +60,7 @@ final class PrefMiddleware: MiddlewareType {
       do {
         let dictionary: [String: Any] = try dictEncoder.encode(result.state)
         defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+        defaults.synchronize()
       } catch {
         self.log.error("AppState could not converted to Dictionary: \(error)")
       }
@@ -86,6 +88,7 @@ final class PrefMiddleware: MiddlewareType {
         do {
           let dictionary: [String: Any] = try dictEncoder.encode(result.state)
           defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+          defaults.synchronize()
         } catch {
           self.log.error("AppState could not converted to Dictionary: \(error)")
         }
