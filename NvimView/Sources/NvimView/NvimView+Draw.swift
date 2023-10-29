@@ -97,11 +97,10 @@ extension NvimView {
       return
     }
 
-    guard self.modeInfoList.count > self.mode.rawValue else {
+    guard let modeInfo = modeInfos[self.mode.rawValue] else {
       self.log.error("Could not get modeInfo for mode index \(self.mode.rawValue)")
       return
     }
-    let modeInfo = modeInfoList[Int(mode.rawValue)]
 
     guard let cursorAttrId = modeInfo.attrId,
           let cursorShapeAttrs = self.cellAttributesCollection.attributes(

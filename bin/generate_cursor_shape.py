@@ -46,7 +46,7 @@ def are_shapes_same() -> bool:
 def swift_shapes() -> str:
     with io.open(SWIFT_TEMPLATE_FILE, "r") as template_file:
         template = Template(template_file.read())
-        cases = "\n".join([f"  case {v[1]} = {v[0]}" for (k, v) in SHAPE_NAMES.items()])
+        cases = "\n".join([f"  case {v[1]} = \"{v[1]}\"" for (k, v) in SHAPE_NAMES.items()])
         return template.substitute(
             cursor_shapes=cases,
             version=version
