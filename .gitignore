@@ -179,3 +179,5 @@ Temporary Items
 
 .deps
 tags.*
+/RxPack/.build
+/Workspace/.swiftpm
