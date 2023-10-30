@@ -93,7 +93,8 @@ final class UiBridge {
     } else {
       // We know that NvimServer is there.
       env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
-      process.launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
+      let launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
+      process.launchPath = launchPath
     }
     process.environment = env
 
