@@ -1,3 +1,3 @@
 [submodule "Neovim"]
-	path = NvimServer
+	path = Neovim
 	url = git@github.com:georgeharker/vimr-neovim.git
