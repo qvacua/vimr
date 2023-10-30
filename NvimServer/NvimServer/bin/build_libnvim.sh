@@ -9,7 +9,8 @@ build_libnvim() {
   # Brew's gettext does not get sym-linked to PATH
   export PATH="/opt/homebrew/opt/gettext/bin:/usr/local/opt/gettext/bin:${PATH}"
 
-  macos_flags="-DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_OSX_ARCHITECTURES=arm64\;x86_64"
+  #macos_flags="-DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_OSX_ARCHITECTURES=arm64\;x86_64"
+  macos_flags="-DCMAKE_OSX_DEPLOYMENT_TARGET=${deployment_target} -DCMAKE_OSX_ARCHITECTURES=arm64"
 
   pushd ../Neovim
 

@@ -17,7 +17,8 @@ main() {
       ./NvimServer/bin/build_libnvim.sh
     fi
 
-    swift build --arch arm64 --arch x86_64 -c release --product NvimServer
+    #swift build --arch arm64 --arch x86_64 -c release --product NvimServer
+    swift build --arch arm64 -c release --product NvimServer
 
   popd >/dev/null
   echo "### Built NvimServer"
