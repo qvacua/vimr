@@ -4,6 +4,8 @@ set -Eeuo pipefail
 readonly nvim_install_path=${nvim_install_path:?"where to install temp nvim"}
 
 build_runtime() {
+  pushd ../Neovim
+
   local -r deployment_target=$1
 
   echo "#### runtime in ${nvim_install_path}"
@@ -18,6 +20,8 @@ build_runtime() {
     install
 
   echo "#### runtime is installed at ${nvim_install_path}/share/nvim/runtime"
+
+  popd
 }
 
 main() {
