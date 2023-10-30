@@ -58,8 +58,9 @@ public extension NvimView {
     default: return
     }
 
-    try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"i", escape_ks: false)
-      .wait()
+    //try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
+    //  .wait()
+    _ = self.api.input(keys: self.vimPlainString(text), errWhenBlocked: false).syncValue()
 
     if self.hasMarkedText() { self._unmarkText() }
     self.keyDownDone = true
