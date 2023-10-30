@@ -6,7 +6,6 @@
 import Commons
 import Foundation
 import MessagePack
-import NvimServerTypes
 import os
 import RxPack
 import RxSwift
