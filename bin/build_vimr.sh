@@ -13,7 +13,7 @@ prepare_nvimserver() {
 
   # Build NvimServer and copy
   build_libnvim=true ./NvimServer/NvimServer/bin/build_nvimserver.sh
-  cp ./NvimServer/.build/apple/Products/Release/NvimServer "${resources_folder}"
+  cp ./Neovim/.build/apple/Products/Release/NvimServer "${resources_folder}"
 
   # Create and copy runtime folder
   install_path="$(/usr/bin/mktemp -d -t 'nvim-runtime')"
