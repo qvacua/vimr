@@ -254,7 +254,6 @@ public extension NvimView {
                return map(vim.fn.getbufinfo(...), function(i)
                     i.buftype = vim.api.nvim_get_option_value("buftype",
                       {buf=i.bufnr})
-                    print(i.name, i.buftype)
                     return i
                   end)
                """, args: [MessagePackValue(buf.handle)])
