@@ -181,3 +181,5 @@ Temporary Items
 tags.*
 /RxPack/.build
 /Workspace/.swiftpm
+.swiftpm
+/NvimServer/.build
