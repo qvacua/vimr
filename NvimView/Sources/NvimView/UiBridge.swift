@@ -14,7 +14,6 @@ final class UiBridge {
   init(uuid: UUID, config: NvimView.Config) {
     self.uuid = uuid
 
-    self.usesCustomTabBar = config.usesCustomTabBar
     self.usesInteractiveZsh = config.useInteractiveZsh
     self.nvimBinary = config.nvimBinary
     self.nvimArgs = config.nvimArgs ?? []
@@ -75,8 +74,6 @@ final class UiBridge {
 
     self.log.debug("Socket: \(self.listenAddress)")
 
-    // FIXME
-    let usesCustomTabBarArg = self.usesCustomTabBar ? "1" : "0"
 
     let inPipe = Pipe()
     let outPipe = Pipe()
@@ -125,7 +122,6 @@ final class UiBridge {
 
   private let uuid: UUID
 
-  private let usesCustomTabBar: Bool
   private let usesInteractiveZsh: Bool
   private let cwd: URL
   private let nvimArgs: [String]

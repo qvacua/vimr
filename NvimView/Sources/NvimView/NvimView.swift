@@ -173,7 +173,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           if (method == "redraw") {
             self?.renderData(params)
           } else if (method == "autocommand") {
-            self?.autoCommandEventNu(params)
+            self?.autoCommandEvent(params)
           } else {
             self?.log.debug("MSG ERROR: \(msg)")
           }

@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 import RxNeovim
+import MessagePack
 
 extension NvimView {
   override public func setFrameSize(_ newSize: NSSize) {
@@ -120,6 +121,7 @@ extension NvimView {
           .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
              "ext_linegrid": true,
              "ext_multigrid": false,
+             "ext_tabline": MessagePackValue(self.usesCustomTabBar),
              "rgb": true
            ]))
           .andThen(

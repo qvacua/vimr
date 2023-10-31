@@ -235,6 +235,9 @@ extension NvimView {
           //self.markForRenderWholeView()
           break
 
+        case "tabline_update":
+          self.tablineUpdate(innerArray)
+
         default:
           self.log.error("Unknown flush data type \(rawType)")
         }
@@ -278,7 +281,7 @@ extension NvimView {
       .disposed(by: self.disposeBag)
   }
 
-  final func autoCommandEventNu(_ array: [MessagePackValue]) {
+  final func autoCommandEvent(_ array: [MessagePackValue]) {
     guard array.count > 0,
           let aucmd = array[0].stringValue?.lowercased(),
        let event = NvimAutoCommandEvent(rawValue: aucmd)
@@ -662,22 +665,6 @@ extension NvimView {
         self.eventsSubject.onNext(.neoVimStopped)
         self.eventsSubject.onCompleted()
       }
-    }
-  }
-
-  final func event(_ value: MessagePackValue) {
-    guard let dict = value.dictionaryValue,
-          let event = dict.keys.first,
-          let args = dict[event]?.arrayValue
-    else {
-      self.bridgeLogger.error("Could not convert \(value)")
-      return
-    }
-
-    switch event.stringValue {
-    case "tabline_update": self.tablineUpdate(args)
-    case "win_viewport": self.winViewportUpdate(args)
-    default: break
     }
   }
 
