@@ -382,6 +382,66 @@ extension FileOutlineView {
 
     self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .verticalSplit)))
   }
+  
+  @IBAction func newFile(_: Any?){
+    guard let node = self.node(from: self.clickedItem) else { return }
+    
+    guard node.url.hasDirectoryPath else { return }
+    
+    let panel = NSSavePanel()
+    panel.directoryURL = node.url
+    panel.nameFieldLabel = "Filename"
+    panel.prompt = "Open"
+    panel.showsTagField = false
+    panel.beginSheetModal(for: self.window!) { result in
+      guard result == .OK else {
+        return
+      }
+
+      let showAlert: () -> Void = {
+        let alert = NSAlert()
+        alert.addButton(withTitle: "OK")
+        alert.messageText = "Invalid File Name"
+        alert
+          .informativeText =
+          "The file name you have entered cannot be used. Please use a different name."
+        alert.alertStyle = .warning
+
+        alert.runModal()
+      }
+
+      guard let url = panel.url else {
+        showAlert()
+        return
+      }
+      
+      self.emit(UuidAction(uuid: self.uuid, action: .open(url: url, mode: .newTab)))
+    }
+  }
+  
+  @IBAction func deleteFile(_: Any?) {
+    guard let node = self.node(from: self.clickedItem) else { return }
+    
+    let fileManager = FileManager.default
+    
+    let showAlert: () -> Void = {
+      let alert = NSAlert()
+      alert.addButton(withTitle: "OK")
+      alert.messageText = "Could not move file to Trash"
+      alert.alertStyle = .warning
+
+      alert.runModal()
+    }
+    
+    do{
+      try fileManager.trashItem(at: node.url, resultingItemURL: nil)
+    } catch {
+      showAlert()
+      return
+    }
+    
+    self.emit(UuidAction(uuid: self.uuid, action: .refresh))
+  }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
@@ -461,11 +521,18 @@ extension FileOutlineView {
   override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     guard let clickedNode = self.node(from: self.clickedItem) else { return true }
 
-    if item
-      .action ==
-      #selector(self.setAsWorkingDirectory(_:)) { return clickedNode.url.hasDirectoryPath }
+    var isValid: Bool
+    
+    switch(item.action) {
+    case #selector(self.setAsWorkingDirectory(_:)):
+      isValid = clickedNode.url.hasDirectoryPath
+    case #selector(self.newFile(_:)):
+      isValid = clickedNode.url.hasDirectoryPath
+    default:
+      isValid = true
+    }
 
-    return true
+    return isValid
   }
 }
 
