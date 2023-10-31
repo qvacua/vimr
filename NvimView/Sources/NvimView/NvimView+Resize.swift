@@ -104,11 +104,11 @@ extension NvimView {
               :autocmd BufEnter * call rpcnotify(\($0), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
               :autocmd DirChanged * call rpcnotify(\($0), 'autocommand', 'dirchanged', expand('<afile>'))
               :autocmd ColorScheme * call rpcnotify(\($0), 'autocommand', 'colorscheme', \
-                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', 0xFFFFFF), \
-                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', 0x000000), \
-                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', 0xFFFFFF), \
-                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', 0x000000), \
-                  get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', 0x000000))
+                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
+                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
+                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
+                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
+                  get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
               :autocmd ExitPre * call rpcnotify(\($0), 'autocommand', 'exitpre')
               :autocmd BufModifiedSet * call rpcnotify(\($0), 'autocommand', 'bufmodifiedset', \
                   str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
