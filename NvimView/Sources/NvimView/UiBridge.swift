@@ -278,7 +278,7 @@ final class UiBridge {
     // We know that NvimServer is there.
     process.launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
     process
-      .arguments = [self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
+      .arguments = ["--gui", self.localServerName, self.remoteServerName, usesCustomTabBarArg] +
       ["--headless"] + self.nvimArgs
 
     self.log.debug(
@@ -294,6 +294,7 @@ final class UiBridge {
     let nvimCmd = [
       // We know that NvimServer is there.
       Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path,
+      "--gui",
       self.localServerName,
       self.remoteServerName,
       self.usesCustomTabBar ? "1" : "0",
