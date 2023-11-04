@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -374,7 +374,7 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.5.0;
+				minimumVersion = 6.6.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
