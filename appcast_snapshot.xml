@@ -6,26 +6,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.44.0-20230103.174333</title>
+      <title>SNAPSHOT-20231104.194056</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20230103.174333</sparkle:version>
-      <sparkle:shortVersionString>v0.44.0</sparkle:shortVersionString>
+      <sparkle:version>20231104.194056</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20231104.194056</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.8.2 😀</li>
-<li>Reduce app size (~14MB) by using <code>strip</code> on VimR binary.</li>
-<li>Dependencies updates</li>
-<li>Kitura/BlueSocket@2.0.4</li>
-<li>sparkle-project/Sparkle@2.3.1</li>
+<li>Minimum macOS requirement is now Ventura (v13).</li>
+<li>Fix VimRSetCharacterspacing: GH-1014</li>
+<li>Add basic file handling to the filebrowser: GH-1005</li>
+<li>Provide neovim original commandline interface: GH-1003</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.44.0-20230103.174333
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20231104.194056
       </releaseNotesLink>
-      <pubDate>2023-01-03T18:13:33.342174</pubDate>
-      <minimumSystemVersion>10.15.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.44.0-20230103.174333/VimR-v0.44.0.tar.bz2"
-                 sparkle:edSignature="IgdSVm/i945fYeKLq6eGQPIfygZ328FXE5ydHaoXN3CNaP72FNCluBWf5tg7ZvBX3oQuq3FWFAb4djHpZXxsCA==" length="16594104"
+      <pubDate>2023-11-04T20:02:13.538735</pubDate>
+      <minimumSystemVersion>13.0</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231104.194056/VimR-SNAPSHOT-20231104.194056.tar.bz2"
+                 sparkle:edSignature="/5SLINMl8UXR7Tjf/lRObPdd7zcs7eYVsZNp5Fg8NxwV/XNTACgJTvdiFvWI8fv7eRzY+8CpaEtGzDm74T57AA==" length="15923473"
                  type="application/octet-stream"/>
     </item>
   </channel>
