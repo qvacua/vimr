@@ -1,6 +1,9 @@
 # Next
 
-* ...
+* Minimum macOS requirement is now Ventura (v13).
+* Fix VimRSetCharacterspacing: GH-1014
+* Add basic file handling to the filebrowser: GH-1005
+* Provide neovim original commandline interface: GH-1003
 
 # 0.44.0-20230103.174333
 

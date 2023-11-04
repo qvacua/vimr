@@ -7,6 +7,7 @@ import Cocoa
 import NvimView
 import PureLayout
 import RxSwift
+import Tabs
 
 class Document: NSDocument, NSWindowDelegate {
   private var nvimView = NvimView(forAutoLayout: ())
@@ -53,13 +54,18 @@ class Document: NSDocument, NSWindowDelegate {
     // We know that we use custom tabs.
     let tabBar = nvimView.tabBar!
 
-    view.addSubview(tabBar)
+    // FIXME: Find out why we have to add tabBar after adding ws, otherwise tabBar is not visible
+    // With deployment target 10_15, adding first tabBar worked fine.
     view.addSubview(nvimView)
+    view.addSubview(tabBar)
 
     tabBar.autoPinEdge(toSuperviewEdge: .left)
     tabBar.autoPinEdge(toSuperviewEdge: .top)
     tabBar.autoPinEdge(toSuperviewEdge: .right)
-    nvimView.autoPinEdge(.top, to: .bottom, of: tabBar)
+//    tabBar.autoSetDimension(.height, toSize: Tabs.Theme().tabBarHeight)
+
+//    nvimView.autoPinEdge(.top, to: .bottom, of: tabBar)
+    nvimView.autoPinEdge(toSuperviewEdge: .top, withInset: 50)
     nvimView.autoPinEdge(toSuperviewEdge: .left)
     nvimView.autoPinEdge(toSuperviewEdge: .right)
     nvimView.autoPinEdge(toSuperviewEdge: .bottom)

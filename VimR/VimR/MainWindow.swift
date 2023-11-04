@@ -547,8 +547,10 @@ final class MainWindow: NSObject,
     }
     let ws = self.workspace
 
-    self.window.contentView?.addSubview(tabBar)
+    // FIXME: Find out why we have to add tabBar after adding ws, otherwise tabBar is not visible
+    // With deployment target 10_15, adding first tabBar worked fine.
     self.window.contentView?.addSubview(ws)
+    self.window.contentView?.addSubview(tabBar)
 
     tabBar.autoPinEdge(toSuperviewEdge: .top, withInset: topInset)
     tabBar.autoPinEdge(toSuperviewEdge: .left)
