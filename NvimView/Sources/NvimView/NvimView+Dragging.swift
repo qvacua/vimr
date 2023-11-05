@@ -34,7 +34,5 @@ public extension NvimView {
 }
 
 private func isFile(sender: NSDraggingInfo) -> Bool {
-  (sender.draggingPasteboard.types?.contains(
-    NSPasteboard.PasteboardType(String(kUTTypeFileURL))
-  )) ?? false
+  (sender.draggingPasteboard.types?.contains(NSPasteboard.PasteboardType.fileURL)) ?? false
 }

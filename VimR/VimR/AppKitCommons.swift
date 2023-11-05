@@ -41,7 +41,7 @@ extension NSTableView {
 
   static func standardSourceListTableView() -> NSTableView {
     let tableView = self.standardTableView()
-    tableView.selectionHighlightStyle = .sourceList
+    tableView.style = .sourceList
 
     return tableView
   }

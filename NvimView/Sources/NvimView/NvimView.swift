@@ -13,6 +13,7 @@ import RxPack
 import RxSwift
 import SpriteKit
 import Tabs
+import UniformTypeIdentifiers
 
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting
@@ -220,7 +221,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
     }
 
     self.bridge.consumer = self
-    self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
+    self.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
 
     self.wantsLayer = true
     self.cellSize = FontUtils.cellSize(

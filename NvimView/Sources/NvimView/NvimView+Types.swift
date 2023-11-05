@@ -92,7 +92,10 @@ public extension NvimView {
     public var background = NSColor.textBackgroundColor
 
     public var visualForeground = NSColor.selectedMenuItemTextColor
-    public var visualBackground = NSColor.selectedMenuItemColor
+    // NSColor.selectedMenuItemColor is deprecated. The doc says that
+    // NSVisualEffectView.Material.selection should be used instead, but I don't know how to get
+    // an NSColor from it.
+    public var visualBackground = NSColor.selectedContentBackgroundColor
 
     public var directoryForeground = NSColor.textColor
 
