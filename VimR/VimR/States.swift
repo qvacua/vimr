@@ -317,7 +317,7 @@ extension MainWindow {
 
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
-    var nvimBinary: String = ""
+    var nvimBinary: String?
     var nvimArgs: [String]?
     var cliPipePath: String?
     var envDict: [String: String]?
