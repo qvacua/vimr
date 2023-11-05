@@ -53,7 +53,11 @@ final class MarkdownPreviewMiddleware {
         guard let buffer = preview.buffer else { return }
 
         do {
-          try self.render(buffer, to: htmlUrl)
+          try self.render(
+            buffer,
+            to: htmlUrl,
+            customMarkdownProcessor: state.customMarkdownProcessor
+          )
           self.previewFiles[uuid] = htmlUrl
         } catch let error as NSError {
           // FIXME: error handling!
@@ -102,10 +106,34 @@ final class MarkdownPreviewMiddleware {
       category: Defs.LoggerCategory.middleware
     )
 
-    private func render(_ bufferUrl: URL, to htmlUrl: URL) throws {
-      let md = try String(contentsOf: bufferUrl)
-      let down = Down(markdownString: md)
-      let body = try down.toHTML(DownOptions.sourcePos)
+    private func render(_ bufferUrl: URL, to htmlUrl: URL, customMarkdownProcessor cmp: String?) throws {
+      let body: String
+      if let cmp, cmp != "" {
+        let content = try Data(contentsOf: bufferUrl)
+
+        let sh = Process()
+
+        let output = Pipe()
+        let input = Pipe()
+        let err = Pipe()
+
+        sh.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        sh.arguments = ["bash", "-l", "-c", cmp]
+        sh.standardInput = input
+        sh.standardOutput = output
+        sh.standardError = err
+
+        input.fileHandleForWriting.write(content)
+        input.fileHandleForWriting.closeFile()
+
+        try sh.run()
+
+        body = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+      } else {
+        let md = try String(contentsOf: bufferUrl)
+        let down = Down(markdownString: md)
+        body = try down.toHTML(DownOptions.sourcePos)
+      }
 
       let html = self.filledTemplate(body: body, title: bufferUrl.lastPathComponent)
       let htmlFilePath = htmlUrl.path

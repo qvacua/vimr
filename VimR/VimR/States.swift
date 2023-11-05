@@ -305,6 +305,8 @@ extension MainWindow {
 
     var isTemporarySession = false
 
+    var customMarkdownProcessor = ""
+
     // neovim
     var uuid = UUID()
     var currentBuffer: NvimView.Buffer?
@@ -349,6 +351,7 @@ extension MainWindow {
       case useLiveResize = "use-live-resize"
       case drawsParallel = "draws-parallel"
       case isShowHidden = "is-show-hidden"
+      case customMarkdownProcessor = "custom-markdown-processor"
 
       case appearance
       case workspaceTools = "workspace-tool"
@@ -391,6 +394,11 @@ extension MainWindow {
       self.isToolButtonsVisible = try container.decode(
         forKey: .toolButtonsVisible,
         default: State.default.isToolButtonsVisible
+      )
+
+      self.customMarkdownProcessor = try container.decode(
+        forKey: .customMarkdownProcessor,
+        default: State.default.customMarkdownProcessor
       )
 
       self.appearance = try container.decode(forKey: .appearance, default: State.default.appearance)
@@ -447,6 +455,7 @@ extension MainWindow {
       try container.encode(NSStringFromRect(self.frame), forKey: .frame)
       try container.encode(self.useLiveResize, forKey: .useLiveResize)
       try container.encode(self.drawsParallel, forKey: .drawsParallel)
+      try container.encode(self.customMarkdownProcessor, forKey: .customMarkdownProcessor)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
       try container.encode(self.useInteractiveZsh, forKey: .useInteractiveZsh)
