@@ -20,6 +20,7 @@ main() {
     pushd ./NvimServer/third-party >/dev/null
       brew fetch --bottle-tag="${arm64_bottle}" gettext
       brew fetch --bottle-tag="${x86_64_bottle}" gettext
+      brew fetch --bottle-tag="${arm64_bottle}" lua
       brew fetch --bottle-tag="${x86_64_bottle}" lua 
 
       local version; version=$(brew info gettext --json | jq -r ".[0].versions.stable"); readonly version
