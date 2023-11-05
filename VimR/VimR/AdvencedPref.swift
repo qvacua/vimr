@@ -68,7 +68,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useSnapshotUpdate: Bool
   private var useLiveResize: Bool
   private var drawsParallel: Bool
-  private var nvimBinary: String?
+  private var nvimBinary: String = ""
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())

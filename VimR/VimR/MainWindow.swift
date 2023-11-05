@@ -86,7 +86,7 @@ final class MainWindow: NSObject,
       usesCustomTabBar: state.appearance.usesCustomTab,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
-      nvimBinary: state.nvimBinary ?? "",
+      nvimBinary: state.nvimBinary,
       nvimArgs: state.nvimArgs,
       envDict: state.envDict,
       sourceFiles: sourceFileUrls
