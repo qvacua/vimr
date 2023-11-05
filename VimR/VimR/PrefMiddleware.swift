@@ -11,7 +11,7 @@ final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
   typealias ActionType = AnyAction
 
-  static let compatibleVersion = "169"
+  static let compatibleVersion = "168"
 
   let mainWindow = MainWindowMiddleware()
 
