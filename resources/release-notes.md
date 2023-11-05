@@ -4,6 +4,7 @@
 * Fix VimRSetCharacterspacing: GH-1014
 * Add basic file handling to the filebrowser: GH-1005
 * Provide neovim original commandline interface: GH-1003
+* Add an option for custom Markdown processor: GH-745
 * Dependencies updates:
   - ReactiveX/RxSwift@6.6.0
   - sparkle-project/Sparkle@2.5.0
