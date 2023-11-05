@@ -15,7 +15,6 @@ jobs:
       - name: Install brew packages
         run: |
           brew update >/dev/null
-          brew upgrade
           brew install automake ninja coreutils
       - name: Build VimR
         run: |
