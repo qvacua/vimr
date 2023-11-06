@@ -95,7 +95,7 @@ extension NvimView {
     guard let newFont = FontUtils.font(fromVimFontSpec: fontSpec) else {
       self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
 
-      self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      self.signalError(code: 596, message: "Invalid font(s): guifont=\(fontSpec)")
       self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag))
       return
     }
