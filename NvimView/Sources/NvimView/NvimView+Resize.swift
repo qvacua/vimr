@@ -86,11 +86,23 @@ extension NvimView {
           value in
           guard let info = value.arrayValue,
                 info.count == 2,
-                let channel = info[0].int32Value
+                let channel = info[0].int32Value,
+                let dict = info[1].dictionaryValue,
+                let version = dict["version"]?.dictionaryValue,
+                let major = version["major"]?.intValue,
+                let minor = version["minor"]?.intValue
           else {
             throw RxNeovimApi.Error
               .exception(message: "Could not convert values to api info.")
           }
+          guard major >= 0 && minor >= 10 || major >= 1
+          else {
+            self.eventsSubject.onNext(.ipcBecameInvalid(
+              "Incompatible neovim version \(major).\(minor)"))
+            throw RxNeovimApi.Error
+              .exception(message: "Could not convert values to api info.")
+          }
+
           return channel
         }).flatMapCompletable({
           // FIXME: make lua
