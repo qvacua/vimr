@@ -17,9 +17,6 @@
       location = "group:Tabs">
    </FileRef>
    <FileRef
-      location = "group:NvimServer">
-   </FileRef>
-   <FileRef
       location = "group:NvimView">
    </FileRef>
    <FileRef

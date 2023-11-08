@@ -263,7 +263,9 @@ struct AppearanceState: Codable {
 
 extension MainWindow {
   struct State: Codable {
-    static let `default` = State(isAllToolsVisible: true, isToolButtonsVisible: true)
+    static let `default` = State(isAllToolsVisible: true,
+                                 isToolButtonsVisible: true,
+                                 nvimBinary: "")
 
     static let defaultTools: [MainWindow.Tools: WorkspaceToolState] = [
       .fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
@@ -317,6 +319,7 @@ extension MainWindow {
 
     var appearance = AppearanceState.default
     var useInteractiveZsh = false
+    var nvimBinary: String = ""
     var nvimArgs: [String]?
     var cliPipePath: String?
     var envDict: [String: String]?
@@ -326,15 +329,17 @@ extension MainWindow {
     var isLeftOptionMeta = false
     var isRightOptionMeta = false
 
+
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
     var currentBufferToSet: NvimView.Buffer?
     var cwdToSet: URL?
     var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 
-    init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool) {
+    init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool, nvimBinary: String) {
       self.isAllToolsVisible = isAllToolsVisible
       self.isToolButtonsVisible = isToolButtonsVisible
+      self.nvimBinary = nvimBinary
     }
 
     enum CodingKeys: String, CodingKey {
@@ -348,6 +353,8 @@ extension MainWindow {
       case isRightOptionMeta = "is-right-option-meta"
 
       case useInteractiveZsh = "use-interactive-zsh"
+      case nvimBinary = "nvim-binary"
+
       case useLiveResize = "use-live-resize"
       case drawsParallel = "draws-parallel"
       case isShowHidden = "is-show-hidden"
@@ -373,6 +380,7 @@ extension MainWindow {
         forKey: .useInteractiveZsh,
         default: State.default.useInteractiveZsh
       )
+      self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State.default.nvimBinary
       self.useLiveResize = try container.decode(
         forKey: .useLiveResize,
         default: State.default.useLiveResize
@@ -459,6 +467,7 @@ extension MainWindow {
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
       try container.encode(self.useInteractiveZsh, forKey: .useInteractiveZsh)
+      try container.encode(self.nvimBinary, forKey: .nvimBinary)
       try container.encode(self.fileBrowserShowHidden, forKey: .isShowHidden)
 
       // See [1]

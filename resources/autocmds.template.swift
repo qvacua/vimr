@@ -1,7 +1,7 @@
 // Auto generated for nvim ${version}
 // See bin/generate_autocmds.py
 
-enum NvimAutoCommandEvent: Int {
+enum NvimAutoCommandEvent: String {
 
 ${event_cases}
 }

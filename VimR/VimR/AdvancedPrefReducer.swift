@@ -26,6 +26,9 @@ final class AdvancedPrefReducer: ReducerType {
 
     case let .setUseSnapshotUpdate(value):
       state.useSnapshotUpdate = value
+
+    case let .setNvimBinary(value):
+      state.mainWindowTemplate.nvimBinary = value
     }
 
     return (state, pair.action, true)

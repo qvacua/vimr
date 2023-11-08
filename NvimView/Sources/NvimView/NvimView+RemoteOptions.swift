@@ -102,6 +102,8 @@ extension NvimView {
 
     gui.async {
       self.font = newFont
+      // Cell size likely changed, do a resize.
+      self.resizeNeoVimUi(to: self.frame.size)
       self.markForRenderWholeView()
       self.eventsSubject.onNext(.guifontChanged(newFont))
     }

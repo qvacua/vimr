@@ -86,6 +86,7 @@ final class MainWindow: NSObject,
       usesCustomTabBar: state.appearance.usesCustomTab,
       useInteractiveZsh: state.useInteractiveZsh,
       cwd: state.cwd,
+      nvimBinary: state.nvimBinary,
       nvimArgs: state.nvimArgs,
       envDict: state.envDict,
       sourceFiles: sourceFileUrls
@@ -259,7 +260,7 @@ final class MainWindow: NSObject,
   private var usesTheme = true
   private var lastThemeMark = Token()
 
-  private let log = OSLog(
+  internal let log = OSLog(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.ui
   )

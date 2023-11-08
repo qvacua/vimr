@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -339,6 +339,7 @@
 			packageReferences = (
 				4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */,
 				4BD67CCF24ED08CB00147C51 /* XCRemoteSwiftPackageReference "PureLayout" */,
+				1FF017012AF02F64003D62BB /* XCLocalSwiftPackageReference "../../NvimServer" */,
 			);
 			productRefGroup = 4B90F0051FD2AF59008A39E0 /* Products */;
 			projectDirPath = "";
@@ -753,6 +754,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		1FF017012AF02F64003D62BB /* XCLocalSwiftPackageReference "../../NvimServer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../NvimServer;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */ = {

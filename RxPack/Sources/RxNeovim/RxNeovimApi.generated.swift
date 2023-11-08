@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.8.2.
+// Auto generated for nvim version 0.9.2.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -983,36 +983,6 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetInfo(
-    buffer: RxNeovimApi.Buffer,
-    errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-    ]
-
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_buf_get_info", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
   public func parseCmd(
     str: String,
     opts: Dictionary<String, RxNeovimApi.Value>,
@@ -1236,6 +1206,36 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_buf_get_commands", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func getOptionInfo(
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+    ]
+
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
@@ -1623,13 +1623,15 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getOptionInfo(
+  public func getOptionInfo2(
     name: String,
+    opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
   ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
     let params: [RxNeovimApi.Value] = [
         .string(name),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
     func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
@@ -1643,13 +1645,13 @@ extension RxNeovimApi {
     if errWhenBlocked {
       return self
         .checkBlocked(
-          self.rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
+          self.rpc(method: "nvim_get_option_info2", params: params, expectsReturnValue: true)
         )
         .map(transform)
     }
 
     return self
-      .rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
+      .rpc(method: "nvim_get_option_info2", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
@@ -2051,6 +2053,28 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  public func uiSetFocus(
+    gained: Bool,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .bool(gained),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_ui_set_focus", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_ui_set_focus", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
   public func uiDetach(
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2196,70 +2220,6 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getHlByName(
-    name: String,
-    rgb: Bool,
-    errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .bool(rgb),
-    ]
-
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_get_hl_by_name", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_get_hl_by_name", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  public func getHlById(
-    hl_id: Int,
-    rgb: Bool,
-    errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(hl_id)),
-        .bool(rgb),
-    ]
-
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_get_hl_by_id", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_get_hl_by_id", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
   public func getHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
@@ -2287,6 +2247,38 @@ extension RxNeovimApi {
 
     return self
       .rpc(method: "nvim_get_hl_id_by_name", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  public func getHl(
+    ns_id: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(ns_id)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_hl", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_hl", params: params, expectsReturnValue: true)
       .map(transform)
   }
 
@@ -3968,49 +3960,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getDirtyStatus(
-    errWhenBlocked: Bool = true
-  ) -> Single<Bool> {
-
-    let params: [RxNeovimApi.Value] = [
-        
-    ]
-
-    func transform(_ value: Value) throws -> Bool {
-      guard let result = (value.boolValue) else {
-        throw RxNeovimApi.Error.conversion(type: Bool.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_get_dirty_status", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_get_dirty_status", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  public func exec(
+  public func exec2(
     src: String,
-    output: Bool,
+    opts: Dictionary<String, RxNeovimApi.Value>,
     errWhenBlocked: Bool = true
-  ) -> Single<String> {
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
 
     let params: [RxNeovimApi.Value] = [
         .string(src),
-        .bool(output),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> String {
-      guard let result = (value.stringValue) else {
-        throw RxNeovimApi.Error.conversion(type: String.self)
+    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
 
       return result
@@ -4019,13 +3982,13 @@ extension RxNeovimApi {
     if errWhenBlocked {
       return self
         .checkBlocked(
-          self.rpc(method: "nvim_exec", params: params, expectsReturnValue: true)
+          self.rpc(method: "nvim_exec2", params: params, expectsReturnValue: true)
         )
         .map(transform)
     }
 
     return self
-      .rpc(method: "nvim_exec", params: params, expectsReturnValue: true)
+      .rpc(method: "nvim_exec2", params: params, expectsReturnValue: true)
       .map(transform)
   }
 

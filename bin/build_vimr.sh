@@ -13,7 +13,7 @@ prepare_nvimserver() {
 
   # Build NvimServer and copy
   build_libnvim=true ./NvimServer/NvimServer/bin/build_nvimserver.sh
-  cp ./NvimServer/.build/apple/Products/Release/NvimServer "${resources_folder}"
+  cp ./NvimServer/.build/arm64-apple-macosx/release/NvimServer "${resources_folder}"
 
   # Create and copy runtime folder
   install_path="$(/usr/bin/mktemp -d -t 'nvim-runtime')"
@@ -38,10 +38,17 @@ build_vimr() {
 
   echo "### Xcodebuilding"
   rm -rf "${build_path}"
-  xcodebuild \
-    -configuration Release -derivedDataPath "${build_path}" \
-    -workspace VimR.xcworkspace -scheme VimR \
-    clean build
+  if [[ "${clean}" == true ]]; then  
+      xcodebuild \
+        -configuration Release -derivedDataPath "${build_path}" \
+        -workspace VimR.xcworkspace -scheme VimR \
+        clean build
+  else
+      xcodebuild \
+        -configuration Release -derivedDataPath "${build_path}" \
+        -workspace VimR.xcworkspace -scheme VimR \
+        build
+  fi
 }
 
 main () {

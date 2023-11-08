@@ -1224,6 +1224,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = "-pthread";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_MODULE_NAME = VimR;
@@ -1246,6 +1247,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = "-pthread";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(VIMR_BUNDLE_IDENTIFIER)";
 				PRODUCT_MODULE_NAME = VimR;
