@@ -14,5 +14,6 @@ pushd "$(dirname "${BASH_SOURCE[0]}")/../.." >/dev/null
 
   if [[ "${clean_deps}" == true ]]; then
     rm -rf ./NvimServer/build
+    rm -rf ./NvimServer/third-party
   fi
 popd >/dev/null

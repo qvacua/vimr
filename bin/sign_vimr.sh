@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 readonly vimr_app_path=${vimr_app_path:?"Path to VimR.app"}
-readonly identity="Developer ID Application: George Harker (B8V3694RNX)"
+readonly identity="Developer ID Application: Tae Won Ha (H96Q2NKTQH)"
 
 remove_sparkle_xpc () {
   # VimR is not sandboxed, so, remove the XPCs
