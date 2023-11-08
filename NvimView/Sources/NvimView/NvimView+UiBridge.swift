@@ -262,22 +262,21 @@ extension NvimView {
 
   final func stop() {
     self.bridgeLogger.debug()
-    self.api
-      .stop()
+    self.quit()
+      .andThen(self.api.stop())
       .andThen(Completable.create { completable in
-        self.eventsSubject.onNext(.neoVimStopped)
-        self.eventsSubject.onCompleted()
+          self.eventsSubject.onNext(.neoVimStopped)
+          self.eventsSubject.onCompleted()
 
-        completable(.completed)
-        return Disposables.create()
-      })
-      .andThen(self.quit())
-      .subscribe(onCompleted: { [weak self] in
-        self?.bridgeLogger.info("Successfully stopped the bridge.")
-        self?.nvimExitedCondition.broadcast()
-      }, onError: {
-        self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
-      })
+          completable(.completed)
+          return Disposables.create()
+        })
+        .subscribe(onCompleted: { [weak self] in
+          self?.bridgeLogger.info("Successfully stopped the bridge.")
+          self?.nvimExitedCondition.broadcast()
+        }, onError: {
+          self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
+        })
       .disposed(by: self.disposeBag)
   }
 
@@ -890,8 +889,7 @@ extension NvimView {
   }
 
   func quit() -> Completable {
-    return self.api.command(command: ":q")
-      .andThen(self.bridge.quit())
+    return self.bridge.quit()
   }
 }
 

@@ -49,6 +49,7 @@ final class UiBridge {
     Completable.create { completable in
       self.nvimServerProc?.waitUntilExit()
       self.log.info("NvimServer \(self.uuid) exited successfully.")
+      completable(.completed)
       return Disposables.create()
     }
   }
