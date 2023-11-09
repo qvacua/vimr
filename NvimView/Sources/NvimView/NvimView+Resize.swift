@@ -73,8 +73,17 @@ extension NvimView {
 
     self.bridge.runLocalServerAndNvim(width: size.width, height: size.height)
 
-    // FIXME: need to wait for listen to occur
-    Thread.sleep(forTimeInterval: 0.1)
+    // Wait for listen and socket creation to occur
+    let timeout = Duration.seconds(4)
+    let start_time = ContinuousClock.now
+    while !FileManager.default.fileExists(atPath: sockPath) {
+      usleep(1000)
+      if ContinuousClock.now - start_time > timeout {
+        self.eventsSubject.onNext(.ipcBecameInvalid(
+          "Timeout waiting for neovim."))
+        return
+      }
+    }
 
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
@@ -130,31 +139,31 @@ extension NvimView {
               """, opts: [:]).asCompletable()
 
 
-          .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
-             "ext_linegrid": true,
-             "ext_multigrid": false,
-             "ext_tabline": MessagePackValue(self.usesCustomTabBar),
-             "rgb": true
-           ]))
-          .andThen(
-            self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-              prev
-                .andThen(
-                  self.api.exec2(src: "source \(url.shellEscapedPath)", opts:["output": true])
-                    .map({
-                      retval in
-                      guard let output_value = retval["output"] ?? retval["output"],
-                            let output = output_value.stringValue
-                      else {
-                        throw RxNeovimApi.Error
-                          .exception(message: "Could not convert values to output.")
-                      }
-                      return output
-                    })
-                    .asCompletable()
-                )
-            }
-          )
+            .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
+              "ext_linegrid": true,
+              "ext_multigrid": false,
+              "ext_tabline": MessagePackValue(self.usesCustomTabBar),
+              "rgb": true
+            ]))
+            .andThen(
+              self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
+                prev
+                  .andThen(
+                    self.api.exec2(src: "source \(url.shellEscapedPath)", opts:["output": true])
+                      .map({
+                        retval in
+                        guard let output_value = retval["output"] ?? retval["output"],
+                              let output = output_value.stringValue
+                        else {
+                          throw RxNeovimApi.Error
+                            .exception(message: "Could not convert values to output.")
+                        }
+                        return output
+                      })
+                      .asCompletable()
+                  )
+              }
+            )
         })
       ).wait()
   }
