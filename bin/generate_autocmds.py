@@ -5,13 +5,13 @@ import io
 import re
 from string import Template
 
-# Assume that we're in $REPO_ROOT/NvimView
+# Assume that we're in $REPO_ROOT/Neovim
 
 NVIM_AUEVENTS_ENUM_FILE = "./build/include/auevents_enum.generated.h"
 SWIFT_TEMPLATE_FILE = "../resources/autocmds.template.swift"
 
 
-def convert(line: str) -> (str, str):
+def convert(line: str) -> tuple[str, str]:
     result = re.match(r'^EVENT_(.*) = (.*)', line.replace(',', ''))
     return result.group(1), result.group(2)
 

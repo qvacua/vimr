@@ -16,18 +16,18 @@ main() {
         echo "### Using the workspace neovim."
     fi
 
-    pushd NvimServer > /dev/null
-      major=$(grep -e "set(NVIM_VERSION_MAJOR" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
-      minor=$(grep -e "set(NVIM_VERSION_MINOR" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
-      patch=$(grep -e "set(NVIM_VERSION_PATCH" CMakeLists.txt | gsed -E "s/.*([0-9]+).*/\1/")
+    pushd Neovim > /dev/null
+      major=$(grep -e "set(NVIM_VERSION_MAJOR" CMakeLists.txt | gsed -E "s/.* ([0-9]+)\)/\1/")
+      minor=$(grep -e "set(NVIM_VERSION_MINOR" CMakeLists.txt | gsed -E "s/.* ([0-9]+)\)/\1/")
+      patch=$(grep -e "set(NVIM_VERSION_PATCH" CMakeLists.txt | gsed -E "s/.* ([0-9]+)\)/\1/")
       prerelease=$(grep -e "set(NVIM_VERSION_PRERELEASE" CMakeLists.txt | gsed -E "s/.*\(.*\"(.*)\"\).*/\1/")
       nvim_version="v$major.$minor.$patch$prerelease"
       echo "### Using nvim version: $nvim_version"
 
-      ./NvimServer/bin/build_libnvim.sh
+      ../NvimServer/NvimServer/bin/build_neovim.sh
     popd > /dev/null
 
-    pushd NvimServer
+    pushd Neovim
       version=${nvim_version} ../bin/generate_autocmds.py > "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
       version=${nvim_version} ../bin/generate_cursor_shape.py > "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
     popd > /dev/null

@@ -80,7 +80,6 @@ extension NvimView {
     case .more: return "More"
     case .moreLastLine: return "MoreLastLine"
     case .showingMatchingParen: return "ShowingMatchingParen"
-    case .termFocus: return "TermFocus"
     case .count: return "Count"
       // @formatter:on
     }

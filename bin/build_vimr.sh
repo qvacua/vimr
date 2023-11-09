@@ -72,7 +72,7 @@ main () {
     ./bin/notarize_vimr.sh
   fi
 
-  echo "### VimR built in ${build_path}/Build/Products/VimR.app"
+  echo "### VimR built in ${build_path}/Build/Products/Release/VimR.app"
   popd >/dev/null
 }
 
