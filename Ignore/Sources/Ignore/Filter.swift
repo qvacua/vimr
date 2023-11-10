@@ -79,12 +79,12 @@ public struct Filter: CustomStringConvertible {
 
     if self.isRelativeToBase {
       return url.path.withCString { stringCstr in
-        wildmatch(patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
+        wildmatch(self.patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
       }
     }
 
     return url.lastPathComponent.withCString { stringCstr in
-      wildmatch(patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
+      wildmatch(self.patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
     }
   }
 
@@ -92,7 +92,7 @@ public struct Filter: CustomStringConvertible {
   public func matches(_ string: String) -> Bool {
     string.withCString {
       stringCstr in
-      wildmatch(patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
+      wildmatch(self.patternCstr, stringCstr, WM_WILDSTAR) == WM_MATCH
     }
   }
 
