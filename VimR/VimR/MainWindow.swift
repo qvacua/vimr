@@ -33,7 +33,7 @@ final class MainWindow: NSObject,
 
   var activateAsciiImInInsertMode: Bool {
     get { self.neoVimView.activateAsciiImInNormalMode }
-    self.set { self.neoVimView.activateAsciiImInNormalMode = newValue }
+    set { self.neoVimView.activateAsciiImInNormalMode = newValue }
   }
 
   weak var shortcutService: ShortcutService?
