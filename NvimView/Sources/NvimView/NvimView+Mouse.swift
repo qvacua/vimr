@@ -4,8 +4,8 @@
  */
 
 import Cocoa
-import RxSwift
 import RxNeovim
+import RxSwift
 
 public extension NvimView {
   override func mouseDown(with event: NSEvent) {
@@ -91,22 +91,27 @@ public extension NvimView {
     if event.isDirectionInvertedFromDevice {
       vertSign = -vertSign
     }
-    self.log.debug("# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)")
+    self.log
+      .debug(
+        "# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)"
+      )
 
     self.api.winGetCursor(window: RxNeovimApi.Window(0))
-      .map( {
+      .map {
         guard $0.count == 2
         else {
           self.log.error("Error decoding \($0)")
           return
         }
-        self.api.winSetCursor(window: RxNeovimApi.Window(0),
-                              pos: [$0[0] + vertSign * absDeltaY, $0[1] + horizSign * absDeltaX])
+        self.api.winSetCursor(
+          window: RxNeovimApi.Window(0),
+          pos: [$0[0] + vertSign * absDeltaY, $0[1] + horizSign * absDeltaX]
+        )
         .subscribe(onError: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
         .disposed(by: self.disposeBag)
-      })
+      }
       .subscribe(onError: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })

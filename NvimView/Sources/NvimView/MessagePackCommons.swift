@@ -18,7 +18,7 @@ enum MessagePackUtils {
   static func value<T>(from data: Data?, conversion: (MessagePackValue) -> T?) -> T? {
     guard let d = data else { return nil }
 
-    do { return conversion(try unpack(d).value) }
+    do { return try conversion(unpack(d).value) }
     catch { return nil }
   }
 

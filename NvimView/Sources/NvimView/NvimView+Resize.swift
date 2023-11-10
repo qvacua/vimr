@@ -4,9 +4,9 @@
  */
 
 import Cocoa
-import RxSwift
-import RxNeovim
 import MessagePack
+import RxNeovim
+import RxSwift
 
 extension NvimView {
   override public func setFrameSize(_ newSize: NSSize) {
@@ -80,7 +80,8 @@ extension NvimView {
       usleep(1000)
       if ContinuousClock.now - start_time > timeout {
         self.eventsSubject.onNext(.ipcBecameInvalid(
-          "Timeout waiting for neovim."))
+          "Timeout waiting for neovim."
+        ))
         return
       }
     }
@@ -89,9 +90,9 @@ extension NvimView {
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...
     try?
-     self.api.run(at: sockPath)
+      self.api.run(at: sockPath)
       .andThen(
-        self.api.getApiInfo().map({
+        self.api.getApiInfo().map {
           value in
           guard let info = value.arrayValue,
                 info.count == 2,
@@ -107,50 +108,62 @@ extension NvimView {
           guard major >= 0 && minor >= 10 || major >= 1
           else {
             self.eventsSubject.onNext(.ipcBecameInvalid(
-              "Incompatible neovim version \(major).\(minor)"))
+              "Incompatible neovim version \(major).\(minor)"
+            ))
             throw RxNeovimApi.Error
               .exception(message: "Could not convert values to api info.")
           }
 
           return channel
-        }).flatMapCompletable({
+        }.flatMapCompletable {
           // FIXME: make lua
           self.api.exec2(src: """
-              ":augroup vimr
-              ":augroup!
-              :autocmd VimEnter * call rpcnotify(\($0), 'autocommand', 'vimenter')
-              :autocmd BufWinEnter * call rpcnotify(\($0), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
-              :autocmd BufWinEnter * call rpcnotify(\($0), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
-              :autocmd TabEnter * call rpcnotify(\($0), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
-              :autocmd BufWritePost * call rpcnotify(\($0), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
-              :autocmd BufEnter * call rpcnotify(\($0), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
-              :autocmd DirChanged * call rpcnotify(\($0), 'autocommand', 'dirchanged', expand('<afile>'))
-              :autocmd ColorScheme * call rpcnotify(\($0), 'autocommand', 'colorscheme', \
-                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
-                  get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
-                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
-                  get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
-                  get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
-              :autocmd ExitPre * call rpcnotify(\($0), 'autocommand', 'exitpre')
-              :autocmd BufModifiedSet * call rpcnotify(\($0), 'autocommand', 'bufmodifiedset', \
-                  str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
-              :let g:gui_vimr = 1
-              ":augroup END
-              """, opts: [:]).asCompletable()
-
+          ":augroup vimr
+          ":augroup!
+          :autocmd VimEnter * call rpcnotify(\($0), 'autocommand', 'vimenter')
+          :autocmd BufWinEnter * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
+          :autocmd BufWinEnter * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
+          :autocmd TabEnter * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
+          :autocmd BufWritePost * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
+          :autocmd BufEnter * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
+          :autocmd DirChanged * call rpcnotify(\(
+            $0
+          ), 'autocommand', 'dirchanged', expand('<afile>'))
+          :autocmd ColorScheme * call rpcnotify(\($0), 'autocommand', 'colorscheme', \
+              get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
+              get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
+              get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
+              get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
+              get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
+          :autocmd ExitPre * call rpcnotify(\($0), 'autocommand', 'exitpre')
+          :autocmd BufModifiedSet * call rpcnotify(\($0), 'autocommand', 'bufmodifiedset', \
+              str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
+          :let g:gui_vimr = 1
+          ":augroup END
+          """, opts: [:]).asCompletable()
 
             .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
               "ext_linegrid": true,
               "ext_multigrid": false,
               "ext_tabline": MessagePackValue(self.usesCustomTabBar),
-              "rgb": true
+              "rgb": true,
             ]))
             .andThen(
               self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
                 prev
                   .andThen(
-                    self.api.exec2(src: "source \(url.shellEscapedPath)", opts:["output": true])
-                      .map({
+                    self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
+                      .map {
                         retval in
                         guard let output_value = retval["output"] ?? retval["output"],
                               let output = output_value.stringValue
@@ -159,12 +172,12 @@ extension NvimView {
                             .exception(message: "Could not convert values to output.")
                         }
                         return output
-                      })
+                      }
                       .asCompletable()
                   )
               }
             )
-        })
+        }
       ).wait()
   }
 

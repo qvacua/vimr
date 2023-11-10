@@ -288,7 +288,7 @@ final class UGrid: CustomStringConvertible, Codable {
         updateMarkedInfo(newValue: oldMarkedInfo)
       }
     }
-    var lastAttrId : Int = 0
+    var lastAttrId = 0
     var column = startCol
     for cindex in 0..<chunk.count {
       let reps = chunk[cindex].repeats ?? 1

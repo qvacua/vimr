@@ -52,7 +52,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   public let api = RxNeovimApi()
 
   public internal(set) var mode: CursorModeShape = .normal
-  public internal(set) var modeInfos = [String : ModeInfo]()
+  public internal(set) var modeInfos = [String: ModeInfo]()
 
   public internal(set) var theme = Theme.default
 
@@ -170,10 +170,10 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         switch msg {
         case let .notification(method, params):
           self?.log.debug("NOTIFICATION: \(method): \(params)")
-          
-          if (method == "redraw") {
+
+          if method == "redraw" {
             self?.renderData(params)
-          } else if (method == "autocommand") {
+          } else if method == "autocommand" {
             self?.autoCommandEvent(params)
           } else {
             self?.log.debug("MSG ERROR: \(msg)")

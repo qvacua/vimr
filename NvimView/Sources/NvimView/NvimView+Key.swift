@@ -58,7 +58,7 @@ public extension NvimView {
     default: return
     }
 
-    //try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
+    // try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
     //  .wait()
     _ = self.api.input(keys: self.vimPlainString(text), errWhenBlocked: false).syncValue()
 
@@ -182,9 +182,9 @@ public extension NvimView {
       // after delete, cusor should be the location
     }
     if replacementRange.length > 0 {
-      let text = String(repeating:"<BS>", count: replacementRange.length)
-      try? self.api.feedkeys(keys: text, mode:"i", escape_ks: false)
-       .wait()
+      let text = String(repeating: "<BS>", count: replacementRange.length)
+      try? self.api.feedkeys(keys: text, mode: "i", escape_ks: false)
+        .wait()
     }
 
     // delay to wait async gui update handled.

@@ -56,8 +56,8 @@ final class UiBridge {
 
   func forceQuit() -> Completable {
     self.log.fault("Force-exiting NvimServer \(self.uuid).")
-    
-    return Completable.create { completable in
+
+    return Completable.create { _ in
       self.forceExitNvimServer()
       self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
       return Disposables.create()
@@ -75,7 +75,6 @@ final class UiBridge {
 
     self.log.debug("Socket: \(self.listenAddress)")
 
-
     let inPipe = Pipe()
     let outPipe = Pipe()
     let errorPipe = Pipe()
@@ -85,8 +84,9 @@ final class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
 
-    if (self.nvimBinary != "" &&
-        FileManager.default.fileExists(atPath: self.nvimBinary)) {
+    if self.nvimBinary != "",
+       FileManager.default.fileExists(atPath: self.nvimBinary)
+    {
       process.launchPath = self.nvimBinary
     } else {
       // We know that NvimServer is there.
@@ -98,9 +98,9 @@ final class UiBridge {
 
     process
       .arguments =
-        ["--embed",
-         "--listen",
-         self.listenAddress] + self.nvimArgs
+      ["--embed",
+       "--listen",
+       self.listenAddress] + self.nvimArgs
 
     self.log.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
@@ -149,7 +149,7 @@ final class UiBridge {
   private var remoteServerName: String { "com.qvacua.NvimView.NvimServer.\(self.uuid)" }
 
   var listenAddress: String {
-    return URL(fileURLWithPath: NSTemporaryDirectory())
+    URL(fileURLWithPath: NSTemporaryDirectory())
       .appendingPathComponent("vimr_\(self.uuid).sock").path
   }
 }
