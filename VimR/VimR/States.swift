@@ -226,10 +226,10 @@ struct AppearanceState: Codable {
     }
 
     self
-      .linespacing = (try container.decodeIfPresent(Double.self, forKey: .editorLinespacing) ?? 1.0)
+      .linespacing = try (container.decodeIfPresent(Double.self, forKey: .editorLinespacing) ?? 1.0)
     self
-      .characterspacing = (
-        try container
+      .characterspacing = try (
+        container
           .decodeIfPresent(Double.self, forKey: .editorCharacterspacing) ?? 1.0
       )
     self.usesLigatures = try container
@@ -263,9 +263,11 @@ struct AppearanceState: Codable {
 
 extension MainWindow {
   struct State: Codable {
-    static let `default` = State(isAllToolsVisible: true,
-                                 isToolButtonsVisible: true,
-                                 nvimBinary: "")
+    static let `default` = State(
+      isAllToolsVisible: true,
+      isToolButtonsVisible: true,
+      nvimBinary: ""
+    )
 
     static let defaultTools: [MainWindow.Tools: WorkspaceToolState] = [
       .fileBrowser: WorkspaceToolState(location: .left, dimension: 200, open: true),
@@ -329,7 +331,6 @@ extension MainWindow {
     var isLeftOptionMeta = false
     var isRightOptionMeta = false
 
-
     // to be cleaned
     var urlsToOpen = [URL: OpenMode]()
     var currentBufferToSet: NvimView.Buffer?
@@ -380,7 +381,8 @@ extension MainWindow {
         forKey: .useInteractiveZsh,
         default: State.default.useInteractiveZsh
       )
-      self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State.default.nvimBinary
+      self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State
+        .default.nvimBinary
       self.useLiveResize = try container.decode(
         forKey: .useLiveResize,
         default: State.default.useLiveResize

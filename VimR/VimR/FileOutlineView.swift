@@ -382,12 +382,12 @@ extension FileOutlineView {
 
     self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .verticalSplit)))
   }
-  
-  @IBAction func newFile(_: Any?){
+
+  @IBAction func newFile(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
-    
+
     guard node.url.hasDirectoryPath else { return }
-    
+
     let panel = NSSavePanel()
     panel.directoryURL = node.url
     panel.nameFieldLabel = "Filename"
@@ -414,16 +414,16 @@ extension FileOutlineView {
         showAlert()
         return
       }
-      
+
       self.emit(UuidAction(uuid: self.uuid, action: .open(url: url, mode: .newTab)))
     }
   }
-  
+
   @IBAction func deleteFile(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
-    
+
     let fileManager = FileManager.default
-    
+
     let showAlert: () -> Void = {
       let alert = NSAlert()
       alert.addButton(withTitle: "OK")
@@ -432,14 +432,14 @@ extension FileOutlineView {
 
       alert.runModal()
     }
-    
-    do{
+
+    do {
       try fileManager.trashItem(at: node.url, resultingItemURL: nil)
     } catch {
       showAlert()
       return
     }
-    
+
     self.emit(UuidAction(uuid: self.uuid, action: .refresh))
   }
 
@@ -522,8 +522,8 @@ extension FileOutlineView {
     guard let clickedNode = self.node(from: self.clickedItem) else { return true }
 
     var isValid: Bool
-    
-    switch(item.action) {
+
+    switch item.action {
     case #selector(self.setAsWorkingDirectory(_:)):
       isValid = clickedNode.url.hasDirectoryPath
     case #selector(self.newFile(_:)):

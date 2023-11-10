@@ -106,9 +106,9 @@ final class FuzzySearchService {
       let start = Swift.min(chunkIndex * coreDataBatchSize, count)
       fetchReq.fetchOffset = start
       do {
-        self.scoreFiles(
+        try self.scoreFiles(
           matcher: matcher,
-          files: try context.fetch(fetchReq),
+          files: context.fetch(fetchReq),
           callback: callback
         )
       } catch {

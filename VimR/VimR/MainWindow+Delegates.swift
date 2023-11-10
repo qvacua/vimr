@@ -103,7 +103,7 @@ extension MainWindow {
           )
         )
       }, onError: {
-        err in self.log.trace("oops couldn't set theme")
+        _ in self.log.trace("oops couldn't set theme")
       })
       .disposed(by: self.disposeBag)
   }
@@ -156,8 +156,10 @@ extension MainWindow {
         (
           colorName: colorName,
           observable: self.neoVimView.api
-            .getHl(ns_id: 0,
-                   opts: ["name": MessagePackValue(colorName)])
+            .getHl(
+              ns_id: 0,
+              opts: ["name": MessagePackValue(colorName)]
+            )
             .asObservable()
         )
       })

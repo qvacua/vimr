@@ -26,7 +26,7 @@ final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
   }
 }
 
-@NSApplicationMain
+@main
 final class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
   struct OpenConfig {
     var urls: [URL]

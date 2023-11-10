@@ -193,7 +193,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     nvimBinaryTitle.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
     nvimBinaryTitle.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
-    //nvimBinaryTitle.autoAlignAxis(.baseline, toSameAxisOf: nvimBinaryField)
+    // nvimBinaryTitle.autoAlignAxis(.baseline, toSameAxisOf: nvimBinaryField)
 
     nvimBinaryField.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
     nvimBinaryField.autoPinEdge(.left, to: .right, of: nvimBinaryTitle, withOffset: 5)
@@ -204,7 +204,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       object: nvimBinaryField,
       queue: nil
     ) { [weak self] _ in self?.nvimBinaryFieldAction() }
-
   }
 }
 

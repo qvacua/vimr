@@ -106,7 +106,11 @@ final class MarkdownPreviewMiddleware {
       category: Defs.LoggerCategory.middleware
     )
 
-    private func render(_ bufferUrl: URL, to htmlUrl: URL, customMarkdownProcessor cmp: String?) throws {
+    private func render(
+      _ bufferUrl: URL,
+      to htmlUrl: URL,
+      customMarkdownProcessor cmp: String?
+    ) throws {
       let body: String
       if let cmp, cmp != "" {
         let content = try Data(contentsOf: bufferUrl)

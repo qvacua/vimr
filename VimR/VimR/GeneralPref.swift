@@ -174,9 +174,11 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     let customMarkdownProcessorTitle = self.titleTextField(title: "Custom Markdown Processor:")
     let customMarkdownProcessorField = self.customMarkdownProcessorField
-    NotificationCenter.default.addObserver(forName: NSControl.textDidEndEditingNotification,
-                                           object: customMarkdownProcessorField,
-                                           queue: nil) { [unowned self] _ in
+    NotificationCenter.default.addObserver(
+      forName: NSControl.textDidEndEditingNotification,
+      object: customMarkdownProcessorField,
+      queue: nil
+    ) { [unowned self] _ in
       self.customMarkdownProcessorAction()
     }
 
@@ -331,13 +333,25 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     cliToolInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
     cliToolInfo.autoPinEdge(.left, to: .right, of: cliToolTitle, withOffset: 5)
 
-    customMarkdownProcessorTitle.autoAlignAxis(.baseline, toSameAxisOf: customMarkdownProcessorField)
+    customMarkdownProcessorTitle.autoAlignAxis(
+      .baseline,
+      toSameAxisOf: customMarkdownProcessorField
+    )
     customMarkdownProcessorTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
-    customMarkdownProcessorTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    customMarkdownProcessorTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
 
     customMarkdownProcessorField.autoPinEdge(.top, to: .bottom, of: cliToolInfo, withOffset: 18)
     customMarkdownProcessorField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-    customMarkdownProcessorField.autoPinEdge(.left, to: .right, of: customMarkdownProcessorTitle, withOffset: 5)
+    customMarkdownProcessorField.autoPinEdge(
+      .left,
+      to: .right,
+      of: customMarkdownProcessorTitle,
+      withOffset: 5
+    )
   }
 }
 

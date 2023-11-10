@@ -325,7 +325,7 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
   private func updateViews() {
     sharedFontPanel.setPanelFont(self.font, isMultiple: false)
     self.fontPanelButton.title = self.font.displayName
-      .map { "\($0) \(font.pointSize)" } ?? "Show fonts..."
+      .map { "\($0) \(self.font.pointSize)" } ?? "Show fonts..."
     self.linespacingField.stringValue = String(format: "%.2f", self.linespacing)
     self.characterspacingField.stringValue = String(format: "%.2f", self.characterspacing)
     self.ligatureCheckbox.boolState = self.usesLigatures

@@ -33,7 +33,7 @@ final class MainWindow: NSObject,
 
   var activateAsciiImInInsertMode: Bool {
     get { self.neoVimView.activateAsciiImInNormalMode }
-    set { self.neoVimView.activateAsciiImInNormalMode = newValue }
+    self.set { self.neoVimView.activateAsciiImInNormalMode = newValue }
   }
 
   weak var shortcutService: ShortcutService?
@@ -260,7 +260,7 @@ final class MainWindow: NSObject,
   private var usesTheme = true
   private var lastThemeMark = Token()
 
-  internal let log = OSLog(
+  let log = OSLog(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.ui
   )
