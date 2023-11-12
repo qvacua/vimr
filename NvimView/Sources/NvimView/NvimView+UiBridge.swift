@@ -38,7 +38,7 @@ extension NvimView {
       return
     }
 
-    guard let grid = array[0].intValue,
+    guard let _ /* grid */ = array[0].intValue,
           let width = array[1].intValue,
           let height = array[2].intValue
     else {
@@ -80,7 +80,7 @@ extension NvimView {
     guard let mainTuple = value.arrayValue,
           mainTuple.count == 2,
           let modeName = mainTuple[0].stringValue,
-          let modeIndex = mainTuple[1].uintValue
+          let _ /* modeIndex */ = mainTuple[1].uintValue
     else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
@@ -204,7 +204,7 @@ extension NvimView {
           break
 
         case "grid_cursor_goto":
-          guard let grid = innerArray[0].uintValue,
+          guard let _ /* grid */ = innerArray[0].uintValue,
                 let row = innerArray[1].uintValue,
                 let col = innerArray[2].uintValue
           else { return }
@@ -408,7 +408,7 @@ extension NvimView {
       return Int.max
     }
 
-    guard let grid = data[0].intValue,
+    guard let _ /* grid */ = data[0].intValue,
           let row = data[1].intValue,
           let startCol = data[2].intValue,
           let chunk = data[3].arrayValue?.compactMap({
@@ -432,7 +432,8 @@ extension NvimView {
             }
             return UUpdate(string: string, attrId: attrId, repeats: repeats)
           }),
-          let wrap = data[4].boolValue
+          // FIXME: implement wrap
+          let _ /* wrap */ = data[4].boolValue
     else {
       self.bridgeLogger.error("Could not convert \(data)")
       return Int.max
@@ -516,7 +517,7 @@ extension NvimView {
   private func doScrollNu(_ array: [Int]) -> Int {
     self.bridgeLogger.trace("[grid, top, bot, left, right, rows, cols] = \(array)")
 
-    let (grid, top, bottom, left, right, rows, cols)
+    let (_ /* grid */, top, bottom, left, right, rows, cols)
       = (array[0], array[1], array[2] - 1, array[3], array[4] - 1, array[5], array[6])
 
     let scrollRegion = Region(
@@ -680,8 +681,8 @@ extension NvimView {
 
     guard let id = array[0].intValue,
           let rgb_dict = array[1].dictionaryValue,
-          let cterm_dict = array[2].dictionaryValue,
-          let info = array[3].arrayValue
+          let _ /* cterm_dict */ = array[2].dictionaryValue,
+          let _ /* info */ = array[3].arrayValue
     else {
       self.bridgeLogger.error(
         "Could not get highlight attributes from " +
@@ -730,8 +731,8 @@ extension NvimView {
     guard let rgb_fg = array[0].intValue,
           let rgb_bg = array[1].intValue,
           let rgb_sp = array[2].intValue,
-          let cterm_fg = array[3].intValue,
-          let cterm_bg = array[4].intValue
+          let _ /* cterm_fg */ = array[3].intValue,
+          let _ /* cterm_bg */ = array[4].intValue
     else {
       self.bridgeLogger.error(
         "Could not get default colors from " +

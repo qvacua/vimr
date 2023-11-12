@@ -3,7 +3,9 @@
  * See LICENSE
  */
 
+import AppKit
 import Cocoa
+import UniformTypeIdentifiers
 
 private let workspace = NSWorkspace.shared
 private let iconsCache = NSCache<NSURL, NSImage>()
@@ -59,7 +61,7 @@ public final class FileUtils {
     return possibleParent.hasDirectoryPath ? possibleParent : possibleParent.parent
   }
 
-  public static func icon(forType type: String) -> NSImage { workspace.icon(forFileType: type) }
+  public static func icon(forType type: String) -> NSImage { workspace.icon(for: UTType(type) ?? UTType.text) }
 
   public static func icon(forUrl url: URL) -> NSImage? {
     if let cached = iconsCache.object(forKey: url as NSURL) { return cached }
