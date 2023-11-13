@@ -14,6 +14,7 @@ import RxSwift
 import SpriteKit
 import Tabs
 import UniformTypeIdentifiers
+import UserNotifications
 
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting

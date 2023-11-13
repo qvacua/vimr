@@ -90,7 +90,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
     self.drawsParallelCheckbox.boolState = self.drawsParallel
-    self.nvimBinaryField.string = self.nvimBinary 
+    self.nvimBinaryField.string = self.nvimBinary
   }
 
   private func addViews() {
