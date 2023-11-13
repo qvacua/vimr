@@ -19,6 +19,8 @@ There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
 - (most importantly) have fun!
 
+We have a chat room: <https://matrix.to/#/#vimr:matrix.org>
+
 If you want to support VimR financially, use [Github's Sponsor](https://github.com/sponsors/qvacua).
 
 ## Download
