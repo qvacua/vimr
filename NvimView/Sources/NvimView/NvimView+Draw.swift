@@ -73,11 +73,6 @@ extension NvimView {
   }
 
   private func draw(cursorIn context: CGContext) {
-    // The position stays at the first cell when we enter the terminal mode
-    // and the cursor seems to be drawn by changing the background color of
-    // the corresponding cell...
-    if self.mode == .termFocus { return }
-
     let cursorPosition = self.ugrid.cursorPositionWithMarkedInfo()
     let defaultAttrs = self.cellAttributesCollection.defaultAttributes
 
@@ -97,11 +92,10 @@ extension NvimView {
       return
     }
 
-    guard self.modeInfoList.count > self.mode.rawValue else {
+    guard let modeInfo = modeInfos[self.mode.rawValue] else {
       self.log.error("Could not get modeInfo for mode index \(self.mode.rawValue)")
       return
     }
-    let modeInfo = modeInfoList[Int(mode.rawValue)]
 
     guard let cursorAttrId = modeInfo.attrId,
           let cursorShapeAttrs = self.cellAttributesCollection.attributes(

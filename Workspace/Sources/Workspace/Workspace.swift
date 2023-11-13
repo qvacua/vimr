@@ -36,13 +36,13 @@ public final class Workspace: NSView, WorkspaceBarDelegate {
     public var foreground = NSColor.black
     public var background = NSColor.white
 
-    public var separator = NSColor.controlShadowColor
+    public var separator = NSColor.separatorColor
 
     public var barBackground = NSColor.windowBackgroundColor
     public var barFocusRing = NSColor.selectedControlColor
 
     public var barButtonBackground = NSColor.clear
-    public var barButtonHighlight = NSColor.controlShadowColor
+    public var barButtonHighlight = NSColor.separatorColor
 
     public var toolbarForeground = NSColor.darkGray
     public var toolbarBackground = NSColor(red: 0.899, green: 0.934, blue: 0.997, alpha: 1)

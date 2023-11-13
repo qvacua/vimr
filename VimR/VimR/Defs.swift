@@ -6,7 +6,7 @@
 import Foundation
 import WebKit
 
-struct Defs {
+enum Defs {
   static let loggerSubsystem = Bundle.main.bundleIdentifier!
 
   enum LoggerCategory {

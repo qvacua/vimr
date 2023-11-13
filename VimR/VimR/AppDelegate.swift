@@ -11,6 +11,7 @@ import os
 import PureLayout
 import RxSwift
 import Sparkle
+import UserNotifications
 
 let debugMenuItemIdentifier = NSUserInterfaceItemIdentifier("debug-menu-item")
 
@@ -26,8 +27,8 @@ final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
   }
 }
 
-@NSApplicationMain
-final class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
+@main
+final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
   struct OpenConfig {
     var urls: [URL]
     var cwd: URL
@@ -77,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCent
 
     super.init()
 
-    NSUserNotificationCenter.default.delegate = self
+    UNUserNotificationCenter.current().delegate = self
   }
 
   override func awakeFromNib() {
@@ -440,9 +441,9 @@ extension AppDelegate {
 
 extension AppDelegate {
   func userNotificationCenter(
-    _: NSUserNotificationCenter,
-    shouldPresent _: NSUserNotification
-  ) -> Bool { true }
+    _: UNUserNotificationCenter,
+    willPresent _: UNNotification
+  ) async -> UNNotificationPresentationOptions { .banner }
 }
 
 // Keep the rawValues in sync with Action in the `vimr` Python script.

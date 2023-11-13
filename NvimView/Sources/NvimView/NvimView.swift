@@ -13,6 +13,8 @@ import RxPack
 import RxSwift
 import SpriteKit
 import Tabs
+import UniformTypeIdentifiers
+import UserNotifications
 
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting
@@ -27,8 +29,6 @@ public protocol NvimViewDelegate: AnyObject {
 
 public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
-
-  public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.0
   public static let maxFontSize = 128.0
@@ -52,8 +52,8 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   public let uuid = UUID()
   public let api = RxNeovimApi()
 
-  public internal(set) var mode = CursorModeShape.normal
-  public internal(set) var modeInfoList = [ModeInfo]()
+  public internal(set) var mode: CursorModeShape = .normal
+  public internal(set) var modeInfos = [String: ModeInfo]()
 
   public internal(set) var theme = Theme.default
 
@@ -172,8 +172,13 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         case let .notification(method, params):
           self?.log.debug("NOTIFICATION: \(method): \(params)")
 
-          guard method == NvimView.rpcEventName else { return }
-          self?.eventsSubject.onNext(.rpcEvent(params))
+          if method == "redraw" {
+            self?.renderData(params)
+          } else if method == "autocommand" {
+            self?.autoCommandEvent(params)
+          } else {
+            self?.log.debug("MSG ERROR: \(msg)")
+          }
 
         case let .error(_, msg):
           self?.log.debug("MSG ERROR: \(msg)")
@@ -219,8 +224,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         .disposed(by: db)
     }
 
-    self.bridge.consumer = self
-    self.registerForDraggedTypes([NSPasteboard.PasteboardType(String(kUTTypeFileURL))])
+    self.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
 
     self.wantsLayer = true
     self.cellSize = FontUtils.cellSize(
@@ -235,6 +239,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         usesCustomTabBar: true,
         useInteractiveZsh: false,
         cwd: URL(fileURLWithPath: NSHomeDirectory()),
+        nvimBinary: "",
         nvimArgs: nil,
         envDict: nil,
         sourceFiles: []

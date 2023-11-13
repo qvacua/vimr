@@ -25,7 +25,7 @@ class PerfTester {
       let decoder = JSONDecoder()
       do {
         let data = try Data(contentsOf: fileUrl)
-        self.ugrids.append(try decoder.decode(UGrid.self, from: data))
+        try self.ugrids.append(decoder.decode(UGrid.self, from: data))
       } catch {
         preconditionFailure("Couldn't decode UGrid from \(name).json: \(error)")
       }

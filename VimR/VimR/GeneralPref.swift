@@ -17,10 +17,15 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setActivateAsciiImInNormalModeAction(Bool)
     case setOpenOnReactivation(Bool)
     case setDefaultUsesVcsIgnores(Bool)
+    case setCustomMarkdownProcessor(String)
   }
 
   override var displayName: String { "General" }
   override var pinToContainer: Bool { true }
+
+  override func windowWillClose() {
+    self.customMarkdownProcessorAction()
+  }
 
   required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
@@ -44,6 +49,9 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.lastWindowAction = state.afterLastWindowAction
     self.afterLastWindowPopup
       .selectItem(at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0)
+
+    self.customMarkdownProcessor = state.mainWindowTemplate.customMarkdownProcessor
+    self.customMarkdownProcessorField.stringValue = state.mainWindowTemplate.customMarkdownProcessor
 
     source
       .observe(on: MainScheduler.instance)
@@ -87,6 +95,9 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private let openFilesFromApplicationsPopup = NSPopUpButton(forAutoLayout: ())
   private let afterLastWindowPopup = NSPopUpButton(forAutoLayout: ())
+
+  private var customMarkdownProcessor = ""
+  private let customMarkdownProcessorField = NSTextField(forAutoLayout: ())
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -161,6 +172,16 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       You can change this setting for each VimR window in the Open Quickly window.
       """#)
 
+    let customMarkdownProcessorTitle = self.titleTextField(title: "Custom Markdown Processor:")
+    let customMarkdownProcessorField = self.customMarkdownProcessorField
+    NotificationCenter.default.addObserver(
+      forName: NSControl.textDidEndEditingNotification,
+      object: customMarkdownProcessorField,
+      queue: nil
+    ) { [unowned self] _ in
+      self.customMarkdownProcessorAction()
+    }
+
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")
     let cliToolButton = NSButton(forAutoLayout: ())
     cliToolButton.title = "Copy 'vimr' CLI Tool..."
@@ -201,6 +222,9 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(cliToolTitle)
     self.addSubview(cliToolButton)
     self.addSubview(cliToolInfo)
+
+    self.addSubview(customMarkdownProcessorTitle)
+    self.addSubview(customMarkdownProcessorField)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -308,6 +332,26 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     cliToolInfo.autoPinEdge(.top, to: .bottom, of: cliToolButton, withOffset: 5)
     cliToolInfo.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
     cliToolInfo.autoPinEdge(.left, to: .right, of: cliToolTitle, withOffset: 5)
+
+    customMarkdownProcessorTitle.autoAlignAxis(
+      .baseline,
+      toSameAxisOf: customMarkdownProcessorField
+    )
+    customMarkdownProcessorTitle.autoPinEdge(.right, to: .right, of: openUntitledWindowTitle)
+    customMarkdownProcessorTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
+
+    customMarkdownProcessorField.autoPinEdge(.top, to: .bottom, of: cliToolInfo, withOffset: 18)
+    customMarkdownProcessorField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    customMarkdownProcessorField.autoPinEdge(
+      .left,
+      to: .right,
+      of: customMarkdownProcessorTitle,
+      withOffset: 5
+    )
   }
 }
 
@@ -387,6 +431,14 @@ extension GeneralPref {
         self.activateAsciiImInNormalModeCheckbox.boolState
       )
     )
+  }
+
+  private func customMarkdownProcessorAction() {
+    let command = self.customMarkdownProcessorField.stringValue
+    if command == self.customMarkdownProcessor { return }
+
+    self.customMarkdownProcessor = command
+    self.emit(.setCustomMarkdownProcessor(self.customMarkdownProcessor))
   }
 
   private func alert(title: String, info: String) {

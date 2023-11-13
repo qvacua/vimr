@@ -380,6 +380,10 @@ def parse_function(f):
         return_value=msgpack_to_swift('value', nvim_type_to_swift(f['return_type']))
     )
 
+    if "deprecated_since" in f:
+        print(f"deprecated {f}")
+        result = '  @available(*, deprecated, message: "This method has been deprecated.")\n' + result
+
     return result
 
 
@@ -414,7 +418,7 @@ if __name__ == '__main__':
     api = msgpack.unpackb(nvim_output.stdout)
 
     version = parse_version(api['version'])
-    functions = [f for f in api['functions'] if 'deprecated_since' not in f]
+    functions = api['functions']  #[f for f in api['functions'] if 'deprecated_since' not in f]
     body = '\n'.join([parse_function(f) for f in functions])
 
     result = extension_template.substitute(

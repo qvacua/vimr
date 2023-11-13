@@ -6,6 +6,18 @@
 import Foundation
 import os
 
+struct UUpdate: Codable {
+  var string: String
+  var attrId: Int?
+  var repeats: Int?
+
+  init(string: String, attrId: Int? = nil, repeats: Int? = nil) {
+    self.string = string
+    self.attrId = attrId
+    self.repeats = repeats
+  }
+}
+
 struct UCell: Codable {
   var string: String
   var attrId: Int
@@ -257,6 +269,40 @@ final class UGrid: CustomStringConvertible, Codable {
         )
       )
     }
+  }
+
+  /// This does not recompute the flat char indices. For performance it's done
+  /// in NvimView.flush()
+  func updateNu(
+    row: Int,
+    startCol: Int,
+    chunk: [UUpdate]
+  ) -> Int {
+    // remove marked patch and recover after modified from vim
+    var oldMarkedInfo: MarkedInfo?
+    if row == self.markedInfo?.position.row {
+      oldMarkedInfo = self.popMarkedInfo()
+    }
+    defer {
+      if let oldMarkedInfo = oldMarkedInfo {
+        updateMarkedInfo(newValue: oldMarkedInfo)
+      }
+    }
+    var lastAttrId = 0
+    var column = startCol
+    for cindex in 0..<chunk.count {
+      let reps = chunk[cindex].repeats ?? 1
+      for _ in 0..<reps {
+        self.cells[row][column].string = chunk[cindex].string
+        let attrId = chunk[cindex].attrId
+        if attrId != nil {
+          lastAttrId = attrId!
+        }
+        self.cells[row][column].attrId = lastAttrId
+        column += 1
+      }
+    }
+    return column
   }
 
   struct MarkedInfo {

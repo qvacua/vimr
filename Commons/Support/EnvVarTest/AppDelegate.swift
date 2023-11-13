@@ -6,7 +6,7 @@
 import Cocoa
 import Commons
 
-@NSApplicationMain
+@main
 class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var window: NSWindow!
   @IBOutlet var textView: NSTextView!

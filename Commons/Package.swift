@@ -1,15 +1,15 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 
 import PackageDescription
 
 let package = Package(
   name: "Commons",
-  platforms: [.macOS(.v10_15)],
+  platforms: [.macOS(.v13)],
   products: [
     .library(name: "Commons", targets: ["Commons", "CommonsObjC"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/Quick/Nimble", from: "11.1.0"),
+    .package(url: "https://github.com/Quick/Nimble", from: "13.0.0"),
   ],
   targets: [
     .target(name: "Commons", dependencies: []),

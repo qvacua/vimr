@@ -58,10 +58,10 @@ extension NvimView {
 
     switch option {
     case let .guifont(fontSpec):
-      command = self.api.setOption(name: "guifont", value: .string(fontSpec))
+      command = self.api.setOptionValue(name: "guifont", value: .string(fontSpec), opts: ["scope": .string("global")])
 
     case let .guifontWide(fontSpec):
-      command = self.api.setOption(name: "guifontwide", value: .string(fontSpec))
+      command = self.api.setOptionValue(name: "guifontwide", value: .string(fontSpec), opts: ["scope": .string("global")])
     }
 
     command
@@ -95,13 +95,15 @@ extension NvimView {
     guard let newFont = FontUtils.font(fromVimFontSpec: fontSpec) else {
       self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
 
-      self.signalError(code: 596, message: "Invalid font(s): gufont=\(fontSpec)")
+      self.signalError(code: 596, message: "Invalid font(s): guifont=\(fontSpec)")
       self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag))
       return
     }
 
     gui.async {
       self.font = newFont
+      // Cell size likely changed, do a resize.
+      self.resizeNeoVimUi(to: self.frame.size)
       self.markForRenderWholeView()
       self.eventsSubject.onNext(.guifontChanged(newFont))
     }

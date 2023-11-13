@@ -15,6 +15,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setUseSnapshotUpdate(Bool)
     case setUseLiveResize(Bool)
     case setDrawsParallel(Bool)
+    case setNvimBinary(String)
   }
 
   override var displayName: String {
@@ -32,6 +33,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useSnapshotUpdate = state.useSnapshotUpdate
     self.useLiveResize = state.mainWindowTemplate.useLiveResize
     self.drawsParallel = state.mainWindowTemplate.drawsParallel
+    self.nvimBinary = state.mainWindowTemplate.nvimBinary
 
     super.init(frame: .zero)
 
@@ -42,11 +44,13 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
         if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
+          || self.nvimBinary != state.mainWindowTemplate.nvimBinary
           || self.useSnapshotUpdate != state.useSnapshotUpdate
           || self.useLiveResize != state.mainWindowTemplate.useLiveResize
           || self.drawsParallel != state.mainWindowTemplate.drawsParallel
         {
           self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
+          self.nvimBinary = state.mainWindowTemplate.nvimBinary
           self.useSnapshotUpdate = state.useSnapshotUpdate
           self.useLiveResize = state.mainWindowTemplate.useLiveResize
           self.drawsParallel = state.mainWindowTemplate.drawsParallel
@@ -64,15 +68,21 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useSnapshotUpdate: Bool
   private var useLiveResize: Bool
   private var drawsParallel: Bool
+  private var nvimBinary: String = ""
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
   private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
+  private let nvimBinaryField = NSTextView(forAutoLayout: ())
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  override func windowWillClose() {
+    self.nvimBinaryFieldAction()
   }
 
   private func updateViews() {
@@ -80,6 +90,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
     self.drawsParallelCheckbox.boolState = self.drawsParallel
+    self.nvimBinaryField.string = self.nvimBinary
   }
 
   private func addViews() {
@@ -136,6 +147,9 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     when scrolling very fast.
     """#)
 
+    let nvimBinaryTitle = self.titleTextField(title: "NeoVim Binary:")
+    let nvimBinaryField = self.nvimBinaryField
+
     self.addSubview(paneTitle)
 
     self.addSubview(useSnapshotUpdate)
@@ -146,6 +160,8 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(useLiveResizeInfo)
     self.addSubview(drawsParallelBox)
     self.addSubview(drawsParallelInfo)
+    self.addSubview(nvimBinaryTitle)
+    self.addSubview(nvimBinaryField)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -174,6 +190,20 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     useInteractiveZshInfo.autoPinEdge(.top, to: .bottom, of: useInteractiveZsh, withOffset: 5)
     useInteractiveZshInfo.autoPinEdge(.left, to: .left, of: useInteractiveZsh)
+
+    nvimBinaryTitle.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
+    nvimBinaryTitle.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
+    // nvimBinaryTitle.autoAlignAxis(.baseline, toSameAxisOf: nvimBinaryField)
+
+    nvimBinaryField.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
+    nvimBinaryField.autoPinEdge(.left, to: .right, of: nvimBinaryTitle, withOffset: 5)
+    nvimBinaryField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    nvimBinaryField.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
+    NotificationCenter.default.addObserver(
+      forName: NSControl.textDidEndEditingNotification,
+      object: nvimBinaryField,
+      queue: nil
+    ) { [weak self] _ in self?.nvimBinaryFieldAction() }
   }
 }
 
@@ -194,5 +224,10 @@ extension AdvancedPref {
 
   @objc func useSnapshotUpdateChannelAction(_ sender: NSButton) {
     self.emit(.setUseSnapshotUpdate(sender.boolState))
+  }
+
+  func nvimBinaryFieldAction() {
+    let newNvimBinary = self.nvimBinaryField.string
+    self.emit(.setNvimBinary(newNvimBinary))
   }
 }

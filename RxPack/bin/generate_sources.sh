@@ -2,8 +2,7 @@
 set -Eeuo pipefail
 
 build_nvimserver_bin() {
-  clean=true ./NvimServer/bin/build_libnvim.sh
-  swift build -c release --product NvimServer
+  clean=true ./NvimServer/bin/build_neovim.sh
 }
 
 main() {
@@ -15,7 +14,7 @@ main() {
   popd >/dev/null
 
   pushd RxPack >/dev/null
-    NVIM_PATH="../NvimServer/.build/release/NvimServer" ./bin/generate_api_methods.py
+    NVIM_PATH="../Neovim/build/bin/nvim" ./bin/generate_api_methods.py
   popd >/dev/null
 
   popd >/dev/null

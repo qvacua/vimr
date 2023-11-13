@@ -5,7 +5,7 @@
 
 import Foundation
 
-final class Resources {
+enum Resources {
   static let resourceUrl = Bundle.main.resourceURL!
   static let previewUrl = resourceUrl.appendingPathComponent("preview")
 

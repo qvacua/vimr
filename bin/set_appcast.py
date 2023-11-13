@@ -15,7 +15,7 @@ from string import Template
 import markdown
 import requests
 
-SIGN_UPDATE = './build/SourcePackages/artifacts/sparkle/bin/sign_update'
+SIGN_UPDATE = './build/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update'
 
 file_path = sys.argv[1]
 bundle_version = sys.argv[2]

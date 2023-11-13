@@ -6,6 +6,7 @@
 import Cocoa
 import DictionaryCoding
 import os
+import UserNotifications
 
 final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
@@ -20,6 +21,7 @@ final class PrefMiddleware: MiddlewareType {
     do {
       let dictionary: [String: Any] = try dictEncoder.encode(appState)
       defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+      defaults.synchronize()
     } catch {
       self.log.error("AppState could not converted to Dictionary: \(error)")
     }
@@ -47,18 +49,26 @@ final class PrefMiddleware: MiddlewareType {
         }
 
         if !traits.contains(.monoSpace) {
-          let notification = NSUserNotification()
-          notification.identifier = UUID().uuidString
-          notification.title = "No monospaced font"
-          notification.informativeText = "The font you selected\(newFontNameText) does not seem "
+          let content = UNMutableNotificationContent()
+          content.title = "No monospaced font"
+          content.body = "The font you selected\(newFontNameText) does not seem "
             + "to be a monospaced font. The rendering will most likely be broken."
-          NSUserNotificationCenter.default.deliver(notification)
+          content.sound = .default
+
+          let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+          )
+
+          UNUserNotificationCenter.current().add(request)
         }
       }
 
       do {
         let dictionary: [String: Any] = try dictEncoder.encode(result.state)
         defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+        defaults.synchronize()
       } catch {
         self.log.error("AppState could not converted to Dictionary: \(error)")
       }
@@ -86,6 +96,7 @@ final class PrefMiddleware: MiddlewareType {
         do {
           let dictionary: [String: Any] = try dictEncoder.encode(result.state)
           defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
+          defaults.synchronize()
         } catch {
           self.log.error("AppState could not converted to Dictionary: \(error)")
         }

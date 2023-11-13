@@ -39,7 +39,10 @@ struct Theme: CustomStringConvertible {
   var background = NSColor.textBackgroundColor
 
   var highlightForeground = NSColor.selectedMenuItemTextColor
-  var highlightBackground = NSColor.selectedMenuItemColor
+  // NSColor.selectedMenuItemColor is deprecated. The doc says that
+  // NSVisualEffectView.Material.selection should be used instead, but I don't know how to get
+  // an NSColor from it.
+  var highlightBackground = NSColor.selectedContentBackgroundColor
 
   var directoryForeground = NSColor.textColor
 

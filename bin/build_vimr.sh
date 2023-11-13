@@ -12,14 +12,15 @@ prepare_nvimserver() {
   rm -rf "${resources_folder}/runtime"
 
   # Build NvimServer and copy
-  build_libnvim=true ./NvimServer/NvimServer/bin/build_nvimserver.sh
-  cp ./NvimServer/.build/apple/Products/Release/NvimServer "${resources_folder}"
+  ./NvimServer/NvimServer/bin/build_neovim.sh
+  pushd ./Neovim/build >/dev/null
+    tar -xf nvim-macos.tar.gz
+  popd >/dev/null
+
+  cp ./Neovim/build/nvim-macos/bin/nvim "${resources_folder}/NvimServer"
 
   # Create and copy runtime folder
-  install_path="$(/usr/bin/mktemp -d -t 'nvim-runtime')"
-  nvim_install_path="${install_path}" ./NvimServer/NvimServer/bin/build_runtime.sh
-  cp -r "${install_path}/share/nvim/runtime" "${resources_folder}"
-  rm -rf "${install_path}"
+  cp -r ./Neovim/build/nvim-macos/share/nvim/runtime "${resources_folder}"
 
   # Copy VimR specific vim file to runtime/plugin folder
   cp "${resources_folder}/com.qvacua.NvimView.vim" "${resources_folder}/runtime/plugin"
@@ -38,10 +39,17 @@ build_vimr() {
 
   echo "### Xcodebuilding"
   rm -rf "${build_path}"
-  xcodebuild \
-    -configuration Release -derivedDataPath "${build_path}" \
-    -workspace VimR.xcworkspace -scheme VimR \
-    clean build
+  if [[ "${clean}" == true ]]; then  
+      xcodebuild \
+        -configuration Release -derivedDataPath "${build_path}" \
+        -workspace VimR.xcworkspace -scheme VimR \
+        clean build
+  else
+      xcodebuild \
+        -configuration Release -derivedDataPath "${build_path}" \
+        -workspace VimR.xcworkspace -scheme VimR \
+        build
+  fi
 }
 
 main () {
@@ -64,7 +72,7 @@ main () {
     ./bin/notarize_vimr.sh
   fi
 
-  echo "### VimR built in ${build_path}/Build/Products/VimR.app"
+  echo "### VimR built in ${build_path}/Build/Products/Release/VimR.app"
   popd >/dev/null
 }
 

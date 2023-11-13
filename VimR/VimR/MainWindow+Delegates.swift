@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import MessagePack
 import NvimView
 import RxNeovim
 import RxPack
@@ -101,6 +102,8 @@ extension MainWindow {
             for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors))
           )
         )
+      }, onFailure: {
+        _ in self.log.trace("oops couldn't set theme")
       })
       .disposed(by: self.disposeBag)
   }
@@ -153,7 +156,10 @@ extension MainWindow {
         (
           colorName: colorName,
           observable: self.neoVimView.api
-            .getHlByName(name: colorName, rgb: true)
+            .getHl(
+              ns_id: 0,
+              opts: ["name": MessagePackValue(colorName)]
+            )
             .asObservable()
         )
       })

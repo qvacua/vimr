@@ -1,5 +1,5 @@
 //
-//  DraggingStackView.swift
+//  DraggingSingleRowStackView.swift
 //  Analysis
 //
 //  Created by Mark Onyschuk on 2017-02-02.
@@ -146,7 +146,7 @@ final class DraggingSingleRowStackView: NSStackView {
   }
 
   private func cacheViews() throws -> [CachedViewLayer] {
-    try views.map { try cacheView(view: $0) }
+    try views.map { try self.cacheView(view: $0) }
   }
 
   private func cacheView(view: NSView) throws -> CachedViewLayer { try CachedViewLayer(view: view) }

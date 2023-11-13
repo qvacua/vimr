@@ -6,7 +6,7 @@ import re
 
 from string import Template
 
-# Assume that we're in $REPO_ROOT/NvimView
+# Assume that we're in $REPO_ROOT/Neovim
 
 NVIM_CURSOR_SHAPE_ENUM_FILE = "./src/nvim/cursor_shape.h"
 SWIFT_TEMPLATE_FILE = "../resources/cursor_shape.template.swift"
@@ -29,8 +29,7 @@ SHAPE_NAMES = {
     "SHAPE_IDX_MORE":   (14, "more"),
     "SHAPE_IDX_MOREL":  (15, "moreLastLine"),
     "SHAPE_IDX_SM":     (16, "showingMatchingParen"),
-    "SHAPE_IDX_TERM":   (17, "termFocus"),
-    "SHAPE_IDX_COUNT":  (18, "count"),
+    "SHAPE_IDX_COUNT":  (17, "count"),
 }
 
 
@@ -46,7 +45,7 @@ def are_shapes_same() -> bool:
 def swift_shapes() -> str:
     with io.open(SWIFT_TEMPLATE_FILE, "r") as template_file:
         template = Template(template_file.read())
-        cases = "\n".join([f"  case {v[1]} = {v[0]}" for (k, v) in SHAPE_NAMES.items()])
+        cases = "\n".join([f"  case {v[1]} = \"{v[1]}\"" for (k, v) in SHAPE_NAMES.items()])
         return template.substitute(
             cursor_shapes=cases,
             version=version

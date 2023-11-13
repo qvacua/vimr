@@ -1,0 +1,7 @@
+{
+  "deploymentTarget": "13",
+  "gettext": {
+    "arm64BottleTag": "arm64_ventura",
+    "x86_64BottleTag": "ventura"
+  }
+}

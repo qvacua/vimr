@@ -17,13 +17,7 @@
       location = "group:Tabs">
    </FileRef>
    <FileRef
-      location = "group:NvimServer">
-   </FileRef>
-   <FileRef
       location = "group:NvimView">
-   </FileRef>
-   <FileRef
-      location = "group:RxPack/Support/RxPackSupport.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Commons/Support/CommonsSupport.xcodeproj">

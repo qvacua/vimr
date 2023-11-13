@@ -59,7 +59,7 @@ build_release() {
 
   # Check whether NvimServer submodule is clean
   git submodule update
-  pushd NvimServer >/dev/null
+  pushd Neovim >/dev/null
     if [[ ! -z "$(git status --porcelain)" ]]; then
       echo "NvimServer submodule not clean!"
       exit 1

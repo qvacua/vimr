@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import RxNeovim
 import RxSwift
 
 public extension NvimView {
@@ -86,10 +87,32 @@ public extension NvimView {
       min(Int(abs(deltaCellX)), maxScrollDeltaX),
       min(Int(abs(deltaCellY)), maxScrollDeltaY)
     )
-    let (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? 1 : -1)
-    self.bridge
-      .scroll(horizontal: horizSign * absDeltaX, vertical: vertSign * absDeltaY, at: cellPosition)
-      .subscribe(onError: { [weak self] error in
+    var (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? 1 : -1)
+    if event.isDirectionInvertedFromDevice {
+      vertSign = -vertSign
+    }
+    self.log
+      .debug(
+        "# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)"
+      )
+
+    self.api.winGetCursor(window: RxNeovimApi.Window(0))
+      .map {
+        guard $0.count == 2
+        else {
+          self.log.error("Error decoding \($0)")
+          return
+        }
+        self.api.winSetCursor(
+          window: RxNeovimApi.Window(0),
+          pos: [$0[0] + vertSign * absDeltaY, $0[1] + horizSign * absDeltaX]
+        )
+        .subscribe(onError: { [weak self] error in
+          self?.log.error("Error in \(#function): \(error)")
+        })
+        .disposed(by: self.disposeBag)
+      }
+      .subscribe(onFailure: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
       .disposed(by: self.disposeBag)
