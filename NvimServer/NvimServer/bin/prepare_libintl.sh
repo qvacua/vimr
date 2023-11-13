@@ -23,7 +23,7 @@ main() {
 
       local version; version=$(brew info gettext --json | jq -r ".[0].versions.stable"); readonly version
       echo "### gettext version ${version}"
-      
+
       local temp_dir; temp_dir="$(mktemp -d)"; readonly temp_dir
       echo "${temp_dir}"
 
@@ -39,9 +39,15 @@ main() {
         popd >/dev/null
 
         mkdir universal
-        cp -r "${arm64_bottle}/gettext/${version}/include" ./universal/
+        #cp -r "${arm64_bottle}/gettext/${version}/include" ./universal/
         mkdir universal/lib
         lipo "${arm64_bottle}/gettext/${version}/lib/libintl.a" "${x86_64_bottle}/gettext/${version}/lib/libintl.a" -create -output ./universal/lib/libintl.a
+
+        pushd ./universal >/dev/null
+          ln -s /opt/homebrew/opt/gettext/bin .
+          ln -s /opt/homebrew/opt/gettext/share .
+          ln -s /opt/homebrew/opt/gettext/include .
+        popd >/dev/null
       popd >/dev/null
 
     mv "${temp_dir}/universal" gettext

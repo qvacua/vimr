@@ -10,7 +10,7 @@ build_neovim() {
 
   # Brew's gettext does not get sym-linked to PATH
   export PATH="/opt/homebrew/opt/gettext/bin:/usr/local/opt/gettext/bin:${PATH}"
-  
+
   export MACOSX_DEPLOYMENT_TARGET
   export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
   cmake -S cmake.deps -B .deps -G Ninja \
@@ -19,11 +19,18 @@ build_neovim() {
     -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
     -D CMAKE_FIND_FRAMEWORK=NEVER
   cmake --build .deps
+
+  # See https://matrix.to/#/!cylwlNXSwagQmZSkzs:matrix.org/$WxndooGmUtD0a4IqjnALvZ_okHw3Gb0TZJIrc77T-SM?via=matrix.org&via=gitter.im&via=envs.net for libintl
+
   cmake -B build -G Ninja \
     -D CMAKE_BUILD_TYPE=${NVIM_BUILD_TYPE} \
     -D CMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
     -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
-    -D CMAKE_FIND_FRAMEWORK=NEVER
+    -D CMAKE_FIND_FRAMEWORK=NEVER \
+    -D LIBINTL_INCLUDE_DIR=../NvimServer/NvimServer/third-party/gettext/include \
+    -D LIBINTL_LIBRARY=../NvimServer/NvimServer/third-party/gettext/lib/libintl.a
+cmake --build build
+
   cmake --build build
   cpack --config build/CPackConfig.cmake
 }
