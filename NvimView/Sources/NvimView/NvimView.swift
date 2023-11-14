@@ -190,7 +190,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           } else if method == "autocommand" {
             self?.autoCommandEvent(params)
           } else {
-            Swift.print("############### \(method): \(params)")
             self?.log.debug("MSG ERROR: \(msg)")
           }
 

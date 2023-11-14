@@ -239,7 +239,7 @@ extension NvimView {
           self.tablineUpdate(innerArray)
 
         default:
-          self.log.error("##################### Unknown flush data type \(rawType)")
+          self.log.error("Unknown flush data type \(rawType)")
         }
       }
 

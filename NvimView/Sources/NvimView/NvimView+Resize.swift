@@ -114,7 +114,6 @@ extension NvimView {
               .exception(message: "Could not convert values to api info.")
           }
 
-          Swift.print("######################### \(channel)")
           return channel
         }.flatMapCompletable {
           // FIXME: make lua
