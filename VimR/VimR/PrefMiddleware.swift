@@ -6,6 +6,7 @@
 import Cocoa
 import DictionaryCoding
 import os
+import UserNotifications
 
 final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
@@ -48,12 +49,19 @@ final class PrefMiddleware: MiddlewareType {
         }
 
         if !traits.contains(.monoSpace) {
-          let notification = NSUserNotification()
-          notification.identifier = UUID().uuidString
-          notification.title = "No monospaced font"
-          notification.informativeText = "The font you selected\(newFontNameText) does not seem "
+          let content = UNMutableNotificationContent()
+          content.title = "No monospaced font"
+          content.body = "The font you selected\(newFontNameText) does not seem "
             + "to be a monospaced font. The rendering will most likely be broken."
-          NSUserNotificationCenter.default.deliver(notification)
+          content.sound = .default
+
+          let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+          )
+
+          UNUserNotificationCenter.current().add(request)
         }
       }
 

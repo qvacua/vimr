@@ -9,6 +9,7 @@ import os
 import PureLayout
 import RxSwift
 import Tabs
+import UserNotifications
 import Workspace
 
 final class MainWindow: NSObject,
@@ -575,16 +576,21 @@ final class MainWindow: NSObject,
   }
 
   private func showInitError() {
-    let notification = NSUserNotification()
-    notification.identifier = UUID().uuidString
-    notification.title = "Error during initialization"
-    notification.informativeText =
+    let content = UNMutableNotificationContent()
+    content.title = "Error during initialization"
+    content.body =
       """
-      There was an error during the initialization of NeoVim.
-      Use :messages to view the error messages.
+      There was an error during the initialization of NeoVim. Use :messages to view the error messages.
       """
+    content.sound = .default
 
-    NSUserNotificationCenter.default.deliver(notification)
+    let request = UNNotificationRequest(
+      identifier: UUID().uuidString,
+      content: content,
+      trigger: nil
+    )
+
+    UNUserNotificationCenter.current().add(request)
   }
 
   private func show(warning: NvimView.Warning) {

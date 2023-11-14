@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-import NvimServerTypes
 
 final class AttributesRunDrawer {
   var font: NSFont {

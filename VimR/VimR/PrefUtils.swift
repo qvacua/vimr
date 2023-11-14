@@ -6,7 +6,7 @@
 import Cocoa
 import NvimView
 
-final class PrefUtils {
+enum PrefUtils {
   static func value<T>(from dict: [String: Any], for key: String) -> T? {
     dict[key] as? T
   }

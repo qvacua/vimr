@@ -102,7 +102,7 @@ extension MainWindow {
             for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors))
           )
         )
-      }, onError: {
+      }, onFailure: {
         _ in self.log.trace("oops couldn't set theme")
       })
       .disposed(by: self.disposeBag)

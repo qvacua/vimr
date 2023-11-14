@@ -5,14 +5,6 @@
 ![Screenshot 1](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot1.png)
 ![Screenshot 2](https://raw.githubusercontent.com/qvacua/vimr/develop/resources/screenshot2.png)
 
-## Fork differences
-
-Originially and wonderfully by [qvacua](https://github.com/qvacua/) which appears to be unsupported any more.
-
-This version can talk to an arbitrary nvim (once the upstream bits get merged)
-It therefore should be able to keep pace with nvim development better.  Work was done to avoid
-having to modify neovim, and the uibridge mechanism has been replaced with api calls.
-
 ## About
 
 Project VimR is a Neovim GUI for macOS.
@@ -26,6 +18,8 @@ There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/
 - Play around with [Neovim](https://github.com/qvacua/neovim),
 - play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
 - (most importantly) have fun!
+
+We have a chat room: <https://matrix.to/#/#vimr:matrix.org>
 
 If you want to support VimR financially, use [Github's Sponsor](https://github.com/sponsors/qvacua).
 
