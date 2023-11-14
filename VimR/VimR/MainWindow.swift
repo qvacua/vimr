@@ -344,6 +344,7 @@ final class MainWindow: NSObject,
 
         if let cwd = state.cwdToSet {
           self.neoVimView.cwd = cwd
+          self.neoVimView.tabBar?.cwd = cwd.path
         }
 
         Completable

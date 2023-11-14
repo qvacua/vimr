@@ -15,6 +15,11 @@ public final class TabBar<Rep: TabRepresentative>: NSView {
   public typealias TabCallback = (Int, Rep, [Rep]) -> Void
 
   public var theme: Theme { self._theme }
+  public var cwd: String? {
+    didSet {
+      self.tabs.forEach { $0.updateContext() }
+    }
+  }
 
   public var closeHandler: TabCallback?
   public var selectHandler: TabCallback?

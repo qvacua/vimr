@@ -22,10 +22,29 @@ final class Tab<Rep: TabRepresentative>: NSView {
       self.adjustToSelectionChange(newValue.isSelected)
     }
     didSet {
-      if self.titleView.stringValue == self.title { return }
-      self.titleView.stringValue = self.title
-      self.adjustWidth()
+      updateTitle(self.title)
     }
+  }
+
+  private func updateTitle(_ title: String) {
+    let display_title = displayTitle(title)
+    if self.titleView.stringValue == display_title { return }
+    self.titleView.stringValue = display_title
+    self.adjustWidth()
+  }
+
+  private func displayTitle(_ title: String) -> String {
+    var display_title = title
+    if self.tabBar?.cwd != nil {
+      let cwd = ((self.tabBar?.cwd!)! as NSString).abbreviatingWithTildeInPath
+      let pref = title.commonPrefix(with: cwd)
+      if pref == cwd {
+        let cwd_component_count = (cwd as NSString).pathComponents.count
+        display_title = NSString.path(
+          withComponents: Array((title as NSString).pathComponents[cwd_component_count...]))
+      }
+    }
+    return display_title
   }
 
   init(withTabRepresentative tabRepresentative: Rep, in tabBar: TabBar<Rep>) {
@@ -48,6 +67,10 @@ final class Tab<Rep: TabRepresentative>: NSView {
 
   func updateTheme() {
     self.adjustColors(self.isSelected)
+  }
+
+  func updateContext() {
+    updateTitle(self.title)
   }
 
   override func mouseUp(with _: NSEvent) { self.tabBar?.select(tab: self) }
