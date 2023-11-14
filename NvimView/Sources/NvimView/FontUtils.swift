@@ -5,7 +5,6 @@
 
 import Cocoa
 import Commons
-import NvimServerTypes
 
 private struct SizedFontTrait: Hashable {
   static func == (lhs: SizedFontTrait, rhs: SizedFontTrait) -> Bool {

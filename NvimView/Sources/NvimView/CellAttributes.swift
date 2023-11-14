@@ -6,7 +6,6 @@
 import Cocoa
 import Commons
 import MessagePack
-import NvimServerTypes
 
 public struct CellAttributes: CustomStringConvertible, Equatable {
   public static func == (left: CellAttributes, right: CellAttributes) -> Bool {

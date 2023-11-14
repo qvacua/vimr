@@ -16,6 +16,17 @@ import Tabs
 import UniformTypeIdentifiers
 import UserNotifications
 
+public struct FontTrait: OptionSet {
+  public let rawValue: UInt
+
+  public init(rawValue: UInt) { self.rawValue = rawValue }
+
+  static let italic = FontTrait(rawValue: 1 << 0)
+  static let bold = FontTrait(rawValue: 1 << 1)
+  static let underline = FontTrait(rawValue: 1 << 2)
+  static let undercurl = FontTrait(rawValue: 1 << 3)
+}
+
 public enum FontSmoothing: String, Codable, CaseIterable {
   case systemSetting
   case withFontSmoothing
@@ -29,6 +40,8 @@ public protocol NvimViewDelegate: AnyObject {
 
 public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
+  
+  public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.0
   public static let maxFontSize = 128.0
@@ -177,6 +190,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           } else if method == "autocommand" {
             self?.autoCommandEvent(params)
           } else {
+            Swift.print("############### \(method): \(params)")
             self?.log.debug("MSG ERROR: \(msg)")
           }
 

@@ -7,7 +7,6 @@ import Carbon
 import Cocoa
 import Foundation
 import MessagePack
-import NvimServerTypes
 import os
 import RxNeovim
 import RxPack
@@ -240,7 +239,7 @@ extension NvimView {
           self.tablineUpdate(innerArray)
 
         default:
-          self.log.error("Unknown flush data type \(rawType)")
+          self.log.error("##################### Unknown flush data type \(rawType)")
         }
       }
 
@@ -630,43 +629,6 @@ extension NvimView {
   final func rpcEventSubscribed() {
     self.rpcEventSubscriptionCondition.broadcast()
     self.eventsSubject.onNext(.rpcEventSubscribed)
-  }
-
-  // FIXME: convert to subprocess
-  final func bridgeHasFatalError(_ value: MessagePackValue?) {
-    gui.async {
-      let alert = NSAlert()
-      alert.addButton(withTitle: "OK")
-      alert.messageText = "Error launching background neovim process"
-      alert.alertStyle = .critical
-
-      if let rawCode = value?.intValue,
-         let code = NvimServerFatalErrorCode(rawValue: rawCode)
-      {
-        switch code {
-        case .localPort:
-          alert.informativeText = "GUI could not connect to the background " +
-            "neovim process. The window will close."
-
-        case .remotePort:
-          alert.informativeText = "The remote message port could not " +
-            "connect to GUI. The window will close."
-
-        @unknown default:
-          self.log.error("Unknown fatal error from NvimServer")
-        }
-      } else {
-        alert.informativeText = "There was an unknown error launching the " +
-          "background neovim Process. " +
-          "The window will close."
-      }
-
-      alert.runModal()
-      self.queue.async {
-        self.eventsSubject.onNext(.neoVimStopped)
-        self.eventsSubject.onCompleted()
-      }
-    }
   }
 
   final func setAttr(with value: MessagePackValue) {
