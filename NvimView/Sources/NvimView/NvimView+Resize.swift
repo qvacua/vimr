@@ -177,6 +177,7 @@ extension NvimView {
                   )
               }
             )
+            .andThen(self.api.subscribe(event: NvimView.rpcEventName))
         }
       ).wait()
   }

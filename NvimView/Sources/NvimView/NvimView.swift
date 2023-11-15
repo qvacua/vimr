@@ -185,6 +185,10 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         case let .notification(method, params):
           self?.log.debug("NOTIFICATION: \(method): \(params)")
 
+          if method == NvimView.rpcEventName {
+            self?.eventsSubject.onNext(.rpcEvent(params))
+          }
+          
           if method == "redraw" {
             self?.renderData(params)
           } else if method == "autocommand" {
