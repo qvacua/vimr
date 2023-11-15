@@ -152,12 +152,6 @@ extension NvimView {
           ":augroup END
           """, opts: [:]).asCompletable()
 
-            .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
-              "ext_linegrid": true,
-              "ext_multigrid": false,
-              "ext_tabline": MessagePackValue(self.usesCustomTabBar),
-              "rgb": true,
-            ]))
             .andThen(
               self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
                 prev
@@ -177,6 +171,12 @@ extension NvimView {
                   )
               }
             )
+            .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
+              "ext_linegrid": true,
+              "ext_multigrid": false,
+              "ext_tabline": MessagePackValue(self.usesCustomTabBar),
+              "rgb": true,
+            ]))
             .andThen(self.api.subscribe(event: NvimView.rpcEventName))
         }
       ).wait()
