@@ -19,6 +19,7 @@ final class MainWindowReducer: ReducerType {
     case let .cd(to: cwd):
       if state.cwd != cwd {
         state.cwd = cwd
+        state.cwdToSet = cwd // Ensure updates also pend to tab bar
       }
 
     case let .setBufferList(buffers):
