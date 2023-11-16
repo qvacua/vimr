@@ -44,7 +44,7 @@ extension NvimView {
       self.bridgeLogger.error("Could not convert; wrong count: \(array)")
       return
     }
-    // FIXME: this must happen immediately, or subsequent updates fail
+    // This must happen immediately (not on gui), or subsequent updates fail
     self.ugrid.resize(Size(width: width, height: height))
     gui.async {
       self.markForRenderWholeView()
@@ -431,7 +431,7 @@ extension NvimView {
             }
             return UUpdate(string: string, attrId: attrId, repeats: repeats)
           }),
-          // FIXME: implement wrap
+          // wrap is informational, not required for correct functionality
           let _ /* wrap */ = data[4].boolValue
     else {
       self.bridgeLogger.error("Could not convert \(data)")
