@@ -153,6 +153,7 @@ extension NvimView {
 
         case "grid_resize":
           self.resize(renderEntry[1])
+          rowStart = 0 // Do not persist prior rowStart as it may be OOB
           recompute = true
 
         case "hl_attr_define":
