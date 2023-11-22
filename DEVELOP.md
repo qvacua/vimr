@@ -3,18 +3,11 @@
 To build NvimServer, do the following
 
 ```bash
-build_libnvim=true clean=false ./bin/build_nvimserver_for_local_dev.sh
+clean=false ./bin/build_neovim_for_local_dev.sh
 ```
 
 You can set `clean=true` if you want to clean the existing build.
 You can also use a watch script as follows (it uses `entr`):
-
-```bash
-clean_initial_build=true ./bin/watch_nvimserver_and_build
-```
-
-When `clean_initial_build` is `true`, the script will clean and build,
-then continuously invoke the `build_nvimserver_for_local_dev` script.
 
 ## How to build nightly
 
