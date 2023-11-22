@@ -1,6 +1,6 @@
 # Next
 
-* VimR is not using custom build binary using `libnvim` anymore. Thanks to GH-1015 by [georgeharker](https://github.com/georgeharker), VimR now even can use external Neovim binary.
+* VimR is not using custom build binary based on `libnvim` anymore. Thanks to GH-1015 by [georgeharker](https://github.com/georgeharker), VimR now uses stock Neovim and can even use external Neovim binary (from v0.10.0 on).
 * Neovim 0.10.0-dev
 * Minimum macOS requirement is now Ventura (v13).
 * Fix VimRSetCharacterspacing: GH-1014
