@@ -7,7 +7,7 @@
 
 ## About
 
-Project VimR is a Neovim GUI for macOS.
+Project VimR is a Neovim GUI for macOS written in Swift.
 
 The goal is to build an editor that uses Neovim inside with many of the convenience
 GUI features similar to those present in modern editors. We mainly use Swift,
@@ -16,10 +16,11 @@ but also use C/Objective-C when where appropriate.
 There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
 
 - Play around with [Neovim](https://github.com/qvacua/neovim),
-- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)), and
+- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)),
+- Play around with the main idea of Redux architecture, and
 - (most importantly) have fun!
 
-We have a chat room: <https://matrix.to/#/#vimr:matrix.org>
+If you feel chatty, there is a chat room: <https://matrix.to/#/#vimr:matrix.org>
 
 If you want to support VimR financially, use [Github's Sponsor](https://github.com/sponsors/qvacua).
 
@@ -29,10 +30,9 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 
 ## Reusable Components
 
-* [RxMessagePort](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMessagePort.swift): RxSwift wrapper for local and remote `CFMessagePort`.
 * [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): Implementation of MsgpackRpc using RxSwift.
 * [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
-* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): SwiftPM module which bundles everything, e.g. Neovim's `runtime`-files, needed to embed Neovim in a Cocoa App.
+* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): SwiftPM module containing an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to embed Neovim in a Cocoa App.
 
 ## Some Features
 
