@@ -6,14 +6,14 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20231110.205939</title>
+      <title>v0.45.0-20231122.130444</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231110.205939</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20231110.205939</sparkle:shortVersionString>
+      <sparkle:version>20231122.130444</sparkle:version>
+      <sparkle:shortVersionString>v0.45.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>VimR is not using custom build binary using <code>libnvim</code> anymore. Thanks to GH-1015 by <a href="https://github.com/georgeharker">georgeharker</a>, VimR now even can use external Neovim binary.</li>
-<li>Neovim 0.10.0-dev</li>
+<li>VimR is not using custom build binary based on <code>libnvim</code> anymore. Thanks to GH-1015 by <a href="https://github.com/georgeharker">georgeharker</a>, VimR now uses stock Neovim and can even use external Neovim binary (from v0.10.0 on).</li>
+<li>Neovim 0.10.0-dev which means Neovim itself may have some rough edges.</li>
 <li>Minimum macOS requirement is now Ventura (v13).</li>
 <li>Fix VimRSetCharacterspacing: GH-1014</li>
 <li>Add basic file handling to the filebrowser: GH-1005</li>
@@ -27,12 +27,12 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20231110.205939
+        https://github.com/qvacua/vimr/releases/tag/v0.45.0-20231122.130444
       </releaseNotesLink>
-      <pubDate>2023-11-10T21:11:02.769511</pubDate>
+      <pubDate>2023-11-22T13:33:30.259526</pubDate>
       <minimumSystemVersion>13.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231110.205939/VimR-SNAPSHOT-20231110.205939.tar.bz2"
-                 sparkle:edSignature="wTejDO5x9U/mu1+pXjgt8ODhhn2AlkPZ+Ir0lhPhquxCvZBemVXoBO1496mNpUE1ni0Gjfe6N7253WzkfNwODA==" length="17782932"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.0-20231122.130444/VimR-v0.45.0.tar.bz2"
+                 sparkle:edSignature="jflXRz14bNa+uT50XhKO+lboOAJ3gx0+ohIEud5u0+IOe6zASL/01jDFXooDsOogZlYBth8oAS86xoGvd4E5Cg==" length="17813066"
                  type="application/octet-stream"/>
     </item>
   </channel>
