@@ -7,7 +7,6 @@ clean=false ./bin/build_neovim_for_local_dev.sh
 ```
 
 You can set `clean=true` if you want to clean the existing build.
-You can also use a watch script as follows (it uses `entr`):
 
 ## How to build nightly
 
