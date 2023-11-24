@@ -129,12 +129,7 @@ final class UiBridge {
   private var initialWidth = 40
   private var initialHeight = 20
 
-  private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
-
   private let disposeBag = DisposeBag()
-
-  private var localServerName: String { "com.qvacua.NvimView.\(self.uuid)" }
-  private var remoteServerName: String { "com.qvacua.NvimView.NvimServer.\(self.uuid)" }
 
   var listenAddress: String {
     URL(fileURLWithPath: NSTemporaryDirectory())
