@@ -3,7 +3,6 @@ set -Eeuo pipefail
 
 readonly strip_symbols=${strip_symbols:-true}
 readonly notarize=${notarize:?"true or false"}
-readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
 readonly clean=${clean:?"true or false"}
 
 prepare_nvimserver() {
@@ -28,14 +27,6 @@ prepare_nvimserver() {
 
 build_vimr() {
   local -r build_path=$1
-
-  # Carthage often crashes => do it at the beginning.
-  echo "### Updating carthage"
-  if [[ "${use_carthage_cache}" == true ]]; then
-    carthage update --cache-builds --platform macos
-  else
-    carthage update --platform macos
-  fi
 
   echo "### Xcodebuilding"
   rm -rf "${build_path}"

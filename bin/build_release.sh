@@ -66,7 +66,7 @@ build_release() {
     fi
   popd >/dev/null
 
-  clean=true notarize=true use_carthage_cache=false ./bin/build_vimr.sh
+  clean=true notarize=true ./bin/build_vimr.sh
 
   pushd "${build_folder_path}" >/dev/null
     tar cjf "VimR-${marketing_version}.tar.bz2" VimR.app

@@ -2,7 +2,6 @@
 set -Eeuo pipefail
 
 readonly notarize=${notarize:?"true or false"}
-readonly use_carthage_cache=${use_carthage_cache:?"true or false"}
 readonly clean=${clean:?"true or false"}
 
 main () {
