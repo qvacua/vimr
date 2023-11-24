@@ -31,11 +31,6 @@ final class UiBridge {
       self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
       self.log.debug("Using ENVs from login shell: \(self.envDict)")
     }
-
-    self.scheduler = SerialDispatchQueueScheduler(
-      queue: self.queue,
-      internalSerialQueueName: String(reflecting: UiBridge.self)
-    )
   }
 
   func runLocalServerAndNvim(width: Int, height: Int) {
@@ -135,13 +130,6 @@ final class UiBridge {
   private var initialHeight = 20
 
   private var runLocalServerAndNvimCompletable: Completable.CompletableObserver?
-
-  private let scheduler: SerialDispatchQueueScheduler
-  private let queue = DispatchQueue(
-    label: String(reflecting: UiBridge.self),
-    qos: .userInitiated,
-    target: .global(qos: .userInitiated)
-  )
 
   private let disposeBag = DisposeBag()
 
