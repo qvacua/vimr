@@ -3,21 +3,23 @@ set -Eeuo pipefail
 shopt -s extglob
 
 main() {
-  # This script is located in /NvimServer/bin and we have to go to /
-  pushd "$(dirname "${BASH_SOURCE[0]}")/../.." >/dev/null
+  # This script is located in /bin/neovim/bin and we have to go to /
+  pushd "$(dirname "${BASH_SOURCE[0]}")/../../.." >/dev/null
 
-    rm -rf ./NvimServer/third-party
-    mkdir -p NvimServer/third-party
+    pushd ./bin/neovim >/dev/null
+      rm -rf ./third-party
+      mkdir -p third-party
 
-    local arm64_bottle
-    arm64_bottle=$(jq -r .gettext.arm64BottleTag ./NvimServer/Resources/buildInfo.json)
-    readonly arm64_bottle
+      local arm64_bottle
+      arm64_bottle=$(jq -r .gettext.arm64BottleTag ./resources/buildInfo.json)
+      readonly arm64_bottle
 
-    local x86_64_bottle
-    x86_64_bottle=$(jq -r .gettext.x86_64BottleTag ./NvimServer/Resources/buildInfo.json)
-    readonly x86_64_bottle
+      local x86_64_bottle
+      x86_64_bottle=$(jq -r .gettext.x86_64BottleTag ./resources/buildInfo.json)
+      readonly x86_64_bottle
+    popd >/dev/null
 
-    pushd ./NvimServer/third-party >/dev/null
+    pushd ./bin/neovim/third-party >/dev/null
       brew fetch --bottle-tag="${arm64_bottle}" gettext
       brew fetch --bottle-tag="${x86_64_bottle}" gettext
 

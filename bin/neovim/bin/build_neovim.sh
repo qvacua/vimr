@@ -27,8 +27,8 @@ build_neovim() {
     -D CMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
     -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
     -D CMAKE_FIND_FRAMEWORK=NEVER \
-    -D LIBINTL_INCLUDE_DIR=../NvimServer/NvimServer/third-party/gettext/include \
-    -D LIBINTL_LIBRARY=../NvimServer/NvimServer/third-party/gettext/lib/libintl.a
+    -D LIBINTL_INCLUDE_DIR=../bin/neovim/third-party/gettext/include \
+    -D LIBINTL_LIBRARY=../bin/neovim/third-party/gettext/lib/libintl.a
 cmake --build build
 
   cmake --build build
@@ -36,16 +36,16 @@ cmake --build build
 }
 
 main() {
-  # This script is located in /NvimServer/bin and we have to go to /
-  pushd "$(dirname "${BASH_SOURCE[0]}")/../../" >/dev/null
+  # This script is located in /bin/neovim/bin and we have to go to /
+  pushd "$(dirname "${BASH_SOURCE[0]}")/../../../" >/dev/null
   
-  ./NvimServer/bin/prepare_libintl.sh
+  ./bin/neovim/bin/prepare_libintl.sh
 
   local deployment_target
-  deployment_target=$(jq -r .deploymentTarget ./NvimServer/Resources/buildInfo.json)
+  deployment_target=$(jq -r .deploymentTarget ./bin/neovim/resources/buildInfo.json)
   readonly deployment_target
   
-  pushd ../Neovim >/dev/null
+  pushd ./Neovim >/dev/null
     echo "### Building neovim binary"
     if [[ "${clean}" == true ]]; then
       make distclean
