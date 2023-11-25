@@ -19,7 +19,7 @@ jobs:
       - name: Build VimR
         run: |
           is_snapshot=true ./bin/set_new_versions.sh
-          notarize=false clean=true use_carthage_cache=false ./bin/build_nightly.sh
+          clean=true notarize=false ./bin/build_nightly.sh
       - name: Replace artifact
         env:
           GH_REPO: ${{ github.repository }}
