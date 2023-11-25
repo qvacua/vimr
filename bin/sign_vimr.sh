@@ -15,7 +15,7 @@ main () {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
     echo "### Signing VimR"
     local entitlements_path
-    entitlements_path=$(realpath ./NvimServer/NvimServer/Resources/NvimServer.entitlements)
+    entitlements_path=$(realpath ./bin/neovim/resources/NvimServer.entitlements)
     readonly entitlements_path
 
     remove_sparkle_xpc
