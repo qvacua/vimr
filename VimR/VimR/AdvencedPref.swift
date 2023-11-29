@@ -74,7 +74,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
   private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
-  private let nvimBinaryField = NSTextView(forAutoLayout: ())
+  private let nvimBinaryField = NSTextField(forAutoLayout: ())
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
@@ -90,7 +90,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
     self.drawsParallelCheckbox.boolState = self.drawsParallel
-    self.nvimBinaryField.string = self.nvimBinary
+    self.nvimBinaryField.stringValue = self.nvimBinary
   }
 
   private func addViews() {
@@ -227,7 +227,7 @@ extension AdvancedPref {
   }
 
   func nvimBinaryFieldAction() {
-    let newNvimBinary = self.nvimBinaryField.string
+    let newNvimBinary = self.nvimBinaryField.stringValue
     self.emit(.setNvimBinary(newNvimBinary))
   }
 }
