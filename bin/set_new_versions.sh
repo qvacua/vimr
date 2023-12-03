@@ -77,7 +77,7 @@ END
 
   echo "Release notes" > release-notes.temp.md
   echo "${output}" > "${bundle_version}-${version_marker}.sh"
-  echo "${output_exec" > "build_release.temp.sh"
+  echo "${output_exec}" > "build_release.temp.sh"
   chmod +x "build_release.temp.sh"
 
   echo "### Tag, commit and push with ${tag}."
