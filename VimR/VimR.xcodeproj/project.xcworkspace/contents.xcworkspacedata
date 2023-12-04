@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/hat/Projects/vimr/VimR.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>
