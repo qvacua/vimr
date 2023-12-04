@@ -87,10 +87,8 @@ public extension NvimView {
       min(Int(abs(deltaCellX)), maxScrollDeltaX),
       min(Int(abs(deltaCellY)), maxScrollDeltaY)
     )
-    var (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? 1 : -1)
-    if event.isDirectionInvertedFromDevice {
-      vertSign = -vertSign
-    }
+    // Note: sign flip on deltaCellY
+    var (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? -1 : 1)
     self.log
       .debug(
         "# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)"
