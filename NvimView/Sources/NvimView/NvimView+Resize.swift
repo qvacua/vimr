@@ -71,7 +71,19 @@ extension NvimView {
 
     self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
-    self.bridge.runLocalServerAndNvim(width: size.width, height: size.height)
+    do {
+      try self.bridge.runLocalServerAndNvim(width: size.width, height: size.height)
+    }
+    catch let err as RxNeovimApi.Error {
+      self.eventsSubject.onNext(.ipcBecameInvalid(
+        "Could not launch neovim (\(err))."
+      ))
+    }
+    catch {
+      self.eventsSubject.onNext(.ipcBecameInvalid(
+        "Could not launch neovim."
+      ))
+    }
 
     // Wait for listen and socket creation to occur
     let timeout = Duration.seconds(4)
@@ -92,7 +104,12 @@ extension NvimView {
     try?
       self.api.run(at: sockPath)
       .andThen(
-        self.api.getApiInfo().map {
+        self.api.getApiInfo()
+          .do(onError: { err in
+            throw RxNeovimApi.Error
+              .exception(message: "Could not connect to neovim (\(err)).")
+          })
+          .map {
           value in
           guard let info = value.arrayValue,
                 info.count == 2,
@@ -105,13 +122,13 @@ extension NvimView {
             throw RxNeovimApi.Error
               .exception(message: "Could not convert values to api info.")
           }
-          guard major >= 0 && minor >= 10 || major >= 1
+          guard (major >= kMinAlphaVersion && minor >= kMinMinorVersion) || major >= kMinMajorVersion
           else {
             self.eventsSubject.onNext(.ipcBecameInvalid(
               "Incompatible neovim version \(major).\(minor)"
             ))
             throw RxNeovimApi.Error
-              .exception(message: "Could not convert values to api info.")
+              .exception(message: "Incompatible neovim version.")
           }
 
           return channel

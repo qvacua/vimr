@@ -9,6 +9,12 @@ import MessagePack
 import os
 import RxPack
 import RxSwift
+import RxNeovim
+import RxPack
+
+let kMinAlphaVersion = 0
+let kMinMinorVersion = 10
+let kMinMajorVersion = 1
 
 final class UiBridge {
   init(uuid: UUID, config: NvimView.Config) {
@@ -33,11 +39,11 @@ final class UiBridge {
     }
   }
 
-  func runLocalServerAndNvim(width: Int, height: Int) {
+  func runLocalServerAndNvim(width: Int, height: Int) throws {
     self.initialWidth = width
     self.initialHeight = height
 
-    self.launchNvimUsingLoginShellEnv()
+    try self.launchNvimUsingLoginShellEnv()
   }
 
   func quit() -> Completable {
@@ -64,7 +70,7 @@ final class UiBridge {
     self.nvimServerProc?.terminate()
   }
 
-  private func launchNvimUsingLoginShellEnv() {
+  private func launchNvimUsingLoginShellEnv() throws {
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = self.listenAddress
 
@@ -103,10 +109,75 @@ final class UiBridge {
     do {
       try process.run()
     } catch {
-      return
+      throw RxNeovimApi.Error
+        .exception(message: "Could not run neovim process.")
     }
 
+    try self.doInitialVersionCheck(inPipe: inPipe, outPipe: outPipe)
+
     self.nvimServerProc = process
+  }
+
+  private func doInitialVersionCheck(inPipe: Pipe, outPipe: Pipe) throws {
+
+    // Construct Msgpack query for api info
+    let packed = pack(
+      [
+        .uint(RxMsgpackRpc.MessageType.request.rawValue),
+        .uint(UInt64(0)),
+        .string("nvim_get_api_info"),
+        .array([]),
+      ]
+    )
+
+    try inPipe.fileHandleForWriting.write(contentsOf: packed)
+
+    // Read responses from the pipe back
+    var accumulatedData : Data = Data()
+    var values : [MessagePackValue] = []
+    var remainderData: Data? = nil
+    while (true) {
+      let data = outPipe.fileHandleForReading.availableData
+      if data.count == 0 {
+        break
+      }
+      accumulatedData.append(data)
+      
+      try (values, remainderData) = RxMsgpackRpc.unpackAllWithReminder(accumulatedData)
+      
+      if let remainderData { accumulatedData = remainderData }
+      else { accumulatedData.count = 0 }
+      
+      if values.count > 0 {
+        break
+      }
+    }
+
+    // Validate version response
+    guard values.count >= 1,
+          let firstResponse = values[0].arrayValue,
+          firstResponse.count == 4,
+          let rawType = firstResponse[0].uint64Value,
+          let type = RxMsgpackRpc.MessageType(rawValue: rawType),
+          type == RxMsgpackRpc.MessageType.response /* this is a response */,
+          let msgId = firstResponse[1].uint64Value,
+          msgId == 0 /* no confusion on stream */,
+          firstResponse[2] == nil /* no error */,
+          let info = firstResponse[3].arrayValue /* response value */,
+          info.count == 2,
+          let dict = info[1].dictionaryValue,
+          let version = dict["version"]?.dictionaryValue,
+          let major = version["major"]?.intValue,
+          let minor = version["minor"]?.intValue
+    else {
+      throw RxNeovimApi.Error
+        .exception(message: "Could not convert values to api info.")
+    }
+    guard (major >= kMinAlphaVersion && minor >= kMinMinorVersion) || major >= kMinMajorVersion
+    else {
+      throw RxNeovimApi.Error
+        .exception(message: "Incompatible neovim version.")
+    }
   }
 
   private func interactive(for shell: URL) -> Bool {

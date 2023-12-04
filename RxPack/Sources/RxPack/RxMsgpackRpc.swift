@@ -202,7 +202,7 @@ public final class RxMsgpackRpc {
 
           if readBytes > 0 {
             dataToUnmarshall.append(readData)
-            let (values, remainderData) = try self.unpackAllWithReminder(dataToUnmarshall)
+            let (values, remainderData) = try RxMsgpackRpc.unpackAllWithReminder(dataToUnmarshall)
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 
@@ -294,7 +294,7 @@ public final class RxMsgpackRpc {
     }
   }
 
-  private func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
+  public static func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
     var values = [Value]()
     var remainderData: Data?
 
