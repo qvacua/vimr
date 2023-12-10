@@ -58,10 +58,18 @@ extension NvimView {
 
     switch option {
     case let .guifont(fontSpec):
-      command = self.api.setOptionValue(name: "guifont", value: .string(fontSpec), opts: ["scope": .string("global")])
+      command = self.api.setOptionValue(
+        name: "guifont",
+        value: .string(fontSpec),
+        opts: ["scope": .string("global")]
+      )
 
     case let .guifontWide(fontSpec):
-      command = self.api.setOptionValue(name: "guifontwide", value: .string(fontSpec), opts: ["scope": .string("global")])
+      command = self.api.setOptionValue(
+        name: "guifontwide",
+        value: .string(fontSpec),
+        opts: ["scope": .string("global")]
+      )
     }
 
     command

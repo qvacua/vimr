@@ -40,7 +40,7 @@ public protocol NvimViewDelegate: AnyObject {
 
 public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
-  
+
   public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.0
@@ -188,7 +188,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           if method == NvimView.rpcEventName {
             self?.eventsSubject.onNext(.rpcEvent(params))
           }
-          
+
           if method == "redraw" {
             self?.renderData(params)
           } else if method == "autocommand" {

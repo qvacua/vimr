@@ -71,120 +71,123 @@ extension NvimView {
 
     self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
+    let inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe
     do {
-      try self.bridge.runLocalServerAndNvim(width: size.width, height: size.height)
-    }
-    catch let err as RxNeovimApi.Error {
+      (inPipe, outPipe, errorPipe) = try self.bridge.runLocalServerAndNvim(
+        width: size.width, height: size.height
+      )
+    } catch let err as RxNeovimApi.Error {
       self.eventsSubject.onNext(.ipcBecameInvalid(
         "Could not launch neovim (\(err))."
       ))
-    }
-    catch {
+
+      return
+    } catch {
       self.eventsSubject.onNext(.ipcBecameInvalid(
         "Could not launch neovim."
       ))
-    }
 
-    // Wait for listen and socket creation to occur
-    let timeout = Duration.seconds(4)
-    let start_time = ContinuousClock.now
-    while !FileManager.default.fileExists(atPath: sockPath) {
-      usleep(1000)
-      if ContinuousClock.now - start_time > timeout {
-        self.eventsSubject.onNext(.ipcBecameInvalid(
-          "Timeout waiting for neovim."
-        ))
-        return
-      }
+      return
     }
 
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...
+    var c: Int32 = 0 // FIXME
     try?
-      self.api.run(at: sockPath)
-      .andThen(
-        self.api.getApiInfo()
-          .do(onError: { err in
-            throw RxNeovimApi.Error
-              .exception(message: "Could not connect to neovim (\(err)).")
-          })
-          .map {
-          value in
-          guard let info = value.arrayValue,
-                info.count == 2,
-                let channel = info[0].int32Value
-          else {
-            throw RxNeovimApi.Error
-              .exception(message: "Could not convert values to api info.")
-          }
-
-          return channel
-        }.flatMapCompletable {
-          // FIXME: make lua
-          self.api.exec2(src: """
-          ":augroup vimr
-          ":augroup!
-          :autocmd VimEnter * call rpcnotify(\($0), 'autocommand', 'vimenter')
-          :autocmd BufWinEnter * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
-          :autocmd BufWinEnter * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
-          :autocmd TabEnter * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
-          :autocmd BufWritePost * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
-          :autocmd BufEnter * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
-          :autocmd DirChanged * call rpcnotify(\(
-            $0
-          ), 'autocommand', 'dirchanged', expand('<afile>'))
-          :autocmd ColorScheme * call rpcnotify(\($0), 'autocommand', 'colorscheme', \
-              get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
-              get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
-              get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
-              get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
-              get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
-          :autocmd ExitPre * call rpcnotify(\($0), 'autocommand', 'exitpre')
-          :autocmd BufModifiedSet * call rpcnotify(\($0), 'autocommand', 'bufmodifiedset', \
-              str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
-          :let g:gui_vimr = 1
-          ":augroup END
-          """, opts: [:]).asCompletable()
-
-            .andThen(
-              self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
-                prev
-                  .andThen(
-                    self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
-                      .map {
-                        retval in
-                        guard let output_value = retval["output"] ?? retval["output"],
-                              let output = output_value.stringValue
-                        else {
-                          throw RxNeovimApi.Error
-                            .exception(message: "Could not convert values to output.")
-                        }
-                        return output
-                      }
-                      .asCompletable()
-                  )
-              }
-            )
-            .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
-              "ext_linegrid": true,
-              "ext_multigrid": false,
-              "ext_tabline": MessagePackValue(self.usesCustomTabBar),
-              "rgb": true,
-            ]))
-            .andThen(self.api.subscribe(event: NvimView.rpcEventName))
+      self.api.run(at: sockPath, inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
+      .andThen(self.api.getApiInfo(errWhenBlocked: false).map { value in
+        guard let info = value.arrayValue,
+              info.count == 2,
+              let channel = info[0].int32Value,
+              let dict = info[1].dictionaryValue,
+              let version = dict["version"]?.dictionaryValue,
+              let major = version["major"]?.intValue,
+              let minor = version["minor"]?.intValue
+        else {
+          throw RxNeovimApi.Error.exception(message: "Could not convert values to api info.")
         }
-      ).wait()
+
+        guard (major >= kMinAlphaVersion && minor >= kMinMinorVersion) || major >=
+          kMinMajorVersion
+        else {
+          self.eventsSubject.onNext(.ipcBecameInvalid(
+            "Incompatible neovim version \(major).\(minor)"
+          ))
+          throw RxNeovimApi.Error
+            .exception(message: "Incompatible neovim version.")
+        }
+        
+        c = channel
+
+        return channel
+      }.asCompletable())
+      .andThen(
+        self.api.command(command: "let g:gui_vimr = 1", expectsReturnValue: false)
+      )
+      .andThen(self.api.uiAttach(width: size.width, height: size.height, options: [
+        "ext_linegrid": true,
+        "ext_multigrid": false,
+        "ext_tabline": MessagePackValue(self.usesCustomTabBar),
+        "rgb": true,
+      ]))
+      .andThen(
+        self.api.exec2(src: """
+        ":augroup vimr
+        ":augroup!
+        :autocmd VimEnter * call rpcnotify(\(c), 'autocommand', 'vimenter')
+        :autocmd BufWinEnter * call rpcnotify(\(
+          c
+        ), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
+        :autocmd BufWinEnter * call rpcnotify(\(
+          c
+        ), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
+        :autocmd TabEnter * call rpcnotify(\(
+          c
+        ), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
+        :autocmd BufWritePost * call rpcnotify(\(
+          c
+        ), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
+        :autocmd BufEnter * call rpcnotify(\(
+          c
+        ), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
+        :autocmd DirChanged * call rpcnotify(\(
+          c
+        ), 'autocommand', 'dirchanged', expand('<afile>'))
+        :autocmd ColorScheme * call rpcnotify(\(c), 'autocommand', 'colorscheme', \
+            get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
+            get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
+            get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
+            get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
+            get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
+        :autocmd ExitPre * call rpcnotify(\(c), 'autocommand', 'exitpre')
+        :autocmd BufModifiedSet * call rpcnotify(\(
+          c
+        ), 'autocommand', 'bufmodifiedset', \
+            str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
+        ":augroup END
+        """, opts: [:], errWhenBlocked: false).asCompletable()
+      )
+      .andThen(
+        self.sourceFileUrls.reduce(Completable.empty()) { prev, url in
+          prev
+            .andThen(
+              self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
+                .map {
+                  retval in
+                  guard let output_value = retval["output"] ?? retval["output"],
+                        let output = output_value.stringValue
+                  else {
+                    throw RxNeovimApi.Error
+                      .exception(message: "Could not convert values to output.")
+                  }
+                  return output
+                }
+                .asCompletable()
+            )
+        }
+      )
+      .andThen(self.api.subscribe(event: NvimView.rpcEventName)).wait()
   }
 
   private func randomEmoji() -> String {

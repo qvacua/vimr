@@ -69,21 +69,17 @@ public final class RxMsgpackRpc {
 
   public func run(
     at path: String,
-    readBufferSize: Int = RxMsgpackRpc.defaultReadBufferSize
+    inPipe: Pipe,
+    outPipe: Pipe,
+    errorPipe: Pipe
   ) -> Completable {
-    Completable.create { completable in
+    self.inPipe = inPipe
+    self.outPipe = outPipe
+    self.errorPipe = errorPipe
+    
+    return Completable.create { completable in
       self.queue.async {
-        do {
-          try self.socket = Socket.create(family: .unix, type: .stream, proto: .unix)
-          self.socket?.readBufferSize = readBufferSize
-          try self.socket?.connect(to: path)
-          self.setUpThreadAndStartReading()
-        } catch {
-          self.socket = nil
-          self.streamSubject.onError(Error(msg: "Could not get socket", cause: error))
-          completable(.error(Error(msg: "Could not get socket at \(path)", cause: error)))
-        }
-
+        self.setUpThreadAndStartReading()
         completable(.completed)
       }
 
@@ -94,7 +90,7 @@ public final class RxMsgpackRpc {
   public func stop() -> Completable {
     Completable.create { completable in
       self.queue.async {
-        self.cleanUpAndCloseSocket()
+        self.cleanUp()
         completable(.completed)
       }
 
@@ -121,33 +117,10 @@ public final class RxMsgpackRpc {
           ]
         )
 
-        if self.socket?.remoteConnectionClosed == true {
-          single(.failure(Error(
-            msg: "Connection stopped, but trying to send a request with msg id \(msgid)"
-          )))
-          return
-        }
-
-        guard let socket = self.socket else {
-          single(.failure(Error(
-            msg: "Socket is invalid, but trying to send a request with " +
-              "msg id \(msgid): \(method) with \(params)"
-          )))
-          return
-        }
-
         if expectsReturnValue { self.singles[msgid] = single }
 
         do {
-          var remainder: Data? = packed
-          while let dataToSend = remainder {
-            let writtenBytes = try socket.write(from: dataToSend)
-            if writtenBytes < dataToSend.count {
-              remainder = packed.suffix(from: writtenBytes)
-            } else {
-              remainder = nil
-            }
-          }
+          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
         } catch {
           self.streamSubject.onError(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
@@ -169,9 +142,12 @@ public final class RxMsgpackRpc {
 
   private var nextMsgid: UInt32 = 0
 
-  private var socket: Socket?
   private let queue: DispatchQueue
   private let dataQueue: DispatchQueue
+  
+  private var inPipe: Pipe?
+  private var outPipe: Pipe?
+  private var errorPipe: Pipe?
 
   private var singles: [UInt32: SingleResponseObserver] = [:]
 
@@ -181,52 +157,40 @@ public final class RxMsgpackRpc {
     Response(msgid: msgid, error: .nil, result: .nil)
   }
 
-  private func cleanUpAndCloseSocket() {
+  private func cleanUp() {
+    self.inPipe = nil
+    self.outPipe = nil
+    self.errorPipe = nil
+    
     self.streamSubject.onCompleted()
 
     self.singles.forEach { _, single in single(.failure(Error(msg: "Socket closed"))) }
-    self.singles.removeAll()
-
-    self.socket?.close()
   }
 
   private func setUpThreadAndStartReading() {
     self.dataQueue.async { [unowned self] in
-      guard let socket = self.socket else { return }
-
+      var readData: Data
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
       repeat {
         do {
-          var readData = Data(capacity: Self.defaultReadBufferSize)
-          let readBytes = try socket.read(into: &readData)
+          guard let buffer = self.outPipe?.fileHandleForReading.availableData else { break }
+          readData = buffer
 
-          if readBytes > 0 {
+          if readData.count > 0 {
             dataToUnmarshall.append(readData)
             let (values, remainderData) = try RxMsgpackRpc.unpackAllWithReminder(dataToUnmarshall)
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 
             values.forEach(self.processMessage)
-          } else if readBytes == 0 {
-            if socket.remoteConnectionClosed {
-              self.queue.async { self.cleanUpAndCloseSocket() }
-              return
-            }
-
-            continue
           }
-        } catch let error as Socket.Error {
-          self.streamSubject.onError(Error(msg: "Could not read from socket", cause: error))
-          self.queue.async { self.cleanUpAndCloseSocket() }
-          return
-        } catch {
-          self.streamSubject.onNext(
-            .error(value: .nil, msg: "Data from socket could not be unpacked")
-          )
-          self.queue.async { self.cleanUpAndCloseSocket() }
-          return
+        } catch let error {
+          self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
         }
-      } while self.socket?.remoteConnectionClosed == false
+      } while readData.count > 0
+      
+      self.streamSubject.onNext(.notification(method: "autocommand", params: ["exitpre"]))
+      self.cleanUp()
     }
   }
 
