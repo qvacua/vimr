@@ -1,6 +1,7 @@
 # Next
 
-* ...
+* GH-1026: Bugfix: Scroll direction system setting is not respected when trackpad-scrolling.
+* GH-1022: Bugfix: Custom Neovim binary setting is not stored correctly and the alert for incompatible version does not show up.
 * Dependencies updates:
   - sparkle-project/Sparkle@2.5.1
 
