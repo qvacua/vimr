@@ -29,9 +29,8 @@ build_neovim() {
     -D CMAKE_FIND_FRAMEWORK=NEVER \
     -D LIBINTL_INCLUDE_DIR=../bin/neovim/third-party/gettext/include \
     -D LIBINTL_LIBRARY=../bin/neovim/third-party/gettext/lib/libintl.a
-cmake --build build
-
   cmake --build build
+
   cpack --config build/CPackConfig.cmake
 }
 
