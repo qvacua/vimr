@@ -93,10 +93,16 @@ extension NvimView {
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...
+
+    // See https://neovim.io/doc/user/ui.html#ui-startup for startup sequence
+    // When we call nvim_command("autocmd VimEnter * call rpcrequest(1, 'vimenter')")
+    // Neovim will send us a vimenter request and enter a blocking state.
+    // We do some autocmd setup and send a response to exit the blocking state in
+    // NvimView.swift
     try? self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
       .andThen(
         self.api.getApiInfo(errWhenBlocked: false)
-          .map { value in
+          .flatMapCompletable { value in
             guard let info = value.arrayValue,
                   info.count == 2,
                   let channel = info[0].int32Value,
@@ -117,48 +123,16 @@ extension NvimView {
               throw RxNeovimApi.Error.exception(message: "Incompatible neovim version.")
             }
 
-            return channel
-          }
-          .map { (channel: Int32) in
-            self.api.exec2(src: """
-            ":augroup vimr
-            ":augroup!
-            :autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
-            :autocmd BufWinEnter * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
-            :autocmd BufWinEnter * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
-            :autocmd TabEnter * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
-            :autocmd BufWritePost * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
-            :autocmd BufEnter * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
-            :autocmd DirChanged * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'dirchanged', expand('<afile>'))
-            :autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', \
-                get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), \
-                get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), \
-                get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), \
-                get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), \
-                get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
-            :autocmd ExitPre * call rpcnotify(\(channel), 'autocommand', 'exitpre')
-            :autocmd BufModifiedSet * call rpcnotify(\(
-              channel
-            ), 'autocommand', 'bufmodifiedset', \
-                str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
-            ":augroup END
+            return self.api.exec2(src: """
+            let g:gui_vimr = 1
+            autocmd ExitPre * call rpcnotify(\(channel), 'autocommand', 'exitpre')
+            autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
+            autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
+            autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
             """, opts: [:], errWhenBlocked: false)
+              .asCompletable()
           }
-          .asCompletable()
       )
-      .andThen(self.api.command(command: "let g:gui_vimr = 1", expectsReturnValue: false))
       .andThen(
         self.api.uiAttach(width: size.width, height: size.height, options: [
           "ext_linegrid": true,

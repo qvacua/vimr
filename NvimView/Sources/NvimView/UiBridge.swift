@@ -84,9 +84,7 @@ final class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
 
-    if self.nvimBinary != "",
-       FileManager.default.fileExists(atPath: self.nvimBinary)
-    {
+    if self.nvimBinary != "", FileManager.default.fileExists(atPath: self.nvimBinary) {
       process.launchPath = self.nvimBinary
     } else {
       // We know that NvimServer is there.
@@ -96,9 +94,7 @@ final class UiBridge {
     }
     process.environment = env
 
-    process
-      .arguments =
-      ["--embed"] + self.nvimArgs
+    process .arguments = ["--embed"] + self.nvimArgs
 
     self.log.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"

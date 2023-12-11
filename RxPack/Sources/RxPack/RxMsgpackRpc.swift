@@ -4,7 +4,6 @@
 import Foundation
 import MessagePack
 import RxSwift
-import Socket
 
 public final class RxMsgpackRpc {
   public static let defaultReadBufferSize = 10240
@@ -21,6 +20,7 @@ public final class RxMsgpackRpc {
     case response(msgid: UInt32, error: Value, result: Value)
     case notification(method: String, params: [Value])
     case error(value: Value, msg: String)
+    case request(msgid: UInt32, method: String, params: [Value])
   }
 
   public struct Response {
@@ -67,14 +67,14 @@ public final class RxMsgpackRpc {
     )
   }
 
-  public func run( inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
+  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
     self.inPipe = inPipe
     self.outPipe = outPipe
     self.errorPipe = errorPipe
-    
+
     return Completable.create { completable in
       self.queue.async {
-        self.setUpThreadAndStartReading()
+        self.startReading()
         completable(.completed)
       }
 
@@ -87,6 +87,38 @@ public final class RxMsgpackRpc {
       self.queue.async {
         self.cleanUp()
         completable(.completed)
+      }
+
+      return Disposables.create()
+    }
+  }
+
+  public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
+    Completable.create { completable in
+      self.queue.async {
+        let packed = pack(
+          [
+            .uint(MessageType.response.rawValue),
+            .uint(UInt64(msgid)),
+            error,
+            result,
+          ]
+        )
+
+        do {
+          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+          completable(.completed)
+        } catch {
+          self.streamSubject.onError(Error(
+            msg: "Could not write to socket for msg id: \(msgid)", cause: error
+          ))
+
+          completable(.error(Error(
+            msg: "Could not write to socket for msg id: \(msgid)", cause: error
+          )))
+
+          return
+        }
       }
 
       return Disposables.create()
@@ -139,7 +171,7 @@ public final class RxMsgpackRpc {
 
   private let queue: DispatchQueue
   private let dataQueue: DispatchQueue
-  
+
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
@@ -156,13 +188,13 @@ public final class RxMsgpackRpc {
     self.inPipe = nil
     self.outPipe = nil
     self.errorPipe = nil
-    
+
     self.streamSubject.onCompleted()
 
     self.singles.forEach { _, single in single(.failure(Error(msg: "Socket closed"))) }
   }
 
-  private func setUpThreadAndStartReading() {
+  private func startReading() {
     self.dataQueue.async { [unowned self] in
       var readData: Data
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
@@ -173,17 +205,17 @@ public final class RxMsgpackRpc {
 
           if readData.count > 0 {
             dataToUnmarshall.append(readData)
-            let (values, remainderData) = try RxMsgpackRpc.unpackAllWithReminder(dataToUnmarshall)
+            let (values, remainderData) = try self.unpackAllWithReminder(dataToUnmarshall)
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 
             values.forEach(self.processMessage)
           }
-        } catch let error {
+        } catch {
           self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
         }
       } while readData.count > 0
-      
+
       self.streamSubject.onNext(.notification(method: "autocommand", params: ["exitpre"]))
       self.cleanUp()
     }
@@ -245,15 +277,20 @@ public final class RxMsgpackRpc {
       self.streamSubject.onNext(.notification(method: method, params: params))
 
     case .request:
-      self.streamSubject.onNext(.error(
-        value: unpacked,
-        msg: "Got message type request from remote"
-      ))
+      guard let msgid = array[1].uint32Value, let method = array[2].stringValue,
+            let params = array[3].arrayValue
+      else {
+        return
+      }
+
+      self.streamSubject.onNext(.request(msgid: msgid, method: method, params: params))
       return
     }
   }
 
-  public static func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
+  private func unpackAllWithReminder(_ data: Data) throws
+    -> (values: [Value], remainder: Data?)
+  {
     var values = [Value]()
     var remainderData: Data?
 

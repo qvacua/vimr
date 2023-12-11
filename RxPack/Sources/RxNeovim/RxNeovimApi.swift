@@ -66,6 +66,10 @@ public final class RxNeovimApi {
       }
   }
 
+  public func sendResponse(msgid: UInt32, error: Value, result: Value) -> Completable {
+    self.msgpackRpc.response(msgid: msgid, error: error, result: result)
+  }
+
   public init() {}
 
   private let msgpackRpc = RxMsgpackRpc(queueQos: .userInteractive)
