@@ -37,13 +37,11 @@ build_neovim() {
 main() {
   # This script is located in /bin/neovim/bin and we have to go to /
   pushd "$(dirname "${BASH_SOURCE[0]}")/../../../" >/dev/null
-  
-  ./bin/neovim/bin/prepare_libintl.sh
 
   local deployment_target
   deployment_target=$(jq -r .deploymentTarget ./bin/neovim/resources/buildInfo.json)
   readonly deployment_target
-  
+
   pushd ./Neovim >/dev/null
     echo "### Building neovim binary"
     if [[ "${clean}" == true ]]; then
