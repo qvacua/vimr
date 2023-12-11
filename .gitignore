@@ -185,4 +185,3 @@ tags.*
 /Workspace/.swiftpm
 .swiftpm
 /NvimServer/.build
-bin/neovim/third-party/
