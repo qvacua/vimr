@@ -67,12 +67,7 @@ public final class RxMsgpackRpc {
     )
   }
 
-  public func run(
-    at path: String,
-    inPipe: Pipe,
-    outPipe: Pipe,
-    errorPipe: Pipe
-  ) -> Completable {
+  public func run( inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
     self.inPipe = inPipe
     self.outPipe = outPipe
     self.errorPipe = errorPipe

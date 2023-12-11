@@ -93,7 +93,7 @@ extension NvimView {
     // We wait here, since the user of NvimView cannot subscribe
     // on the Completable. We could demand that the user call launchNeoVim()
     // by themselves, but...
-    try? self.api.run(at: sockPath, inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
+    try? self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
       .andThen(
         self.api.getApiInfo(errWhenBlocked: false)
           .map { value in
