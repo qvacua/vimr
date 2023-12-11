@@ -1,12 +1,22 @@
 ## How to develop
 
-To build NvimServer, do the following
+To build Neovim for development, i.e., no universal binary, do the following
 
 ```bash
-clean=false ./bin/build_neovim_for_local_dev.sh
+clean=false for_dev=true ./bin/build_nvimserver.sh
 ```
 
 You can set `clean=true` if you want to clean the existing build.
+
+## How to update gettext (libintl)
+
+Update `./bin/neovim/resources/build_info../bin/neovim/resources/buildInfo.json`
+
+```bash
+./bin/neovim/bin/prepare_libintl.sh
+```
+
+It will update `./bin/neovim/third-party`, commit and push.
 
 ## How to build nightly
 
