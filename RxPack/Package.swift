@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "RxPack",
-  platforms: [.macOS(.v13)],
+  platforms: [.macOS(.v12)],
   products: [
     .library(name: "RxPack", targets: ["RxPack"]),
     .library(name: "RxNeovim", targets: ["RxNeovim"]),

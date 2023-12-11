@@ -1,9 +1,12 @@
 # Next
 
+* VimR now uses the release Neovim version 0.9.4 and is compatible with external Neovim binary version 0.9.x.
+* Minium macOS requirement is now Monterey (v12).
 * GH-1026: Bugfix: Scroll direction system setting is not respected when trackpad-scrolling.
 * GH-1022: Bugfix: Custom Neovim binary setting is not stored correctly and the alert for incompatible version does not show up.
 * Dependencies updates:
   - sparkle-project/Sparkle@2.5.1
+  - Removed: Kitura/BlueSocket
 
 # 0.45.0-20231122.130444
 
