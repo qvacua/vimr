@@ -112,6 +112,8 @@ final class Context: ReduxContext {
   private func cleanUpAppState() {
     self.state.mainWindows.keys.forEach { uuid in
       self.state.mainWindows[uuid]?.cwdToSet = nil
+      self.state.mainWindows[uuid]?.tcwdToSet = nil
+      self.state.mainWindows[uuid]?.lcwdToSet = nil
       self.state.mainWindows[uuid]?.currentBufferToSet = nil
       self.state.mainWindows[uuid]?.viewToBeFocused = nil
       self.state.mainWindows[uuid]?.urlsToOpen.removeAll()

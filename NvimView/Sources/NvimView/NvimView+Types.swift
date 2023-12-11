@@ -58,6 +58,8 @@ public extension NvimView {
     case setTitle(String)
     case setDirtyStatus(Bool)
     case cwdChanged
+    case tcwdChanged
+    case lcwdChanged
     case bufferListChanged
     case tabChanged
 

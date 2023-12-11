@@ -335,6 +335,8 @@ extension MainWindow {
     var urlsToOpen = [URL: OpenMode]()
     var currentBufferToSet: NvimView.Buffer?
     var cwdToSet: URL?
+    var tcwdToSet: URL?
+    var lcwdToSet: URL?
     var viewToBeFocused: FocusableView? = FocusableView.neoVimView
 
     init(isAllToolsVisible: Bool, isToolButtonsVisible: Bool, nvimBinary: String) {

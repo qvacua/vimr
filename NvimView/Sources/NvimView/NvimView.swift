@@ -40,7 +40,7 @@ public protocol NvimViewDelegate: AnyObject {
 
 public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
-
+  
   public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.0
@@ -135,6 +135,36 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         .setCurrentDir(dir: newValue.path)
         .subscribe(on: self.scheduler)
         .subscribe(onError: { [weak self] error in
+          self?.eventsSubject
+            .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
+        })
+        .disposed(by: self.disposeBag)
+    }
+  }
+
+  public var tcwd: URL {
+    get { self._cwd }
+
+    set {
+      self.api
+        .exec2(src:"tcd \(newValue.path)", opts: [:])
+        .subscribe(on: self.scheduler)
+        .subscribe(onFailure: { [weak self] error in
+          self?.eventsSubject
+            .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
+        })
+        .disposed(by: self.disposeBag)
+    }
+  }
+
+  public var lcwd: URL {
+    get { self._cwd }
+
+    set {
+      self.api
+        .exec2(src:"lcd \(newValue.path)", opts: [:])
+        .subscribe(on: self.scheduler)
+        .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject
             .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
         })
@@ -375,7 +405,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         autocmd TabEnter * call rpcnotify(\(channel), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
         autocmd BufWritePost * call rpcnotify(\(channel), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
         autocmd BufEnter * call rpcnotify(\(channel), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
-        autocmd DirChanged * call rpcnotify(\( channel), 'autocommand', 'dirchanged', expand('<afile>'))
+        autocmd DirChanged * call rpcnotify(\( channel), 'autocommand', 'dirchanged', expand('<afile>'), v:event['scope'])
         autocmd BufModifiedSet * call rpcnotify(\(channel), 'autocommand', 'bufmodifiedset', str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
         """, opts: [:], errWhenBlocked: false)
         // swiftformat:enable all

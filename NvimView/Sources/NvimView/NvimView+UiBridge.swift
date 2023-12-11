@@ -333,13 +333,21 @@ extension NvimView {
     }
 
     if event == .dirchanged {
-      guard array.count > 1,
-            array[1].stringValue != nil
+      guard array.count > 2,
+            array[1].stringValue != nil,
+            let scope = array[2].stringValue
       else {
         self.bridgeLogger.error("Could not convert \(array)")
         return
       }
-      self.cwdChanged(array[1])
+
+      if scope == "tabpage" {
+        self.tcwdChanged(array[1])
+      } else if scope == "window" {
+        self.lcwdChanged(array[1])
+      } else {
+        self.cwdChanged(array[1])
+      }
       return
     }
 
@@ -570,6 +578,28 @@ extension NvimView {
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     self.eventsSubject.onNext(.cwdChanged)
+  }
+
+  final func tcwdChanged(_ value: MessagePackValue) {
+    guard let cwd = value.stringValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
+
+    self.bridgeLogger.debug(cwd)
+    self._cwd = URL(fileURLWithPath: cwd)
+    self.eventsSubject.onNext(.tcwdChanged)
+  }
+
+  final func lcwdChanged(_ value: MessagePackValue) {
+    guard let cwd = value.stringValue else {
+      self.bridgeLogger.error("Could not convert \(value)")
+      return
+    }
+
+    self.bridgeLogger.debug(cwd)
+    self._cwd = URL(fileURLWithPath: cwd)
+    self.eventsSubject.onNext(.lcwdChanged)
   }
 
   final func colorSchemeChanged(_ value: MessagePackValue) {

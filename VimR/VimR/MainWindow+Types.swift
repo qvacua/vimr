@@ -10,6 +10,8 @@ import Workspace
 extension MainWindow {
   enum Action {
     case cd(to: URL)
+    case tcd(to: URL)
+    case lcd(to: URL)
     case setBufferList([NvimView.Buffer])
 
     case newCurrentBuffer(NvimView.Buffer)

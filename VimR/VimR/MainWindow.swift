@@ -290,6 +290,10 @@ final class MainWindow: NSObject,
 
         case .cwdChanged: self?.cwdChanged()
 
+        case .tcwdChanged: self?.tcwdChanged()
+
+        case .lcwdChanged: self?.lcwdChanged()
+
         case .bufferListChanged: self?.bufferListChanged()
 
         case .tabChanged: self?.tabChanged()
@@ -345,6 +349,16 @@ final class MainWindow: NSObject,
 
         if let cwd = state.cwdToSet {
           self.neoVimView.cwd = cwd
+          self.neoVimView.tabBar?.cwd = cwd.path
+        }
+
+        if let cwd = state.tcwdToSet {
+          self.neoVimView.tcwd = cwd
+          self.neoVimView.tabBar?.cwd = cwd.path
+        }
+
+        if let cwd = state.lcwdToSet {
+          self.neoVimView.lcwd = cwd
           self.neoVimView.tabBar?.cwd = cwd.path
         }
 

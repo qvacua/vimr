@@ -67,6 +67,14 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
+  func tcwdChanged() {
+    self.emit(self.uuidAction(for: .tcd(to: self.neoVimView.cwd)))
+  }
+
+  func lcwdChanged() {
+    self.emit(self.uuidAction(for: .lcd(to: self.neoVimView.cwd)))
+  }
+
   func bufferListChanged() {
     self.neoVimView
       .allBuffers()
