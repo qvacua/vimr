@@ -40,7 +40,7 @@ public protocol NvimViewDelegate: AnyObject {
 
 public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
   // MARK: - Public
-  
+
   public static let rpcEventName = "com.qvacua.NvimView"
 
   public static let minFontSize = 4.0
@@ -182,13 +182,24 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
     self.api.msgpackRawStream
       .subscribe(onNext: { [weak self] msg in
         switch msg {
+        case let .request(msgid, method, _):
+          // See https://neovim.io/doc/user/ui.html#ui-startup
+          // "vimenter" RPC request will be sent to us
+          // which is the result of
+          // nvim_command("autocmd VimEnter * call rpcrequest(1, 'vimenter')") in
+          // NvimView+Resize.swift
+          // This is the only request sent from Neovim to the UI, afaics.
+          guard method == "vimenter" else { break }
+          self?.log.debug("Processing blocking vimenter request")
+          self?.setupAutocmdsAndSendResponse(forMsgid: msgid)
+
         case let .notification(method, params):
-          self?.log.debug("NOTIFICATION: \(method): \(params)")
+          self?.log.trace("NOTIFICATION: \(method): \(params)")
 
           if method == NvimView.rpcEventName {
             self?.eventsSubject.onNext(.rpcEvent(params))
           }
-          
+
           if method == "redraw" {
             self?.renderData(params)
           } else if method == "autocommand" {
@@ -346,4 +357,33 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
+
+  private func setupAutocmdsAndSendResponse(forMsgid msgid: UInt32) {
+    self.api.getApiInfo(errWhenBlocked: false)
+      .flatMapCompletable { value in
+        guard let info = value.arrayValue,
+              info.count == 2,
+              let channel = info[0].int32Value
+        else {
+          throw RxNeovimApi.Error.exception(message: "Could not convert values to api info.")
+        }
+
+        // swiftformat:disable all
+        return self.api.exec2(src: """
+        autocmd BufWinEnter * call rpcnotify(\(channel), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
+        autocmd BufWinLeave * call rpcnotify(\(channel), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
+        autocmd TabEnter * call rpcnotify(\(channel), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
+        autocmd BufWritePost * call rpcnotify(\(channel), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
+        autocmd BufEnter * call rpcnotify(\(channel), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
+        autocmd DirChanged * call rpcnotify(\( channel), 'autocommand', 'dirchanged', expand('<afile>'))
+        autocmd BufModifiedSet * call rpcnotify(\(channel), 'autocommand', 'bufmodifiedset', str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
+        """, opts: [:], errWhenBlocked: false)
+        // swiftformat:enable all
+          .asCompletable()
+          .andThen(
+            self.api.sendResponse(msgid: msgid, error: .nil, result: .nil)
+          )
+      }
+      .subscribe().disposed(by: self.disposeBag)
+  }
 }

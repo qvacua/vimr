@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct Defs {
+enum Defs {
   static let loggerSubsystem = "com.qvacua.NvimView"
 
   enum LoggerCategory {

@@ -21,11 +21,13 @@ main() {
 
   if [[ "${for_dev}" == true ]]; then
     pushd ./Neovim >/dev/null
-      make CMAKE_BUILD_TYPE=Release
+      mkdir -p ./build/install
+      make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=./install"
+      make install
     popd >/dev/null
 
-    cp ./Neovim/build/bin/nvim "${resources_folder}/NvimServer"
-    cp -r ./Neovim/build/runtime "${resources_folder}"
+    cp ./Neovim/build/install/bin/nvim "${resources_folder}/NvimServer"
+    cp -r ./Neovim/build/install/share/nvim/runtime "${resources_folder}"
   else
     ./bin/neovim/bin/build_neovim.sh
     pushd ./Neovim/build >/dev/null

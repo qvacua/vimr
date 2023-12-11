@@ -5,7 +5,7 @@
 
 import Cocoa
 
-final class KeyUtils {
+enum KeyUtils {
   static func isControlCode(key: String) -> Bool {
     guard key.count == 1 else {
       return false

@@ -7,13 +7,12 @@ import Commons
 import Foundation
 import MessagePack
 import os
-import RxPack
-import RxSwift
 import RxNeovim
 import RxPack
+import RxSwift
 
 let kMinAlphaVersion = 0
-let kMinMinorVersion = 10
+let kMinMinorVersion = 9
 let kMinMajorVersion = 1
 
 final class UiBridge {
@@ -39,11 +38,11 @@ final class UiBridge {
     }
   }
 
-  func runLocalServerAndNvim(width: Int, height: Int) throws {
+  func runLocalServerAndNvim(width: Int, height: Int) throws -> (Pipe, Pipe, Pipe) {
     self.initialWidth = width
     self.initialHeight = height
 
-    try self.launchNvimUsingLoginShellEnv()
+    return try self.launchNvimUsingLoginShellEnv()
   }
 
   func quit() -> Completable {
@@ -70,7 +69,7 @@ final class UiBridge {
     self.nvimServerProc?.terminate()
   }
 
-  private func launchNvimUsingLoginShellEnv() throws {
+  private func launchNvimUsingLoginShellEnv() throws -> (Pipe, Pipe, Pipe) {
     var env = self.envDict
     env["NVIM_LISTEN_ADDRESS"] = self.listenAddress
 
@@ -85,9 +84,7 @@ final class UiBridge {
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
 
-    if self.nvimBinary != "",
-       FileManager.default.fileExists(atPath: self.nvimBinary)
-    {
+    if self.nvimBinary != "", FileManager.default.fileExists(atPath: self.nvimBinary) {
       process.launchPath = self.nvimBinary
     } else {
       // We know that NvimServer is there.
@@ -97,11 +94,7 @@ final class UiBridge {
     }
     process.environment = env
 
-    process
-      .arguments =
-      ["--embed",
-       "--listen",
-       self.listenAddress] + self.nvimArgs
+    process .arguments = ["--embed"] + self.nvimArgs
 
     self.log.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
@@ -113,71 +106,8 @@ final class UiBridge {
         .exception(message: "Could not run neovim process.")
     }
 
-    try self.doInitialVersionCheck(inPipe: inPipe, outPipe: outPipe)
-
     self.nvimServerProc = process
-  }
-
-  private func doInitialVersionCheck(inPipe: Pipe, outPipe: Pipe) throws {
-
-    // Construct Msgpack query for api info
-    let packed = pack(
-      [
-        .uint(RxMsgpackRpc.MessageType.request.rawValue),
-        .uint(UInt64(0)),
-        .string("nvim_get_api_info"),
-        .array([]),
-      ]
-    )
-
-    try inPipe.fileHandleForWriting.write(contentsOf: packed)
-
-    // Read responses from the pipe back
-    var accumulatedData : Data = Data()
-    var values : [MessagePackValue] = []
-    var remainderData: Data? = nil
-    while (true) {
-      let data = outPipe.fileHandleForReading.availableData
-      if data.count == 0 {
-        break
-      }
-      accumulatedData.append(data)
-      
-      try (values, remainderData) = RxMsgpackRpc.unpackAllWithReminder(accumulatedData)
-      
-      if let remainderData { accumulatedData = remainderData }
-      else { accumulatedData.count = 0 }
-      
-      if values.count > 0 {
-        break
-      }
-    }
-
-    // Validate version response
-    guard values.count >= 1,
-          let firstResponse = values[0].arrayValue,
-          firstResponse.count == 4,
-          let rawType = firstResponse[0].uint64Value,
-          let type = RxMsgpackRpc.MessageType(rawValue: rawType),
-          type == RxMsgpackRpc.MessageType.response /* this is a response */,
-          let msgId = firstResponse[1].uint64Value,
-          msgId == 0 /* no confusion on stream */,
-          firstResponse[2] == nil /* no error */,
-          let info = firstResponse[3].arrayValue /* response value */,
-          info.count == 2,
-          let dict = info[1].dictionaryValue,
-          let version = dict["version"]?.dictionaryValue,
-          let major = version["major"]?.intValue,
-          let minor = version["minor"]?.intValue
-    else {
-      throw RxNeovimApi.Error
-        .exception(message: "Could not convert values to api info.")
-    }
-    guard (major >= kMinAlphaVersion && minor >= kMinMinorVersion) || major >= kMinMajorVersion
-    else {
-      throw RxNeovimApi.Error
-        .exception(message: "Incompatible neovim version.")
-    }
+    return (inPipe, outPipe, errorPipe)
   }
 
   private func interactive(for shell: URL) -> Bool {

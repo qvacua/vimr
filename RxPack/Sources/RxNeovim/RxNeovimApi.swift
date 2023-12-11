@@ -34,7 +34,9 @@ public final class RxNeovimApi {
 
   public var msgpackRawStream: Observable<RxMsgpackRpc.Message> { self.msgpackRpc.stream }
 
-  public func run(at path: String) -> Completable { self.msgpackRpc.run(at: path) }
+  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
+    self.msgpackRpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
+  }
 
   public func stop() -> Completable { self.msgpackRpc.stop() }
 
@@ -62,6 +64,10 @@ public final class RxNeovimApi {
 
         return response.result
       }
+  }
+
+  public func sendResponse(msgid: UInt32, error: Value, result: Value) -> Completable {
+    self.msgpackRpc.response(msgid: msgid, error: error, result: result)
   }
 
   public init() {}

@@ -13,7 +13,6 @@ import Workspace
 
 extension MainWindow {
   func rpcEventAction(params rawParams: [MessagePackValue]) {
-    Swift.print("################### \(rawParams)")
     guard rawParams.count > 0 else { return }
 
     guard let strEvent = rawParams[0].stringValue,
