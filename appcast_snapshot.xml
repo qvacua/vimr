@@ -25,7 +25,7 @@
         https://github.com/qvacua/vimr/releases/tag/v0.45.1-20231211.195158
       </releaseNotesLink>
       <pubDate>2023-12-11T19:59:19.895765</pubDate>
-      <minimumSystemVersion>13.0</minimumSystemVersion>
+      <minimumSystemVersion>12.0</minimumSystemVersion>
       <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.1-20231211.195158/VimR-v0.45.1.tar.bz2"
                  sparkle:edSignature="QxwHFQTpmHq8APIKPH1st0MP0jCU066XSZqd0q92xciaXal7DQnWqPvkEWQYi7km2kPIXw8usoP5Hnjkm9RrBw==" length="17198035"
                  type="application/octet-stream"/>
