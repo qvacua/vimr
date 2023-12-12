@@ -23,7 +23,7 @@ main() {
   fi
   echo "### Using ${tag_name} as tag name"
   git commit -am "Bump version to ${tag_name}"
-  git tag -am "${tag_name}"
+  git tag -a "${tag_name}" -m "${tag_name}"
   git push
   git push origin "${tag_name}"
 
