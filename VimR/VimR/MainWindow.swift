@@ -221,6 +221,8 @@ final class MainWindow: NSObject,
     self.window.makeFirstResponder(self.neoVimView)
 
     self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
+    
+    self.toggleFramerate(self)
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {

@@ -42,11 +42,7 @@ final class AttributesRunDrawer {
     offset: CGPoint,
     in context: CGContext
   ) {
-    let runs = self.drawsParallel ?
-      attrsRuns.parallelMap(chunkSize: 50) { run in
-        self.fontGlyphRuns(from: run, offset: offset)
-      }
-      : attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
+    let runs = attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
 
     for i in 0..<attrsRuns.count {
       self.draw(
