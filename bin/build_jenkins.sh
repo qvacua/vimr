@@ -2,6 +2,9 @@
 set -Eeuo pipefail
 
 readonly branch=${branch:?"which branch to use"}
+readonly create_gh_release=${create_gh_release:?"create Github release?"}
+readonly upload=${upload:?"upload artifact to github release?"}
+readonly update_appcast=${update_app_cast:?"update and push appcast?"}
 
 main() {
   echo "### Releasing VimR started"
@@ -22,6 +25,7 @@ main() {
     tag_name="${marketing_version}-${bundle_version}"
   fi
   echo "### Using ${tag_name} as tag name"
+  git checkout "${branch}"
   git commit -am "Bump version to ${tag_name}"
   git tag -a "${tag_name}" -m "${tag_name}"
   git push
