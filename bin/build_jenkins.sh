@@ -4,7 +4,7 @@ set -Eeuo pipefail
 readonly branch=${branch:?"which branch to use"}
 readonly create_gh_release=${create_gh_release:?"create Github release?"}
 readonly upload=${upload:?"upload artifact to github release?"}
-readonly update_appcast=${update_app_cast:?"update and push appcast?"}
+readonly update_appcast=${update_appcast:?"update and push appcast?"}
 
 main() {
   echo "### Releasing VimR started"
