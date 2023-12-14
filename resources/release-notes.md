@@ -1,5 +1,10 @@
 # Next
 
+* Removed parallel typesetting option since single threaded typesetting seems to be faster.
+* ...
+
+#  v0.45.1-20231211.195158
+
 * VimR now uses the release Neovim version 0.9.4 and is compatible with external Neovim binary version 0.9.x.
 * Minium macOS requirement is now Monterey (v12).
 * GH-1026: Bugfix: Scroll direction system setting is not respected when trackpad-scrolling.
