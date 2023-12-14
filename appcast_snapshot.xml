@@ -11,7 +11,7 @@
       <sparkle:version>20231214.165334</sparkle:version>
       <sparkle:shortVersionString>v0.45.2</sparkle:shortVersionString>
       <description><![CDATA[
-    <p>Release notes</p>
+      <ul><li>Removed parallel typesetting option since single threaded typesetting seems to be faster.</ul>
   ]]></description>
       <releaseNotesLink>
         https://github.com/qvacua/vimr/releases/tag/v0.45.2-20231214.165334
