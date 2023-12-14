@@ -2,10 +2,10 @@
 // - Job DSL
 // - AnsiColor
 
-def buildSnapshotJob = freeStyleJob('vimr_build')
+def releaseVimRJob = freeStyleJob('vimr_release')
 
-buildSnapshotJob.with {
-  description 'Builds a new snapshot or a new release'
+releaseVimRJob.with {
+  description 'Release a new version'
 
   logRotator {
     numToKeep(10)
@@ -40,7 +40,7 @@ buildSnapshotJob.with {
 
   publishers {
     archiveArtifacts {
-      pattern('build/Build/Products/Release/**')
+      pattern('build/Build/Products/Release/**, release.spec.sh, release-notes.temp.md, appcast*, build_release.temp.sh')
       onlyIfSuccessful()
     }
   }
