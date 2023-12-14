@@ -14,7 +14,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setUseInteractiveZsh(Bool)
     case setUseSnapshotUpdate(Bool)
     case setUseLiveResize(Bool)
-    case setDrawsParallel(Bool)
     case setNvimBinary(String)
   }
 
@@ -32,7 +31,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate
     self.useLiveResize = state.mainWindowTemplate.useLiveResize
-    self.drawsParallel = state.mainWindowTemplate.drawsParallel
     self.nvimBinary = state.mainWindowTemplate.nvimBinary
 
     super.init(frame: .zero)
@@ -47,13 +45,11 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
           || self.nvimBinary != state.mainWindowTemplate.nvimBinary
           || self.useSnapshotUpdate != state.useSnapshotUpdate
           || self.useLiveResize != state.mainWindowTemplate.useLiveResize
-          || self.drawsParallel != state.mainWindowTemplate.drawsParallel
         {
           self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
           self.nvimBinary = state.mainWindowTemplate.nvimBinary
           self.useSnapshotUpdate = state.useSnapshotUpdate
           self.useLiveResize = state.mainWindowTemplate.useLiveResize
-          self.drawsParallel = state.mainWindowTemplate.drawsParallel
 
           self.updateViews()
         }
@@ -67,13 +63,11 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useInteractiveZsh: Bool
   private var useSnapshotUpdate: Bool
   private var useLiveResize: Bool
-  private var drawsParallel: Bool
   private var nvimBinary: String = ""
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
-  private let drawsParallelCheckbox = NSButton(forAutoLayout: ())
   private let nvimBinaryField = NSTextField(forAutoLayout: ())
 
   @available(*, unavailable)
@@ -89,7 +83,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useSnapshotUpdateCheckbox.boolState = self.useSnapshotUpdate
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.useLiveResizeCheckbox.boolState = self.useLiveResize
-    self.drawsParallelCheckbox.boolState = self.drawsParallel
     self.nvimBinaryField.stringValue = self.nvimBinary
   }
 
@@ -134,19 +127,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
     """#)
 
-    let drawsParallelBox = self.drawsParallelCheckbox
-    self.configureCheckbox(
-      button: drawsParallelBox,
-      title: "Use Concurrent Rendering",
-      action: #selector(AdvancedPref.drawParallelAction(_:))
-    )
-
-    let drawsParallelInfo = self.infoTextField(markdown: #"""
-    VimR can compute the glyphs concurrently. This may result in faster rendering,\
-    depending on the situation. It will definitely result in higher CPU usage, e.g.\
-    when scrolling very fast.
-    """#)
-
     let nvimBinaryTitle = self.titleTextField(title: "NeoVim Binary:")
     let nvimBinaryField = self.nvimBinaryField
 
@@ -158,8 +138,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(useInteractiveZshInfo)
     self.addSubview(useLiveResize)
     self.addSubview(useLiveResizeInfo)
-    self.addSubview(drawsParallelBox)
-    self.addSubview(drawsParallelInfo)
     self.addSubview(nvimBinaryTitle)
     self.addSubview(nvimBinaryField)
 
@@ -173,13 +151,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     useLiveResizeInfo.autoPinEdge(.top, to: .bottom, of: useLiveResize, withOffset: 5)
     useLiveResizeInfo.autoPinEdge(.left, to: .left, of: useLiveResize)
 
-    drawsParallelBox.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
-    drawsParallelBox.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
-
-    drawsParallelInfo.autoPinEdge(.top, to: .bottom, of: drawsParallelBox, withOffset: 5)
-    drawsParallelInfo.autoPinEdge(.left, to: .left, of: drawsParallelBox)
-
-    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: drawsParallelInfo, withOffset: 18)
+    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
     useSnapshotUpdate.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
 
     useSnapshotUpdateInfo.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdate, withOffset: 5)
@@ -212,10 +184,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 extension AdvancedPref {
   @objc func useLiveResizeAction(_ sender: NSButton) {
     self.emit(.setUseLiveResize(sender.boolState))
-  }
-
-  @objc func drawParallelAction(_ sender: NSButton) {
-    self.emit(.setDrawsParallel(sender.boolState))
   }
 
   @objc func useInteractiveZshAction(_ sender: NSButton) {

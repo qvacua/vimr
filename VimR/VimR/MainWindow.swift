@@ -170,7 +170,6 @@ final class MainWindow: NSObject,
     self.linespacing = state.appearance.linespacing
     self.characterspacing = state.appearance.characterspacing
     self.usesLigatures = state.appearance.usesLigatures
-    self.drawsParallel = state.drawsParallel
 
     self.editorPosition = state.preview.editorPosition
     self.previewPosition = state.preview.previewPosition
@@ -209,7 +208,6 @@ final class MainWindow: NSObject,
     self.addViews(withTopInset: 0)
 
     self.neoVimView.usesLiveResize = state.useLiveResize
-    self.neoVimView.drawsParallel = self.drawsParallel
     self.neoVimView.delegate = self
     self.updateNeoVimAppearance()
 
@@ -432,11 +430,6 @@ final class MainWindow: NSObject,
 
         if self.neoVimView.usesLiveResize != state.useLiveResize {
           self.neoVimView.usesLiveResize = state.useLiveResize
-        }
-
-        if self.drawsParallel != state.drawsParallel {
-          self.drawsParallel = state.drawsParallel
-          self.neoVimView.drawsParallel = self.drawsParallel
         }
 
         if self.defaultFont != state.appearance.font

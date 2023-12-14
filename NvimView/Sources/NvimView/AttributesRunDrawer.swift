@@ -19,7 +19,6 @@ final class AttributesRunDrawer {
   }
 
   var usesLigatures: Bool
-  var drawsParallel = false
 
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0

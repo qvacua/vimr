@@ -83,10 +83,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
     didSet { self.markForRenderWholeView() }
   }
 
-  public var drawsParallel = false {
-    didSet { self.drawer.drawsParallel = self.drawsParallel }
-  }
-
   public var linespacing: CGFloat {
     get { self._linespacing }
 
