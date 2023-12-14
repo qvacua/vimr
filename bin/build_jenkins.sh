@@ -6,11 +6,26 @@ readonly create_gh_release=${create_gh_release:?"create Github release?"}
 readonly upload=${upload:?"upload artifact to github release?"}
 readonly update_appcast=${update_appcast:?"update and push appcast?"}
 readonly release_notes=${release_notes:?"release notes"}
+readonly is_snapshot=${is_snapshot:?"is snapshot?"}
+
+check_parameters() {
+  if [[ "${is_snapshot}" == false && -z "${marketing_version}" ]]; then
+    echo "### No marketing_version for a release version! Exiting"
+    exit 1
+  fi
+
+  if [[ "${create_gh_release}" == true && -z "${release_notes}" ]]; then
+    echo "### No release notes when creating github release! Exiting"
+    exit 1
+  fi
+}
 
 main() {
   echo "### Releasing VimR started"
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
+
+  check_parameters
 
   git submodule update --init
   git checkout "${branch}"
