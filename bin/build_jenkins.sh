@@ -26,6 +26,7 @@ main() {
   fi
   echo "### Using ${tag_name} as tag name"
   git checkout "${branch}"
+  git pull
   git commit -am "Bump version to ${tag_name}"
   git tag -a "${tag_name}" -m "${tag_name}"
   git push
