@@ -36,10 +36,6 @@ main() {
 
   echo "### Build VimR"
 
-  # FOR DEV
-  export create_gh_release=false
-  export upload=false
-
   release_spec_file=release.spec.sh ./bin/build_release.sh
 
   if [[ "${create_gh_release}" == false ]]; then
