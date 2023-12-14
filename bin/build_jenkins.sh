@@ -5,6 +5,7 @@ readonly branch=${branch:?"which branch to use"}
 readonly create_gh_release=${create_gh_release:?"create Github release?"}
 readonly upload=${upload:?"upload artifact to github release?"}
 readonly update_appcast=${update_appcast:?"update and push appcast?"}
+readonly release_notes=${release_notes:?"release notes"}
 
 main() {
   echo "### Releasing VimR started"
@@ -16,6 +17,9 @@ main() {
   git pull
 
   ./bin/set_new_versions.sh
+
+  echo "### Store release notes"
+  echo "${release_notes}" > release-notes.temp.md
 
   # commit and push the tag
   # get the marketing version to be used as tag
@@ -31,9 +35,6 @@ main() {
   git tag -a "${tag_name}" -m "${tag_name}"
   git push
   git push origin "${tag_name}"
-
-  echo "### Store release notes"
-  echo "${release_notes}" > release-notes.temp.md
 
   echo "### Build VimR"
 
