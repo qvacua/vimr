@@ -12,6 +12,8 @@ main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 
   git submodule update --init
+  git checkout "${branch}"
+  git pull
 
   ./bin/set_new_versions.sh
 
@@ -25,8 +27,6 @@ main() {
     tag_name="${marketing_version}-${bundle_version}"
   fi
   echo "### Using ${tag_name} as tag name"
-  git checkout "${branch}"
-  git pull
   git commit -am "Bump version to ${tag_name}"
   git tag -a "${tag_name}" -m "${tag_name}"
   git push
