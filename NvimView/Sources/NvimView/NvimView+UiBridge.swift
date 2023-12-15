@@ -91,14 +91,14 @@ extension NvimView {
       self.bridgeLogger.error("Could not convert \(value)")
       return
     }
+    
+    self.regionsToFlush.append(self.cursorRegion(for: self.ugrid.cursorPosition))
 
     gui.async {
       self.lastMode = self.mode
       self.mode = modeShape
       self.bridgeLogger.debug("\(self.lastMode) -> \(self.mode)")
       self.handleInputMethodSource()
-
-      self.markForRender(region: self.cursorRegion(for: self.ugrid.cursorPosition))
     }
   }
 
@@ -232,9 +232,7 @@ extension NvimView {
           recompute = true
 
         case "flush":
-          // FIXME: buffer up all the prior data
-          // self.markForRenderWholeView()
-          break
+          self.flush()
 
         case "tabline_update":
           self.tablineUpdate(innerArray)
@@ -401,6 +399,11 @@ extension NvimView {
         )
       })
   }
+  
+  private func flush() {
+    for region in self.regionsToFlush { self.markForRender(region: region) }
+    self.regionsToFlush.removeAll(keepingCapacity: true)
+  }
 
   private func doRawLineNu(data: [MessagePackValue]) -> Int {
     guard data.count == 5 else {
@@ -455,7 +458,7 @@ extension NvimView {
 
     if count > 0 {
       if row == self.ugrid.markedInfo?.position.row {
-        self.markForRender(region: Region(
+        self.regionsToFlush.append(Region(
           top: row, bottom: row,
           left: startCol, right: self.ugrid.size.width
         ))
@@ -466,11 +469,11 @@ extension NvimView {
         let rightBoundary = self.ugrid.rightBoundaryOfWord(
           at: Position(row: row, column: max(0, endCol - 1))
         )
-        self.markForRender(region: Region(
+        self.regionsToFlush.append(Region(
           top: row, bottom: row, left: leftBoundary, right: rightBoundary
         ))
       } else {
-        self.markForRender(region: Region(
+        self.regionsToFlush.append(Region(
           top: row, bottom: row, left: startCol, right: max(0, endCol - 1)
         ))
       }
@@ -526,7 +529,7 @@ extension NvimView {
     )
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
-    self.markForRender(region: scrollRegion)
+    self.regionsToFlush.append(scrollRegion)
     self.eventsSubject.onNext(.scroll)
 
     return min(0, top)
@@ -760,17 +763,17 @@ extension NvimView {
     self.setNeedsDisplay(self.rect(for: region))
   }
 
-  final func markForRender(row: Int, column: Int) {
-    self.bridgeLogger.debug("\(row):\(column)")
-    self.setNeedsDisplay(self.rect(forRow: row, column: column))
-  }
-
-  final func markForRender(position: Position) {
-    self.bridgeLogger.debug(position)
-    self.setNeedsDisplay(
-      self.rect(forRow: position.row, column: position.column)
-    )
-  }
+//  final func markForRender(row: Int, column: Int) {
+//    self.bridgeLogger.debug("\(row):\(column)")
+//    self.setNeedsDisplay(self.rect(forRow: row, column: column))
+//  }
+//
+//  final func markForRender(position: Position) {
+//    self.bridgeLogger.debug(position)
+//    self.setNeedsDisplay(
+//      self.rect(forRow: position.row, column: position.column)
+//    )
+//  }
 }
 
 extension NvimView {
