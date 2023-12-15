@@ -94,7 +94,7 @@ final class UiBridge {
     }
     process.environment = env
 
-    process .arguments = ["--embed"] + self.nvimArgs
+    process.arguments = ["--embed"] + self.nvimArgs
 
     self.log.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"

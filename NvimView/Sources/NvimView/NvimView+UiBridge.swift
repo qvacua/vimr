@@ -27,8 +27,7 @@ extension NvimView {
   }
 
   final func resize(_ value: MessagePackValue) {
-    guard let array = value.arrayValue
-    else {
+    guard let array = value.arrayValue else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
     }
@@ -54,9 +53,7 @@ extension NvimView {
   final func optionSet(_ values: [MessagePackValue]) {
     var options: [MessagePackValue: MessagePackValue] = [:]
     for index in 1..<values.count {
-      guard let option_pair = values[index].arrayValue,
-            option_pair.count == 2
-      else {
+      guard let option_pair = values[index].arrayValue, option_pair.count == 2 else {
         self.bridgeLogger.error("Could not convert \(values)")
         continue
       }
@@ -91,7 +88,7 @@ extension NvimView {
       self.bridgeLogger.error("Could not convert \(value)")
       return
     }
-    
+
     self.regionsToFlush.append(self.cursorRegion(for: self.ugrid.cursorPosition))
 
     gui.async {
@@ -141,8 +138,7 @@ extension NvimView {
 
         case "grid_line":
           for index in 1..<renderEntry.count {
-            guard let grid_line = renderEntry[index].arrayValue
-            else {
+            guard let grid_line = renderEntry[index].arrayValue else {
               self.bridgeLogger.error("Could not convert \(value)")
               return
             }
@@ -331,9 +327,7 @@ extension NvimView {
     }
 
     if event == .dirchanged {
-      guard array.count > 1,
-            array[1].stringValue != nil
-      else {
+      guard array.count > 1, array[1].stringValue != nil else {
         self.bridgeLogger.error("Could not convert \(array)")
         return
       }
@@ -346,16 +340,13 @@ extension NvimView {
       return
     }
 
-    guard array.count > 1,
-          let bufferHandle = array[1].intValue
-    else {
+    guard array.count > 1, let bufferHandle = array[1].intValue else {
       self.bridgeLogger.error("Could not convert \(array)")
       return
     }
 
     if event == .bufmodifiedset {
-      guard array.count > 2
-      else {
+      guard array.count > 2 else {
         self.bridgeLogger.error("Could not convert \(array)")
         return
       }
@@ -393,13 +384,10 @@ extension NvimView {
       .wait(onCompleted: { [weak self] in
         self?.bridgeLogger.fault("Successfully force-closed the bridge.")
       }, onError: { [weak self] in
-        self?.bridgeLogger.fault(
-          "There was an error force-closing" +
-            " the bridge: \($0)"
-        )
+        self?.bridgeLogger.fault("There was an error force-closing the bridge: \($0)")
       })
   }
-  
+
   private func flush() {
     for region in self.regionsToFlush { self.markForRender(region: region) }
     self.regionsToFlush.removeAll(keepingCapacity: true)

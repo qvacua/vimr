@@ -348,7 +348,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   var lastMode = CursorModeShape.normal
 
   var regionsToFlush = [Region]()
-  
+
   var framerateView: SKView?
 
   // MARK: - Private
