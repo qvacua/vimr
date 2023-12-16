@@ -1,7 +1,10 @@
 # Next
 
+* Add `enable-debug-menu` preferences item to enable Debug menu item.
+
+# v0.45.2-20231214.165334
+
 * Removed parallel typesetting option since single threaded typesetting seems to be faster.
-* ...
 
 #  v0.45.1-20231211.195158
 
