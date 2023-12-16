@@ -297,9 +297,7 @@ extension NvimView {
     self.bridgeLogger.debug()
 
     self.ugrid.clear()
-    gui.async {
-      self.markForRenderWholeView()
-    }
+    self.markForRenderWholeView()
   }
 
   private func modeChange(_ value: MessagePackValue) {
@@ -321,12 +319,10 @@ extension NvimView {
 
     self.regionsToFlush.append(self.cursorRegion(for: self.ugrid.cursorPosition))
 
-    gui.async {
-      self.lastMode = self.mode
-      self.mode = modeShape
-      self.bridgeLogger.debug("\(self.lastMode) -> \(self.mode)")
-      self.handleInputMethodSource()
-    }
+    self.lastMode = self.mode
+    self.mode = modeShape
+    self.bridgeLogger.debug("\(self.lastMode) -> \(self.mode)")
+    self.handleInputMethodSource()
   }
 
   private func modeInfoSet(_ value: MessagePackValue) {
@@ -572,38 +568,8 @@ extension NvimView {
     let theme = Theme(values)
     self.bridgeLogger.debug(theme)
 
-    gui.async {
-      self.theme = theme
-      self.eventsSubject.onNext(.colorschemeChanged(theme))
-    }
-  }
-
-  private func defaultColorsChanged(_ value: MessagePackValue) {
-    guard let values = MessagePackUtils.array(
-      from: value, ofSize: 3, conversion: { $0.intValue }
-    ) else {
-      self.bridgeLogger.error("Could not convert \(value)")
-      return
-    }
-
-    self.bridgeLogger.debug(values)
-
-    let attrs = CellAttributes(
-      fontTrait: [],
-      foreground: values[0],
-      background: values[1],
-      special: values[2],
-      reverse: false
-    )
-    gui.async {
-      self.cellAttributesCollection.set(
-        attributes: attrs,
-        for: CellAttributesCollection.defaultAttributesId
-      )
-      self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
-        attrs.background
-      )
-    }
+    self.theme = theme
+    self.eventsSubject.onNext(.colorschemeChanged(theme))
   }
 
   private func setDirty(with value: MessagePackValue) {
@@ -660,9 +626,7 @@ extension NvimView {
     self.bridgeLogger.debug("AttrId: \(id): \(attrs)")
 
     // FIXME: seems to not work well unless not async
-    // gui.async {
     self.cellAttributesCollection.set(attributes: attrs, for: id)
-    // }
   }
 
   private func defaultColors(with value: MessagePackValue) {
@@ -744,7 +708,7 @@ extension NvimView {
       return TabEntry(title: name, isSelected: tabpage == curTab, tabpage: tabpage)
     }
 
-    gui.async { self.tabBar?.update(tabRepresentatives: self.tabEntries) }
+    self.tabBar?.update(tabRepresentatives: self.tabEntries)
   }
 
   private func winViewportUpdate(_: [MessagePackValue]) {
