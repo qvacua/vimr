@@ -5,8 +5,10 @@ readonly branch=${branch:?"which branch to use"}
 readonly create_gh_release=${create_gh_release:?"create Github release?"}
 readonly upload=${upload:?"upload artifact to github release?"}
 readonly update_appcast=${update_appcast:?"update and push appcast?"}
-readonly release_notes=${release_notes:?"release notes"}
-readonly is_snapshot=${is_snapshot:?"is snapshot?"}
+
+# release.spec.sh will declare these two variables
+release_notes=${release_notes:?"release notes"}
+is_snapshot=${is_snapshot:?"is snapshot?"}
 
 check_parameters() {
   if [[ "${is_snapshot}" == false && -z "${marketing_version}" ]]; then
