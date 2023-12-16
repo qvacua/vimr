@@ -67,9 +67,6 @@ extension NvimView {
 
   private func launchNeoVim(_ size: Size) {
     self.log.info("=== Starting neovim...")
-    let sockPath = self.bridge.listenAddress
-
-    self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
     let inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe
     do {

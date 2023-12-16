@@ -71,9 +71,6 @@ final class UiBridge {
 
   private func launchNvimUsingLoginShellEnv() throws -> (Pipe, Pipe, Pipe) {
     var env = self.envDict
-    env["NVIM_LISTEN_ADDRESS"] = self.listenAddress
-
-    self.log.debug("Socket: \(self.listenAddress)")
 
     let inPipe = Pipe()
     let outPipe = Pipe()
@@ -131,11 +128,6 @@ final class UiBridge {
   private var initialHeight = 20
 
   private let disposeBag = DisposeBag()
-
-  var listenAddress: String {
-    URL(fileURLWithPath: NSTemporaryDirectory())
-      .appendingPathComponent("vimr_\(self.uuid).sock").path
-  }
 }
 
 private let timeout = 5
