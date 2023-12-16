@@ -19,7 +19,6 @@ class Document: NSDocument, NSWindowDelegate {
     self.nvimView.font = NSFont(name: "Fira Code", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
-    self.nvimView.drawsParallel = true
 
     self.nvimView
       .events
