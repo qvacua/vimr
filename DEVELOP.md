@@ -8,6 +8,12 @@ clean=false for_dev=true ./bin/build_nvimserver.sh
 
 You can set `clean=true` if you want to clean the existing build.
 
+### How to enable the Debug menu in Release build
+
+```bash
+defaults write com.qvacua.VimR enable-debug-menu 1
+```
+
 ## How to update gettext (libintl)
 
 Update `./bin/neovim/resources/build_info../bin/neovim/resources/buildInfo.json`

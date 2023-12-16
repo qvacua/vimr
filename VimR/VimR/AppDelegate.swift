@@ -157,6 +157,7 @@ extension AppDelegate {
     #if DEBUG
       NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
     #else
+      // defaults write com.qvacua.VimR enable-debug-menu 1
       if UserDefaults.standard.bool(forKey: "enable-debug-menu") {
         NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
       }
