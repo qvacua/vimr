@@ -381,7 +381,6 @@ def parse_function(f):
     )
 
     if "deprecated_since" in f:
-        print(f"deprecated {f}")
         result = '  @available(*, deprecated, message: "This method has been deprecated.")\n' + result
 
     return result
