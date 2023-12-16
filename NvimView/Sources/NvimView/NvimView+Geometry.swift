@@ -20,6 +20,10 @@ extension NvimView {
 
     return cursorRegion
   }
+  
+  func regionForRow(at: Position) -> Region {
+    Region(top: at.row, bottom: at.row, left: at.column, right: ugrid.size.width)
+  }
 
   func region(for rect: CGRect) -> Region {
     let cellWidth = self.cellSize.width
