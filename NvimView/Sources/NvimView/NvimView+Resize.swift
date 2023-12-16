@@ -123,6 +123,7 @@ extension NvimView {
               throw RxNeovimApi.Error.exception(message: "Incompatible neovim version.")
             }
 
+            // swiftformat:disable all
             return self.api.exec2(src: """
             let g:gui_vimr = 1
             autocmd ExitPre * call rpcnotify(\(channel), 'autocommand', 'exitpre')
@@ -130,6 +131,7 @@ extension NvimView {
             autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
             autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
             """, opts: [:], errWhenBlocked: false)
+            // swiftformat:enable all
               .asCompletable()
           }
       )

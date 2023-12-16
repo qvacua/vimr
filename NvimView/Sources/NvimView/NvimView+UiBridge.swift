@@ -696,7 +696,7 @@ extension NvimView {
     )
   }
 
-  private  func updateMenu() {
+  private func updateMenu() {
     self.bridgeLogger.debug()
   }
 
