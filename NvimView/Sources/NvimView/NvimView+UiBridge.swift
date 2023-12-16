@@ -246,9 +246,11 @@ extension NvimView {
       self.newCurrentBuffer(bufferHandle)
     }
   }
+}
 
-  // MARK: Private
+// MARK: Private
 
+extension NvimView {
   private func optionSet(_ value: MessagePackValue) {
     guard let options = value.dictionaryValue else {
       self.bridgeLogger.error("Could not convert \(value)")
