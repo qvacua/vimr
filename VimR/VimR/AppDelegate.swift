@@ -156,6 +156,10 @@ extension AppDelegate {
 
     #if DEBUG
       NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
+    #else
+      if UserDefaults.standard.bool(forKey: "enable-debug-menu") {
+        NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
+      }
     #endif
   }
 
