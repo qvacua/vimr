@@ -1,8 +1,10 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+readonly clean=${clean:?"true or false"}
+
 build_nvimserver_bin() {
-  clean=true ./bin/neovim/bin/build_neovim.sh
+  ./bin/neovim/bin/build_neovim.sh
 }
 
 main() {

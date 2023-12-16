@@ -50,7 +50,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -82,7 +82,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -158,7 +158,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -256,7 +256,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -290,7 +290,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -320,7 +320,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -356,7 +356,7 @@ extension RxNeovimApi {
         .bool(strict_indexing),
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -458,7 +458,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -490,7 +490,7 @@ extension RxNeovimApi {
         .int(Int64(index)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -522,7 +522,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -552,7 +552,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -584,7 +584,7 @@ extension RxNeovimApi {
         .string(mode),
     ]
 
-    func transform(_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] {
+    let transform = { (_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] in
       guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
         throw RxNeovimApi.Error.conversion(type: [Dictionary<String, RxNeovimApi.Value>].self)
       }
@@ -720,7 +720,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -774,7 +774,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -828,7 +828,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -860,7 +860,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -898,7 +898,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -930,7 +930,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -962,7 +962,7 @@ extension RxNeovimApi {
         fun,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -994,7 +994,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1026,7 +1026,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -1156,7 +1156,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1188,7 +1188,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1221,7 +1221,7 @@ extension RxNeovimApi {
         .bool(output),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -1252,7 +1252,7 @@ extension RxNeovimApi {
         .string(command),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -1285,7 +1285,7 @@ extension RxNeovimApi {
         args,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1316,7 +1316,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -1384,7 +1384,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -1417,7 +1417,7 @@ extension RxNeovimApi {
         .bool(rgb),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1450,7 +1450,7 @@ extension RxNeovimApi {
         .bool(rgb),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1510,7 +1510,7 @@ extension RxNeovimApi {
         .int(Int64(index)),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -1601,7 +1601,7 @@ extension RxNeovimApi {
         .bool(include_end),
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -1669,7 +1669,7 @@ extension RxNeovimApi {
         value,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1702,7 +1702,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1737,7 +1737,7 @@ extension RxNeovimApi {
         value,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1770,7 +1770,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1805,7 +1805,7 @@ extension RxNeovimApi {
         value,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1838,7 +1838,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1871,7 +1871,7 @@ extension RxNeovimApi {
         value,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1902,7 +1902,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -1932,7 +1932,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -1962,7 +1962,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -1991,7 +1991,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -2027,7 +2027,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -2065,7 +2065,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2103,7 +2103,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -2137,7 +2137,7 @@ extension RxNeovimApi {
         .int(Int64(id)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -2177,7 +2177,7 @@ extension RxNeovimApi {
         .int(Int64(col_end)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -2261,7 +2261,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2316,7 +2316,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -2348,7 +2348,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -2402,7 +2402,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2434,7 +2434,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2492,7 +2492,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2548,7 +2548,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Window] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
@@ -2580,7 +2580,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -2660,7 +2660,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Window {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
       guard let result = (RxNeovimApi.Window(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Window.self)
       }
@@ -2690,7 +2690,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -2720,7 +2720,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -2970,7 +2970,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -3002,7 +3002,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -3128,7 +3128,7 @@ extension RxNeovimApi {
         .string(keys),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -3196,7 +3196,7 @@ extension RxNeovimApi {
         .bool(special),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -3228,7 +3228,7 @@ extension RxNeovimApi {
         args,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -3262,7 +3262,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -3292,7 +3292,7 @@ extension RxNeovimApi {
         .string(text),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -3321,7 +3321,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -3353,7 +3353,7 @@ extension RxNeovimApi {
         .bool(all),
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -3404,7 +3404,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -3477,7 +3477,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -3553,7 +3553,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -3698,7 +3698,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Buffer] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Buffer] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Buffer(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Buffer].self)
       }
@@ -3727,7 +3727,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Buffer {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
       guard let result = (RxNeovimApi.Buffer(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Buffer.self)
       }
@@ -3778,7 +3778,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Window] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
@@ -3807,7 +3807,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Window {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
       guard let result = (RxNeovimApi.Window(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Window.self)
       }
@@ -3861,7 +3861,7 @@ extension RxNeovimApi {
         .bool(scratch),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Buffer {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
       guard let result = (RxNeovimApi.Buffer(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Buffer.self)
       }
@@ -3893,7 +3893,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -3946,7 +3946,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Tabpage] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Tabpage] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Tabpage(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Tabpage].self)
       }
@@ -3975,7 +3975,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Tabpage {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
       guard let result = (RxNeovimApi.Tabpage(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Tabpage.self)
       }
@@ -4031,7 +4031,7 @@ extension RxNeovimApi {
         .int(Int64(phase)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -4133,7 +4133,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -4162,7 +4162,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4192,7 +4192,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4222,7 +4222,7 @@ extension RxNeovimApi {
         .map(dict.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4269,7 +4269,7 @@ extension RxNeovimApi {
         .string(mode),
     ]
 
-    func transform(_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] {
+    let transform = { (_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] in
       guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
         throw RxNeovimApi.Error.conversion(type: [Dictionary<String, RxNeovimApi.Value>].self)
       }
@@ -4350,7 +4350,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4410,7 +4410,7 @@ extension RxNeovimApi {
         .int(Int64(chan)),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4439,7 +4439,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4469,7 +4469,7 @@ extension RxNeovimApi {
         calls,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4498,7 +4498,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4528,7 +4528,7 @@ extension RxNeovimApi {
         .int(Int64(pid)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4558,7 +4558,7 @@ extension RxNeovimApi {
         .int(Int64(pid)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4616,7 +4616,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -4648,7 +4648,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4680,7 +4680,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4712,7 +4712,7 @@ extension RxNeovimApi {
         .map(opts.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4764,7 +4764,7 @@ extension RxNeovimApi {
         .string(expr),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4796,7 +4796,7 @@ extension RxNeovimApi {
         args,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4830,7 +4830,7 @@ extension RxNeovimApi {
         args,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -4864,7 +4864,7 @@ extension RxNeovimApi {
         .bool(highlight),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4898,7 +4898,7 @@ extension RxNeovimApi {
         .map(config.mapToDict({ (Value.string($0), $1) })),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Window {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
       guard let result = (RxNeovimApi.Window(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Window.self)
       }
@@ -4952,7 +4952,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -4982,7 +4982,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Buffer {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
       guard let result = (RxNeovimApi.Buffer(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Buffer.self)
       }
@@ -5036,7 +5036,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -5090,7 +5090,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5144,7 +5144,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5200,7 +5200,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -5280,7 +5280,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -5310,7 +5310,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Tabpage {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
       guard let result = (RxNeovimApi.Tabpage(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Tabpage.self)
       }
@@ -5340,7 +5340,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5370,7 +5370,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -5448,7 +5448,7 @@ extension RxNeovimApi {
         fun,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -5503,7 +5503,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5540,7 +5540,7 @@ extension RxNeovimApi {
         .bool(strict_indexing),
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -5604,7 +5604,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -5635,7 +5635,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -5691,7 +5691,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -5724,7 +5724,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -5755,7 +5755,7 @@ extension RxNeovimApi {
         .string(command),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -5786,7 +5786,7 @@ extension RxNeovimApi {
         .int(Int64(buffer.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5856,7 +5856,7 @@ extension RxNeovimApi {
         .int(Int64(col_end)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -5912,7 +5912,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -5945,7 +5945,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6005,7 +6005,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6063,7 +6063,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Window] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
@@ -6096,7 +6096,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6127,7 +6127,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Window {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
       guard let result = (RxNeovimApi.Window(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Window.self)
       }
@@ -6158,7 +6158,7 @@ extension RxNeovimApi {
         .int(Int64(tabpage.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }
@@ -6213,7 +6213,7 @@ extension RxNeovimApi {
         .int(Int64(height)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6271,7 +6271,7 @@ extension RxNeovimApi {
         .string(keys),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -6308,7 +6308,7 @@ extension RxNeovimApi {
         .bool(special),
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -6339,7 +6339,7 @@ extension RxNeovimApi {
         .string(text),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -6369,7 +6369,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [String] {
+    let transform = { (_ value: Value) throws -> [String] in
       guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
@@ -6422,7 +6422,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> String {
+    let transform = { (_ value: Value) throws -> String in
       guard let result = (value.stringValue) else {
         throw RxNeovimApi.Error.conversion(type: String.self)
       }
@@ -6498,7 +6498,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6529,7 +6529,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -6628,7 +6628,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Buffer] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Buffer] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Buffer(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Buffer].self)
       }
@@ -6658,7 +6658,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Buffer {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
       guard let result = (RxNeovimApi.Buffer(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Buffer.self)
       }
@@ -6711,7 +6711,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Window] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
@@ -6741,7 +6741,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Window {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
       guard let result = (RxNeovimApi.Window(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Window.self)
       }
@@ -6794,7 +6794,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> [RxNeovimApi.Tabpage] {
+    let transform = { (_ value: Value) throws -> [RxNeovimApi.Tabpage] in
       guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Tabpage(v) })) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Tabpage].self)
       }
@@ -6824,7 +6824,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Tabpage {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
       guard let result = (RxNeovimApi.Tabpage(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Tabpage.self)
       }
@@ -6924,7 +6924,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -6954,7 +6954,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> {
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
         throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
       }
@@ -6984,7 +6984,7 @@ extension RxNeovimApi {
         
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -7038,7 +7038,7 @@ extension RxNeovimApi {
         .string(expr),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -7071,7 +7071,7 @@ extension RxNeovimApi {
         args,
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -7102,7 +7102,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Buffer {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
       guard let result = (RxNeovimApi.Buffer(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Buffer.self)
       }
@@ -7133,7 +7133,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -7189,7 +7189,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -7245,7 +7245,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Int {
+    let transform = { (_ value: Value) throws -> Int in
       guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
@@ -7303,7 +7303,7 @@ extension RxNeovimApi {
         .string(name),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Value {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
       guard let result = (Optional(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
@@ -7334,7 +7334,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> [Int] {
+    let transform = { (_ value: Value) throws -> [Int] in
       guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
@@ -7365,7 +7365,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> RxNeovimApi.Tabpage {
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
       guard let result = (RxNeovimApi.Tabpage(value)) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Tabpage.self)
       }
@@ -7396,7 +7396,7 @@ extension RxNeovimApi {
         .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: Value) throws -> Bool {
+    let transform = { (_ value: Value) throws -> Bool in
       guard let result = (value.boolValue) else {
         throw RxNeovimApi.Error.conversion(type: Bool.self)
       }

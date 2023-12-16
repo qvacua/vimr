@@ -61,7 +61,7 @@ func_template = Template('''\
         ${params}
     ]
 
-    func transform(_ value: Value) throws -> ${result_type} {
+    let transform = { (_ value: Value) throws -> ${result_type} in
       guard let result = (${return_value}) else {
         throw RxNeovimApi.Error.conversion(type: ${result_type}.self)
       }
