@@ -163,40 +163,7 @@ extension NvimView {
 
     self.bridgeLogger.debug("\(event): \(array)")
 
-    if event == .vimenter {
-      Completable
-        .empty()
-        .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
-        .andThen(
-          Completable.create { completable in
-            self.rpcEventSubscriptionCondition.wait(for: 5)
-            self.bridgeLogger.debug("RPC events subscription done.")
-
-            completable(.completed)
-            return Disposables.create()
-          }
-        )
-        .andThen(
-          {
-            let ginitPath = URL(fileURLWithPath: NSHomeDirectory())
-              .appendingPathComponent(".config/nvim/ginit.vim").path
-            let loadGinit = FileManager.default.fileExists(atPath: ginitPath)
-            if loadGinit {
-              self.bridgeLogger.debug("Source'ing ginit.vim")
-              return self.api.command(command: "source \(ginitPath.shellEscapedPath)")
-            } else {
-              return .empty()
-            }
-          }()
-        )
-        // .andThen(self.bridge.notifyReadinessForRpcEvents())
-        .subscribe(onCompleted: { [weak self] in
-          self?.log.debug("Notified the NvimServer to fire GUIEnter")
-        })
-        .disposed(by: self.disposeBag)
-
-      return
-    }
+    // vimenter is handled in NvimView.swift
 
     if event == .exitpre {
       self.stop()

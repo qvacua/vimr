@@ -140,22 +140,6 @@ extension NvimView {
           "rgb": true,
         ])
       )
-      .andThen(
-        self.sourceFileUrls.reduce(.empty()) { prev, url in
-          prev.andThen(
-            self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
-              .map { retval in
-                guard let output = retval["output"]?.stringValue else {
-                  throw RxNeovimApi.Error
-                    .exception(message: "Could not convert values to output.")
-                }
-                return output
-              }
-              .asCompletable()
-          )
-        }
-      )
-      .andThen(self.api.subscribe(event: NvimView.rpcEventName))
       .wait()
   }
 

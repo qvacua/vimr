@@ -187,7 +187,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           // This is the only request sent from Neovim to the UI, afaics.
           guard method == "vimenter" else { break }
           self?.log.debug("Processing blocking vimenter request")
-          self?.setupAutocmdsAndSendResponse(forMsgid: msgid)
+          self?.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
         case let .notification(method, params):
           self?.log.trace("NOTIFICATION: \(method): \(params)")
@@ -356,7 +356,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
 
-  private func setupAutocmdsAndSendResponse(forMsgid msgid: UInt32) {
+  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) {
     self.api.getApiInfo(errWhenBlocked: false)
       .flatMapCompletable { value in
         guard let info = value.arrayValue,
@@ -378,8 +378,43 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         """, opts: [:], errWhenBlocked: false)
         // swiftformat:enable all
           .asCompletable()
+          .andThen(self.api.subscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
+          .andThen(
+            self.sourceFileUrls.reduce(.empty()) { prev, url in
+              prev.andThen(
+                self.api.exec2(
+                  src: "source \(url.shellEscapedPath)",
+                  opts: ["output": true],
+                  errWhenBlocked: false
+                )
+                .map { retval in
+                  guard let output = retval["output"]?.stringValue else {
+                    throw RxNeovimApi.Error
+                      .exception(message: "Could not convert values to output.")
+                  }
+                  return output
+                }
+                .asCompletable()
+              )
+            }
+          )
           .andThen(
             self.api.sendResponse(msgid: msgid, error: .nil, result: .nil)
+          )
+          .andThen(
+            {
+              let ginitPath = URL(fileURLWithPath: NSHomeDirectory())
+                .appendingPathComponent(".config/nvim/ginit.vim").path
+              if FileManager.default.fileExists(atPath: ginitPath) {
+                self.bridgeLogger.debug("Source'ing ginit.vim")
+                return self.api.command(
+                  command: "source \(ginitPath.shellEscapedPath)",
+                  expectsReturnValue: false
+                )
+              } else {
+                return .empty()
+              }
+            }()
           )
       }
       .subscribe().disposed(by: self.disposeBag)
