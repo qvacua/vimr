@@ -406,26 +406,15 @@ extension NvimView {
     guard let _ /* grid */ = data[0].intValue,
           let row = data[1].intValue,
           let startCol = data[2].intValue,
-          let chunk = data[3].arrayValue?.compactMap({
-            arg -> UUpdate? in
-            guard arg != nil,
-                  let argArray = arg.arrayValue
-            else {
-              return nil
-            }
-            var string = ""
-            var attrId: Int? = nil
-            var repeats: Int? = nil
-            if argArray.count > 0, arg[0] != nil, arg[0]?.stringValue != nil {
-              string = arg[0]!.stringValue!
-            }
-            if argArray.count > 1, arg[1] != nil, arg[1]?.intValue != nil {
-              attrId = arg[1]!.intValue!
-            }
-            if argArray.count > 2, arg[2] != nil, arg[2]?.intValue != nil {
-              repeats = arg[2]!.intValue!
-            }
-            return UUpdate(string: string, attrId: attrId, repeats: repeats)
+          let chunk = data[3].arrayValue?.compactMap({ arg -> UUpdate? in
+            guard let argArray = arg.arrayValue else { return nil }
+            var uupdate = UUpdate(string: "", attrId: nil, repeats: nil)
+
+            if argArray.count > 0, let str = arg[0]?.stringValue { uupdate.string = str }
+            if argArray.count > 1, let attrId = arg[1]?.intValue { uupdate.attrId = attrId }
+            if argArray.count > 2, let repeats = arg[2]?.intValue { uupdate.repeats = repeats }
+
+            return uupdate
           }),
           // wrap is informational, not required for correct functionality
           let _ /* wrap */ = data[4].boolValue
@@ -441,14 +430,8 @@ extension NvimView {
       )
     #endif
 
-    let count = chunk.count
-    let endCol = self.ugrid.updateNu(
-      row: row,
-      startCol: startCol,
-      chunk: chunk
-    )
-
-    if count > 0 {
+    let endCol = self.ugrid.updateNu(row: row, startCol: startCol, chunk: chunk)
+    if chunk.count > 0 {
       if row == self.ugrid.markedInfo?.position.row {
         self.regionsToFlush.append(Region(
           top: row, bottom: row,
