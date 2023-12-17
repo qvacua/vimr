@@ -63,16 +63,6 @@ final class UGrid: CustomStringConvertible, Codable {
     try container.encode(self.cells, forKey: .cells)
   }
 
-  #if DEBUG
-    func dump() throws {
-      let encoder = JSONEncoder()
-      encoder.outputFormatting = .prettyPrinted
-
-      let data = try encoder.encode(self)
-      try data.write(to: URL(fileURLWithPath: "/tmp/ugrid.dump.json"))
-    }
-  #endif
-
   var description: String {
     let result = "UGrid.flatCharIndex:\n" + self.cells.reduce("") { result, row in
       result + "(\(row[0].flatCharIndex...row[self.size.width - 1].flatCharIndex)), "
@@ -358,11 +348,8 @@ final class UGrid: CustomStringConvertible, Codable {
 
   // marked text insert into cell directly
   // marked text always following cursor position
-  func updateMark(
-    markedText: String,
-    selectedRange: NSRange
-  ) {
-    assert(Thread.isMainThread, "should occur on main thread!")
+  func updateMark( markedText: String, selectedRange: NSRange ) {
+    assert(Thread.isMainThread)
     var selectedRangeByCell = selectedRange
     let markedTextArray: [String] = markedText.enumerated().reduce(into: []) { array, pair in
       array.append(String(pair.element))
@@ -402,6 +389,18 @@ final class UGrid: CustomStringConvertible, Codable {
   }
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
+}
+
+extension UGrid {
+  func dump() throws {
+    #if DEBUG
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = .prettyPrinted
+
+      let data = try encoder.encode(self)
+      try data.write(to: URL(fileURLWithPath: "/tmp/ugrid.dump.json"))
+    #endif
+  }
 }
 
 private let clearString = " "
