@@ -14,10 +14,11 @@ extension NvimView {
 
     if self.isInitialResize {
       self.isInitialResize = false
-      self.launchNeoVim(self.discreteSize(size: newSize))
-      // FIXME: not clear why this is needed but otherwise
-      // grid is too large
-      self.resizeNeoVimUi(to: newSize)
+
+      let size = self.discreteSize(size: newSize)
+      self.ugrid.resize(size)
+      self.launchNeoVim(size)
+
       return
     }
 
@@ -67,9 +68,6 @@ extension NvimView {
 
   private func launchNeoVim(_ size: Size) {
     self.log.info("=== Starting neovim...")
-    let sockPath = self.bridge.listenAddress
-
-    self.log.info("NVIM_LISTEN_ADDRESS=\(sockPath)")
 
     let inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe
     do {
@@ -123,6 +121,7 @@ extension NvimView {
               throw RxNeovimApi.Error.exception(message: "Incompatible neovim version.")
             }
 
+            // swiftformat:disable all
             return self.api.exec2(src: """
             let g:gui_vimr = 1
             autocmd ExitPre * call rpcnotify(\(channel), 'autocommand', 'exitpre')
@@ -130,6 +129,7 @@ extension NvimView {
             autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
             autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
             """, opts: [:], errWhenBlocked: false)
+            // swiftformat:enable all
               .asCompletable()
           }
       )
@@ -141,22 +141,6 @@ extension NvimView {
           "rgb": true,
         ])
       )
-      .andThen(
-        self.sourceFileUrls.reduce(.empty()) { prev, url in
-          prev.andThen(
-            self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
-              .map { retval in
-                guard let output = retval["output"]?.stringValue else {
-                  throw RxNeovimApi.Error
-                    .exception(message: "Could not convert values to output.")
-                }
-                return output
-              }
-              .asCompletable()
-          )
-        }
-      )
-      .andThen(self.api.subscribe(event: NvimView.rpcEventName))
       .wait()
   }
 

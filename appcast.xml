@@ -6,28 +6,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.1-20231211.195158</title>
+      <title>v0.45.2-20231214.165334</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231211.195158</sparkle:version>
-      <sparkle:shortVersionString>v0.45.1</sparkle:shortVersionString>
+      <sparkle:version>20231214.165334</sparkle:version>
+      <sparkle:shortVersionString>v0.45.2</sparkle:shortVersionString>
       <description><![CDATA[
-    <ul>
-<li>VimR now uses the release Neovim version 0.9.4 and is compatible with external Neovim binary version 0.9.x.</li>
-<li>Minium macOS requirement is now Monterey (v12).</li>
-<li>GH-1026: Bugfix: Scroll direction system setting is not respected when trackpad-scrolling.</li>
-<li>GH-1022: Bugfix: Custom Neovim binary setting is not stored correctly and the alert for incompatible version does not show up.</li>
-<li>Dependencies updates:</li>
-<li>sparkle-project/Sparkle@2.5.1</li>
-<li>Removed: Kitura/BlueSocket</li>
-</ul>
+      <ul><li>Removed parallel typesetting option since single threaded typesetting seems to be faster.</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.1-20231211.195158
+        https://github.com/qvacua/vimr/releases/tag/v0.45.2-20231214.165334
       </releaseNotesLink>
-      <pubDate>2023-12-11T19:59:19.895765</pubDate>
+      <pubDate>2023-12-14T16:58:24.969789</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.1-20231211.195158/VimR-v0.45.1.tar.bz2"
-                 sparkle:edSignature="QxwHFQTpmHq8APIKPH1st0MP0jCU066XSZqd0q92xciaXal7DQnWqPvkEWQYi7km2kPIXw8usoP5Hnjkm9RrBw==" length="17198035"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.2-20231214.165334/VimR-v0.45.2.tar.bz2"
+                 sparkle:edSignature="bUnHDedEoHGMwcxa0LwxO8jgeLiZVW74CV/fsQLzyB7Aq/YsJ6ZzZw57OaCYUyPMgDkyc8HXRYNTOcWYYn9ZCg==" length="17192229"
                  type="application/octet-stream"/>
     </item>
   </channel>

@@ -305,7 +305,6 @@ extension MainWindow {
     var fileBrowserShowHidden = false
 
     var useLiveResize = false
-    var drawsParallel = false
 
     var isTemporarySession = false
 
@@ -357,7 +356,6 @@ extension MainWindow {
       case nvimBinary = "nvim-binary"
 
       case useLiveResize = "use-live-resize"
-      case drawsParallel = "draws-parallel"
       case isShowHidden = "is-show-hidden"
       case customMarkdownProcessor = "custom-markdown-processor"
 
@@ -386,10 +384,6 @@ extension MainWindow {
       self.useLiveResize = try container.decode(
         forKey: .useLiveResize,
         default: State.default.useLiveResize
-      )
-      self.drawsParallel = try container.decode(
-        forKey: .drawsParallel,
-        default: State.default.drawsParallel
       )
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
@@ -464,7 +458,6 @@ extension MainWindow {
       try container.encode(self.isToolButtonsVisible, forKey: .toolButtonsVisible)
       try container.encode(NSStringFromRect(self.frame), forKey: .frame)
       try container.encode(self.useLiveResize, forKey: .useLiveResize)
-      try container.encode(self.drawsParallel, forKey: .drawsParallel)
       try container.encode(self.customMarkdownProcessor, forKey: .customMarkdownProcessor)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)

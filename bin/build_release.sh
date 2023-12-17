@@ -128,9 +128,12 @@ main() {
     prepare_bin
     build_release
 
-    if [[ "${create_gh_release}" == true ]]; then
-      create_gh_release
+    if [[ "${create_gh_release}" == false ]]; then
+      echo "### No github release, exiting"
+      exit 0
     fi
+
+    create_gh_release
 
     if [[ "${upload}" == true ]]; then
       # Give GitHub some time.

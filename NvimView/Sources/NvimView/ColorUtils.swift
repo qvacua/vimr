@@ -43,5 +43,5 @@ final class ColorUtils {
   }
 }
 
-private let colorCache = FifoCache<Int, NSColor>(count: 500, queueQos: .userInteractive)
-private let cgColorCache = FifoCache<Int, CGColor>(count: 500, queueQos: .userInteractive)
+private let colorCache = FifoCache<Int, NSColor>(count: 500)
+private let cgColorCache = FifoCache<Int, CGColor>(count: 500)

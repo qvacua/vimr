@@ -63,20 +63,20 @@ declare -r -x github_release_name=${github_release_name}
 declare -r -x release_notes=\$(cat release-notes.temp.md)
 
 # Add release notes to release-notes.temp.md and issue
-# create_gh_release=true upload=true update_appcast=true release_spec_file=${bundle_version}-${version_marker}.sh ./bin/build_release.sh
+# create_gh_release=true upload=true update_appcast=true release_spec_file=release.spec.sh ./bin/build_release.sh
 END
 )
   readonly output
 
   local output_exec
   output_exec=$(cat <<-END
-create_gh_release=true upload=true update_appcast=true release_spec_file=${bundle_version}-${version_marker}.sh ./bin/build_release.sh
+create_gh_release=true upload=true update_appcast=true release_spec_file=release.spec.sh ./bin/build_release.sh
 END
 )
   readonly output_exec
 
   echo "Release notes" > release-notes.temp.md
-  echo "${output}" > "${bundle_version}-${version_marker}.sh"
+  echo "${output}" > "release.spec.sh"
   echo "${output_exec}" > "build_release.temp.sh"
   chmod +x "build_release.temp.sh"
 
@@ -85,7 +85,7 @@ END
   echo ""
   echo "### Use the following to build a release:"
   echo ""
-  echo "release_spec_file=${bundle_version}-${version_marker}.sh \\"
+  echo "release_spec_file=release.spc.sh \\"
   echo "create_gh_release=true upload=true update_appcast=true \\"
   echo "./bin/build_release.sh"
   echo ""

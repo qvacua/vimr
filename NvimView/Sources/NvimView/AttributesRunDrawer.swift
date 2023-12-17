@@ -19,7 +19,6 @@ final class AttributesRunDrawer {
   }
 
   var usesLigatures: Bool
-  var drawsParallel = false
 
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
@@ -42,11 +41,7 @@ final class AttributesRunDrawer {
     offset: CGPoint,
     in context: CGContext
   ) {
-    let runs = self.drawsParallel ?
-      attrsRuns.parallelMap(chunkSize: 50) { run in
-        self.fontGlyphRuns(from: run, offset: offset)
-      }
-      : attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
+    let runs = attrsRuns.map { self.fontGlyphRuns(from: $0, offset: offset) }
 
     for i in 0..<attrsRuns.count {
       self.draw(

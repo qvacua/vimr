@@ -61,7 +61,9 @@ public final class FileUtils {
     return possibleParent.hasDirectoryPath ? possibleParent : possibleParent.parent
   }
 
-  public static func icon(forType type: String) -> NSImage { workspace.icon(for: UTType(type) ?? UTType.text) }
+  public static func icon(forType type: String) -> NSImage { workspace
+    .icon(for: UTType(type) ?? UTType.text)
+  }
 
   public static func icon(forUrl url: URL) -> NSImage? {
     if let cached = iconsCache.object(forKey: url as NSURL) { return cached }

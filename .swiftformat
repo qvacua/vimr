@@ -1,4 +1,4 @@
---swiftversion 5.3
+--swiftversion 5.9
 
 --exclude Carthage,third-party,**/*.generated.swift,**/*.template.swift
 

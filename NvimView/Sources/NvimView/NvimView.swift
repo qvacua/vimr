@@ -83,10 +83,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
     didSet { self.markForRenderWholeView() }
   }
 
-  public var drawsParallel = false {
-    didSet { self.drawer.drawsParallel = self.drawsParallel }
-  }
-
   public var linespacing: CGFloat {
     get { self._linespacing }
 
@@ -191,11 +187,9 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           // This is the only request sent from Neovim to the UI, afaics.
           guard method == "vimenter" else { break }
           self?.log.debug("Processing blocking vimenter request")
-          self?.setupAutocmdsAndSendResponse(forMsgid: msgid)
+          self?.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
         case let .notification(method, params):
-          self?.log.trace("NOTIFICATION: \(method): \(params)")
-
           if method == NvimView.rpcEventName {
             self?.eventsSubject.onNext(.rpcEvent(params))
           }
@@ -225,8 +219,10 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
             self?.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
           }
         }
-      }, onError: {
-        [weak self] error in self?.log.error(error)
+      }, onError: { [weak self] error in
+        self?.log.error(error)
+      }, onCompleted: { [weak self] in
+        self?.stop()
       })
       .disposed(by: self.disposeBag)
 
@@ -277,12 +273,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   @available(*, unavailable)
   public required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
-  @IBAction public func debug1(_: Any?) {
-    #if DEBUG
-      do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
-    #endif
-  }
 
   // MARK: - Internal
 
@@ -351,6 +341,8 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   var lastMode = CursorModeShape.normal
 
+  var regionsToFlush = [Region]()
+
   var framerateView: SKView?
 
   // MARK: - Private
@@ -358,7 +350,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
 
-  private func setupAutocmdsAndSendResponse(forMsgid msgid: UInt32) {
+  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) {
     self.api.getApiInfo(errWhenBlocked: false)
       .flatMapCompletable { value in
         guard let info = value.arrayValue,
@@ -380,8 +372,38 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         """, opts: [:], errWhenBlocked: false)
         // swiftformat:enable all
           .asCompletable()
+          .andThen(self.api.subscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
+          .andThen(
+            self.sourceFileUrls.reduce(.empty()) { prev, url in
+              prev.andThen(
+                self.api.exec2(
+                  src: "source \(url.shellEscapedPath)",
+                  opts: ["output": true],
+                  errWhenBlocked: false
+                )
+                .map { retval in
+                  guard let output = retval["output"]?.stringValue else {
+                    throw RxNeovimApi.Error
+                      .exception(message: "Could not convert values to output.")
+                  }
+                  return output
+                }
+                .asCompletable()
+              )
+            }
+          )
           .andThen(
             self.api.sendResponse(msgid: msgid, error: .nil, result: .nil)
+          )
+          .andThen(
+            {
+              let ginitPath = FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent(".config/nvim/ginit.vim").path
+              guard FileManager.default.fileExists(atPath: ginitPath) else { return .empty() }
+
+              self.bridgeLogger.debug("Source'ing ginit.vim")
+              return self.api.command(command: "source \(ginitPath.shellEscapedPath)")
+            }()
           )
       }
       .subscribe().disposed(by: self.disposeBag)

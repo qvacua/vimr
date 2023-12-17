@@ -6,28 +6,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.1-20231211.195158</title>
+      <title>SNAPSHOT-20231217.175027</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231211.195158</sparkle:version>
-      <sparkle:shortVersionString>v0.45.1</sparkle:shortVersionString>
+      <sparkle:version>20231217.175027</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20231217.175027</sparkle:shortVersionString>
       <description><![CDATA[
-    <ul>
-<li>VimR now uses the release Neovim version 0.9.4 and is compatible with external Neovim binary version 0.9.x.</li>
-<li>Minium macOS requirement is now Monterey (v12).</li>
-<li>GH-1026: Bugfix: Scroll direction system setting is not respected when trackpad-scrolling.</li>
-<li>GH-1022: Bugfix: Custom Neovim binary setting is not stored correctly and the alert for incompatible version does not show up.</li>
-<li>Dependencies updates:</li>
-<li>sparkle-project/Sparkle@2.5.1</li>
-<li>Removed: Kitura/BlueSocket</li>
+    <p>Changes since last release:</p>
+<ul>
+<li>Add <code>enable-debug-menu</code> preferences item to enable Debug menu item.</li>
+<li>Fix a synchronization issue in MsgpackRpc.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.1-20231211.195158
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20231217.175027
       </releaseNotesLink>
-      <pubDate>2023-12-11T19:59:19.895765</pubDate>
+      <pubDate>2023-12-17T17:55:16.481342</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.1-20231211.195158/VimR-v0.45.1.tar.bz2"
-                 sparkle:edSignature="QxwHFQTpmHq8APIKPH1st0MP0jCU066XSZqd0q92xciaXal7DQnWqPvkEWQYi7km2kPIXw8usoP5Hnjkm9RrBw==" length="17198035"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231217.175027/VimR-SNAPSHOT-20231217.175027.tar.bz2"
+                 sparkle:edSignature="lQ3equ6hZG0+nzK+iBFj45GyL+N7UUALKgsZTkESpfGkz4KfS55EGipKLGCbBP2YkDKS/2KOzrb2ZE0kEns1Bw==" length="17191492"
                  type="application/octet-stream"/>
     </item>
   </channel>

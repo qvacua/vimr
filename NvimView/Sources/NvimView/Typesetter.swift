@@ -270,10 +270,7 @@ final class Typesetter {
     }
   }
 
-  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], CtRunsAndFont>(
-    count: 5000,
-    queueQos: .userInteractive
-  )
+  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], CtRunsAndFont>(count: 5000)
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 

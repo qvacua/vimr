@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-               BuildableName = "VimR.app"
-               BlueprintName = "VimR"
-               ReferencedContainer = "container:VimR.xcodeproj">
+               BlueprintIdentifier = "4B0225EF224AAE260052362B"
+               BuildableName = "MinimalNvimViewDemo.app"
+               BlueprintName = "MinimalNvimViewDemo"
+               ReferencedContainer = "container:NvimViewSupport.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -26,9 +26,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -44,16 +43,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-            BuildableName = "VimR.app"
-            BlueprintName = "VimR"
-            ReferencedContainer = "container:VimR.xcodeproj">
+            BlueprintIdentifier = "4B0225EF224AAE260052362B"
+            BuildableName = "MinimalNvimViewDemo.app"
+            BlueprintName = "MinimalNvimViewDemo"
+            ReferencedContainer = "container:NvimViewSupport.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
-         referenceType = "1">
-      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -65,10 +60,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4BEBA5041CFF374B00673FDF"
-            BuildableName = "VimR.app"
-            BlueprintName = "VimR"
-            ReferencedContainer = "container:VimR.xcodeproj">
+            BlueprintIdentifier = "4B0225EF224AAE260052362B"
+            BuildableName = "MinimalNvimViewDemo.app"
+            BlueprintName = "MinimalNvimViewDemo"
+            ReferencedContainer = "container:NvimViewSupport.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

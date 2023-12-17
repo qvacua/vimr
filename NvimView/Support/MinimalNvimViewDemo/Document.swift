@@ -10,7 +10,7 @@ import RxSwift
 import Tabs
 
 class Document: NSDocument, NSWindowDelegate {
-  private var nvimView = NvimView(forAutoLayout: ())
+  private let nvimView = NvimView(forAutoLayout: ())
   private let disposeBag = DisposeBag()
 
   override init() {
@@ -19,7 +19,7 @@ class Document: NSDocument, NSWindowDelegate {
     self.nvimView.font = NSFont(name: "Fira Code", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
-    self.nvimView.drawsParallel = true
+    self.nvimView.usesLiveResize = true
 
     self.nvimView
       .events
@@ -62,18 +62,15 @@ class Document: NSDocument, NSWindowDelegate {
     tabBar.autoPinEdge(toSuperviewEdge: .left)
     tabBar.autoPinEdge(toSuperviewEdge: .top)
     tabBar.autoPinEdge(toSuperviewEdge: .right)
-//    tabBar.autoSetDimension(.height, toSize: Tabs.Theme().tabBarHeight)
+    tabBar.autoSetDimension(.height, toSize: Tabs.Theme().tabBarHeight)
 
-//    nvimView.autoPinEdge(.top, to: .bottom, of: tabBar)
-    nvimView.autoPinEdge(toSuperviewEdge: .top, withInset: 50)
+    nvimView.autoPinEdge(.top, to: .bottom, of: tabBar)
     nvimView.autoPinEdge(toSuperviewEdge: .left)
     nvimView.autoPinEdge(toSuperviewEdge: .right)
     nvimView.autoPinEdge(toSuperviewEdge: .bottom)
   }
 
-  override var windowNibName: NSNib.Name? {
-    NSNib.Name("Document")
-  }
+  override var windowNibName: NSNib.Name? { NSNib.Name("Document") }
 
   override func data(ofType _: String) throws -> Data {
     throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
@@ -81,5 +78,11 @@ class Document: NSDocument, NSWindowDelegate {
 
   override func read(from _: Data, ofType _: String) throws {
     throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
+  }
+}
+
+extension Document {
+  @IBAction public func debug3(_: Any?) {
+    self.nvimView.toggleFramerateView()
   }
 }
