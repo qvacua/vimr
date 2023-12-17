@@ -14,11 +14,11 @@ extension NvimView {
 
     if self.isInitialResize {
       self.isInitialResize = false
-      
+
       let size = self.discreteSize(size: newSize)
       self.ugrid.resize(size)
       self.launchNeoVim(size)
-      
+
       return
     }
 

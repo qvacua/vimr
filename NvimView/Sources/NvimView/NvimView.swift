@@ -274,12 +274,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   @available(*, unavailable)
   public required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  @IBAction public func debug1(_: Any?) {
-    #if DEBUG
-      do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
-    #endif
-  }
-
   // MARK: - Internal
 
   let queue = DispatchQueue(
