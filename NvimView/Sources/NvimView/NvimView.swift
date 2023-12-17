@@ -190,8 +190,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           self?.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
         case let .notification(method, params):
-          self?.log.trace("NOTIFICATION: \(method): \(params)")
-
           if method == NvimView.rpcEventName {
             self?.eventsSubject.onNext(.rpcEvent(params))
           }
