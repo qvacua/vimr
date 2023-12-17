@@ -27,7 +27,7 @@ let package = Package(
         .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",
       ],
-      // com.qvacua.NvimView.vim is copied by the download NvimServer script.
+      // com.qvacua.NvimView.vim is copied by the build NvimServer script.
       exclude: ["Resources/com.qvacua.NvimView.vim"],
       resources: [
         .copy("Resources/runtime"),
