@@ -403,17 +403,12 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           )
           .andThen(
             {
-              let ginitPath = URL(fileURLWithPath: NSHomeDirectory())
+              let ginitPath = FileManager.default.homeDirectoryForCurrentUser
                 .appendingPathComponent(".config/nvim/ginit.vim").path
-              if FileManager.default.fileExists(atPath: ginitPath) {
-                self.bridgeLogger.debug("Source'ing ginit.vim")
-                return self.api.command(
-                  command: "source \(ginitPath.shellEscapedPath)",
-                  expectsReturnValue: false
-                )
-              } else {
-                return .empty()
-              }
+              guard FileManager.default.fileExists(atPath: ginitPath) else { return .empty() }
+
+              self.bridgeLogger.debug("Source'ing ginit.vim")
+              return self.api.command(command: "source \(ginitPath.shellEscapedPath)")
             }()
           )
       }
