@@ -221,8 +221,10 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
             self?.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
           }
         }
-      }, onError: {
-        [weak self] error in self?.log.error(error)
+      }, onError: { [weak self] error in
+        self?.log.error(error)
+      }, onCompleted: { [weak self] in
+        self?.stop()
       })
       .disposed(by: self.disposeBag)
 

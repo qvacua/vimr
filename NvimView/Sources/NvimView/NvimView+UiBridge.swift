@@ -22,6 +22,26 @@ extension NvimView {
     self.bridgeLogger.debug(region)
     self.setNeedsDisplay(self.rect(for: region))
   }
+  
+  final func stop() {
+    self.bridgeLogger.debug()
+    self.quit()
+      .andThen(self.api.stop())
+      .andThen(Completable.create { completable in
+        self.eventsSubject.onNext(.neoVimStopped)
+        self.eventsSubject.onCompleted()
+
+        completable(.completed)
+        return Disposables.create()
+      })
+      .subscribe(onCompleted: { [weak self] in
+        self?.bridgeLogger.info("Successfully stopped the bridge.")
+        self?.nvimExitedCondition.broadcast()
+      }, onError: {
+        self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
+      })
+      .disposed(by: self.disposeBag)
+  }
 
   final func renderData(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
@@ -319,26 +339,6 @@ extension NvimView {
 
     self.bridgeLogger.debug(title)
     self.eventsSubject.onNext(.setTitle(title))
-  }
-
-  private func stop() {
-    self.bridgeLogger.debug()
-    self.quit()
-      .andThen(self.api.stop())
-      .andThen(Completable.create { completable in
-        self.eventsSubject.onNext(.neoVimStopped)
-        self.eventsSubject.onCompleted()
-
-        completable(.completed)
-        return Disposables.create()
-      })
-      .subscribe(onCompleted: { [weak self] in
-        self?.bridgeLogger.info("Successfully stopped the bridge.")
-        self?.nvimExitedCondition.broadcast()
-      }, onError: {
-        self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
-      })
-      .disposed(by: self.disposeBag)
   }
 
   private func ipcBecameInvalid(_ error: Swift.Error) {

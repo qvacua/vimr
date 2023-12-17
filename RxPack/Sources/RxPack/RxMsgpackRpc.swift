@@ -56,14 +56,20 @@ public final class RxMsgpackRpc {
   public let uuid = UUID()
 
   public init(queueQos: DispatchQoS) {
+    let uuidStr = self.uuid.uuidString
     self.queue = DispatchQueue(
-      label: "\(String(reflecting: RxMsgpackRpc.self))-\(self.uuid.uuidString)",
+      label: "\(String(reflecting: RxMsgpackRpc.self))-\(uuidStr)",
       qos: queueQos,
       target: .global(qos: queueQos.qosClass)
     )
-    self.dataQueue = DispatchQueue(
-      label: "\(String(reflecting: RxMsgpackRpc.self))-dataQueue-\(self.uuid.uuidString)",
+    self.pipeReadQueue = DispatchQueue(
+      label: "\(String(reflecting: RxMsgpackRpc.self))-pipeReadQueue-\(uuidStr)",
       qos: queueQos
+    )
+    self.streamQueue = DispatchQueue(
+      label: "\(String(reflecting: RxMsgpackRpc.self))-streamSubjectQueue-\(uuidStr)",
+      qos: queueQos,
+      target: .global(qos: queueQos.qosClass)
     )
   }
 
@@ -144,7 +150,9 @@ public final class RxMsgpackRpc {
           ]
         )
 
-        if expectsReturnValue { self.singles[msgid] = single }
+        if expectsReturnValue {
+          self.streamQueue.async { self.singles[msgid] = single }
+        }
 
         do {
           try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
@@ -170,14 +178,17 @@ public final class RxMsgpackRpc {
   private var nextMsgid: UInt32 = 0
 
   private let queue: DispatchQueue
-  private let dataQueue: DispatchQueue
+  private let pipeReadQueue: DispatchQueue
+  private let streamQueue: DispatchQueue
 
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
 
+  // R/w only in streamQueue
   private var singles: [UInt32: SingleResponseObserver] = [:]
 
+  // Publish events only in streamQueue
   private let streamSubject = PublishSubject<Message>()
 
   private func nilResponse(with msgid: UInt32) -> Response {
@@ -189,13 +200,14 @@ public final class RxMsgpackRpc {
     self.outPipe = nil
     self.errorPipe = nil
 
-    self.streamSubject.onCompleted()
-
-    self.singles.forEach { _, single in single(.failure(Error(msg: "Socket closed"))) }
+    self.streamQueue.async {
+      self.streamSubject.onCompleted()
+      self.singles.forEach { _, single in single(.failure(Error(msg: "Pipe closed"))) }
+    }
   }
 
   private func startReading() {
-    self.dataQueue.async { [unowned self] in
+    self.pipeReadQueue.async { [unowned self] in
       var readData: Data
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
       repeat {
@@ -209,14 +221,17 @@ public final class RxMsgpackRpc {
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 
-            values.forEach(self.processMessage)
+            self.streamQueue.async {
+              values.forEach(self.processMessage)
+            }
           }
         } catch {
-          self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
+          self.streamQueue.async {
+            self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
+          }
         }
       } while readData.count > 0
 
-      self.streamSubject.onNext(.notification(method: "autocommand", params: ["exitpre"]))
       self.cleanUp()
     }
   }
@@ -252,9 +267,7 @@ public final class RxMsgpackRpc {
         return
       }
 
-      self.queue.async {
-        self.processResponse(msgid: UInt32(msgid64), error: array[2], result: array[3])
-      }
+      self.processResponse(msgid: UInt32(msgid64), error: array[2], result: array[3])
 
     case .notification:
       guard array.count == 3 else {
@@ -279,18 +292,14 @@ public final class RxMsgpackRpc {
     case .request:
       guard let msgid = array[1].uint32Value, let method = array[2].stringValue,
             let params = array[3].arrayValue
-      else {
-        return
-      }
+      else { return }
 
       self.streamSubject.onNext(.request(msgid: msgid, method: method, params: params))
       return
     }
   }
 
-  private func unpackAllWithReminder(_ data: Data) throws
-    -> (values: [Value], remainder: Data?)
-  {
+  private func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
     var values = [Value]()
     var remainderData: Data?
 
