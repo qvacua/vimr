@@ -6,22 +6,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20231216.201345</title>
+      <title>SNAPSHOT-20231217.175027</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231216.201345</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20231216.201345</sparkle:shortVersionString>
+      <sparkle:version>20231217.175027</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20231217.175027</sparkle:shortVersionString>
       <description><![CDATA[
-    <ul>
+    <p>Changes since last release:</p>
+<ul>
 <li>Add <code>enable-debug-menu</code> preferences item to enable Debug menu item.</li>
+<li>Fix a synchronization issue in MsgpackRpc.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20231216.201345
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20231217.175027
       </releaseNotesLink>
-      <pubDate>2023-12-16T20:18:34.619898</pubDate>
+      <pubDate>2023-12-17T17:55:16.481342</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231216.201345/VimR-SNAPSHOT-20231216.201345.tar.bz2"
-                 sparkle:edSignature="EyFPODpyIMzU4wrGLZo1ywedmSrgZrB+8r0AUN68M9NoY8hsD0sw8ap//J8CUbuDiLB4X49isa5Jl2hb+6tNAQ==" length="17193627"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231217.175027/VimR-SNAPSHOT-20231217.175027.tar.bz2"
+                 sparkle:edSignature="lQ3equ6hZG0+nzK+iBFj45GyL+N7UUALKgsZTkESpfGkz4KfS55EGipKLGCbBP2YkDKS/2KOzrb2ZE0kEns1Bw==" length="17191492"
                  type="application/octet-stream"/>
     </item>
   </channel>
