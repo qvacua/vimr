@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.9.4.
+// Auto generated for nvim version 0.10.0.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -1923,6 +1923,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
+  @available(*, deprecated, message: "This method has been deprecated.")
   public func getOptionInfo(
     name: String,
     errWhenBlocked: Bool = true
@@ -1951,6 +1952,182 @@ extension RxNeovimApi {
     return self
       .rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
       .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func setOption(
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+        value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func getOption(
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func bufGetOption(
+    buffer: RxNeovimApi.Buffer,
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func bufSetOption(
+    buffer: RxNeovimApi.Buffer,
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .string(name),
+        value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func winGetOption(
+    window: RxNeovimApi.Window,
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(window.handle)),
+        .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = (Optional(value)) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func winSetOption(
+    window: RxNeovimApi.Window,
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(window.handle)),
+        .string(name),
+        value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
   }
 
   public func createNamespace(
@@ -2367,176 +2544,6 @@ extension RxNeovimApi {
     return self
       .rpc(method: "nvim_get_option_info2", params: params, expectsReturnValue: true)
       .map(transform)
-  }
-
-  public func setOption(
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .rpc(method: "nvim_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .asCompletable()
-  }
-
-  public func getOption(
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  public func bufGetOption(
-    buffer: RxNeovimApi.Buffer,
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  public func bufSetOption(
-    buffer: RxNeovimApi.Buffer,
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .asCompletable()
-  }
-
-  public func winGetOption(
-    window: RxNeovimApi.Window,
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  public func winSetOption(
-    window: RxNeovimApi.Window,
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: expectsReturnValue)
-      .asCompletable()
   }
 
   public func tabpageListWins(
@@ -2961,6 +2968,30 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  public func uiTermEvent(
+    event: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+
+    let params: [RxNeovimApi.Value] = [
+        .string(event),
+        value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_ui_term_event", params: params, expectsReturnValue: expectsReturnValue)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .rpc(method: "nvim_ui_term_event", params: params, expectsReturnValue: expectsReturnValue)
+      .asCompletable()
+  }
+
   public func getHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
@@ -3047,6 +3078,36 @@ extension RxNeovimApi {
     return self
       .rpc(method: "nvim_set_hl", params: params, expectsReturnValue: expectsReturnValue)
       .asCompletable()
+  }
+
+  public func getHlNs(
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_get_hl_ns", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_get_hl_ns", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 
   public func setHlNs(
@@ -4701,6 +4762,38 @@ extension RxNeovimApi {
       .map(transform)
   }
 
+  public func completeSet(
+    index: Int,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(index)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_complete_set", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_complete_set", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
   public func exec2(
     src: String,
     opts: Dictionary<String, RxNeovimApi.Value>,
@@ -5493,6 +5586,38 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  public func winTextHeight(
+    window: RxNeovimApi.Window,
+    opts: Dictionary<String, RxNeovimApi.Value>,
+    errWhenBlocked: Bool = true
+  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(window.handle)),
+        .map(opts.mapToDict({ (Value.string($0), $1) })),
+    ]
+
+    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
+      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
+        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "nvim_win_text_height", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "nvim_win_text_height", params: params, expectsReturnValue: true)
+      .map(transform)
+  }
+
   @available(*, deprecated, message: "This method has been deprecated.")
   public func rLineCount(
     buffer: RxNeovimApi.Buffer,
@@ -5837,47 +5962,6 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rAddHighlight(
-    buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Single<Int> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .string(hl_group),
-        .int(Int64(line)),
-        .int(Int64(col_start)),
-        .int(Int64(col_end)),
-    ]
-
-    let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
-        throw RxNeovimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "buffer_add_highlight", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
-    }
-
-    return self
-      .rpc(method: "buffer_add_highlight", params: params, expectsReturnValue: true)
-      .map(transform)
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
   public func etOption(
     name: String,
     value: RxNeovimApi.Value,
@@ -6051,6 +6135,47 @@ extension RxNeovimApi {
     return self
       .rpc(method: "window_set_option", params: params, expectsReturnValue: expectsReturnValue)
       .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  public func rAddHighlight(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+
+    let params: [RxNeovimApi.Value] = [
+        .int(Int64(buffer.handle)),
+        .int(Int64(ns_id)),
+        .string(hl_group),
+        .int(Int64(line)),
+        .int(Int64(col_start)),
+        .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.rpc(method: "buffer_add_highlight", params: params, expectsReturnValue: true)
+        )
+        .map(transform)
+    }
+
+    return self
+      .rpc(method: "buffer_add_highlight", params: params, expectsReturnValue: true)
+      .map(transform)
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
