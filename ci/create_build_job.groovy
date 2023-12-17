@@ -55,7 +55,7 @@ nightlyVimRJob.with {
   }
 
   parameters {
-    stringParam('branch', 'update_neovim', 'Branch to build; defaults to master')
+    stringParam('branch', 'update-neovim', 'Branch to build; defaults to master')
   }
 
   scm {
