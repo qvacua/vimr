@@ -30,15 +30,6 @@ Update `./bin/neovim/resources/build_info../bin/neovim/resources/buildInfo.json`
 ```
 
 It will update `./bin/neovim/third-party`, commit and push.
-
-## How to build nightly
-
-```bash
-git tag -f neovim-nightly; git push -f origin neovim-nightly
-```
-
-Then, GitHub actions will build and re-create the release.
-
 ## How to release
 
 * Set a new version of VimR via
@@ -60,4 +51,3 @@ Then, GitHub actions will build and re-create the release.
     ./bin/build_release.sh
     ```
 * The `appcast{-snapshot}.xml` file is modified. Check and push.
-
