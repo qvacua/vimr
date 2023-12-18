@@ -79,8 +79,8 @@ public final class RxMsgpackRpc {
     self.errorPipe = errorPipe
 
     return Completable.create { completable in
-      self.queue.async {
-        self.startReading()
+      self.queue.async { [weak self] in
+        self?.startReading()
         completable(.completed)
       }
 
@@ -90,8 +90,8 @@ public final class RxMsgpackRpc {
 
   public func stop() -> Completable {
     Completable.create { completable in
-      self.queue.async {
-        self.cleanUp()
+      self.queue.async { [weak self] in
+        self?.cleanUp()
         completable(.completed)
       }
 
@@ -100,8 +100,8 @@ public final class RxMsgpackRpc {
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
-    Completable.create { completable in
-      self.queue.async {
+    Completable.create { [weak self] completable in
+      self?.queue.async {
         let packed = pack(
           [
             .uint(MessageType.response.rawValue),
@@ -112,10 +112,10 @@ public final class RxMsgpackRpc {
         )
 
         do {
-          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+          try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
           completable(.completed)
         } catch {
-          self.streamSubject.onError(Error(
+          self?.streamSubject.onError(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           ))
 
@@ -136,11 +136,11 @@ public final class RxMsgpackRpc {
     params: [Value],
     expectsReturnValue: Bool
   ) -> Single<Response> {
-    Single.create { single in
-      self.queue.async {
-        let msgid = self.nextMsgid
-        self.nextMsgid += 1
+    return Single.create { [weak self] single in
+      guard let msgid = self?.nextMsgid else { return Disposables.create() }
+      self?.nextMsgid += 1
 
+      self?.queue.async {
         let packed = pack(
           [
             .uint(MessageType.request.rawValue),
@@ -151,13 +151,13 @@ public final class RxMsgpackRpc {
         )
 
         if expectsReturnValue {
-          self.streamQueue.async { self.singles[msgid] = single }
+          self?.streamQueue.async { self?.singles[msgid] = single }
         }
 
         do {
-          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+          try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
         } catch {
-          self.streamSubject.onError(Error(
+          self?.streamSubject.onError(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           ))
 
@@ -168,7 +168,9 @@ public final class RxMsgpackRpc {
           return
         }
 
-        if !expectsReturnValue { single(.success(self.nilResponse(with: msgid))) }
+        if !expectsReturnValue {
+          single(.success(Response(msgid: msgid, error: .nil, result: .nil)))
+        }
       }
 
       return Disposables.create()
@@ -200,39 +202,39 @@ public final class RxMsgpackRpc {
     self.outPipe = nil
     self.errorPipe = nil
 
-    self.streamQueue.async {
-      self.streamSubject.onCompleted()
-      self.singles.forEach { _, single in single(.failure(Error(msg: "Pipe closed"))) }
+    self.streamQueue.async { [weak self] in
+      self?.streamSubject.onCompleted()
+      self?.singles.forEach { _, single in single(.failure(Error(msg: "Pipe closed"))) }
     }
   }
 
   private func startReading() {
-    self.pipeReadQueue.async { [unowned self] in
+    self.pipeReadQueue.async { [weak self] in
       var readData: Data
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
       repeat {
         do {
-          guard let buffer = self.outPipe?.fileHandleForReading.availableData else { break }
+          guard let buffer = self?.outPipe?.fileHandleForReading.availableData else { break }
           readData = buffer
 
           if readData.count > 0 {
             dataToUnmarshall.append(readData)
-            let (values, remainderData) = try self.unpackAllWithReminder(dataToUnmarshall)
+            guard let (values, remainderData) = try self?.unpackAllWithReminder(dataToUnmarshall) else { throw Error(msg: "Nil when unpacking") }
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 
-            self.streamQueue.async {
-              values.forEach(self.processMessage)
+            self?.streamQueue.async {
+              values.forEach { value in self?.processMessage(value) }
             }
           }
         } catch {
-          self.streamQueue.async {
-            self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
+          self?.streamQueue.async {
+            self?.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
           }
         }
       } while readData.count > 0
 
-      self.cleanUp()
+      self?.cleanUp()
     }
   }
 

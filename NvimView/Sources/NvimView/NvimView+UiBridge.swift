@@ -22,14 +22,14 @@ extension NvimView {
     self.bridgeLogger.debug(region)
     self.setNeedsDisplay(self.rect(for: region))
   }
-  
+
   final func stop() {
     self.bridgeLogger.debug()
     self.quit()
       .andThen(self.api.stop())
-      .andThen(Completable.create { completable in
-        self.eventsSubject.onNext(.neoVimStopped)
-        self.eventsSubject.onCompleted()
+      .andThen(Completable.create { [weak self] completable in
+        self?.eventsSubject.onNext(.neoVimStopped)
+        self?.eventsSubject.onCompleted()
 
         completable(.completed)
         return Disposables.create()
