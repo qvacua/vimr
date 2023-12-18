@@ -12,10 +12,10 @@ public enum CursorShape: Equatable {
 
   static func of(shape: String, cellPercentage: Int?) -> CursorShape? {
     switch shape {
-    case "block": return block
-    case "horizontal": return cellPercentage.map(horizontal(cellPercentage:))
-    case "vertical": return cellPercentage.map(vertical(cellPercentage:))
-    default: return nil
+    case "block": block
+    case "horizontal": cellPercentage.map(horizontal(cellPercentage:))
+    case "vertical": cellPercentage.map(vertical(cellPercentage:))
+    default: nil
     }
   }
 }

@@ -132,7 +132,8 @@ public extension NvimView {
               return self?.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
             }
 
-            return currentBufferIsTransient ? self?.open(url, cmd: "e") : self?.open(url, cmd: "tabe")
+            return currentBufferIsTransient ? self?.open(url, cmd: "e") : self?
+              .open(url, cmd: "tabe")
           }
         )
       }
@@ -157,7 +158,7 @@ public extension NvimView {
 
   func openInVerticalSplit(urls: [URL]) -> Completable {
     Completable
-      .concat(urls.compactMap {[weak self]  url in self?.open(url, cmd: "vsp") })
+      .concat(urls.compactMap { [weak self] url in self?.open(url, cmd: "vsp") })
       .subscribe(on: self.scheduler)
   }
 
@@ -167,10 +168,11 @@ public extension NvimView {
       .map { tabs in tabs.map(\.windows).flatMap { $0 } }
       .flatMapCompletable { [weak self] wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
-          guard let completable = self?.api.setCurrentWin(window: RxNeovimApi.Window(win.handle)) else {
+          guard let completable = self?.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
+          else {
             throw RxNeovimApi.Error.exception(message: "Could not set current win")
           }
-          
+
           return completable
         }
 
@@ -236,10 +238,13 @@ public extension NvimView {
     self.api
       .getCurrentWin()
       .flatMapCompletable { [weak self] curWin in
-        guard let completable = self?.api.winSetCursor(window: curWin, pos: [position.row, position.column]) else {
+        guard let completable = self?.api.winSetCursor(
+          window: curWin,
+          pos: [position.row, position.column]
+        ) else {
           throw RxNeovimApi.Error.exception(message: "Could not set cursor")
         }
-        
+
         return completable
       }
       .subscribe(on: self.scheduler)
@@ -258,19 +263,19 @@ public extension NvimView {
     currentBuffer: RxNeovimApi.Buffer?
   ) -> Single<NvimView.Buffer> {
     self.api.execLua(code: """
-      local function map(tbl, f)
-          local t = {}
-          for k,v in pairs(tbl) do
-              t[k] = f(v)
-          end
-          return t
-      end
-      return map(vim.fn.getbufinfo(...), function(i)
-           i.buftype = vim.api.nvim_get_option_value("buftype",
-             {buf=i.bufnr})
-           return i
-         end)
-      """, args: [MessagePackValue(buf.handle)])
+    local function map(tbl, f)
+        local t = {}
+        for k,v in pairs(tbl) do
+            t[k] = f(v)
+        end
+        return t
+    end
+    return map(vim.fn.getbufinfo(...), function(i)
+         i.buftype = vim.api.nvim_get_option_value("buftype",
+           {buf=i.bufnr})
+         return i
+       end)
+    """, args: [MessagePackValue(buf.handle)])
       .map { result -> NvimView.Buffer in
         guard let info_array = result.arrayValue,
               info_array.count == 1,
@@ -326,7 +331,7 @@ public extension NvimView {
         guard let single = self?.neoVimBuffer(for: buf, currentBuffer: currentBuffer) else {
           throw RxNeovimApi.Error.exception(message: "Could not get buffer")
         }
-        
+
         return single
       }
       .map { buffer in NvimView.Window(
@@ -334,7 +339,7 @@ public extension NvimView {
         buffer: buffer,
         isCurrentInTab: window == currentWindow
       )
-    }
+      }
   }
 
   private func neoVimTab(

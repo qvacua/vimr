@@ -144,7 +144,7 @@ final class UGrid: CustomStringConvertible, Codable {
     }
     defer {
       // keep markedInfo position not changed. markedInfo only following cursor position change
-      if let oldMarkedInfo = oldMarkedInfo {
+      if let oldMarkedInfo {
         updateMarkedInfo(newValue: oldMarkedInfo)
       }
     }
@@ -241,7 +241,7 @@ final class UGrid: CustomStringConvertible, Codable {
       oldMarkedInfo = self.popMarkedInfo()
     }
     defer {
-      if let oldMarkedInfo = oldMarkedInfo {
+      if let oldMarkedInfo {
         updateMarkedInfo(newValue: oldMarkedInfo)
       }
     }
@@ -274,7 +274,7 @@ final class UGrid: CustomStringConvertible, Codable {
       oldMarkedInfo = self.popMarkedInfo()
     }
     defer {
-      if let oldMarkedInfo = oldMarkedInfo {
+      if let oldMarkedInfo {
         updateMarkedInfo(newValue: oldMarkedInfo)
       }
     }
@@ -341,14 +341,14 @@ final class UGrid: CustomStringConvertible, Codable {
 
   func cursorPositionWithMarkedInfo(allowOverflow: Bool = false) -> Position {
     var position: Position = self.cursorPosition
-    if let markedInfo = markedInfo { position.column += markedInfo.selectedRange.location }
+    if let markedInfo { position.column += markedInfo.selectedRange.location }
     if !allowOverflow, position.column >= self.size.width { position.column = self.size.width - 1 }
     return position
   }
 
   // marked text insert into cell directly
   // marked text always following cursor position
-  func updateMark( markedText: String, selectedRange: NSRange ) {
+  func updateMark(markedText: String, selectedRange: NSRange) {
     assert(Thread.isMainThread)
     var selectedRangeByCell = selectedRange
     let markedTextArray: [String] = markedText.enumerated().reduce(into: []) { array, pair in

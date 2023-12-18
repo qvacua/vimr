@@ -167,11 +167,10 @@ public extension NvimView {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
     let vimClickCount = self.vimClickCountFrom(event: event)
 
-    let result: String
-    if let vimModifiers = self.vimModifierFlags(event.modifierFlags) {
-      result = self.wrapNamedKeys("\(vimModifiers)\(vimClickCount)\(vimName)") + vimMouseLocation
+    let result: String = if let vimModifiers = self.vimModifierFlags(event.modifierFlags) {
+      self.wrapNamedKeys("\(vimModifiers)\(vimClickCount)\(vimName)") + vimMouseLocation
     } else {
-      result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
+      self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
     self.api
@@ -210,13 +209,11 @@ public extension NvimView {
   }
 
   private func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
-    let typeY: String
-    if deltaY > 0 { typeY = "ScrollWheelUp" }
-    else { typeY = "ScrollWheelDown" }
+    let typeY = if deltaY > 0 { "ScrollWheelUp" }
+    else { "ScrollWheelDown" }
 
-    let typeX: String
-    if deltaX < 0 { typeX = "ScrollWheelRight" }
-    else { typeX = "ScrollWheelLeft" }
+    let typeX = if deltaX < 0 { "ScrollWheelRight" }
+    else { "ScrollWheelLeft" }
 
     return (typeX, typeY)
   }

@@ -43,8 +43,8 @@ enum KeyUtils {
     // // swiftlint:disable:this all
     switch char {
     case "\u{00}"..."\u{FF}", "\u{FF61}"..."\u{FFDC}", "\u{FFE8}"..."\u{FFEE}":
-      return true
-    default: return false
+      true
+    default: false
     }
   }
 }
