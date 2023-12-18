@@ -136,7 +136,7 @@ public final class RxMsgpackRpc {
     params: [Value],
     expectsReturnValue: Bool
   ) -> Single<Response> {
-    return Single.create { [weak self] single in
+    Single.create { [weak self] single in
       guard let msgid = self?.nextMsgid else { return Disposables.create() }
       self?.nextMsgid += 1
 
@@ -219,7 +219,8 @@ public final class RxMsgpackRpc {
 
           if readData.count > 0 {
             dataToUnmarshall.append(readData)
-            guard let (values, remainderData) = try self?.unpackAllWithReminder(dataToUnmarshall) else { throw Error(msg: "Nil when unpacking") }
+            guard let (values, remainderData) = try self?.unpackAllWithReminder(dataToUnmarshall)
+            else { throw Error(msg: "Nil when unpacking") }
             if let remainderData { dataToUnmarshall = remainderData }
             else { dataToUnmarshall.count = 0 }
 

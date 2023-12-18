@@ -16,7 +16,7 @@ public final class Ignore {
 
     if urls.isEmpty { return nil }
 
-    if let gitRoot = gitRoot {
+    if let gitRoot {
       let vcsFolderFilters = self.vcsFolderPattern.map { Filter(base: gitRoot, pattern: $0) }
       return Ignore(base: gitRoot, parent: nil, ignoreFileUrls: urls, prepend: vcsFolderFilters)
     }

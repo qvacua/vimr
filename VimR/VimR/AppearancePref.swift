@@ -352,21 +352,21 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
 
   private func indexToFontSmoothing(_ index: Int) -> FontSmoothing {
     switch index {
-    case 0: return .systemSetting
-    case 1: return .withFontSmoothing
-    case 2: return .noFontSmoothing
-    case 3: return .noAntiAliasing
+    case 0: .systemSetting
+    case 1: .withFontSmoothing
+    case 2: .noFontSmoothing
+    case 3: .noAntiAliasing
 
-    default: return .systemSetting
+    default: .systemSetting
     }
   }
 
   private func fontSmoothingToIndex(_ fontSmoothing: FontSmoothing) -> Int {
     switch fontSmoothing {
-    case .systemSetting: return 0
-    case .withFontSmoothing: return 1
-    case .noFontSmoothing: return 2
-    case .noAntiAliasing: return 3
+    case .systemSetting: 0
+    case .withFontSmoothing: 1
+    case .noFontSmoothing: 2
+    case .noAntiAliasing: 3
     }
   }
 }

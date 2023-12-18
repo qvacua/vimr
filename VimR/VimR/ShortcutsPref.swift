@@ -104,11 +104,12 @@ final class ShortcutsPref: PrefPane,
     }
 
     legacyDefaultShortcuts.forEach { id in
-      let shortcut: Shortcut?
-      if let dict = self.shortcutsUserDefaults?.value(forKey: id) as? [String: Any] {
-        shortcut = Shortcut(dictionary: dict)
+      let shortcut: Shortcut? = if let dict = self.shortcutsUserDefaults?
+        .value(forKey: id) as? [String: Any]
+      {
+        Shortcut(dictionary: dict)
       } else {
-        shortcut = defaultShortcuts[id] ?? nil
+        defaultShortcuts[id] ?? nil
       }
 
       let data = ShortcutValueTransformer.shared.reverseTransformedValue(shortcut) as? NSData
