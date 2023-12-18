@@ -2,6 +2,7 @@
 
 * Add `enable-debug-menu` preferences item to enable Debug menu item.
 * Fix a synchronization issue in MsgpackRpc.
+* Fix a memory leak
 
 # v0.45.2-20231214.165334
 
