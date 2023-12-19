@@ -6,10 +6,10 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20231218.230104</title>
+      <title>v0.45.3-20231219.174252</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231218.230104</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20231218.230104</sparkle:shortVersionString>
+      <sparkle:version>20231219.174252</sparkle:version>
+      <sparkle:shortVersionString>v0.45.3</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
 <li>Add <code>enable-debug-menu</code> preferences item to enable Debug menu item.</li>
@@ -18,12 +18,12 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20231218.230104
+        https://github.com/qvacua/vimr/releases/tag/v0.45.3-20231219.174252
       </releaseNotesLink>
-      <pubDate>2023-12-18T23:05:42.439607</pubDate>
+      <pubDate>2023-12-19T17:48:21.399583</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20231218.230104/VimR-SNAPSHOT-20231218.230104.tar.bz2"
-                 sparkle:edSignature="q/SXVQ9IxVV4c5lYVPuhICFZo+9Fj3YMOqhO9BjnTgRooy9zeAA0GHq1+GGMW/M9HaZYK71gzY4r1cqgtG0sBg==" length="16990013"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.3-20231219.174252/VimR-v0.45.3.tar.bz2"
+                 sparkle:edSignature="ugpC4ddJ+CwIUi+XInBGTBdrP6O7AcNM3CpOwg688HeUgLboLN/wC24rk3LQr4uenjNOL8/EoiT0drHr46OADg==" length="16989202"
                  type="application/octet-stream"/>
     </item>
   </channel>

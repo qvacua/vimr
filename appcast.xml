@@ -6,20 +6,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.2-20231214.165334</title>
+      <title>v0.45.3-20231219.174252</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231214.165334</sparkle:version>
-      <sparkle:shortVersionString>v0.45.2</sparkle:shortVersionString>
+      <sparkle:version>20231219.174252</sparkle:version>
+      <sparkle:shortVersionString>v0.45.3</sparkle:shortVersionString>
       <description><![CDATA[
-      <ul><li>Removed parallel typesetting option since single threaded typesetting seems to be faster.</ul>
+    <ul>
+<li>Add <code>enable-debug-menu</code> preferences item to enable Debug menu item.</li>
+<li>Fix a synchronization issue in MsgpackRpc.</li>
+<li>Fix a memory leak</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.2-20231214.165334
+        https://github.com/qvacua/vimr/releases/tag/v0.45.3-20231219.174252
       </releaseNotesLink>
-      <pubDate>2023-12-14T16:58:24.969789</pubDate>
+      <pubDate>2023-12-19T17:48:21.399583</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.2-20231214.165334/VimR-v0.45.2.tar.bz2"
-                 sparkle:edSignature="bUnHDedEoHGMwcxa0LwxO8jgeLiZVW74CV/fsQLzyB7Aq/YsJ6ZzZw57OaCYUyPMgDkyc8HXRYNTOcWYYn9ZCg==" length="17192229"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.3-20231219.174252/VimR-v0.45.3.tar.bz2"
+                 sparkle:edSignature="ugpC4ddJ+CwIUi+XInBGTBdrP6O7AcNM3CpOwg688HeUgLboLN/wC24rk3LQr4uenjNOL8/EoiT0drHr46OADg==" length="16989202"
                  type="application/octet-stream"/>
     </item>
   </channel>
