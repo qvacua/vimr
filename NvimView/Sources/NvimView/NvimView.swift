@@ -331,7 +331,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   let sourceFileUrls: [URL]
 
-  let rpcEventSubscriptionCondition = ConditionVariable()
   let nvimExitedCondition = ConditionVariable()
 
   var tabEntries = [TabEntry]()

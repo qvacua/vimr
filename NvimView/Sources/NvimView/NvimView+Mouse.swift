@@ -95,22 +95,17 @@ public extension NvimView {
       )
 
     self.api.winGetCursor(window: RxNeovimApi.Window(0))
-      .map {
-        guard $0.count == 2
-        else {
-          self.log.error("Error decoding \($0)")
-          return
+      .flatMapCompletable { cursor in
+        guard cursor.count == 2 else {
+          self.log.error("Error decoding \(cursor)")
+          return Completable.empty()
         }
-        self.api.winSetCursor(
+        return self.api.winSetCursor(
           window: RxNeovimApi.Window(0),
-          pos: [$0[0] + vertSign * absDeltaY, $0[1] + horizSign * absDeltaX]
+          pos: [cursor[0] + vertSign * absDeltaY, cursor[1] + horizSign * absDeltaX]
         )
-        .subscribe(onError: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
       }
-      .subscribe(onFailure: { [weak self] error in
+      .subscribe(onError: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
       .disposed(by: self.disposeBag)
