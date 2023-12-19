@@ -159,8 +159,7 @@ extension NvimView {
 
     let discreteSize = self.discreteSize(size: boundsSize)
     let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-    let infoStr = "(You can turn on the experimental live resizing feature" +
-      " in the Advanced preferences)"
+    let infoStr = "(You can turn on live resizing feature in the Advanced preferences)"
 
     var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
     sizeAttrs[.foregroundColor] = self.theme.foreground
