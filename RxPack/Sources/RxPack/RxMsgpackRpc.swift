@@ -210,30 +210,26 @@ public final class RxMsgpackRpc {
 
   private func startReading() {
     self.pipeReadQueue.async { [weak self] in
-      var readData: Data
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
-      repeat {
+      while let buffer = self?.outPipe?.fileHandleForReading.availableData, buffer.count > 0 {
+        dataToUnmarshall.append(consume buffer)
+
         do {
-          guard let buffer = self?.outPipe?.fileHandleForReading.availableData else { break }
-          readData = buffer
+          guard let (values, remainderData) = try self?.unpackAllWithRemainder(dataToUnmarshall)
+          else { throw Error(msg: "Nil when unpacking") }
 
-          if readData.count > 0 {
-            dataToUnmarshall.append(readData)
-            guard let (values, remainderData) = try self?.unpackAllWithReminder(dataToUnmarshall)
-            else { throw Error(msg: "Nil when unpacking") }
-            if let remainderData { dataToUnmarshall = remainderData }
-            else { dataToUnmarshall.count = 0 }
+          if let remainderData { dataToUnmarshall = consume remainderData }
+          else { dataToUnmarshall.removeAll(keepingCapacity: true) }
 
-            self?.streamQueue.async {
-              values.forEach { value in self?.processMessage(value) }
-            }
+          self?.streamQueue.async {
+            values.forEach { value in self?.processMessage(value) }
           }
         } catch {
           self?.streamQueue.async {
             self?.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
           }
         }
-      } while readData.count > 0
+      }
 
       self?.cleanUp()
     }
@@ -302,18 +298,18 @@ public final class RxMsgpackRpc {
     }
   }
 
-  private func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
+  private func unpackAllWithRemainder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
     var values = [Value]()
     var remainderData: Data?
 
-    var data = Subdata(data: data)
-    while !data.isEmpty {
+    var subdata = Subdata(data: data)
+    while !subdata.isEmpty {
       let value: Value
       do {
-        (value, data) = try unpack(data, compatibility: false)
-        values.append(value)
+        (value, subdata) = try unpack(subdata, compatibility: false)
+        values.append(consume value)
       } catch MessagePackError.insufficientData {
-        remainderData = data.data
+        remainderData = subdata.data
         break
       }
     }
@@ -326,7 +322,7 @@ public final class RxMsgpackRpc {
       self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
     }
 
-    guard let single: SingleResponseObserver = self.singles[msgid] else { return }
+    guard let single = self.singles[msgid] else { return }
 
     single(.success(Response(msgid: msgid, error: error, result: result)))
     self.singles.removeValue(forKey: msgid)
