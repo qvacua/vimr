@@ -1,5 +1,9 @@
 # Next
 
+* Fix a memory leak
+
+# v0.45.4-20231222.171428
+
 * Reduce memory usage, esp., when scrolling.
 
 # v0.45.3-20231219.174252
