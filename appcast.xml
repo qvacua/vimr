@@ -6,24 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.3-20231219.174252</title>
+      <title>v0.45.4-20231222.171428</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231219.174252</sparkle:version>
-      <sparkle:shortVersionString>v0.45.3</sparkle:shortVersionString>
+      <sparkle:version>20231222.171428</sparkle:version>
+      <sparkle:shortVersionString>v0.45.4</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Add <code>enable-debug-menu</code> preferences item to enable Debug menu item.</li>
-<li>Fix a synchronization issue in MsgpackRpc.</li>
-<li>Fix a memory leak</li>
+<li>Reduce memory usage, esp., when scrolling.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.3-20231219.174252
+        https://github.com/qvacua/vimr/releases/tag/v0.45.4-20231222.171428
       </releaseNotesLink>
-      <pubDate>2023-12-19T17:48:21.399583</pubDate>
+      <pubDate>2023-12-22T17:19:30.817390</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.3-20231219.174252/VimR-v0.45.3.tar.bz2"
-                 sparkle:edSignature="ugpC4ddJ+CwIUi+XInBGTBdrP6O7AcNM3CpOwg688HeUgLboLN/wC24rk3LQr4uenjNOL8/EoiT0drHr46OADg==" length="16989202"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.4-20231222.171428/VimR-v0.45.4.tar.bz2"
+                 sparkle:edSignature="m1S6cisCUGuwt3pVauo2IQSLqpeSjRlODRKwstcuheq2rHYD17mFTDbKk3UjugtsLzy5zXnA8lB2N4baTb6dAQ==" length="16991116"
                  type="application/octet-stream"/>
     </item>
   </channel>
