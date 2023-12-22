@@ -211,15 +211,31 @@ public final class RxMsgpackRpc {
   private func startReading() {
     self.pipeReadQueue.async { [weak self] in
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
-      while let buffer = self?.outPipe?.fileHandleForReading.availableData, buffer.count > 0 {
-        dataToUnmarshall.append(consume buffer)
+      var bufferCount = 0
+      while true {
+        // If we do not use autoreleasepool here, the memory usage keeps going up
+        autoreleasepool {
+          guard let buffer = self?.outPipe?.fileHandleForReading.availableData,
+                buffer.count > 0
+          else {
+            bufferCount = 0
+            return
+          }
+
+          bufferCount = buffer.count
+          dataToUnmarshall.append(buffer)
+          _ = consume buffer
+        }
+
+        if bufferCount == 0 { break }
 
         do {
           guard let (values, remainderData) = try self?.unpackAllWithRemainder(dataToUnmarshall)
           else { throw Error(msg: "Nil when unpacking") }
 
-          if let remainderData { dataToUnmarshall = consume remainderData }
+          if let remainderData { dataToUnmarshall = remainderData }
           else { dataToUnmarshall.removeAll(keepingCapacity: true) }
+          _ = consume remainderData
 
           self?.streamQueue.async {
             values.forEach { value in self?.processMessage(value) }
