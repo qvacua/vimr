@@ -1,5 +1,9 @@
 # Next
 
+* Reduce memory usage, esp., when scrolling.
+
+# v0.45.3-20231219.174252
+
 * Add `enable-debug-menu` preferences item to enable Debug menu item.
 * Fix a synchronization issue in MsgpackRpc.
 * Fix a memory leak
