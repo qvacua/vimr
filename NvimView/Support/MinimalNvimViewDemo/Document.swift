@@ -24,9 +24,9 @@ class Document: NSDocument, NSWindowDelegate {
     self.nvimView
       .events
       .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { event in
+      .subscribe(onNext: { [weak self] event in
         switch event {
-        case .neoVimStopped: self.close()
+        case .neoVimStopped: self?.close()
         default: break
         }
       })
