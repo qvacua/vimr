@@ -80,6 +80,7 @@ final class UiBridge {
     process.standardError = errorPipe
     process.standardOutput = outPipe
     process.currentDirectoryPath = self.cwd.path
+    process.qualityOfService = .userInteractive
 
     if self.nvimBinary != "", FileManager.default.fileExists(atPath: self.nvimBinary) {
       process.launchPath = self.nvimBinary
