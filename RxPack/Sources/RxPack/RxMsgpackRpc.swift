@@ -154,10 +154,7 @@ public final class RxMsgpackRpc {
           ]
         )
 
-        if expectsReturnValue {
-          // In streamQueue since we want to sync' access self.singles only in that queue.
-          self?.queue.async { self?.singles[msgid] = single }
-        }
+        if expectsReturnValue { self?.singles[msgid] = single }
 
         do {
           try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
@@ -233,8 +230,7 @@ public final class RxMsgpackRpc {
       while true {
         // If we do not use autoreleasepool here, the memory usage keeps going up
         autoreleasepool {
-          guard let buffer = self?.outPipe?.fileHandleForReading.availableData,
-                buffer.count > 0
+          guard let buffer = self?.outPipe?.fileHandleForReading.availableData, buffer.count > 0
           else {
             bufferCount = 0
             return
