@@ -123,10 +123,10 @@ public final class RxMsgpackRpc {
     expectsReturnValue: Bool
   ) -> Single<Response> {
     Single.create { [weak self] single in
-      guard let msgid = self?.nextMsgid else { return Disposables.create() }
-      self?.nextMsgid += 1
-
       self?.queue.async {
+        guard let msgid = self?.nextMsgid else { return }
+        self?.nextMsgid += 1
+        
         let packed = pack(
           [
             .uint(MessageType.request.rawValue),
