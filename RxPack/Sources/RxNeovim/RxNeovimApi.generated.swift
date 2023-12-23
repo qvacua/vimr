@@ -54,7 +54,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_autocmds", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_autocmds", params: params)
       .map(transform)
   }
 
@@ -76,7 +76,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_create_autocmd", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_create_autocmd", params: params)
       .map(transform)
   }
 
@@ -88,7 +88,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_autocmd", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_autocmd", params: params)
       .asCompletable()
   }
 
@@ -100,7 +100,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_clear_autocmds", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_clear_autocmds", params: params)
       .asCompletable()
   }
 
@@ -122,7 +122,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_create_augroup", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_create_augroup", params: params)
       .map(transform)
   }
 
@@ -134,7 +134,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_augroup_by_id", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_augroup_by_id", params: params)
       .asCompletable()
   }
 
@@ -146,7 +146,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_augroup_by_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_augroup_by_name", params: params)
       .asCompletable()
   }
 
@@ -160,7 +160,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_exec_autocmds", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_exec_autocmds", params: params)
       .asCompletable()
   }
 
@@ -180,7 +180,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_line_count", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_line_count", params: params)
       .map(transform)
   }
 
@@ -204,7 +204,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_attach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_attach", params: params)
       .map(transform)
   }
 
@@ -224,7 +224,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_detach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_detach", params: params)
       .map(transform)
   }
 
@@ -250,7 +250,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_lines", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_lines", params: params)
       .map(transform)
   }
 
@@ -270,7 +270,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_lines", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_lines", params: params)
       .asCompletable()
   }
 
@@ -292,7 +292,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_text", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_text", params: params)
       .asCompletable()
   }
 
@@ -322,7 +322,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_text", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_text", params: params)
       .map(transform)
   }
 
@@ -344,7 +344,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_offset", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_offset", params: params)
       .map(transform)
   }
 
@@ -366,7 +366,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_var", params: params)
       .map(transform)
   }
 
@@ -386,7 +386,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_changedtick", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_changedtick", params: params)
       .map(transform)
   }
 
@@ -408,7 +408,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_keymap", params: params)
       .map(transform)
   }
 
@@ -428,7 +428,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_keymap", params: params)
       .asCompletable()
   }
 
@@ -444,7 +444,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_del_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_del_keymap", params: params)
       .asCompletable()
   }
 
@@ -460,7 +460,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_var", params: params)
       .asCompletable()
   }
 
@@ -474,7 +474,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_del_var", params: params)
       .asCompletable()
   }
 
@@ -494,7 +494,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_name", params: params)
       .map(transform)
   }
 
@@ -508,7 +508,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_name", params: params)
       .asCompletable()
   }
 
@@ -528,7 +528,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_is_loaded", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_is_loaded", params: params)
       .map(transform)
   }
 
@@ -542,7 +542,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_delete", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_delete", params: params)
       .asCompletable()
   }
 
@@ -562,7 +562,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_is_valid", params: params)
       .map(transform)
   }
 
@@ -584,7 +584,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_del_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_del_mark", params: params)
       .map(transform)
   }
 
@@ -612,7 +612,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_set_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_mark", params: params)
       .map(transform)
   }
 
@@ -637,7 +637,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_mark", params: params)
       .map(transform)
   }
 
@@ -659,7 +659,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_call", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_call", params: params)
       .map(transform)
   }
 
@@ -681,7 +681,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_parse_cmd", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_parse_cmd", params: params)
       .map(transform)
   }
 
@@ -703,7 +703,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_cmd", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_cmd", params: params)
       .map(transform)
   }
 
@@ -719,7 +719,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_create_user_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_create_user_command", params: params)
       .asCompletable()
   }
 
@@ -731,7 +731,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_user_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_user_command", params: params)
       .asCompletable()
   }
 
@@ -749,7 +749,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_create_user_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_create_user_command", params: params)
       .asCompletable()
   }
 
@@ -763,7 +763,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_del_user_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_del_user_command", params: params)
       .asCompletable()
   }
 
@@ -783,7 +783,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_commands", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_commands", params: params)
       .map(transform)
   }
 
@@ -805,7 +805,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_commands", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_commands", params: params)
       .map(transform)
   }
 
@@ -828,7 +828,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_exec", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_exec", params: params)
       .map(transform)
   }
 
@@ -849,7 +849,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_command_output", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_command_output", params: params)
       .map(transform)
   }
 
@@ -872,7 +872,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_execute_lua", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_execute_lua", params: params)
       .map(transform)
   }
 
@@ -893,7 +893,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_number", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_number", params: params)
       .map(transform)
   }
 
@@ -912,7 +912,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_clear_highlight", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_clear_highlight", params: params)
       .asCompletable()
   }
 
@@ -941,7 +941,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_set_virtual_text", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_virtual_text", params: params)
       .map(transform)
   }
 
@@ -964,7 +964,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_hl_by_id", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_hl_by_id", params: params)
       .map(transform)
   }
 
@@ -987,7 +987,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_hl_by_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_hl_by_name", params: params)
       .map(transform)
   }
 
@@ -1004,7 +1004,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_insert", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_insert", params: params)
       .asCompletable()
   }
 
@@ -1027,7 +1027,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_line", params: params)
       .map(transform)
   }
 
@@ -1044,7 +1044,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_set_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_line", params: params)
       .asCompletable()
   }
 
@@ -1059,7 +1059,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_del_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_del_line", params: params)
       .asCompletable()
   }
 
@@ -1088,7 +1088,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_line_slice", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_line_slice", params: params)
       .map(transform)
   }
 
@@ -1111,7 +1111,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_set_line_slice", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_line_slice", params: params)
       .asCompletable()
   }
 
@@ -1136,7 +1136,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_var", params: params)
       .map(transform)
   }
 
@@ -1159,7 +1159,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_del_var", params: params)
       .map(transform)
   }
 
@@ -1184,7 +1184,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_set_var", params: params)
       .map(transform)
   }
 
@@ -1207,7 +1207,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_del_var", params: params)
       .map(transform)
   }
 
@@ -1232,7 +1232,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_set_var", params: params)
       .map(transform)
   }
 
@@ -1255,7 +1255,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_del_var", params: params)
       .map(transform)
   }
 
@@ -1278,7 +1278,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_var", params: params)
       .map(transform)
   }
 
@@ -1299,7 +1299,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_del_var", params: params)
       .map(transform)
   }
 
@@ -1319,7 +1319,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_option_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_option_info", params: params)
       .map(transform)
   }
 
@@ -1339,7 +1339,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_create_namespace", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_create_namespace", params: params)
       .map(transform)
   }
 
@@ -1357,7 +1357,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_namespaces", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_namespaces", params: params)
       .map(transform)
   }
 
@@ -1386,7 +1386,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_extmark_by_id", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_extmark_by_id", params: params)
       .map(transform)
   }
 
@@ -1414,7 +1414,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_extmarks", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_extmarks", params: params)
       .map(transform)
   }
 
@@ -1442,7 +1442,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_set_extmark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_extmark", params: params)
       .map(transform)
   }
 
@@ -1466,7 +1466,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_del_extmark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_del_extmark", params: params)
       .map(transform)
   }
 
@@ -1496,7 +1496,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_add_highlight", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_add_highlight", params: params)
       .map(transform)
   }
 
@@ -1514,7 +1514,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_clear_namespace", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_clear_namespace", params: params)
       .asCompletable()
   }
 
@@ -1528,7 +1528,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_decoration_provider", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_decoration_provider", params: params)
       .asCompletable()
   }
 
@@ -1550,7 +1550,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_option_value", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_option_value", params: params)
       .map(transform)
   }
 
@@ -1566,7 +1566,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_option_value", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_option_value", params: params)
       .asCompletable()
   }
 
@@ -1584,7 +1584,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_all_options_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_all_options_info", params: params)
       .map(transform)
   }
 
@@ -1606,7 +1606,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_option_info2", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_option_info2", params: params)
       .map(transform)
   }
 
@@ -1620,7 +1620,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_option", params: params)
       .asCompletable()
   }
 
@@ -1640,7 +1640,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_option", params: params)
       .map(transform)
   }
 
@@ -1662,7 +1662,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_buf_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_get_option", params: params)
       .map(transform)
   }
 
@@ -1678,7 +1678,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_buf_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_buf_set_option", params: params)
       .asCompletable()
   }
 
@@ -1700,7 +1700,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_option", params: params)
       .map(transform)
   }
 
@@ -1716,7 +1716,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_option", params: params)
       .asCompletable()
   }
 
@@ -1736,7 +1736,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_tabpage_list_wins", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_list_wins", params: params)
       .map(transform)
   }
 
@@ -1758,7 +1758,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_tabpage_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_get_var", params: params)
       .map(transform)
   }
 
@@ -1774,7 +1774,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_tabpage_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_set_var", params: params)
       .asCompletable()
   }
 
@@ -1788,7 +1788,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_tabpage_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_del_var", params: params)
       .asCompletable()
   }
 
@@ -1808,7 +1808,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_tabpage_get_win", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_get_win", params: params)
       .map(transform)
   }
 
@@ -1828,7 +1828,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_tabpage_get_number", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_get_number", params: params)
       .map(transform)
   }
 
@@ -1848,7 +1848,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_tabpage_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_tabpage_is_valid", params: params)
       .map(transform)
   }
 
@@ -1864,7 +1864,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_attach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_attach", params: params)
       .asCompletable()
   }
 
@@ -1881,7 +1881,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "ui_attach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "ui_attach", params: params)
       .asCompletable()
   }
 
@@ -1893,7 +1893,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_set_focus", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_set_focus", params: params)
       .asCompletable()
   }
 
@@ -1903,7 +1903,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_detach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_detach", params: params)
       .asCompletable()
   }
 
@@ -1917,7 +1917,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_try_resize", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_try_resize", params: params)
       .asCompletable()
   }
 
@@ -1931,7 +1931,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_set_option", params: params)
       .asCompletable()
   }
 
@@ -1947,7 +1947,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_try_resize_grid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_try_resize_grid", params: params)
       .asCompletable()
   }
 
@@ -1959,7 +1959,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_pum_set_height", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_pum_set_height", params: params)
       .asCompletable()
   }
 
@@ -1977,7 +1977,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_ui_pum_set_bounds", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_ui_pum_set_bounds", params: params)
       .asCompletable()
   }
 
@@ -1997,7 +1997,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_hl_id_by_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_hl_id_by_name", params: params)
       .map(transform)
   }
 
@@ -2019,7 +2019,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_hl", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_hl", params: params)
       .map(transform)
   }
 
@@ -2035,7 +2035,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_hl", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_hl", params: params)
       .asCompletable()
   }
 
@@ -2047,7 +2047,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_hl_ns", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_hl_ns", params: params)
       .asCompletable()
   }
 
@@ -2059,7 +2059,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_hl_ns_fast", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_hl_ns_fast", params: params)
       .asCompletable()
   }
 
@@ -2075,7 +2075,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_feedkeys", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_feedkeys", params: params)
       .asCompletable()
   }
 
@@ -2095,7 +2095,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_input", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_input", params: params)
       .map(transform)
   }
 
@@ -2117,7 +2117,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_input_mouse", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_input_mouse", params: params)
       .asCompletable()
   }
 
@@ -2143,7 +2143,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_replace_termcodes", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_replace_termcodes", params: params)
       .map(transform)
   }
 
@@ -2165,7 +2165,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_exec_lua", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_exec_lua", params: params)
       .map(transform)
   }
 
@@ -2189,7 +2189,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_notify", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_notify", params: params)
       .map(transform)
   }
 
@@ -2209,7 +2209,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_strwidth", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_strwidth", params: params)
       .map(transform)
   }
 
@@ -2227,7 +2227,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_runtime_paths", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_runtime_paths", params: params)
       .map(transform)
   }
 
@@ -2249,7 +2249,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_runtime_file", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_runtime_file", params: params)
       .map(transform)
   }
 
@@ -2261,7 +2261,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_current_dir", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_current_dir", params: params)
       .asCompletable()
   }
 
@@ -2279,7 +2279,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_current_line", params: params)
       .map(transform)
   }
 
@@ -2291,7 +2291,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_current_line", params: params)
       .asCompletable()
   }
 
@@ -2301,7 +2301,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_current_line", params: params)
       .asCompletable()
   }
 
@@ -2321,7 +2321,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_var", params: params)
       .map(transform)
   }
 
@@ -2335,7 +2335,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_var", params: params)
       .asCompletable()
   }
 
@@ -2347,7 +2347,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_var", params: params)
       .asCompletable()
   }
 
@@ -2367,7 +2367,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_vvar", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_vvar", params: params)
       .map(transform)
   }
 
@@ -2381,7 +2381,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_vvar", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_vvar", params: params)
       .asCompletable()
   }
 
@@ -2397,7 +2397,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_echo", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_echo", params: params)
       .asCompletable()
   }
 
@@ -2409,7 +2409,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_out_write", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_out_write", params: params)
       .asCompletable()
   }
 
@@ -2421,7 +2421,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_err_write", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_err_write", params: params)
       .asCompletable()
   }
 
@@ -2433,7 +2433,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_err_writeln", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_err_writeln", params: params)
       .asCompletable()
   }
 
@@ -2451,7 +2451,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_bufs", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_bufs", params: params)
       .map(transform)
   }
 
@@ -2469,7 +2469,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_current_buf", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_current_buf", params: params)
       .map(transform)
   }
 
@@ -2481,7 +2481,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_current_buf", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_current_buf", params: params)
       .asCompletable()
   }
 
@@ -2499,7 +2499,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_wins", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_wins", params: params)
       .map(transform)
   }
 
@@ -2517,7 +2517,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_current_win", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_current_win", params: params)
       .map(transform)
   }
 
@@ -2529,7 +2529,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_current_win", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_current_win", params: params)
       .asCompletable()
   }
 
@@ -2551,7 +2551,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_create_buf", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_create_buf", params: params)
       .map(transform)
   }
 
@@ -2573,7 +2573,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_open_term", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_open_term", params: params)
       .map(transform)
   }
 
@@ -2587,7 +2587,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_chan_send", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_chan_send", params: params)
       .asCompletable()
   }
 
@@ -2605,7 +2605,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_tabpages", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_tabpages", params: params)
       .map(transform)
   }
 
@@ -2623,7 +2623,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_current_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_current_tabpage", params: params)
       .map(transform)
   }
 
@@ -2635,7 +2635,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_current_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_current_tabpage", params: params)
       .asCompletable()
   }
 
@@ -2659,7 +2659,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_paste", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_paste", params: params)
       .map(transform)
   }
 
@@ -2677,7 +2677,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_put", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_put", params: params)
       .asCompletable()
   }
 
@@ -2689,7 +2689,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_subscribe", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_subscribe", params: params)
       .asCompletable()
   }
 
@@ -2701,7 +2701,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_unsubscribe", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_unsubscribe", params: params)
       .asCompletable()
   }
 
@@ -2721,7 +2721,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_color_by_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_color_by_name", params: params)
       .map(transform)
   }
 
@@ -2739,7 +2739,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_color_map", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_color_map", params: params)
       .map(transform)
   }
 
@@ -2759,7 +2759,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_context", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_context", params: params)
       .map(transform)
   }
 
@@ -2779,7 +2779,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_load_context", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_load_context", params: params)
       .map(transform)
   }
 
@@ -2788,7 +2788,7 @@ public extension RxNeovimApi {
     let params: [RxNeovimApi.Value] = [
     ]
     return self
-      .rpc(method: "nvim_get_mode", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_mode", params: params)
       .map { value in
         guard let result = msgPackDictToSwift(value.dictionaryValue) else {
           throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
@@ -2814,7 +2814,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_keymap", params: params)
       .map(transform)
   }
 
@@ -2832,7 +2832,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_keymap", params: params)
       .asCompletable()
   }
 
@@ -2846,7 +2846,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_del_keymap", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_keymap", params: params)
       .asCompletable()
   }
 
@@ -2864,7 +2864,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_api_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_api_info", params: params)
       .map(transform)
   }
 
@@ -2884,7 +2884,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_set_client_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_set_client_info", params: params)
       .asCompletable()
   }
 
@@ -2904,7 +2904,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_chan_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_chan_info", params: params)
       .map(transform)
   }
 
@@ -2922,7 +2922,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_chans", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_chans", params: params)
       .map(transform)
   }
 
@@ -2942,7 +2942,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_call_atomic", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_call_atomic", params: params)
       .map(transform)
   }
 
@@ -2960,7 +2960,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_list_uis", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_list_uis", params: params)
       .map(transform)
   }
 
@@ -2980,7 +2980,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_proc_children", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_proc_children", params: params)
       .map(transform)
   }
 
@@ -3000,7 +3000,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_proc", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_proc", params: params)
       .map(transform)
   }
 
@@ -3018,7 +3018,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_select_popupmenu_item", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_select_popupmenu_item", params: params)
       .asCompletable()
   }
 
@@ -3038,7 +3038,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_del_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_del_mark", params: params)
       .map(transform)
   }
 
@@ -3060,7 +3060,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_get_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_get_mark", params: params)
       .map(transform)
   }
 
@@ -3082,7 +3082,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_eval_statusline", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_eval_statusline", params: params)
       .map(transform)
   }
 
@@ -3104,7 +3104,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_exec2", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_exec2", params: params)
       .map(transform)
   }
 
@@ -3116,7 +3116,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_command", params: params)
       .asCompletable()
   }
 
@@ -3136,7 +3136,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_eval", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_eval", params: params)
       .map(transform)
   }
 
@@ -3158,7 +3158,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_call_function", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_call_function", params: params)
       .map(transform)
   }
 
@@ -3182,7 +3182,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_call_dict_function", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_call_dict_function", params: params)
       .map(transform)
   }
 
@@ -3206,7 +3206,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_parse_expression", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_parse_expression", params: params)
       .map(transform)
   }
 
@@ -3230,7 +3230,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_open_win", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_open_win", params: params)
       .map(transform)
   }
 
@@ -3244,7 +3244,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_config", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_config", params: params)
       .asCompletable()
   }
 
@@ -3264,7 +3264,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_config", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_config", params: params)
       .map(transform)
   }
 
@@ -3284,7 +3284,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_buf", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_buf", params: params)
       .map(transform)
   }
 
@@ -3298,7 +3298,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_buf", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_buf", params: params)
       .asCompletable()
   }
 
@@ -3321,7 +3321,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_cursor", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_cursor", params: params)
       .map(transform)
   }
 
@@ -3335,7 +3335,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_cursor", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_cursor", params: params)
       .asCompletable()
   }
 
@@ -3355,7 +3355,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_height", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_height", params: params)
       .map(transform)
   }
 
@@ -3369,7 +3369,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_height", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_height", params: params)
       .asCompletable()
   }
 
@@ -3389,7 +3389,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_width", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_width", params: params)
       .map(transform)
   }
 
@@ -3403,7 +3403,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_width", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_width", params: params)
       .asCompletable()
   }
 
@@ -3425,7 +3425,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_var", params: params)
       .map(transform)
   }
 
@@ -3441,7 +3441,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_var", params: params)
       .asCompletable()
   }
 
@@ -3455,7 +3455,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_del_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_del_var", params: params)
       .asCompletable()
   }
 
@@ -3478,7 +3478,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_position", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_position", params: params)
       .map(transform)
   }
 
@@ -3498,7 +3498,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_tabpage", params: params)
       .map(transform)
   }
 
@@ -3518,7 +3518,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_get_number", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_get_number", params: params)
       .map(transform)
   }
 
@@ -3538,7 +3538,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_is_valid", params: params)
       .map(transform)
   }
 
@@ -3550,7 +3550,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_hide", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_hide", params: params)
       .asCompletable()
   }
 
@@ -3564,7 +3564,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_close", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_close", params: params)
       .asCompletable()
   }
 
@@ -3586,7 +3586,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "nvim_win_call", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_call", params: params)
       .map(transform)
   }
 
@@ -3600,7 +3600,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "nvim_win_set_hl_ns", params: params, expectsReturnValue: true)
+      .sendRequest(method: "nvim_win_set_hl_ns", params: params)
       .asCompletable()
   }
 
@@ -3621,7 +3621,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_line_count", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_line_count", params: params)
       .map(transform)
   }
 
@@ -3648,7 +3648,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_lines", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_lines", params: params)
       .map(transform)
   }
 
@@ -3669,7 +3669,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_set_lines", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_lines", params: params)
       .asCompletable()
   }
 
@@ -3692,7 +3692,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_var", params: params)
       .map(transform)
   }
 
@@ -3713,7 +3713,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_name", params: params)
       .map(transform)
   }
 
@@ -3728,7 +3728,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_set_name", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_name", params: params)
       .asCompletable()
   }
 
@@ -3749,7 +3749,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_is_valid", params: params)
       .map(transform)
   }
 
@@ -3775,7 +3775,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_mark", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_mark", params: params)
       .map(transform)
   }
 
@@ -3796,7 +3796,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_command_output", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_command_output", params: params)
       .map(transform)
   }
 
@@ -3817,7 +3817,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_number", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_number", params: params)
       .map(transform)
   }
 
@@ -3836,7 +3836,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_clear_highlight", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_clear_highlight", params: params)
       .asCompletable()
   }
 
@@ -3867,7 +3867,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_add_highlight", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_add_highlight", params: params)
       .map(transform)
   }
 
@@ -3882,7 +3882,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_option", params: params)
       .asCompletable()
   }
 
@@ -3903,7 +3903,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_option", params: params)
       .map(transform)
   }
 
@@ -3926,7 +3926,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "buffer_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_get_option", params: params)
       .map(transform)
   }
 
@@ -3943,7 +3943,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "buffer_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "buffer_set_option", params: params)
       .asCompletable()
   }
 
@@ -3966,7 +3966,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_option", params: params)
       .map(transform)
   }
 
@@ -3983,7 +3983,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "window_set_option", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_set_option", params: params)
       .asCompletable()
   }
 
@@ -4004,7 +4004,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_get_windows", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_get_windows", params: params)
       .map(transform)
   }
 
@@ -4027,7 +4027,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_get_var", params: params)
       .map(transform)
   }
 
@@ -4048,7 +4048,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_get_window", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_get_window", params: params)
       .map(transform)
   }
 
@@ -4069,7 +4069,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "tabpage_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "tabpage_is_valid", params: params)
       .map(transform)
   }
 
@@ -4080,7 +4080,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "ui_detach", params: params, expectsReturnValue: true)
+      .sendRequest(method: "ui_detach", params: params)
       .asCompletable()
   }
 
@@ -4103,7 +4103,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "ui_try_resize", params: params, expectsReturnValue: true)
+      .sendRequest(method: "ui_try_resize", params: params)
       .map(transform)
   }
 
@@ -4120,7 +4120,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_feedkeys", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_feedkeys", params: params)
       .asCompletable()
   }
 
@@ -4141,7 +4141,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_input", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_input", params: params)
       .map(transform)
   }
 
@@ -4168,7 +4168,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_replace_termcodes", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_replace_termcodes", params: params)
       .map(transform)
   }
 
@@ -4189,7 +4189,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_strwidth", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_strwidth", params: params)
       .map(transform)
   }
 
@@ -4208,7 +4208,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_list_runtime_paths", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_list_runtime_paths", params: params)
       .map(transform)
   }
 
@@ -4221,7 +4221,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_change_directory", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_change_directory", params: params)
       .asCompletable()
   }
 
@@ -4240,7 +4240,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_current_line", params: params)
       .map(transform)
   }
 
@@ -4253,7 +4253,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_set_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_current_line", params: params)
       .asCompletable()
   }
 
@@ -4264,7 +4264,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_del_current_line", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_del_current_line", params: params)
       .asCompletable()
   }
 
@@ -4285,7 +4285,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_var", params: params)
       .map(transform)
   }
 
@@ -4306,7 +4306,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_vvar", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_vvar", params: params)
       .map(transform)
   }
 
@@ -4319,7 +4319,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_out_write", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_out_write", params: params)
       .asCompletable()
   }
 
@@ -4332,7 +4332,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_err_write", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_err_write", params: params)
       .asCompletable()
   }
 
@@ -4345,7 +4345,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_report_error", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_report_error", params: params)
       .asCompletable()
   }
 
@@ -4364,7 +4364,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_buffers", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_buffers", params: params)
       .map(transform)
   }
 
@@ -4383,7 +4383,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_current_buffer", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_current_buffer", params: params)
       .map(transform)
   }
 
@@ -4396,7 +4396,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_set_current_buffer", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_current_buffer", params: params)
       .asCompletable()
   }
 
@@ -4415,7 +4415,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_windows", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_windows", params: params)
       .map(transform)
   }
 
@@ -4434,7 +4434,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_current_window", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_current_window", params: params)
       .map(transform)
   }
 
@@ -4447,7 +4447,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_set_current_window", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_current_window", params: params)
       .asCompletable()
   }
 
@@ -4466,7 +4466,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_tabpages", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_tabpages", params: params)
       .map(transform)
   }
 
@@ -4485,7 +4485,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_current_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_current_tabpage", params: params)
       .map(transform)
   }
 
@@ -4498,7 +4498,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_set_current_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_set_current_tabpage", params: params)
       .asCompletable()
   }
 
@@ -4511,7 +4511,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_subscribe", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_subscribe", params: params)
       .asCompletable()
   }
 
@@ -4524,7 +4524,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_unsubscribe", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_unsubscribe", params: params)
       .asCompletable()
   }
 
@@ -4545,7 +4545,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_name_to_color", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_name_to_color", params: params)
       .map(transform)
   }
 
@@ -4564,7 +4564,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_color_map", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_color_map", params: params)
       .map(transform)
   }
 
@@ -4583,7 +4583,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_get_api_info", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_get_api_info", params: params)
       .map(transform)
   }
 
@@ -4596,7 +4596,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "vim_command", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_command", params: params)
       .asCompletable()
   }
 
@@ -4617,7 +4617,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_eval", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_eval", params: params)
       .map(transform)
   }
 
@@ -4640,7 +4640,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "vim_call_function", params: params, expectsReturnValue: true)
+      .sendRequest(method: "vim_call_function", params: params)
       .map(transform)
   }
 
@@ -4661,7 +4661,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_buffer", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_buffer", params: params)
       .map(transform)
   }
 
@@ -4685,7 +4685,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_cursor", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_cursor", params: params)
       .map(transform)
   }
 
@@ -4700,7 +4700,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "window_set_cursor", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_set_cursor", params: params)
       .asCompletable()
   }
 
@@ -4721,7 +4721,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_height", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_height", params: params)
       .map(transform)
   }
 
@@ -4736,7 +4736,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "window_set_height", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_set_height", params: params)
       .asCompletable()
   }
 
@@ -4757,7 +4757,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_width", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_width", params: params)
       .map(transform)
   }
 
@@ -4772,7 +4772,7 @@ public extension RxNeovimApi {
     ]
 
     return self
-      .rpc(method: "window_set_width", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_set_width", params: params)
       .asCompletable()
   }
 
@@ -4795,7 +4795,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_var", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_var", params: params)
       .map(transform)
   }
 
@@ -4819,7 +4819,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_position", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_position", params: params)
       .map(transform)
   }
 
@@ -4840,7 +4840,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_get_tabpage", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_get_tabpage", params: params)
       .map(transform)
   }
 
@@ -4861,7 +4861,7 @@ public extension RxNeovimApi {
     }
 
     return self
-      .rpc(method: "window_is_valid", params: params, expectsReturnValue: true)
+      .sendRequest(method: "window_is_valid", params: params)
       .map(transform)
   }
 }

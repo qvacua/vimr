@@ -18,7 +18,7 @@ void_func_template = Template('''\
     ]
 
     return self
-      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      .sendRequest(method: "${nvim_func_name}", params: params)
       .asCompletable()
   }
 ''')
@@ -30,7 +30,7 @@ get_mode_func_template = Template('''\
         ${params}
     ]
     return self
-      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      .sendRequest(method: "${nvim_func_name}", params: params)
       .map { value in
         guard let result = (${return_value}) else {
           throw RxNeovimApi.Error.conversion(type: ${result_type}.self)
@@ -57,7 +57,7 @@ func_template = Template('''\
     }
 
     return self
-      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
+      .sendRequest(method: "${nvim_func_name}", params: params)
       .map(transform)
   }
 ''')
