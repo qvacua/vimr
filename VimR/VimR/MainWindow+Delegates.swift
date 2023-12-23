@@ -56,7 +56,6 @@ extension MainWindow {
 
   func set(title: String) {
     self.window.title = title
-    self.set(repUrl: self.window.representedURL, themed: self.titlebarThemed)
   }
 
   func set(dirtyStatus: Bool) {

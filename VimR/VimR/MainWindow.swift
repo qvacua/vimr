@@ -415,12 +415,14 @@ final class MainWindow: NSObject,
         )
 
         self.usesTheme = state.appearance.usesTheme
-        self.currentBuffer = state.currentBuffer
 
-        if state.appearance.showsFileIcon {
-          self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
-        } else {
-          self.set(repUrl: nil, themed: self.titlebarThemed)
+        if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
+          self.currentBuffer = state.currentBuffer
+          if state.appearance.showsFileIcon {
+            self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
+          } else {
+            self.set(repUrl: nil, themed: self.titlebarThemed)
+          }
         }
 
         self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
