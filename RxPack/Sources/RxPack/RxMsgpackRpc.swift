@@ -4,6 +4,7 @@
 import Foundation
 import MessagePack
 import RxSwift
+import os
 
 public final class RxMsgpackRpc {
   public static let defaultReadBufferSize = 10240
@@ -83,6 +84,12 @@ public final class RxMsgpackRpc {
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
     Completable.create { [weak self] completable in
       self?.queue.async {
+        if self?.closed == true {
+          self?.log.warning("Not sending response because closed")
+          completable(.error(Error(msg: "Rpc closed")))
+          return
+        }
+        
         let packed = pack(
           [
             .uint(MessageType.response.rawValue),
@@ -119,6 +126,12 @@ public final class RxMsgpackRpc {
   ) -> Single<Response> {
     Single.create { [weak self] single in
       self?.queue.async {
+        if self?.closed == true {
+          self?.log.warning("Not sending request because closed")
+          single(.failure(Error(msg: "Rpc closed")))
+          return
+        }
+        
         guard let msgid = self?.nextMsgid else { return }
         self?.nextMsgid += 1
 
@@ -163,6 +176,7 @@ public final class RxMsgpackRpc {
 
   // R/w only in self.queue
   private var nextMsgid: UInt32 = 0
+  private var closed = false
 
   private let pipeReadQueue: DispatchQueue
   private let queue: DispatchQueue
@@ -170,6 +184,8 @@ public final class RxMsgpackRpc {
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
+  
+  private let log = Logger(subsystem: "com.qvacua.RxPack.RxMsgpackRpc", category: "rpc")
 
   // R/w only in streamQueue
   private var singles: [UInt32: SingleResponseObserver] = [:]
@@ -183,12 +199,16 @@ public final class RxMsgpackRpc {
 
   private func cleanUp() {
     self.queue.async { [weak self] in
+      self?.closed = true
+      
       self?.inPipe = nil
       self?.outPipe = nil
       self?.errorPipe = nil
       
       self?.streamSubject.onCompleted()
-      self?.singles.forEach { _, single in single(.failure(Error(msg: "Pipe closed"))) }
+      self?.singles.forEach { _, single in single(.failure(Error(msg: "Rpc closed"))) }
+      
+      self?.log.info("RxMsgpackRpc closed")
     }
   }
 
@@ -222,6 +242,10 @@ public final class RxMsgpackRpc {
           _ = consume remainderData
 
           self?.queue.async {
+            if self?.closed == true {
+              self?.log.info("Not processing msgs because closed.")
+              return
+            }
             values.forEach { value in self?.processMessage(value) }
           }
         } catch {
