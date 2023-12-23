@@ -35,7 +35,11 @@ let package = Package(
     ),
     .testTarget(
       name: "RxNeovimTests",
-      dependencies: ["RxNeovim"]
+      dependencies: [
+        "RxNeovim",
+        .product(name: "RxBlocking", package: "RxSwift"),
+        .product(name: "Nimble", package: "Nimble"),
+      ]
     ),
   ]
 )
