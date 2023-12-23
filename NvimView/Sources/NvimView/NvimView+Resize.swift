@@ -99,7 +99,7 @@ extension NvimView {
     // NvimView.swift
     try? self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
       .andThen(
-        self.api.getApiInfo(errWhenBlocked: false)
+        self.api.getApiInfo()
           .flatMapCompletable { value in
             guard let info = value.arrayValue,
                   info.count == 2,
@@ -128,7 +128,7 @@ extension NvimView {
             autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
             autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
             autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
-            """, opts: [:], errWhenBlocked: false)
+            """, opts: [:])
             // swiftformat:enable all
               .asCompletable()
           }

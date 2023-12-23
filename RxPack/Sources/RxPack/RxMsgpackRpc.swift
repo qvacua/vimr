@@ -216,7 +216,11 @@ public final class RxMsgpackRpc {
       self?.errorPipe = nil
 
       self?.streamSubject.onCompleted()
-      self?.singles.forEach { _, single in single(.failure(Error(msg: "Rpc closed"))) }
+      self?.singles.forEach { msgid, single in single(.success(.init(
+        msgid: msgid,
+        error: .nil,
+        result: .nil
+      ))) }
 
       self?.log.info("RxMsgpackRpc closed")
     }

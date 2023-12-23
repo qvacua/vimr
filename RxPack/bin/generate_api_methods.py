@@ -12,23 +12,13 @@ import io
 
 void_func_template = Template('''\
   public func ${func_name}(${args}
-    expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
         ${params}
     ]
 
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
-        )
-        .asCompletable()
-    }
-
     return self
-      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: expectsReturnValue)
+      .rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
       .asCompletable()
   }
 ''')
@@ -36,7 +26,6 @@ void_func_template = Template('''\
 get_mode_func_template = Template('''\
   public func ${func_name}(${args}
   ) -> Single<${result_type}> {
-
     let params: [RxNeovimApi.Value] = [
         ${params}
     ]
@@ -54,9 +43,7 @@ get_mode_func_template = Template('''\
 
 func_template = Template('''\
   public func ${func_name}(${args}
-    errWhenBlocked: Bool = true
   ) -> Single<${result_type}> {
-
     let params: [RxNeovimApi.Value] = [
         ${params}
     ]
@@ -67,14 +54,6 @@ func_template = Template('''\
       }
 
       return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.rpc(method: "${nvim_func_name}", params: params, expectsReturnValue: true)
-        )
-        .map(transform)
     }
 
     return self
@@ -352,6 +331,7 @@ def parse_args(raw_params):
     params = dict(zip(names, types))
 
     result = '\n'.join([n + ': ' + t + ',' for n, t in params.items()])
+    result = result[:-1]
     if not result:
         return ''
 

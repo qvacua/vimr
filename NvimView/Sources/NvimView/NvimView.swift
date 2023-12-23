@@ -350,7 +350,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   private var _characterspacing = NvimView.defaultCharacterspacing
 
   private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) {
-    self.api.getApiInfo(errWhenBlocked: false)
+    self.api.getApiInfo()
       .flatMapCompletable { value in
         guard let info = value.arrayValue,
               info.count == 2,
@@ -368,18 +368,14 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         autocmd BufEnter * call rpcnotify(\(channel), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
         autocmd DirChanged * call rpcnotify(\( channel), 'autocommand', 'dirchanged', expand('<afile>'))
         autocmd BufModifiedSet * call rpcnotify(\(channel), 'autocommand', 'bufmodifiedset', str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
-        """, opts: [:], errWhenBlocked: false)
+        """, opts: [:])
         // swiftformat:enable all
           .asCompletable()
-          .andThen(self.api.subscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
+          .andThen(self.api.subscribe(event: NvimView.rpcEventName))
           .andThen(
             self.sourceFileUrls.reduce(.empty()) { prev, url in
               prev.andThen(
-                self.api.exec2(
-                  src: "source \(url.shellEscapedPath)",
-                  opts: ["output": true],
-                  errWhenBlocked: false
-                )
+                self.api.exec2(src: "source \(url.shellEscapedPath)", opts: ["output": true])
                 .map { retval in
                   guard let output = retval["output"]?.stringValue else {
                     throw RxNeovimApi.Error

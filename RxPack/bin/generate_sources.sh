@@ -15,6 +15,7 @@ main() {
 
   pushd RxPack >/dev/null
     NVIM_PATH="../Neovim/build/bin/nvim" ./bin/generate_api_methods.py
+    swiftformat ./Sources/RxNeovim/RxNeovimApi.generated.swift
   popd >/dev/null
 
   popd >/dev/null

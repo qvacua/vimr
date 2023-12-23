@@ -59,8 +59,8 @@ public extension NvimView {
         cellPosition: cellPosition
       )
       self.api
-        .input(keys: vimInputX, errWhenBlocked: false).asCompletable()
-        .andThen(self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable())
+        .input(keys: vimInputX).asCompletable()
+        .andThen(self.api.input(keys: vimInputY).asCompletable())
         .subscribe(onError: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -169,7 +169,7 @@ public extension NvimView {
     }
 
     self.api
-      .input(keys: result, errWhenBlocked: false)
+      .input(keys: result)
       .subscribe(onFailure: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })

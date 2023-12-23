@@ -69,8 +69,8 @@ class RxNeovimApiExample: XCTestCase {
     formatter.dateFormat = "mm:ss.SSS"
     for i in 0...100 {
       let date = Date()
-      let response = try self.api.commandOutput(
-        command: "echo '\(i) \(formatter.string(from: date))'"
+      let response = try self.api.exec2(
+        src: "echo '\(i) \(formatter.string(from: date))'", opts: ["output": true]
       ).toBlocking().first()!
       Swift.print(response)
     }
