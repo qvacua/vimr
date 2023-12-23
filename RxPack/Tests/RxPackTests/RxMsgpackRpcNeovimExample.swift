@@ -14,9 +14,7 @@ private extension PrimitiveSequenceType {
 }
 
 private func delayingCompletable() -> Completable {
-  Single.just(0)
-    .delay(.milliseconds(10), scheduler: MainScheduler.instance)
-    .asCompletable()
+  Completable.empty().delay(.milliseconds(10), scheduler: MainScheduler.instance)
 }
 
 /// No real test, just a sample code to see that it works with Neovim
