@@ -73,30 +73,16 @@ public final class RxMsgpackRpc {
     )
   }
 
-  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
+  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) {
     self.inPipe = inPipe
     self.outPipe = outPipe
     self.errorPipe = errorPipe
 
-    return Completable.create { completable in
-      self.queue.async { [weak self] in
-        self?.startReading()
-        completable(.completed)
-      }
-
-      return Disposables.create()
-    }
+    self.queue.async { [weak self] in self?.startReading() }
   }
 
-  public func stop() -> Completable {
-    Completable.create { completable in
-      self.queue.async { [weak self] in
-        self?.cleanUp()
-        completable(.completed)
-      }
-
-      return Disposables.create()
-    }
+  public func stop() {
+    self.queue.async { [weak self] in self?.cleanUp() }
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
@@ -337,7 +323,7 @@ public final class RxMsgpackRpc {
     if let single = self.singles.removeValue(forKey: msgid) {
       single(.success(Response(msgid: msgid, error: error, result: result)))
     }
-    
+
     if self.streamResponses {
       self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
     }
