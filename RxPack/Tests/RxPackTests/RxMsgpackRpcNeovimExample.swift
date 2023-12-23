@@ -51,7 +51,7 @@ class RxMsgpackRpcNeovimExample: XCTestCase {
     let outPipe = self.proc.standardOutput as! Pipe
     let errorPipe = self.proc.standardError as! Pipe
     try! self.proc.run()
-    self.rpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
+    try! self.rpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe).waitCompletion()
   }
 
   override func tearDown() {
@@ -62,7 +62,7 @@ class RxMsgpackRpcNeovimExample: XCTestCase {
       expectsReturnValue: false
     ).waitCompletion()
 
-    self.rpc.stop()
+    try! self.rpc.stop().waitCompletion()
     self.proc.waitUntilExit()
   }
 

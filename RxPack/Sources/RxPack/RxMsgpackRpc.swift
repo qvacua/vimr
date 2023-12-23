@@ -3,8 +3,8 @@
 
 import Foundation
 import MessagePack
-import RxSwift
 import os
+import RxSwift
 
 public final class RxMsgpackRpc {
   public static let defaultReadBufferSize = 10240
@@ -63,22 +63,32 @@ public final class RxMsgpackRpc {
       qos: queueQos
     )
     self.queue = DispatchQueue(
-      label: "\(String(reflecting: RxMsgpackRpc.self))-streamSubjectQueue-\(uuidStr)",
+      label: "\(String(reflecting: RxMsgpackRpc.self))-queue-\(uuidStr)",
       qos: queueQos,
       target: .global(qos: queueQos.qosClass)
     )
   }
 
-  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) {
+  public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {
     self.inPipe = inPipe
     self.outPipe = outPipe
     self.errorPipe = errorPipe
 
-    self.startReading()
+    return Completable.create { completable in
+      self.startReading()
+      completable(.completed)
+
+      return Disposables.create()
+    }
   }
 
-  public func stop() {
-    self.cleanUp()
+  public func stop() -> Completable {
+    Completable.create { completable in
+      self.cleanUp()
+      completable(.completed)
+
+      return Disposables.create()
+    }
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
@@ -89,7 +99,7 @@ public final class RxMsgpackRpc {
           completable(.error(Error(msg: "Rpc closed")))
           return
         }
-        
+
         let packed = pack(
           [
             .uint(MessageType.response.rawValue),
@@ -131,7 +141,7 @@ public final class RxMsgpackRpc {
           single(.failure(Error(msg: "Rpc closed")))
           return
         }
-        
+
         guard let msgid = self?.nextMsgid else { return }
         self?.nextMsgid += 1
 
@@ -184,7 +194,7 @@ public final class RxMsgpackRpc {
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
-  
+
   private let log = Logger(subsystem: "com.qvacua.RxPack.RxMsgpackRpc", category: "rpc")
 
   // R/w only in streamQueue
@@ -200,14 +210,14 @@ public final class RxMsgpackRpc {
   private func cleanUp() {
     self.queue.async { [weak self] in
       self?.closed = true
-      
+
       self?.inPipe = nil
       self?.outPipe = nil
       self?.errorPipe = nil
-      
+
       self?.streamSubject.onCompleted()
       self?.singles.forEach { _, single in single(.failure(Error(msg: "Rpc closed"))) }
-      
+
       self?.log.info("RxMsgpackRpc closed")
     }
   }
