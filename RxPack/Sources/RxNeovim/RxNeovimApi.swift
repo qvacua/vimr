@@ -40,18 +40,6 @@ public final class RxNeovimApi {
 
   public func stop() -> Completable { self.msgpackRpc.stop() }
 
-  public func checkBlocked<T>(_ single: Single<T>) -> Single<T> {
-    self
-      .getMode()
-      .flatMap { dict -> Single<T> in
-        guard (dict["blocking"]?.boolValue ?? false) == false else {
-          throw RxNeovimApi.Error.blocked
-        }
-
-        return single
-      }
-  }
-
   public func rpc(
     method: String,
     params: [RxNeovimApi.Value],
