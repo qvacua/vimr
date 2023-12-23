@@ -10,7 +10,7 @@ upload_artifact() {
   readonly GH_TOKEN
 
   echo "### Uploading artifact"
-  gh release upload "neovim-nightly" "${vimr_artifact_path}"
+  gh release upload "neovim-nightly" "${vimr_artifact_path}" --clobber
   echo "### Uploaded artifact"
 }
 
