@@ -185,7 +185,7 @@ extension NvimView {
 
     // vimenter is handled in NvimView.swift
 
-    if event == .exitpre {
+    if event == .vimleave {
       self.stop()
       return
     }
