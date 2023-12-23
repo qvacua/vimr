@@ -334,14 +334,13 @@ public final class RxMsgpackRpc {
   }
 
   private func processResponse(msgid: UInt32, error: Value, result: Value) {
+    if let single = self.singles.removeValue(forKey: msgid) {
+      single(.success(Response(msgid: msgid, error: error, result: result)))
+    }
+    
     if self.streamResponses {
       self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
     }
-
-    guard let single = self.singles[msgid] else { return }
-
-    single(.success(Response(msgid: msgid, error: error, result: result)))
-    self.singles.removeValue(forKey: msgid)
   }
 }
 

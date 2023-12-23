@@ -174,7 +174,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
     super.init(frame: .zero)
 
-    self.api.streamResponses = true
+    self.api.streamResponses = false
     self.api.msgpackRawStream
       .subscribe(onNext: { [weak self] msg in
         switch msg {
