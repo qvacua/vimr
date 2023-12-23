@@ -1,5 +1,6 @@
 # Next
 
+* Bugfix: When there are modified buffers, VimR hangs when closing the window (or `:quit`ting Neovim)
 * Fix a memory leak
 
 # v0.45.4-20231222.171428
