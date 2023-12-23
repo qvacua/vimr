@@ -206,6 +206,10 @@ public final class RxMsgpackRpc {
 
   private func cleanUp() {
     self.queue.async { [weak self] in
+      if self?.closed == true {
+        self?.log.info("RxMsgpackRpc already closed")
+        return
+      }
       self?.closed = true
 
       self?.inPipe = nil
