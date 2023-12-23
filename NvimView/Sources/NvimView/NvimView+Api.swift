@@ -43,10 +43,8 @@ public extension NvimView {
       return vim.fn.getbufinfo({"bufmodified": v:true})
       """, args: [])
       .map { result -> Bool in
-        guard let info_array = result.arrayValue
-        else {
-          throw RxNeovimApi.Error
-            .exception(message: "Could not convert values into info array.")
+        guard let info_array = result.arrayValue else {
+          throw RxNeovimApi.Error.exception(message: "Could not convert values into info array.")
         }
         return info_array.count > 0
       }
@@ -70,16 +68,23 @@ public extension NvimView {
   func currentBuffer() -> Single<NvimView.Buffer> {
     self.api
       .getCurrentBuf()
-      .flatMap { self.neoVimBuffer(for: $0, currentBuffer: $0) }
+      .flatMap { [weak self] in
+        guard let single = self?.neoVimBuffer(for: $0, currentBuffer: $0) else {
+          throw RxNeovimApi.Error.exception(message: "Could not get buffer")
+        }
+        return single
+      }
       .subscribe(on: self.scheduler)
   }
 
   func allBuffers() -> Single<[NvimView.Buffer]> {
     Single
       .zip(self.api.getCurrentBuf(), self.api.listBufs()) { (curBuf: $0, bufs: $1) }
-      .map { tuple in tuple.bufs.map { buf in
-        self.neoVimBuffer(for: buf, currentBuffer: tuple.curBuf)
-      } }
+      .map { [weak self] tuple in
+        tuple.bufs.compactMap { buf in
+          self?.neoVimBuffer(for: buf, currentBuffer: tuple.curBuf)
+        }
+      }
       .flatMap(Single.fromSinglesToSingleOfArray)
       .subscribe(on: self.scheduler)
   }
@@ -97,9 +102,9 @@ public extension NvimView {
       self.api.getCurrentTabpage(),
       self.api.listTabpages()
     ) { (curBuf: $0, curTab: $1, tabs: $2) }
-      .map { tuple in
-        tuple.tabs.map { tab in
-          self.neoVimTab(for: tab, currentTabpage: tuple.curTab, currentBuffer: tuple.curBuf)
+      .map { [weak self] tuple in
+        tuple.tabs.compactMap { tab in
+          self?.neoVimTab(for: tab, currentTabpage: tuple.curTab, currentBuffer: tuple.curBuf)
         }
       }
       .flatMap(Single.fromSinglesToSingleOfArray)
@@ -115,19 +120,20 @@ public extension NvimView {
   func open(urls: [URL]) -> Completable {
     self
       .allTabs()
-      .flatMapCompletable { tabs -> Completable in
+      .flatMapCompletable { [weak self] tabs -> Completable in
         let buffers = tabs.map(\.windows).flatMap { $0 }.map(\.buffer)
         let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
         return Completable.concat(
-          urls.map { url -> Completable in
+          urls.compactMap { url -> Completable? in
             let bufExists = buffers.contains { $0.url == url }
             let wins = tabs.map(\.windows).flatMap { $0 }
             if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
-              return self.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
+              return self?.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
             }
 
-            return currentBufferIsTransient ? self.open(url, cmd: "e") : self.open(url, cmd: "tabe")
+            return currentBufferIsTransient ? self?.open(url, cmd: "e") : self?
+              .open(url, cmd: "tabe")
           }
         )
       }
@@ -136,7 +142,7 @@ public extension NvimView {
 
   func openInNewTab(urls: [URL]) -> Completable {
     Completable
-      .concat(urls.map { url in self.open(url, cmd: "tabe") })
+      .concat(urls.compactMap { [weak self] url in self?.open(url, cmd: "tabe") })
       .subscribe(on: self.scheduler)
   }
 
@@ -146,13 +152,13 @@ public extension NvimView {
 
   func openInHorizontalSplit(urls: [URL]) -> Completable {
     Completable
-      .concat(urls.map { url in self.open(url, cmd: "sp") })
+      .concat(urls.compactMap { [weak self] url in self?.open(url, cmd: "sp") })
       .subscribe(on: self.scheduler)
   }
 
   func openInVerticalSplit(urls: [URL]) -> Completable {
     Completable
-      .concat(urls.map { url in self.open(url, cmd: "vsp") })
+      .concat(urls.compactMap { [weak self] url in self?.open(url, cmd: "vsp") })
       .subscribe(on: self.scheduler)
   }
 
@@ -160,18 +166,28 @@ public extension NvimView {
     self
       .allTabs()
       .map { tabs in tabs.map(\.windows).flatMap { $0 } }
-      .flatMapCompletable { wins -> Completable in
+      .flatMapCompletable { [weak self] wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
-          return self.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
+          guard let completable = self?.api.setCurrentWin(window: RxNeovimApi.Window(win.handle))
+          else {
+            throw RxNeovimApi.Error.exception(message: "Could not set current win")
+          }
+
+          return completable
         }
 
-        return self.api.command(command: "tab sb \(buffer.handle)")
+        guard let completable = self?.api.command(command: "tab sb \(buffer.handle)") else {
+          throw RxNeovimApi.Error.exception(message: "Could tab sb")
+        }
+        return completable
       }
       .subscribe(on: self.scheduler)
   }
 
   func goTo(line: Int) -> Completable {
-    self.api.command(command: "\(line)")
+    self.api
+      .command(command: "\(line)")
+      .subscribe(on: self.scheduler)
   }
 
   /// Closes the current window.
@@ -212,10 +228,7 @@ public extension NvimView {
         retval in
         guard let output_value = retval["output"] ?? retval["output"],
               let output = output_value.stringValue
-        else {
-          throw RxNeovimApi.Error
-            .exception(message: "Could not convert values to output.")
-        }
+        else { throw RxNeovimApi.Error.exception(message: "Could not convert values to output.") }
         return output
       }
       .subscribe(on: self.scheduler)
@@ -224,8 +237,15 @@ public extension NvimView {
   func cursorGo(to position: Position) -> Completable {
     self.api
       .getCurrentWin()
-      .flatMapCompletable { curWin in
-        self.api.winSetCursor(window: curWin, pos: [position.row, position.column])
+      .flatMapCompletable { [weak self] curWin in
+        guard let completable = self?.api.winSetCursor(
+          window: curWin,
+          pos: [position.row, position.column]
+        ) else {
+          throw RxNeovimApi.Error.exception(message: "Could not set cursor")
+        }
+
+        return completable
       }
       .subscribe(on: self.scheduler)
   }
@@ -242,28 +262,26 @@ public extension NvimView {
     for buf: RxNeovimApi.Buffer,
     currentBuffer: RxNeovimApi.Buffer?
   ) -> Single<NvimView.Buffer> {
-    self.api
-      .execLua(code: """
-      local function map(tbl, f)
-          local t = {}
-          for k,v in pairs(tbl) do
-              t[k] = f(v)
-          end
-          return t
-      end
-      return map(vim.fn.getbufinfo(...), function(i)
-           i.buftype = vim.api.nvim_get_option_value("buftype",
-             {buf=i.bufnr})
-           return i
-         end)
-      """, args: [MessagePackValue(buf.handle)])
+    self.api.execLua(code: """
+    local function map(tbl, f)
+        local t = {}
+        for k,v in pairs(tbl) do
+            t[k] = f(v)
+        end
+        return t
+    end
+    return map(vim.fn.getbufinfo(...), function(i)
+         i.buftype = vim.api.nvim_get_option_value("buftype",
+           {buf=i.bufnr})
+         return i
+       end)
+    """, args: [MessagePackValue(buf.handle)])
       .map { result -> NvimView.Buffer in
         guard let info_array = result.arrayValue,
               info_array.count == 1,
               let raw_info = info_array[0].dictionaryValue
         else {
-          throw RxNeovimApi.Error
-            .exception(message: "Could not convert values into info array.")
+          throw RxNeovimApi.Error.exception(message: "Could not convert values into info array.")
         }
         let info: [String: MessagePackValue] = .init(
           uniqueKeysWithValues: raw_info.map {
@@ -309,12 +327,19 @@ public extension NvimView {
   ) -> Single<NvimView.Window> {
     self.api
       .winGetBuf(window: window)
-      .flatMap { buf in self.neoVimBuffer(for: buf, currentBuffer: currentBuffer) }
+      .flatMap { [weak self] buf in
+        guard let single = self?.neoVimBuffer(for: buf, currentBuffer: currentBuffer) else {
+          throw RxNeovimApi.Error.exception(message: "Could not get buffer")
+        }
+
+        return single
+      }
       .map { buffer in NvimView.Window(
         apiWindow: window,
         buffer: buffer,
         isCurrentInTab: window == currentWindow
-      ) }
+      )
+      }
   }
 
   private func neoVimTab(
@@ -326,9 +351,9 @@ public extension NvimView {
       self.api.tabpageGetWin(tabpage: tabpage),
       self.api.tabpageListWins(tabpage: tabpage)
     ) { (curWin: $0, wins: $1) }
-      .map { tuple in
-        tuple.wins.map { win in
-          self.neoVimWindow(for: win, currentWindow: tuple.curWin, currentBuffer: currentBuffer)
+      .map { [weak self] tuple in
+        tuple.wins.compactMap { win in
+          self?.neoVimWindow(for: win, currentWindow: tuple.curWin, currentBuffer: currentBuffer)
         }
       }
       .flatMap(Single.fromSinglesToSingleOfArray)

@@ -394,14 +394,12 @@ extension OpenQuicklyWindow {
   private func moveSelection(ofTableView tableView: NSTableView, byDelta delta: Int) {
     let selectedRow = tableView.selectedRow
     let lastIdx = tableView.numberOfRows - 1
-    let targetIdx: Int
-
-    if selectedRow + delta < 0 {
-      targetIdx = 0
+    let targetIdx: Int = if selectedRow + delta < 0 {
+      0
     } else if selectedRow + delta > lastIdx {
-      targetIdx = lastIdx
+      lastIdx
     } else {
-      targetIdx = selectedRow + delta
+      selectedRow + delta
     }
 
     tableView.selectRowIndexes(IndexSet(integer: targetIdx), byExtendingSelection: false)

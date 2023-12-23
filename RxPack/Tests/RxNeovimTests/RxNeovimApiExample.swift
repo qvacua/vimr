@@ -3,6 +3,7 @@
 
 import Nimble
 import RxBlocking
+import RxNeovim
 import RxPack
 import RxSwift
 import XCTest
@@ -20,15 +21,15 @@ private func delayingCompletable() -> Completable {
 }
 
 /// No real test, just a sample code to see that it works with Neovim
-class RxMsgpackRpcNeovimExample: XCTestCase {
-  let rpc = RxMsgpackRpc(queueQos: .default)
+class RxNeovimApiExample: XCTestCase {
+  let api = RxNeovimApi()
   let disposeBag = DisposeBag()
   var proc: Process!
 
   override func setUp() {
     super.setUp()
 
-    self.rpc.stream.subscribe(
+    self.api.msgpackRawStream.subscribe(
       onNext: { msg in
         switch msg {
         case let .notification(method, params):
@@ -51,84 +52,55 @@ class RxMsgpackRpcNeovimExample: XCTestCase {
     let outPipe = self.proc.standardOutput as! Pipe
     let errorPipe = self.proc.standardError as! Pipe
     try! self.proc.run()
-    try! self.rpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe).waitCompletion()
+    try! self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe).waitCompletion()
   }
 
   override func tearDown() {
     super.tearDown()
 
-    try! self.rpc.request(
-      method: "nvim_command", params: [.string("q!")],
-      expectsReturnValue: false
-    ).waitCompletion()
-
-    try! self.rpc.stop().waitCompletion()
+    try! self.api.command(command: "q!").waitCompletion()
     self.proc.waitUntilExit()
   }
 
   func testExample() throws {
-    try self.rpc.request(
-      method: "nvim_ui_attach",
-      params: [80, 24, [:]],
-      expectsReturnValue: false
-    ).waitCompletion()
+    try self.api.uiAttach(width: 80, height: 24, options: [:]).waitCompletion()
 
     let formatter = DateFormatter()
     formatter.dateFormat = "mm:ss.SSS"
     for i in 0...100 {
       let date = Date()
-      let response = try self.rpc
-        .request(
-          method: "nvim_exec2",
-          params: [.string("echo '\(i) \(formatter.string(from: date))'"), ["output": true]],
-          expectsReturnValue: true
-        )
-        .toBlocking().first()!
-
+      let response = try self.api.exec2(
+        src: "echo '\(i) \(formatter.string(from: date))'", opts: ["output": true]
+      ).toBlocking().first()!
       Swift.print(response)
     }
 
     let testFileUrl: URL = FileManager.default
       .homeDirectoryForCurrentUser.appending(components: "test/big.swift")
     guard FileManager.default.fileExists(atPath: testFileUrl.path) else {
-      try self.rpc.request(method: "nvim_ui_detach", params: [], expectsReturnValue: false)
-        .waitCompletion()
+      try self.api.uiDetach().waitCompletion()
 
       return
     }
 
-    try self.rpc.request(
-      method: "nvim_command",
-      params: [.string("e \(testFileUrl.path)")],
-      expectsReturnValue: false
-    ).waitCompletion()
+    try self.api.command(command: "e \(testFileUrl.path)").waitCompletion()
 
-    let lineCount = try self.rpc.request(
-      method: "nvim_buf_line_count",
-      params: [.int(0)],
-      expectsReturnValue: true
-    )
-    .toBlocking().first()!
+    let lineCount = try self.api.bufLineCount(buffer: .init(0)).toBlocking().first()!
     Swift.print("Line count of \(testFileUrl): \(lineCount)")
 
     let repeatCount = 200
     for _ in 0...repeatCount {
-      try self.rpc
-        .request(method: "nvim_input", params: ["<PageDown>"], expectsReturnValue: false)
-        .waitCompletion()
+      try self.api.input(keys: "<PageDown>").waitCompletion()
       try delayingCompletable().waitCompletion()
     }
     for _ in 0...repeatCount {
-      try self.rpc
-        .request(method: "nvim_input", params: ["<PageUp>"], expectsReturnValue: false)
-        .waitCompletion()
+      try self.api.input(keys: "<PageUp>").waitCompletion()
       try delayingCompletable().waitCompletion()
     }
 
     Thread.sleep(forTimeInterval: 1)
 
-    try self.rpc.request(method: "nvim_ui_detach", params: [], expectsReturnValue: false)
-      .waitCompletion()
+    try self.api.uiDetach().waitCompletion()
   }
 }
 

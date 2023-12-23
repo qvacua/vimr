@@ -42,14 +42,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .replace:
       self.api
-        .input(keys: "<Esc>ui", errWhenBlocked: false)
+        .input(keys: "<Esc>ui")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.api
-        .input(keys: "u", errWhenBlocked: false)
+        .input(keys: "u")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
         })
@@ -63,14 +63,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .replace:
       self.api
-        .input(keys: "<Esc><C-r>i", errWhenBlocked: false)
+        .input(keys: "<Esc><C-r>i")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
         .disposed(by: self.disposeBag)
     case .normal, .visual:
       self.api
-        .input(keys: "<C-r>", errWhenBlocked: false)
+        .input(keys: "<C-r>")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
         })
@@ -84,7 +84,7 @@ extension NvimView {
     switch self.mode {
     case .visual, .normal:
       self.api
-        .input(keys: "\"+d", errWhenBlocked: false)
+        .input(keys: "\"+d")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
         })
@@ -98,7 +98,7 @@ extension NvimView {
     switch self.mode {
     case .visual, .normal:
       self.api
-        .input(keys: "\"+y", errWhenBlocked: false)
+        .input(keys: "\"+y")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
         })
@@ -124,7 +124,7 @@ extension NvimView {
     switch self.mode {
     case .normal, .visual:
       self.api
-        .input(keys: "x", errWhenBlocked: false)
+        .input(keys: "x")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
         })
@@ -138,14 +138,14 @@ extension NvimView {
     switch self.mode {
     case .insert, .visual:
       self.api
-        .input(keys: "<Esc>ggVG", errWhenBlocked: false)
+        .input(keys: "<Esc>ggVG")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })
         .disposed(by: self.disposeBag)
     default:
       self.api
-        .input(keys: "ggVG", errWhenBlocked: false)
+        .input(keys: "ggVG")
         .subscribe(onFailure: { [weak self] error in
           self?.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
         })

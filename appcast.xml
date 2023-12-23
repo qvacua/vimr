@@ -6,20 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.2-20231214.165334</title>
+      <title>v0.45.5-20231223.144003</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231214.165334</sparkle:version>
-      <sparkle:shortVersionString>v0.45.2</sparkle:shortVersionString>
+      <sparkle:version>20231223.144003</sparkle:version>
+      <sparkle:shortVersionString>v0.45.5</sparkle:shortVersionString>
       <description><![CDATA[
-      <ul><li>Removed parallel typesetting option since single threaded typesetting seems to be faster.</ul>
+    <ul>
+<li>Bugfix: When there are modified buffers, VimR hangs when closing the window (or <code>:quit</code>ting Neovim)</li>
+<li>Fix a memory leak</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.2-20231214.165334
+        https://github.com/qvacua/vimr/releases/tag/v0.45.5-20231223.144003
       </releaseNotesLink>
-      <pubDate>2023-12-14T16:58:24.969789</pubDate>
+      <pubDate>2023-12-23T14:45:17.568035</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.2-20231214.165334/VimR-v0.45.2.tar.bz2"
-                 sparkle:edSignature="bUnHDedEoHGMwcxa0LwxO8jgeLiZVW74CV/fsQLzyB7Aq/YsJ6ZzZw57OaCYUyPMgDkyc8HXRYNTOcWYYn9ZCg==" length="17192229"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.5-20231223.144003/VimR-v0.45.5.tar.bz2"
+                 sparkle:edSignature="fGeIdX5rr51NRGTC0GGRJsa30gTC57odBSNDHa7G3XvidmvYgRj1RYKxOPtWbZ5oTf5WOGXb4CiA7H+UGVbNAA==" length="16988784"
                  type="application/octet-stream"/>
     </item>
   </channel>

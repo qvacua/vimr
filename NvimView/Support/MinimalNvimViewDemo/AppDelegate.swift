@@ -9,6 +9,14 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_: Notification) {}
 
+  func applicationOpenUntitledFile(_: NSApplication) -> Bool {
+    if openNewWindowWhenLaunching { false } else { true }
+  }
+
+  func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
+    false
+  }
+
   func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
     NSDocumentController.shared
       .documents
@@ -18,3 +26,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return .terminateNow
   }
 }
+
+private let openNewWindowWhenLaunching = false

@@ -1,7 +1,21 @@
 # Next
 
+* ...
+
+# v0.45.5-20231223.144003
+
+* Bugfix: When there are modified buffers, VimR hangs when closing the window (or `:quit`ting Neovim)
+* Fix a memory leak
+
+# v0.45.4-20231222.171428
+
+* Reduce memory usage, esp., when scrolling.
+
+# v0.45.3-20231219.174252
+
 * Add `enable-debug-menu` preferences item to enable Debug menu item.
 * Fix a synchronization issue in MsgpackRpc.
+* Fix a memory leak
 
 # v0.45.2-20231214.165334
 

@@ -41,11 +41,10 @@ final class PrefMiddleware: MiddlewareType {
       if newFont != self.currentFont {
         self.currentFont = newFont
 
-        let newFontNameText: String
-        if let newFontName = newFont.displayName {
-          newFontNameText = ", \(newFontName),"
+        let newFontNameText = if let newFontName = newFont.displayName {
+          ", \(newFontName),"
         } else {
-          newFontNameText = ""
+          ""
         }
 
         if !traits.contains(.monoSpace) {

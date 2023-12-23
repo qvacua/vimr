@@ -36,6 +36,7 @@ main () {
 
   if [[ "${strip_symbols}" == true ]]; then
     strip -rSTx "${vimr_app_path}/Contents/MacOS/VimR"
+    strip -rSx "${vimr_app_path}/Contents/Resources/NvimView_NvimView.bundle/Contents/Resources/NvimServer"
   fi
 
   if [[ "${notarize}" == true ]]; then

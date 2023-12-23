@@ -59,8 +59,8 @@ public extension NvimView {
         cellPosition: cellPosition
       )
       self.api
-        .input(keys: vimInputX, errWhenBlocked: false).asCompletable()
-        .andThen(self.api.input(keys: vimInputY, errWhenBlocked: false).asCompletable())
+        .input(keys: vimInputX).asCompletable()
+        .andThen(self.api.input(keys: vimInputY).asCompletable())
         .subscribe(onError: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -95,22 +95,17 @@ public extension NvimView {
       )
 
     self.api.winGetCursor(window: RxNeovimApi.Window(0))
-      .map {
-        guard $0.count == 2
-        else {
-          self.log.error("Error decoding \($0)")
-          return
+      .flatMapCompletable { cursor in
+        guard cursor.count == 2 else {
+          self.log.error("Error decoding \(cursor)")
+          return Completable.empty()
         }
-        self.api.winSetCursor(
+        return self.api.winSetCursor(
           window: RxNeovimApi.Window(0),
-          pos: [$0[0] + vertSign * absDeltaY, $0[1] + horizSign * absDeltaX]
+          pos: [cursor[0] + vertSign * absDeltaY, cursor[1] + horizSign * absDeltaX]
         )
-        .subscribe(onError: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
       }
-      .subscribe(onFailure: { [weak self] error in
+      .subscribe(onError: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
       .disposed(by: self.disposeBag)
@@ -167,15 +162,14 @@ public extension NvimView {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
     let vimClickCount = self.vimClickCountFrom(event: event)
 
-    let result: String
-    if let vimModifiers = self.vimModifierFlags(event.modifierFlags) {
-      result = self.wrapNamedKeys("\(vimModifiers)\(vimClickCount)\(vimName)") + vimMouseLocation
+    let result: String = if let vimModifiers = self.vimModifierFlags(event.modifierFlags) {
+      self.wrapNamedKeys("\(vimModifiers)\(vimClickCount)\(vimName)") + vimMouseLocation
     } else {
-      result = self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
+      self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
     self.api
-      .input(keys: result, errWhenBlocked: false)
+      .input(keys: result)
       .subscribe(onFailure: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
@@ -210,13 +204,11 @@ public extension NvimView {
   }
 
   private func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
-    let typeY: String
-    if deltaY > 0 { typeY = "ScrollWheelUp" }
-    else { typeY = "ScrollWheelDown" }
+    let typeY = if deltaY > 0 { "ScrollWheelUp" }
+    else { "ScrollWheelDown" }
 
-    let typeX: String
-    if deltaX < 0 { typeX = "ScrollWheelRight" }
-    else { typeX = "ScrollWheelLeft" }
+    let typeX = if deltaX < 0 { "ScrollWheelRight" }
+    else { "ScrollWheelLeft" }
 
     return (typeX, typeY)
   }

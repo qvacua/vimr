@@ -521,15 +521,13 @@ extension FileOutlineView {
   override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
     guard let clickedNode = self.node(from: self.clickedItem) else { return true }
 
-    var isValid: Bool
-
-    switch item.action {
+    let isValid: Bool = switch item.action {
     case #selector(self.setAsWorkingDirectory(_:)):
-      isValid = clickedNode.url.hasDirectoryPath
+      clickedNode.url.hasDirectoryPath
     case #selector(self.newFile(_:)):
-      isValid = clickedNode.url.hasDirectoryPath
+      clickedNode.url.hasDirectoryPath
     default:
-      isValid = true
+      true
     }
 
     return isValid

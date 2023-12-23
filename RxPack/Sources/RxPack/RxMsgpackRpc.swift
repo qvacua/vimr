@@ -3,6 +3,7 @@
 
 import Foundation
 import MessagePack
+import os
 import RxSwift
 
 public final class RxMsgpackRpc {
@@ -40,16 +41,16 @@ public final class RxMsgpackRpc {
   }
 
   /**
-    Streams `Message.notification`s and `Message.error`s by default.
-    When `streamResponses` is set to `true`, then also `Message.response`s.
+   Streams `Message.notification`s and `Message.error`s by default.
+   When `streamResponses` is set to `true`, then also `Message.response`s.
    */
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
   /**
-    When `true`, all messages of type `MessageType.response` are also streamed
-    to `stream` as `Message.response`. When `false`, only the `Single`s
-    you get from `request(msgid, method, params, expectsReturnValue)` will
-    get the response as `Response`.
+   When `true`, all messages of type `MessageType.response` are also streamed
+   to `stream` as `Message.response`. When `false`, only the `Single`s
+   you get from `request(msgid, method, params, expectsReturnValue)` will
+   get the response as `Response`.
    */
   public var streamResponses = false
 
@@ -57,17 +58,12 @@ public final class RxMsgpackRpc {
 
   public init(queueQos: DispatchQoS) {
     let uuidStr = self.uuid.uuidString
-    self.queue = DispatchQueue(
-      label: "\(String(reflecting: RxMsgpackRpc.self))-\(uuidStr)",
-      qos: queueQos,
-      target: .global(qos: queueQos.qosClass)
-    )
     self.pipeReadQueue = DispatchQueue(
       label: "\(String(reflecting: RxMsgpackRpc.self))-pipeReadQueue-\(uuidStr)",
       qos: queueQos
     )
-    self.streamQueue = DispatchQueue(
-      label: "\(String(reflecting: RxMsgpackRpc.self))-streamSubjectQueue-\(uuidStr)",
+    self.queue = DispatchQueue(
+      label: "\(String(reflecting: RxMsgpackRpc.self))-queue-\(uuidStr)",
       qos: queueQos,
       target: .global(qos: queueQos.qosClass)
     )
@@ -79,10 +75,8 @@ public final class RxMsgpackRpc {
     self.errorPipe = errorPipe
 
     return Completable.create { completable in
-      self.queue.async {
-        self.startReading()
-        completable(.completed)
-      }
+      self.startReading()
+      completable(.completed)
 
       return Disposables.create()
     }
@@ -90,18 +84,22 @@ public final class RxMsgpackRpc {
 
   public func stop() -> Completable {
     Completable.create { completable in
-      self.queue.async {
-        self.cleanUp()
-        completable(.completed)
-      }
+      self.cleanUp()
+      completable(.completed)
 
       return Disposables.create()
     }
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
-    Completable.create { completable in
-      self.queue.async {
+    Completable.create { [weak self] completable in
+      self?.queue.async {
+        if self?.closed == true {
+          self?.log.warning("Not sending response because closed")
+          completable(.error(Error(msg: "Rpc closed")))
+          return
+        }
+
         let packed = pack(
           [
             .uint(MessageType.response.rawValue),
@@ -112,10 +110,10 @@ public final class RxMsgpackRpc {
         )
 
         do {
-          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+          try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
           completable(.completed)
         } catch {
-          self.streamSubject.onError(Error(
+          self?.streamSubject.onError(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           ))
 
@@ -136,10 +134,16 @@ public final class RxMsgpackRpc {
     params: [Value],
     expectsReturnValue: Bool
   ) -> Single<Response> {
-    Single.create { single in
-      self.queue.async {
-        let msgid = self.nextMsgid
-        self.nextMsgid += 1
+    Single.create { [weak self] single in
+      self?.queue.async {
+        if self?.closed == true {
+          self?.log.warning("Not sending request because closed")
+          single(.failure(Error(msg: "Rpc closed")))
+          return
+        }
+
+        guard let msgid = self?.nextMsgid else { return }
+        self?.nextMsgid += 1
 
         let packed = pack(
           [
@@ -151,13 +155,14 @@ public final class RxMsgpackRpc {
         )
 
         if expectsReturnValue {
-          self.streamQueue.async { self.singles[msgid] = single }
+          // In streamQueue since we want to sync' access self.singles only in that queue.
+          self?.queue.async { self?.singles[msgid] = single }
         }
 
         do {
-          try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+          try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
         } catch {
-          self.streamSubject.onError(Error(
+          self?.streamSubject.onError(Error(
             msg: "Could not write to socket for msg id: \(msgid)", cause: error
           ))
 
@@ -168,22 +173,29 @@ public final class RxMsgpackRpc {
           return
         }
 
-        if !expectsReturnValue { single(.success(self.nilResponse(with: msgid))) }
+        if !expectsReturnValue {
+          single(.success(Response(msgid: msgid, error: .nil, result: .nil)))
+        }
       }
 
       return Disposables.create()
     }
   }
 
-  private var nextMsgid: UInt32 = 0
+  // MARK: Private
 
-  private let queue: DispatchQueue
+  // R/w only in self.queue
+  private var nextMsgid: UInt32 = 0
+  private var closed = false
+
   private let pipeReadQueue: DispatchQueue
-  private let streamQueue: DispatchQueue
+  private let queue: DispatchQueue
 
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
+
+  private let log = Logger(subsystem: "com.qvacua.RxPack.RxMsgpackRpc", category: "rpc")
 
   // R/w only in streamQueue
   private var singles: [UInt32: SingleResponseObserver] = [:]
@@ -196,46 +208,72 @@ public final class RxMsgpackRpc {
   }
 
   private func cleanUp() {
-    self.inPipe = nil
-    self.outPipe = nil
-    self.errorPipe = nil
+    self.queue.async { [weak self] in
+      self?.closed = true
 
-    self.streamQueue.async {
-      self.streamSubject.onCompleted()
-      self.singles.forEach { _, single in single(.failure(Error(msg: "Pipe closed"))) }
+      self?.inPipe = nil
+      self?.outPipe = nil
+      self?.errorPipe = nil
+
+      self?.streamSubject.onCompleted()
+      self?.singles.forEach { msgid, single in single(.success(.init(
+        msgid: msgid,
+        error: .nil,
+        result: .nil
+      ))) }
+
+      self?.log.info("RxMsgpackRpc closed")
     }
   }
 
   private func startReading() {
-    self.pipeReadQueue.async { [unowned self] in
-      var readData: Data
+    self.pipeReadQueue.async { [weak self] in
       var dataToUnmarshall = Data(capacity: Self.defaultReadBufferSize)
-      repeat {
+      var bufferCount = 0
+      while true {
+        // If we do not use autoreleasepool here, the memory usage keeps going up
+        autoreleasepool {
+          guard let buffer = self?.outPipe?.fileHandleForReading.availableData,
+                buffer.count > 0
+          else {
+            bufferCount = 0
+            return
+          }
+
+          bufferCount = buffer.count
+          dataToUnmarshall.append(buffer)
+          _ = consume buffer
+        }
+
+        if bufferCount == 0 { break }
+
         do {
-          guard let buffer = self.outPipe?.fileHandleForReading.availableData else { break }
-          readData = buffer
+          guard let (values, remainderData) = try self?.unpackAllWithRemainder(dataToUnmarshall)
+          else { throw Error(msg: "Nil when unpacking") }
 
-          if readData.count > 0 {
-            dataToUnmarshall.append(readData)
-            let (values, remainderData) = try self.unpackAllWithReminder(dataToUnmarshall)
-            if let remainderData { dataToUnmarshall = remainderData }
-            else { dataToUnmarshall.count = 0 }
+          if let remainderData { dataToUnmarshall = remainderData }
+          else { dataToUnmarshall.removeAll(keepingCapacity: true) }
+          _ = consume remainderData
 
-            self.streamQueue.async {
-              values.forEach(self.processMessage)
+          self?.queue.async {
+            if self?.closed == true {
+              self?.log.info("Not processing msgs because closed.")
+              return
             }
+            values.forEach { value in self?.processMessage(value) }
           }
         } catch {
-          self.streamQueue.async {
-            self.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
+          self?.queue.async {
+            self?.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
           }
         }
-      } while readData.count > 0
+      }
 
-      self.cleanUp()
+      self?.cleanUp()
     }
   }
 
+  // Call only in self.streamQueue
   private func processMessage(_ unpacked: Value) {
     guard let array = unpacked.arrayValue else {
       self.streamSubject.onNext(.error(
@@ -299,34 +337,38 @@ public final class RxMsgpackRpc {
     }
   }
 
-  private func unpackAllWithReminder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
+  // Call only in self.streamQueue
+  private func processResponse(msgid: UInt32, error: Value, result: Value) {
+    if let single = self.singles.removeValue(forKey: msgid) {
+      single(.success(Response(msgid: msgid, error: error, result: result)))
+    }
+
+    if self.streamResponses {
+      self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
+    }
+  }
+}
+
+// MARK: Private utilities
+
+extension RxMsgpackRpc {
+  private func unpackAllWithRemainder(_ data: Data) throws -> (values: [Value], remainder: Data?) {
     var values = [Value]()
     var remainderData: Data?
 
-    var data = Subdata(data: data)
-    while !data.isEmpty {
+    var subdata = Subdata(data: data)
+    while !subdata.isEmpty {
       let value: Value
       do {
-        (value, data) = try unpack(data, compatibility: false)
-        values.append(value)
+        (value, subdata) = try unpack(subdata, compatibility: false)
+        values.append(consume value)
       } catch MessagePackError.insufficientData {
-        remainderData = data.data
+        remainderData = subdata.data
         break
       }
     }
 
     return (values, remainderData)
-  }
-
-  private func processResponse(msgid: UInt32, error: Value, result: Value) {
-    if self.streamResponses {
-      self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
-    }
-
-    guard let single: SingleResponseObserver = self.singles[msgid] else { return }
-
-    single(.success(Response(msgid: msgid, error: error, result: result)))
-    self.singles.removeValue(forKey: msgid)
   }
 }
 

@@ -63,7 +63,7 @@ public struct Filter: CustomStringConvertible {
 
   /// Ignores whether the pattern is only applicable for directories.
   public func disallows(_ string: String) -> Bool {
-    if self.isAllow { return false } else { return self.matches(string) }
+    if self.isAllow { false } else { self.matches(string) }
   }
 
   /// Ignores whether the pattern is only applicable for directories.

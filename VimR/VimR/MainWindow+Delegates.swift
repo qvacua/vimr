@@ -56,7 +56,6 @@ extension MainWindow {
 
   func set(title: String) {
     self.window.title = title
-    self.set(repUrl: self.window.representedURL, themed: self.titlebarThemed)
   }
 
   func set(dirtyStatus: Bool) {
@@ -70,8 +69,11 @@ extension MainWindow {
   func bufferListChanged() {
     self.neoVimView
       .allBuffers()
-      .subscribe(onSuccess: { buffers in
-        self.emit(self.uuidAction(for: .setBufferList(buffers.filter(\.isListed))))
+      .subscribe(onSuccess: { [weak self] buffers in
+        guard let action = self?.uuidAction(for: .setBufferList(buffers.filter(\.isListed))) else {
+          return
+        }
+        self?.emit(action)
       })
       .disposed(by: self.disposeBag)
   }
@@ -87,8 +89,8 @@ extension MainWindow {
   func tabChanged() {
     self.neoVimView
       .currentBuffer()
-      .subscribe(onSuccess: {
-        self.newCurrentBuffer($0)
+      .subscribe(onSuccess: { [weak self] in
+        self?.newCurrentBuffer($0)
       })
       .disposed(by: self.disposeBag)
   }
