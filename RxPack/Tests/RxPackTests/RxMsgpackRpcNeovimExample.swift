@@ -79,8 +79,8 @@ class RxMsgpackRpcNeovimExample: XCTestCase {
       let date = Date()
       let response = try self.rpc
         .request(
-          method: "nvim_command_output",
-          params: [.string("echo '\(i) \(formatter.string(from: date))'")],
+          method: "nvim_exec2",
+          params: [.string("echo '\(i) \(formatter.string(from: date))'"), ["output": true]],
           expectsReturnValue: true
         )
         .toBlocking().first()!
