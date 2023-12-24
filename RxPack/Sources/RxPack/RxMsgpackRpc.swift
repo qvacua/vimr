@@ -25,6 +25,10 @@ public final class RxMsgpackRpc {
   }
 
   public struct Response {
+    public static func nilResponse(_ msgid: UInt32) -> Self {
+      return .init(msgid: msgid, error: .nil, result: .nil)
+    }
+
     public let msgid: UInt32
     public let error: Value
     public let result: Value
@@ -171,7 +175,7 @@ public final class RxMsgpackRpc {
         }
 
         if !expectsReturnValue {
-          single(.success(Response(msgid: msgid, error: .nil, result: .nil)))
+          single(.success(.nilResponse(msgid)))
         }
       }
 
@@ -200,10 +204,6 @@ public final class RxMsgpackRpc {
   // Publish events only in streamQueue
   private let streamSubject = PublishSubject<Message>()
 
-  private func nilResponse(with msgid: UInt32) -> Response {
-    Response(msgid: msgid, error: .nil, result: .nil)
-  }
-
   private func cleanUp() {
     self.queue.async { [weak self] in
       if self?.closed == true {
@@ -217,11 +217,7 @@ public final class RxMsgpackRpc {
       self?.errorPipe = nil
 
       self?.streamSubject.onCompleted()
-      self?.singles.forEach { msgid, single in single(.success(.init(
-        msgid: msgid,
-        error: .nil,
-        result: .nil
-      ))) }
+      self?.singles.forEach { msgid, single in single(.success(.nilResponse(msgid))) }
 
       self?.log.info("RxMsgpackRpc closed")
     }

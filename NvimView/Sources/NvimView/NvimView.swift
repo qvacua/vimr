@@ -387,9 +387,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
               )
             }
           )
-          .andThen(
-            self.api.sendResponse(msgid: msgid, error: .nil, result: .nil)
-          )
+          .andThen(self.api.sendResponse(.nilResponse(msgid)))
           .andThen(
             {
               let ginitPath = FileManager.default.homeDirectoryForCurrentUser
