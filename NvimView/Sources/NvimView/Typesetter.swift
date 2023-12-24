@@ -20,56 +20,59 @@ final class Typesetter {
     let ctRuns = self.ctRuns(from: utf16Chars, font: font)
 
     return ctRuns.withUnsafeBufferPointer { pointer -> [FontGlyphRun] in
-      [FontGlyphRun](unsafeUninitializedCapacity: pointer.count) { resultBuffer, endCount in
-        for k in 0..<pointer.count {
-          let run = pointer[k]
+      // Tried to use Array(unsafeUninitializedCapacity, initializingWith:) for result,
+      // but I get EXC_BAD_ACCESS, I don't know why.
+      var result: [FontGlyphRun] = []
+      result.reserveCapacity(pointer.count)
 
-          let glyphCount = CTRunGetGlyphCount(run)
+      for k in 0..<pointer.count {
+        let run = pointer[k]
 
-          // swiftlint:disable force_unwrapping
-          let glyphs = [CGGlyph](unsafeUninitializedCapacity: glyphCount) { buffer, count in
-            CTRunGetGlyphs(run, .zero, buffer.baseAddress!)
-            count = glyphCount
-          }
+        let glyphCount = CTRunGetGlyphCount(run)
 
-          var positions = [CGPoint](unsafeUninitializedCapacity: glyphCount) { buffer, count in
-            CTRunGetPositions(run, .zero, buffer.baseAddress!)
-            count = glyphCount
-          }
-
-          let indices = [CFIndex](unsafeUninitializedCapacity: glyphCount) { buffer, count in
-            CTRunGetStringIndices(run, .zero, buffer.baseAddress!)
-            count = glyphCount
-          }
-          // swiftlint:enable force_unwrapping
-
-          var column = -1
-          var columnPosition = 0.0
-          var deltaX = 0.0
-
-          positions.withUnsafeMutableBufferPointer { positionsPtr in
-            for i in 0..<positionsPtr.count {
-              let newColumn = cellIndices[indices[i]] + startColumn
-              if newColumn != column {
-                columnPosition = offset.x + newColumn.cgf * cellWidth
-                deltaX = columnPosition - positionsPtr[i].x
-                column = newColumn
-              }
-              positionsPtr[i].x += deltaX
-              positionsPtr[i].y += offset.y
-            }
-          }
-
-          let attrs = CTRunGetAttributes(run)
-          let font = Unmanaged<NSFont>.fromOpaque(
-            CFDictionaryGetValue(attrs, Unmanaged.passUnretained(kCTFontAttributeName).toOpaque())
-          ).takeUnretainedValue()
-
-          resultBuffer[k] = FontGlyphRun(font: font, glyphs: glyphs, positions: positions)
+        // swiftlint:disable force_unwrapping
+        let glyphs = [CGGlyph](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetGlyphs(run, .zero, buffer.baseAddress!)
+          count = glyphCount
         }
 
-        endCount = pointer.count
+        var positions = [CGPoint](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetPositions(run, .zero, buffer.baseAddress!)
+          count = glyphCount
+        }
+
+        let indices = [CFIndex](unsafeUninitializedCapacity: glyphCount) { buffer, count in
+          CTRunGetStringIndices(run, .zero, buffer.baseAddress!)
+          count = glyphCount
+        }
+        // swiftlint:enable force_unwrapping
+
+        var column = -1
+        var columnPosition = 0.0
+        var deltaX = 0.0
+
+        positions.withUnsafeMutableBufferPointer { positionsPtr in
+          for i in 0..<positionsPtr.count {
+            let newColumn = cellIndices[indices[i]] + startColumn
+            if newColumn != column {
+              columnPosition = offset.x + newColumn.cgf * cellWidth
+              deltaX = columnPosition - positionsPtr[i].x
+              column = newColumn
+            }
+            positionsPtr[i].x += deltaX
+            positionsPtr[i].y += offset.y
+          }
+        }
+
+        let attrs = CTRunGetAttributes(run)
+        let font = Unmanaged<NSFont>.fromOpaque(
+          CFDictionaryGetValue(attrs, Unmanaged.passUnretained(kCTFontAttributeName).toOpaque())
+        ).takeUnretainedValue()
+
+        result.append(FontGlyphRun(font: font, glyphs: glyphs, positions: positions))
       }
+
+      return result
     }
   }
 
@@ -146,8 +149,8 @@ final class Typesetter {
       attributes: [.font: font, .ligature: ligatureOption]
     )
 
-    let ctLine = CTLineCreateWithAttributedString(consume attrStr)
-    guard let ctRuns = CTLineGetGlyphRuns(consume ctLine) as? [CTRun] else { return [] }
+    let ctLine = CTLineCreateWithAttributedString(attrStr)
+    guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
     self.ctRunsCache.set(CtRunsAndFont(ctRuns: ctRuns, font: font), forKey: utf16Chars)
 
