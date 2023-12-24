@@ -66,16 +66,18 @@ enum FontUtils {
     if trait.isEmpty { return font }
 
     let sizedFontTrait = SizedFontTrait(trait: trait, size: font.pointSize)
-
     if let cachedFont = fontCache.valueForKey(sizedFontTrait) { return cachedFont }
+    if nilFontCache.valueForKey(sizedFontTrait) != nil { return font }
 
     var ctFontTrait: CTFontSymbolicTraits = []
     if trait.contains(.bold) { ctFontTrait.insert(.boldTrait) }
-
     if trait.contains(.italic) { ctFontTrait.insert(.italicTrait) }
 
-    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(font, 0.0, nil, ctFontTrait, ctFontTrait)
-    else { return font }
+    guard let ctFont = CTFontCreateCopyWithSymbolicTraits(font, 0, nil, ctFontTrait, ctFontTrait)
+    else {
+      nilFontCache.set(0, forKey: sizedFontTrait)
+      return font
+    }
 
     fontCache.set(ctFont, forKey: sizedFontTrait)
     return ctFont
@@ -113,6 +115,7 @@ enum FontUtils {
   }
 }
 
-private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 100)
+private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 50)
+private let nilFontCache = FifoCache<SizedFontTrait, Int>(count: 50)
 private let fontHeightCache = FifoCache<NSFont, CGFloat>(count: 100)
 private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(count: 100)

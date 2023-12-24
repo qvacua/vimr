@@ -150,7 +150,11 @@ final class AttributesRunDrawer {
   }
 
   private func fontGlyphRuns(from attrsRun: AttributesRun, offset: CGPoint) -> [FontGlyphRun] {
-    let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
+    let font = if attrsRun.attrs.fontTrait.isEmpty {
+      self.font
+    } else {
+      FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
+    }
 
     if self.usesLigatures {
       return self.typesetter.fontGlyphRunsWithLigatures(
