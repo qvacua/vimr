@@ -150,6 +150,8 @@ final class AttributesRunDrawer {
   }
 
   private func fontGlyphRuns(from attrsRun: AttributesRun, offset: CGPoint) -> [FontGlyphRun] {
+    // We do the check here despite the fact FontUtils.font(adding:to:) does it
+    // since empty trait is the most frequent case
     let font = if attrsRun.attrs.fontTrait.isEmpty {
       self.font
     } else {
