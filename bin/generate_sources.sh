@@ -30,6 +30,8 @@ main() {
     pushd Neovim
       version=${nvim_version} ../bin/generate_autocmds.py > "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
       version=${nvim_version} ../bin/generate_cursor_shape.py > "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
+      swiftformat "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
+      swiftformat "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
     popd > /dev/null
 
   popd > /dev/null
