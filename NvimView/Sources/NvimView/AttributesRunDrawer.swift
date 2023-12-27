@@ -18,7 +18,9 @@ final class AttributesRunDrawer {
     didSet { self.updateFontMetrics() }
   }
 
-  var usesLigatures: Bool
+  var usesLigatures: Bool {
+    didSet { self.typesetter.clearCache() }
+  }
 
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
@@ -187,5 +189,7 @@ final class AttributesRunDrawer {
     self.descent = CTFontGetDescent(self.font)
     self.underlinePosition = CTFontGetUnderlinePosition(self.font)
     self.underlineThickness = CTFontGetUnderlineThickness(self.font)
+    
+    self.typesetter.clearCache()
   }
 }
