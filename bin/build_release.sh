@@ -90,10 +90,6 @@ create_gh_release() {
 }
 
 upload_artifact() {
-  local -x GH_TOKEN
-  GH_TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
-  readonly GH_TOKEN
-
   echo "### Uploading artifact"
   gh release upload "${tag}" "${vimr_artifact_path}"
   echo "### Uploaded artifact"
@@ -132,6 +128,10 @@ main() {
       echo "### No github release, exiting"
       exit 0
     fi
+
+    local -x GH_TOKEN
+    GH_TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
+    readonly GH_TOKEN
 
     create_gh_release
 
