@@ -6,23 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.45.5-20231223.144003</title>
+      <title>v0.46.0-20240102.233758</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20231223.144003</sparkle:version>
-      <sparkle:shortVersionString>v0.45.5</sparkle:shortVersionString>
+      <sparkle:version>20240102.233758</sparkle:version>
+      <sparkle:shortVersionString>v0.46.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Bugfix: When there are modified buffers, VimR hangs when closing the window (or <code>:quit</code>ting Neovim)</li>
-<li>Fix a memory leak</li>
+<li>Neovim 0.9.5 😀</li>
+<li>Improve rendering performance slightly.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.45.5-20231223.144003
+        https://github.com/qvacua/vimr/releases/tag/v0.46.0-20240102.233758
       </releaseNotesLink>
-      <pubDate>2023-12-23T14:45:17.568035</pubDate>
+      <pubDate>2024-01-02T23:43:20.636385</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.45.5-20231223.144003/VimR-v0.45.5.tar.bz2"
-                 sparkle:edSignature="fGeIdX5rr51NRGTC0GGRJsa30gTC57odBSNDHa7G3XvidmvYgRj1RYKxOPtWbZ5oTf5WOGXb4CiA7H+UGVbNAA==" length="16988784"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.46.0-20240102.233758/VimR-v0.46.0.tar.bz2"
+                 sparkle:edSignature="ABotIuoHD4YB9TbN6Ejh0BD/uqxkl1b1MS7sPBFZuf/sZN1fTn1CggY2CyvQnCz3oI3icG/FKpHR7YWxpobxDA==" length="17024638"
                  type="application/octet-stream"/>
     </item>
   </channel>
