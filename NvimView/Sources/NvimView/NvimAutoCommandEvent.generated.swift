@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.9.4
+// Auto generated for nvim v0.10.0-dev
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: String {
@@ -74,7 +74,10 @@ enum NvimAutoCommandEvent: String {
   case insertleavepre
   case lspattach
   case lspdetach
+  case lsprequest
+  case lspnotify
   case lsptokenupdate
+  case lspprogress
   case menupopup
   case modechanged
   case optionset
@@ -84,6 +87,7 @@ enum NvimAutoCommandEvent: String {
   case recordingenter
   case recordingleave
   case remotereply
+  case safestate
   case searchwrapped
   case sessionloadpost
   case shellcmdpost
