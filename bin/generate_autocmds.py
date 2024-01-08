@@ -25,7 +25,7 @@ def swift_autocmds(version: str, template_string: str) -> str:
 
     return template.substitute(
         event_cases="\n".join(
-            [f" case {event[0].lower()} = \"{event[0].lower()}\"" for event in autocmds]
+            [f" case {event[0].lower()}" for event in autocmds]
         ),
         version=version
     )

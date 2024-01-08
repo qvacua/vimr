@@ -2,132 +2,130 @@
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: String {
-
- case bufadd = "bufadd"
- case bufdelete = "bufdelete"
- case bufenter = "bufenter"
- case buffilepost = "buffilepost"
- case buffilepre = "buffilepre"
- case bufhidden = "bufhidden"
- case bufleave = "bufleave"
- case bufmodifiedset = "bufmodifiedset"
- case bufnew = "bufnew"
- case bufnewfile = "bufnewfile"
- case bufreadcmd = "bufreadcmd"
- case bufreadpost = "bufreadpost"
- case bufreadpre = "bufreadpre"
- case bufunload = "bufunload"
- case bufwinenter = "bufwinenter"
- case bufwinleave = "bufwinleave"
- case bufwipeout = "bufwipeout"
- case bufwritecmd = "bufwritecmd"
- case bufwritepost = "bufwritepost"
- case bufwritepre = "bufwritepre"
- case chaninfo = "chaninfo"
- case chanopen = "chanopen"
- case cmdundefined = "cmdundefined"
- case cmdwinenter = "cmdwinenter"
- case cmdwinleave = "cmdwinleave"
- case cmdlinechanged = "cmdlinechanged"
- case cmdlineenter = "cmdlineenter"
- case cmdlineleave = "cmdlineleave"
- case colorscheme = "colorscheme"
- case colorschemepre = "colorschemepre"
- case completechanged = "completechanged"
- case completedone = "completedone"
- case completedonepre = "completedonepre"
- case cursorhold = "cursorhold"
- case cursorholdi = "cursorholdi"
- case cursormoved = "cursormoved"
- case cursormovedi = "cursormovedi"
- case diagnosticchanged = "diagnosticchanged"
- case diffupdated = "diffupdated"
- case dirchanged = "dirchanged"
- case dirchangedpre = "dirchangedpre"
- case encodingchanged = "encodingchanged"
- case exitpre = "exitpre"
- case fileappendcmd = "fileappendcmd"
- case fileappendpost = "fileappendpost"
- case fileappendpre = "fileappendpre"
- case filechangedro = "filechangedro"
- case filechangedshell = "filechangedshell"
- case filechangedshellpost = "filechangedshellpost"
- case filereadcmd = "filereadcmd"
- case filereadpost = "filereadpost"
- case filereadpre = "filereadpre"
- case filetype = "filetype"
- case filewritecmd = "filewritecmd"
- case filewritepost = "filewritepost"
- case filewritepre = "filewritepre"
- case filterreadpost = "filterreadpost"
- case filterreadpre = "filterreadpre"
- case filterwritepost = "filterwritepost"
- case filterwritepre = "filterwritepre"
- case focusgained = "focusgained"
- case focuslost = "focuslost"
- case funcundefined = "funcundefined"
- case guienter = "guienter"
- case guifailed = "guifailed"
- case insertchange = "insertchange"
- case insertcharpre = "insertcharpre"
- case insertenter = "insertenter"
- case insertleave = "insertleave"
- case insertleavepre = "insertleavepre"
- case lspattach = "lspattach"
- case lspdetach = "lspdetach"
- case lsptokenupdate = "lsptokenupdate"
- case menupopup = "menupopup"
- case modechanged = "modechanged"
- case optionset = "optionset"
- case quickfixcmdpost = "quickfixcmdpost"
- case quickfixcmdpre = "quickfixcmdpre"
- case quitpre = "quitpre"
- case recordingenter = "recordingenter"
- case recordingleave = "recordingleave"
- case remotereply = "remotereply"
- case searchwrapped = "searchwrapped"
- case sessionloadpost = "sessionloadpost"
- case shellcmdpost = "shellcmdpost"
- case shellfilterpost = "shellfilterpost"
- case signal = "signal"
- case sourcecmd = "sourcecmd"
- case sourcepost = "sourcepost"
- case sourcepre = "sourcepre"
- case spellfilemissing = "spellfilemissing"
- case stdinreadpost = "stdinreadpost"
- case stdinreadpre = "stdinreadpre"
- case swapexists = "swapexists"
- case syntax = "syntax"
- case tabclosed = "tabclosed"
- case tabenter = "tabenter"
- case tableave = "tableave"
- case tabnew = "tabnew"
- case tabnewentered = "tabnewentered"
- case termchanged = "termchanged"
- case termclose = "termclose"
- case termenter = "termenter"
- case termleave = "termleave"
- case termopen = "termopen"
- case termresponse = "termresponse"
- case textchanged = "textchanged"
- case textchangedi = "textchangedi"
- case textchangedp = "textchangedp"
- case textchangedt = "textchangedt"
- case textyankpost = "textyankpost"
- case uienter = "uienter"
- case uileave = "uileave"
- case user = "user"
- case vimenter = "vimenter"
- case vimleave = "vimleave"
- case vimleavepre = "vimleavepre"
- case vimresized = "vimresized"
- case vimresume = "vimresume"
- case vimsuspend = "vimsuspend"
- case winclosed = "winclosed"
- case winenter = "winenter"
- case winleave = "winleave"
- case winnew = "winnew"
- case winresized = "winresized"
- case winscrolled = "winscrolled"
+  case bufadd
+  case bufdelete
+  case bufenter
+  case buffilepost
+  case buffilepre
+  case bufhidden
+  case bufleave
+  case bufmodifiedset
+  case bufnew
+  case bufnewfile
+  case bufreadcmd
+  case bufreadpost
+  case bufreadpre
+  case bufunload
+  case bufwinenter
+  case bufwinleave
+  case bufwipeout
+  case bufwritecmd
+  case bufwritepost
+  case bufwritepre
+  case chaninfo
+  case chanopen
+  case cmdundefined
+  case cmdwinenter
+  case cmdwinleave
+  case cmdlinechanged
+  case cmdlineenter
+  case cmdlineleave
+  case colorscheme
+  case colorschemepre
+  case completechanged
+  case completedone
+  case completedonepre
+  case cursorhold
+  case cursorholdi
+  case cursormoved
+  case cursormovedi
+  case diagnosticchanged
+  case diffupdated
+  case dirchanged
+  case dirchangedpre
+  case encodingchanged
+  case exitpre
+  case fileappendcmd
+  case fileappendpost
+  case fileappendpre
+  case filechangedro
+  case filechangedshell
+  case filechangedshellpost
+  case filereadcmd
+  case filereadpost
+  case filereadpre
+  case filetype
+  case filewritecmd
+  case filewritepost
+  case filewritepre
+  case filterreadpost
+  case filterreadpre
+  case filterwritepost
+  case filterwritepre
+  case focusgained
+  case focuslost
+  case funcundefined
+  case guienter
+  case guifailed
+  case insertchange
+  case insertcharpre
+  case insertenter
+  case insertleave
+  case insertleavepre
+  case lspattach
+  case lspdetach
+  case lsptokenupdate
+  case menupopup
+  case modechanged
+  case optionset
+  case quickfixcmdpost
+  case quickfixcmdpre
+  case quitpre
+  case recordingenter
+  case recordingleave
+  case remotereply
+  case searchwrapped
+  case sessionloadpost
+  case shellcmdpost
+  case shellfilterpost
+  case signal
+  case sourcecmd
+  case sourcepost
+  case sourcepre
+  case spellfilemissing
+  case stdinreadpost
+  case stdinreadpre
+  case swapexists
+  case syntax
+  case tabclosed
+  case tabenter
+  case tableave
+  case tabnew
+  case tabnewentered
+  case termchanged
+  case termclose
+  case termenter
+  case termleave
+  case termopen
+  case termresponse
+  case textchanged
+  case textchangedi
+  case textchangedp
+  case textchangedt
+  case textyankpost
+  case uienter
+  case uileave
+  case user
+  case vimenter
+  case vimleave
+  case vimleavepre
+  case vimresized
+  case vimresume
+  case vimsuspend
+  case winclosed
+  case winenter
+  case winleave
+  case winnew
+  case winresized
+  case winscrolled
 }
-

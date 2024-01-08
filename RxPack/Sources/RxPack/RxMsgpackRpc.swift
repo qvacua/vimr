@@ -25,6 +25,10 @@ public final class RxMsgpackRpc {
   }
 
   public struct Response {
+    public static func nilResponse(_ msgid: UInt32) -> Self {
+      return .init(msgid: msgid, error: .nil, result: .nil)
+    }
+
     public let msgid: UInt32
     public let error: Value
     public let result: Value
@@ -154,10 +158,7 @@ public final class RxMsgpackRpc {
           ]
         )
 
-        if expectsReturnValue {
-          // In streamQueue since we want to sync' access self.singles only in that queue.
-          self?.queue.async { self?.singles[msgid] = single }
-        }
+        if expectsReturnValue { self?.singles[msgid] = single }
 
         do {
           try self?.inPipe?.fileHandleForWriting.write(contentsOf: packed)
@@ -174,7 +175,7 @@ public final class RxMsgpackRpc {
         }
 
         if !expectsReturnValue {
-          single(.success(Response(msgid: msgid, error: .nil, result: .nil)))
+          single(.success(.nilResponse(msgid)))
         }
       }
 
@@ -203,12 +204,12 @@ public final class RxMsgpackRpc {
   // Publish events only in streamQueue
   private let streamSubject = PublishSubject<Message>()
 
-  private func nilResponse(with msgid: UInt32) -> Response {
-    Response(msgid: msgid, error: .nil, result: .nil)
-  }
-
   private func cleanUp() {
     self.queue.async { [weak self] in
+      if self?.closed == true {
+        self?.log.info("RxMsgpackRpc already closed")
+        return
+      }
       self?.closed = true
 
       self?.inPipe = nil
@@ -216,11 +217,7 @@ public final class RxMsgpackRpc {
       self?.errorPipe = nil
 
       self?.streamSubject.onCompleted()
-      self?.singles.forEach { msgid, single in single(.success(.init(
-        msgid: msgid,
-        error: .nil,
-        result: .nil
-      ))) }
+      self?.singles.forEach { msgid, single in single(.success(.nilResponse(msgid))) }
 
       self?.log.info("RxMsgpackRpc closed")
     }
@@ -233,8 +230,7 @@ public final class RxMsgpackRpc {
       while true {
         // If we do not use autoreleasepool here, the memory usage keeps going up
         autoreleasepool {
-          guard let buffer = self?.outPipe?.fileHandleForReading.availableData,
-                buffer.count > 0
+          guard let buffer = self?.outPipe?.fileHandleForReading.availableData, buffer.count > 0
           else {
             bufferCount = 0
             return

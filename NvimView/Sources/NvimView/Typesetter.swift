@@ -8,6 +8,10 @@ import Commons
 import os
 
 final class Typesetter {
+  func clearCache() {
+    self.ctRunsCache.clear()
+  }
+  
   func fontGlyphRunsWithLigatures(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
@@ -141,8 +145,7 @@ final class Typesetter {
   }
 
   private func ctRuns(from utf16Chars: [Unicode.UTF16.CodeUnit], font: NSFont) -> [CTRun] {
-    if let ctRunsAndFont = self.ctRunsCache.valueForKey(utf16Chars),
-       font == ctRunsAndFont.font { return ctRunsAndFont.ctRuns }
+    if let ctRunsAndFont = self.ctRunsCache.valueForKey(utf16Chars) { return ctRunsAndFont }
 
     let attrStr = NSAttributedString(
       string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
@@ -152,7 +155,7 @@ final class Typesetter {
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
-    self.ctRunsCache.set(CtRunsAndFont(ctRuns: ctRuns, font: font), forKey: utf16Chars)
+    self.ctRunsCache.set(ctRuns, forKey: utf16Chars)
 
     return ctRuns
   }
@@ -270,14 +273,9 @@ final class Typesetter {
     }
   }
 
-  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], CtRunsAndFont>(count: 5000)
+  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], [CTRun]>(count: 5000)
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
-
-  private struct CtRunsAndFont {
-    var ctRuns: [CTRun]
-    var font: NSFont
-  }
 
   private struct NvimUtf16CellsRun {
     var startColumn: Int

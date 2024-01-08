@@ -1,6 +1,7 @@
 # Next
 
-* ...
+* Neovim 0.9.5 😀
+* Improve rendering performance slightly.
 
 # v0.45.5-20231223.144003
 

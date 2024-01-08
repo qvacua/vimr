@@ -16,7 +16,7 @@ class Document: NSDocument, NSWindowDelegate {
   override init() {
     super.init()
 
-    self.nvimView.font = NSFont(name: "Fira Code", size: 13)
+    self.nvimView.font = NSFont(name: "Iosevka", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
     self.nvimView.usesLiveResize = true

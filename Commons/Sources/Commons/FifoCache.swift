@@ -23,6 +23,11 @@ public final class FifoCache<Key: Hashable, Value> {
   }
 
   public func valueForKey(_ key: Key) -> Value? { self.storage[key] }
+  
+  public func clear() {
+    self.keys = Array(repeating: nil, count: count)
+    self.storage.removeAll(keepingCapacity: true)
+  }
 
   private let count: Int
   private var keys: [Key?]

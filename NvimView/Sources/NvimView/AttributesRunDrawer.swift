@@ -18,7 +18,9 @@ final class AttributesRunDrawer {
     didSet { self.updateFontMetrics() }
   }
 
-  var usesLigatures: Bool
+  var usesLigatures: Bool {
+    didSet { self.typesetter.clearCache() }
+  }
 
   private(set) var cellSize: CGSize = .zero
   private(set) var baselineOffset: CGFloat = 0
@@ -150,7 +152,13 @@ final class AttributesRunDrawer {
   }
 
   private func fontGlyphRuns(from attrsRun: AttributesRun, offset: CGPoint) -> [FontGlyphRun] {
-    let font = FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
+    // We do the check here despite the fact FontUtils.font(adding:to:) does it
+    // since empty trait is the most frequent case
+    let font = if attrsRun.attrs.fontTrait.isEmpty {
+      self.font
+    } else {
+      FontUtils.font(adding: attrsRun.attrs.fontTrait, to: self.font)
+    }
 
     if self.usesLigatures {
       return self.typesetter.fontGlyphRunsWithLigatures(
@@ -181,5 +189,7 @@ final class AttributesRunDrawer {
     self.descent = CTFontGetDescent(self.font)
     self.underlinePosition = CTFontGetUnderlinePosition(self.font)
     self.underlineThickness = CTFontGetUnderlineThickness(self.font)
+    
+    self.typesetter.clearCache()
   }
 }

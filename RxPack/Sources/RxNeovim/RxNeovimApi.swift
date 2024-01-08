@@ -53,8 +53,8 @@ public final class RxNeovimApi {
       }
   }
 
-  public func sendResponse(msgid: UInt32, error: Value, result: Value) -> Completable {
-    self.msgpackRpc.response(msgid: msgid, error: error, result: result)
+  public func sendResponse(_ response: RxMsgpackRpc.Response) -> Completable {
+    self.msgpackRpc.response(msgid: response.msgid, error: response.error, result: response.result)
   }
 
   public init() {}
