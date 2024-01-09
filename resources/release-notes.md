@@ -1,5 +1,12 @@
 # Next
 
+* ...
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.5.2
+
+
+# v0.46.0-20240102.233758
+
 * Neovim 0.9.5 😀
 * Improve rendering performance slightly.
 
