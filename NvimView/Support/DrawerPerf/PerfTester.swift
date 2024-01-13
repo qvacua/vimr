@@ -44,7 +44,7 @@ class PerfTester {
       columnRange: 0...ugrid.size.width - 1
     )
 
-    return runs.parallelMap(chunkSize: 50) { run in
+    return runs.map { run in
       let font = FontUtils.font(
         adding: run.attrs.fontTrait, to: self.font
       )
