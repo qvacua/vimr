@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* Properly include `libintl` such that for example `:languge` works.
 * Dependencies updates:
   - sparkle-project/Sparkle@2.5.2
 
