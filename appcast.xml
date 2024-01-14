@@ -6,23 +6,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.46.0-20240102.233758</title>
+      <title>v0.46.1-20240114.181346</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240102.233758</sparkle:version>
-      <sparkle:shortVersionString>v0.46.0</sparkle:shortVersionString>
+      <sparkle:version>20240114.181346</sparkle:version>
+      <sparkle:shortVersionString>v0.46.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.9.5 😀</li>
-<li>Improve rendering performance slightly.</li>
+<li>Properly include <code>libintl</code> such that for example <code>:languge</code> works.</li>
+<li>Dependencies updates:</li>
+<li>sparkle-project/Sparkle@2.5.2</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.46.0-20240102.233758
+        https://github.com/qvacua/vimr/releases/tag/v0.46.1-20240114.181346
       </releaseNotesLink>
-      <pubDate>2024-01-02T23:43:20.636385</pubDate>
+      <pubDate>2024-01-14T18:18:43.928444</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.46.0-20240102.233758/VimR-v0.46.0.tar.bz2"
-                 sparkle:edSignature="ABotIuoHD4YB9TbN6Ejh0BD/uqxkl1b1MS7sPBFZuf/sZN1fTn1CggY2CyvQnCz3oI3icG/FKpHR7YWxpobxDA==" length="17024638"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.46.1-20240114.181346/VimR-v0.46.1.tar.bz2"
+                 sparkle:edSignature="H/QnSYh5+mK9qpA0RlZlAS84dWUqkbUUDp/q0W3YLWkJLu9mkSktE1AgdMy3uY2GtGW4mmwMsyQj6vlfHWHkDQ==" length="16932799"
                  type="application/octet-stream"/>
     </item>
   </channel>
