@@ -26,7 +26,7 @@ build_neovim() {
     -D CMAKE_BUILD_TYPE=${NVIM_BUILD_TYPE} \
     -D CMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
     -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
-    -D CMAKE_FIND_FRAMEWORK=NEVER \
+    -D CMAKE_FIND_FRAMEWORK=LAST \
     -D LIBINTL_INCLUDE_DIR=../bin/neovim/third-party/gettext/include \
     -D LIBINTL_LIBRARY=../bin/neovim/third-party/gettext/lib/libintl.a
   cmake --build build

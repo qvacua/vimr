@@ -41,7 +41,7 @@ releaseVimRJob.with {
 
   publishers {
     archiveArtifacts {
-      pattern('build/Build/Products/Release/**, release.spec.sh, release-notes.temp.md, appcast*, build_release.temp.sh')
+      pattern('Neovim/build/**, build/Build/Products/Release/**, release.spec.sh, release-notes.temp.md, appcast*, build_release.temp.sh')
       onlyIfSuccessful()
     }
   }
@@ -77,7 +77,7 @@ nightlyVimRJob.with {
 
   publishers {
     archiveArtifacts {
-      pattern('build/Build/Products/Release/**')
+      pattern('Neovim/build/**, build/Build/Products/Release/**')
       onlyIfSuccessful()
     }
   }
