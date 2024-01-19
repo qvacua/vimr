@@ -21,15 +21,6 @@ clean=false for_dev=true ./bin/build_nvimserver.sh # generate auto commands and 
 defaults write com.qvacua.VimR enable-debug-menu 1
 ```
 
-## How to update gettext (libintl)
-
-Update `./bin/neovim/resources/build_info../bin/neovim/resources/buildInfo.json`
-
-```bash
-./bin/neovim/bin/prepare_libintl.sh
-```
-
-It will update `./bin/neovim/third-party`, commit and push.
 ## How to release
 
 * Set a new version of VimR via
