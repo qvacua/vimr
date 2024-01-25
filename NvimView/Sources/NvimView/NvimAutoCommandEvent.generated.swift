@@ -111,6 +111,7 @@ enum NvimAutoCommandEvent: String {
   case termenter
   case termleave
   case termopen
+  case termrequest
   case termresponse
   case textchanged
   case textchangedi
