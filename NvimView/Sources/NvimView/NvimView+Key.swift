@@ -43,7 +43,7 @@ public extension NvimView {
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
       : self.vimPlainString(chars)
 
-    _ = self.api.input(keys: finalInput).syncValue()
+    _ = self.api.input(keys: finalInput, errWhenBlocked: false).syncValue()
 
     self.keyDownDone = true
   }
@@ -60,7 +60,7 @@ public extension NvimView {
 
     // try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
     //  .wait()
-    _ = self.api.input(keys: self.vimPlainString(text)).syncValue()
+    _ = self.api.input(keys: self.vimPlainString(text), errWhenBlocked: false).syncValue()
 
     if self.hasMarkedText() { self._unmarkText() }
     self.keyDownDone = true
@@ -125,7 +125,7 @@ public extension NvimView {
     // So we escape as early as possible
     if chars == "\0" {
       self.api
-        .input(keys: self.wrapNamedKeys("Nul"))
+        .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
         .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -138,7 +138,7 @@ public extension NvimView {
     // Also mentioned in MacVim's KeyBindings.plist
     if flags == .control, chars == "6" {
       self.api
-        .input(keys: "\u{1e}") // AKA ^^
+        .input(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
         .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -149,7 +149,7 @@ public extension NvimView {
     if flags == .control, chars == "2" {
       // <C-2> should generate \0, escaping as above
       self.api
-        .input(keys: self.wrapNamedKeys("Nul"))
+        .input(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
         .subscribe(onFailure: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
