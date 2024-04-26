@@ -10,7 +10,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/qvacua/misc.swift", exact: "0.2.0"),
-    .package(url: "https://github.com/Quick/Nimble", from: "13.0.0"),
+    .package(url: "https://github.com/Quick/Nimble", from: "13.3.0"),
   ],
   targets: [
     .target(name: "Ignore", dependencies: [.product(name: "WildmatchC", package: "misc.swift")]),

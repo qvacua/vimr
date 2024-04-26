@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 readonly clean=${clean:?"true or false"}
 readonly NVIM_BUILD_TYPE=${NVIM_BUILD_TYPE:-"Release"}
-readonly gettext_version="0.22.4"
+readonly gettext_version="0.22.5"
 readonly gettext_url="https://ftp.gnu.org/pub/gnu/gettext/gettext-${gettext_version}.tar.gz"
 declare temp_dir; temp_dir="$(mktemp -d)"; readonly temp_dir
 readonly gettext_install_dir="${temp_dir}/universal"
