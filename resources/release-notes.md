@@ -1,6 +1,7 @@
 # Next
 
 * Properly include `libintl` such that for example `:languge` works.
+* Bugfix: Filetype detection issue
 * Dependencies updates:
   - sparkle-project/Sparkle@2.6.0
   - Quick/Nimble@13.3.0
