@@ -31,8 +31,10 @@ public struct Theme {
   }
 
   public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
-
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
+
+  public var tabBackgroundColor = NSColor.selectedTextBackgroundColor
+  public var tabForegroundColor = NSColor.selectedTextColor
 
   public var titleFont = NSFont.systemFont(ofSize: 11)
   public var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)

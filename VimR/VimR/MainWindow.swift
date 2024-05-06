@@ -482,6 +482,9 @@ final class MainWindow: NSObject,
 
     tabsTheme.selectedForegroundColor = self.theme.highlightForeground
     tabsTheme.selectedBackgroundColor = self.theme.highlightBackground
+		
+		tabsTheme.tabBackgroundColor = self.theme.tabBackground;
+		tabsTheme.tabForegroundColor = self.theme.tabForeground;
 
     tabsTheme.tabSelectedIndicatorColor = self.theme.highlightForeground
 

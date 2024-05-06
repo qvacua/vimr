@@ -107,8 +107,8 @@ extension Tab {
 
   private func adjustColors(_ newIsSelected: Bool) {
     if newIsSelected {
-      self.layer?.backgroundColor = self.theme.selectedBackgroundColor.cgColor
-      self.titleView.textColor = self.theme.selectedForegroundColor
+      self.layer?.backgroundColor = self.theme.tabBackgroundColor.cgColor
+      self.titleView.textColor = self.theme.tabForegroundColor
       self.closeButton.image = self.theme.selectedCloseButtonImage
     } else {
       self.layer?.backgroundColor = self.theme.backgroundColor.cgColor
