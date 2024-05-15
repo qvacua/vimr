@@ -25,7 +25,7 @@ public struct Theme {
     didSet {
       self.selectedCloseButtonImage = Icon.close.asImage(
         dimension: self.iconDimension.width,
-        color: self.selectedForegroundColor
+        color: self.tabForegroundColor
       )
     }
   }
@@ -60,12 +60,12 @@ public struct Theme {
   public init() {
     self.closeButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.foregroundColor
+      color: self.tabForegroundColor
+      
     )
-
     self.selectedCloseButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.selectedForegroundColor
+      color: self.tabForegroundColor
     )
   }
 }
