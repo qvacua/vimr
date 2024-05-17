@@ -1,6 +1,7 @@
 # Next
 
 * Properly include `libintl` such that for example `:languge` works.
+* GH-1059: Improved coloring of custom tabs; thanks @s-daveb for the PR!
 * Bugfix: Filetype detection issue
 * Dependencies updates:
   - sparkle-project/Sparkle@2.6.0
