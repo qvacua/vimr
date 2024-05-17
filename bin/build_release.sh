@@ -120,31 +120,31 @@ main() {
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
 
-    check_version
-    prepare_bin
-    build_release
-
-    if [[ "${create_gh_release}" == false ]]; then
-      echo "### No github release, exiting"
-      exit 0
-    fi
-
-    local -x GH_TOKEN
-    GH_TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
-    readonly GH_TOKEN
-
-    create_gh_release
-
-    if [[ "${upload}" == true ]]; then
-      # Give GitHub some time.
-      sleep 5
-      check_gh_release_present
-      upload_artifact
-    fi
+#    check_version
+#    prepare_bin
+#    build_release
+#
+#    if [[ "${create_gh_release}" == false ]]; then
+#      echo "### No github release, exiting"
+#      exit 0
+#    fi
+#
+#    local -x GH_TOKEN
+#    GH_TOKEN=$(cat ~/.local/secrets/github.qvacua.release.token)
+#    readonly GH_TOKEN
+#
+#    create_gh_release
+#
+#    if [[ "${upload}" == true ]]; then
+#      # Give GitHub some time.
+#      sleep 5
+#      check_gh_release_present
+#      upload_artifact
+#    fi
 
     if [[ "${update_appcast}" == true ]]; then
       # Sometimes GitHub is not yet up-to-date with the uploaded asset.
-      sleep 5
+#      sleep 5
       update_appcast_file
     fi
 
