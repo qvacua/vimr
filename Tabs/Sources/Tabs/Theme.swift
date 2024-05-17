@@ -25,14 +25,16 @@ public struct Theme {
     didSet {
       self.selectedCloseButtonImage = Icon.close.asImage(
         dimension: self.iconDimension.width,
-        color: self.selectedForegroundColor
+        color: self.tabForegroundColor
       )
     }
   }
 
   public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
-
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
+
+  public var tabBackgroundColor = NSColor.selectedTextBackgroundColor
+  public var tabForegroundColor = NSColor.selectedTextColor
 
   public var titleFont = NSFont.systemFont(ofSize: 11)
   public var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
@@ -58,12 +60,12 @@ public struct Theme {
   public init() {
     self.closeButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.foregroundColor
+      color: self.tabForegroundColor
+      
     )
-
     self.selectedCloseButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.selectedForegroundColor
+      color: self.tabForegroundColor
     )
   }
 }

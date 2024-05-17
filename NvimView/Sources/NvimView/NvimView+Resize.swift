@@ -126,7 +126,7 @@ extension NvimView {
             let g:gui_vimr = 1
             autocmd VimLeave * call rpcnotify(\(channel), 'autocommand', 'vimleave')
             autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
-            autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1))
+            autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('TablineSel')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('TablineSel')}), 'fg', -1))
             autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
             """, opts: [:], errWhenBlocked: false)
             // swiftformat:enable all

@@ -511,7 +511,7 @@ extension NvimView {
 
   private func colorSchemeChanged(_ value: MessagePackValue) {
     guard let values = MessagePackUtils.array(
-      from: value, ofSize: 5, conversion: { $0.intValue }
+      from: value, ofSize: 7, conversion: { $0.intValue }
     ) else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
