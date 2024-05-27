@@ -73,4 +73,4 @@ jobs:
 
       - name: Publish release
         run: |
-          gh release create $TAG_NAME --title "Neovim universal build ${TAG_NAME}" --target $GITHUB_SHA nvim-macos-x86_64/nvim-macos-x86_64.tar.gz nvim-macos-arm64/nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
+          gh release create $TAG_NAME --title "Neovim universal build ${TAG_NAME}" --target $GITHUB_SHA nvim-macos-x86_64.tar.gz nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
