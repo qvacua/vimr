@@ -50,11 +50,13 @@ jobs:
       # Must perform checkout first, since it deletes the target directory
       # before running, and would therefore delete the downloaded artifacts
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/download-artifact@v4
 
       - name: Install dependencies
-        run: brew-bundle
+        run: brew bundle
 
       - name: Set tag name env
         run: |
