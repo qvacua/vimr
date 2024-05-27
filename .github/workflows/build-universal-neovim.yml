@@ -7,7 +7,6 @@ on:
 
 jobs:
   macos:
-    needs: setup
     strategy:
       fail-fast: false
       matrix:
