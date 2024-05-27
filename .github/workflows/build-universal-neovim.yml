@@ -1,0 +1,66 @@
+name: 'Universal Neovim'
+on:
+  push:
+    tags:
+      # example: neovim-v0.10.0-20240601.102525
+      - neovim-v[0-9]+.[0-9]+.[0-9]+-.*
+
+jobs:
+  macos:
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ macos-12, macos-14 ]
+        include:
+          - runner: macos-12
+            arch: x86_64
+          - runner: macos-14
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Perform a full checkout #13471
+          fetch-depth: 0
+      - name: Install dependencies
+        run: brew bundle
+
+      - name: Build neovim
+        run: clean=true ./bin/neovim/bin/build_neovim.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nvim-macos-${{ matrix.arch }}
+          path: Neovim/build/nvim-macos-${{ matrix.arch }}.tar.gz
+          retention-days: 1
+
+  publish:
+    needs: [macos]
+    runs-on: macos-14
+    env:
+      GH_REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      # Must perform checkout first, since it deletes the target directory
+      # before running, and would therefore delete the downloaded artifacts
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+
+      - name: Install dependencies
+        run: brew-bundle
+
+      - name: Set tag name env
+        run: |
+          TAG_NAME=${{ github.ref }}
+          echo "TAG_NAME=${TAG_NAME#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create universal Neovim
+        run: ./bin/neovim/bin/build_universal_neovim.sh
+
+      - name: Publish release
+        run: |
+          gh release create $TAG_NAME --title "Neovim universal build ${TAG_NAME}" --target $GITHUB_SHA nvim-macos-x86_64/nvim-macos-x86_64.tar.gz nvim-macos-arm64/nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
