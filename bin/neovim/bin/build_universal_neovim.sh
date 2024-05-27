@@ -23,6 +23,8 @@ main() {
 
   local universal_folder_path; universal_folder_path="$(pwd)/nvim-macos-universal";
   readonly universal_folder_path
+  echo "${universal_folder_path}"
+  ls -la
 
   mkdir -p "${universal_folder_path}/bin"
   cp -r nvim-macos-arm64/share "${universal_folder_path}"
