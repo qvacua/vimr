@@ -66,7 +66,6 @@ jobs:
           mv nvim-macos-arm64/* .
           rm -r nvim-macos-x86_64
           rm -r nvim-macos-arm64
-          ls -la
 
       - name: Create universal Neovim
         run: ./bin/neovim/bin/build_universal_neovim.sh

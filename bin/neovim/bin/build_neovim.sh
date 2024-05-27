@@ -60,11 +60,9 @@ build_neovim() {
   cmake -B build -G Ninja \
     -D CMAKE_BUILD_TYPE="${NVIM_BUILD_TYPE}" \
     -D CMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET}" \
-    -D ENABLE_LIBINTL=OFF \
-    -D CMAKE_FIND_FRAMEWORK=NEVER
-#    -D CMAKE_FIND_FRAMEWORK=NEVER \
-#    -D LIBINTL_INCLUDE_DIR="${gettext_install_dir}/include" \
-#    -D LIBINTL_LIBRARY="${gettext_install_dir}/lib/libintl.a"
+    -D CMAKE_FIND_FRAMEWORK=NEVER \
+    -D LIBINTL_INCLUDE_DIR="${gettext_install_dir}/include" \
+    -D LIBINTL_LIBRARY="${gettext_install_dir}/lib/libintl.a"
   cmake --build build
 
   cpack --config build/CPackConfig.cmake
@@ -84,7 +82,7 @@ main() {
       make distclean
     fi
 
-#    build_gettext "${deployment_target}"
+    build_gettext "${deployment_target}"
     build_neovim "${deployment_target}"
   popd >/dev/null
 
