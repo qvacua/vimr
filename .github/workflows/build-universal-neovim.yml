@@ -22,6 +22,7 @@ jobs:
         with:
           # Perform a full checkout #13471
           fetch-depth: 0
+          submodules: true
       - name: Install dependencies
         run: brew bundle
 
