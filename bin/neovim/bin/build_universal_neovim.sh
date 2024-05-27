@@ -41,7 +41,7 @@ main() {
          -output "${universal_folder_path}/share/nvim/runtime/parser/${filename}"
   done
 
-  tar -cjf nvim-macos-universal
+  tar -cjf nvim-macos-universal.tar.bz nvim-macos-universal
 
   popd >/dev/null
 }
