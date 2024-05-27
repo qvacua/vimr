@@ -75,5 +75,5 @@ jobs:
         run: |
           gh release create $TAG_NAME \
              --prerelease \
-             --title "Neovim universal build ${TAG_NAME}" \
+             --title "Universal ${TAG_NAME}" \
              --target $GITHUB_SHA nvim-macos-x86_64.tar.gz nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
