@@ -33,7 +33,6 @@ main() {
   lipo -create nvim-macos-arm64/bin/nvim nvim-macos-x86_64/bin/nvim \
        -output "${universal_folder_path}/bin/nvim"
   for f in nvim-macos-arm64/lib/nvim/parser/*; do
-    echo "${f}"
     f="${f%/}"
     local filename="${f##*/}"
     lipo -create "nvim-macos-arm64/lib/nvim/parser/${filename}" \

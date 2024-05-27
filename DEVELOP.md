@@ -23,6 +23,16 @@ defaults write com.qvacua.VimR enable-debug-menu 1
 
 ## How to release
 
+### Neovim
+
+* Commit and push the new release of Neovim.
+* Tag and push with the following
+    ```bash
+   version=neovim-vX.Y.Z-$(date "+%Y%m%d.%H%M%S"); git tag -a "${version}" -m "${version}"; git push origin "${version}"
+    ```
+
+### VimR
+
 * Set a new version of VimR via
     ```bash
     is_snapshot=true ./bin/set_new_versions.sh # for snapshot or
