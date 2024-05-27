@@ -29,9 +29,6 @@ jobs:
       - name: Build neovim
         run: clean=true ./bin/neovim/bin/build_neovim.sh
 
-      - name: Append arch to artifact
-        run: mv Neovim/build/nvim-macos.tar.gz Neovim/build/nvim-macos-${{ matrix.arch }}.tar.gz
-
       - uses: actions/upload-artifact@v4
         with:
           name: nvim-macos-${{ matrix.arch }}
