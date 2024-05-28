@@ -8,7 +8,7 @@ set -Eeuo pipefail
 # built for the current architecture only and using the simple `make` command.
 
 declare -r -x clean=${clean:-true}
-declare -r -x for_dev=${for_dev:-true}
+declare -r -x for_dev=${for_dev:-false}
 
 main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
