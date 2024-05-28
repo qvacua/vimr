@@ -37,6 +37,8 @@ defaults write com.qvacua.VimR enable-debug-menu 1
     ```bash
    version=neovim-vX.Y.Z-$(date "+%Y%m%d.%H%M%S"); git tag -a "${version}" -m "${version}"; git push origin "${version}"
     ```
+* Github action will build universal binary + runtime and package it.
+* Update the version of Neovim in `/bin/neovim/resources/buildInfo.json`
 
 ### VimR
 
