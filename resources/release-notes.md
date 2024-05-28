@@ -1,5 +1,9 @@
 # Next
 
+* Neovim 0.10.0 😀
+
+# v0.46.2-20240517.102525
+
 * GH-1059: Improved coloring of custom tabs; thanks @s-daveb for the PR!
 
 # v0.46.1-20240426.143700

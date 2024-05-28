@@ -1,28 +1,27 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+# This script builds Neovim with gettext for host's architecture, *no* universal build
+# Produces /Neovim/build/neovim-macos-$arch.tar.gz
+
 readonly clean=${clean:?"true or false"}
 readonly NVIM_BUILD_TYPE=${NVIM_BUILD_TYPE:-"Release"}
 readonly gettext_version="0.22.5"
 readonly gettext_url="https://ftp.gnu.org/pub/gnu/gettext/gettext-${gettext_version}.tar.gz"
 declare temp_dir; temp_dir="$(mktemp -d)"; readonly temp_dir
-readonly gettext_install_dir="${temp_dir}/universal"
+readonly gettext_install_dir="${temp_dir}/gettext"
 
 build_gettext() {
-  local -r -x MACOSX_DEPLOYMENT_TARGET=$1
+  local -r -x MACOSX_DEPLOYMENT_TARGET="$1"
 
   pushd "${temp_dir}" >/dev/null
     curl -L "${gettext_url}" -o gettext.tar.gz
     tar -xzf gettext.tar.gz
 
-    mkdir universal
+    mkdir gettext
 
     pushd "./gettext-${gettext_version}" >/dev/null
       ./configure \
-        CC="gcc -arch x86_64 -arch arm64" \
-        CXX="g++ -arch x86_64 - arch arm64" \
-        CPP="gcc -E" \
-        CXXCPP="g++ -E" \
         --prefix "${gettext_install_dir}" \
         --disable-silent-rules \
         --with-included-glib \
@@ -43,9 +42,9 @@ build_gettext() {
 }
 
 build_neovim() {
-  # slightly modified version of /Neovim/.github/scripts/build_universal_macos.sh
+  # slightly modified version of Neovim's Github workflow for release
   local -r -x MACOSX_DEPLOYMENT_TARGET=$1
-  local -r -x SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+  local -x SDKROOT; SDKROOT=$(xcrun --sdk macosx --show-sdk-path); readonly SDKROOT
 
   # Brew's gettext does not get sym-linked to PATH
   export PATH="/opt/homebrew/opt/gettext/bin:/usr/local/opt/gettext/bin:${PATH}"
@@ -53,7 +52,6 @@ build_neovim() {
   cmake -S cmake.deps -B .deps -G Ninja \
     -D CMAKE_BUILD_TYPE="${NVIM_BUILD_TYPE}" \
     -D CMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET}" \
-    -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
     -D CMAKE_FIND_FRAMEWORK=NEVER
   cmake --build .deps
 
@@ -62,8 +60,7 @@ build_neovim() {
   cmake -B build -G Ninja \
     -D CMAKE_BUILD_TYPE="${NVIM_BUILD_TYPE}" \
     -D CMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET}" \
-    -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 \
-    -D CMAKE_FIND_FRAMEWORK=LAST \
+    -D CMAKE_FIND_FRAMEWORK=NEVER \
     -D LIBINTL_INCLUDE_DIR="${gettext_install_dir}/include" \
     -D LIBINTL_LIBRARY="${gettext_install_dir}/lib/libintl.a"
   cmake --build build
