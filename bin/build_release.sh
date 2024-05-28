@@ -22,10 +22,8 @@ declare -r -x GH_REPO="qvacua/vimr"
 
 prepare_bin() {
   pushd ./bin >/dev/null
-    if ! pyenv which python | grep -q "com.qvacua.VimR.bin"; then
-      echo "com.qvacua.VimR.bin virtualenv not set up!"
-      exit 1;
-    fi
+    python3 -m venv .venv
+    source .venv/bin/activate
 
     pip install -r requirements.txt
   popd >/dev/null
