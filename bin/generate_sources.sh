@@ -24,7 +24,7 @@ main() {
       nvim_version="v$major.$minor.$patch$prerelease"
       echo "### Using nvim version: $nvim_version"
 
-      ../bin/neovim/bin/build_neovim.sh
+      for_dev=true ../bin/build_nvimserver.sh
     popd > /dev/null
 
     pushd Neovim

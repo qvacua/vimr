@@ -12,6 +12,8 @@ If you want to build Neovim locally, i.e., no universal build, you can use
 clean=true for_dev=true ./bin/build_nvimserver.sh
 ```
 
+This is used when generating source since we need some generated header files.
+
 ### Generating sources when upgrading Neovim
 
 ```bash
