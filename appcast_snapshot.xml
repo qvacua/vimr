@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.46.2-20240517.102525</title>
+      <title>SNAPSHOT-20240528.165029</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240517.102525</sparkle:version>
-      <sparkle:shortVersionString>v0.46.2</sparkle:shortVersionString>
+      <sparkle:version>20240528.165029</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20240528.165029</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1059: Improved coloring of custom tabs; thanks @s-daveb for the PR!</li>
+<li>Neovim 0.10.0 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.46.2-20240517.102525
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20240528.165029
       </releaseNotesLink>
-      <pubDate>2024-05-17T10:49:24.608480</pubDate>
+      <pubDate>2024-05-28T16:54:50.741606</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.46.2-20240517.102525/VimR-v0.46.2.tar.bz2"
-                 sparkle:edSignature="bFlWhf7BYWo8kXYM3HEnqGKWssm0VM0y3D7N6XS6Erkk1iE57Y4DOcRqL4UWcL7gyiEnOoNWj/4NO77H7WUuDQ==" length="17062912"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20240528.165029/VimR-SNAPSHOT-20240528.165029.tar.bz2"
+                 sparkle:edSignature="p6VAIKWU0eD5PJpGJc1JjfSC1El+dXrr7hrvFmI+OVkDO0YjTzPWzOSj8TzQoK0owrmp2SciwRqJ86E5aOyqBQ==" length="19377862"
                  type="application/octet-stream"/>
     </item>
   </channel>
