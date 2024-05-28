@@ -1,14 +1,12 @@
-// Auto generated for nvim version 0.9.5.
+// Auto generated for nvim version 0.10.0.
 // See bin/generate_api_methods.py
 
 import Foundation
 import MessagePack
 import RxSwift
 
-extension RxNeovimApi {
-
-  public enum Error: Swift.Error {
-
+public extension RxNeovimApi {
+  enum Error: Swift.Error {
     public static let exceptionRawValue = UInt64(0)
     public static let validationRawValue = UInt64(1)
 
@@ -32,26 +30,24 @@ extension RxNeovimApi {
 
       switch rawValue {
       case Error.exceptionRawValue: self = .exception(message: message)
-    case Error.validationRawValue: self = .validation(message: message)
+      case Error.validationRawValue: self = .validation(message: message)
       default: self = .unknown
       }
     }
   }
 }
 
-extension RxNeovimApi {
-
-  public func getAutocmds(
-    opts: Dictionary<String, RxNeovimApi.Value>,
+public extension RxNeovimApi {
+  func getAutocmds(
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -71,19 +67,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func createAutocmd(
+  func createAutocmd(
     event: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        event,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      event,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -103,13 +98,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func delAutocmd(
+  func delAutocmd(
     id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(id)),
+      .int(Int64(id)),
     ]
 
     if expectsReturnValue {
@@ -125,13 +119,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func clearAutocmds(
-    opts: Dictionary<String, RxNeovimApi.Value>,
+  func clearAutocmds(
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -147,19 +140,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func createAugroup(
+  func createAugroup(
     name: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -179,13 +171,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func delAugroupById(
+  func delAugroupById(
     id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(id)),
+      .int(Int64(id)),
     ]
 
     if expectsReturnValue {
@@ -201,13 +192,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delAugroupByName(
+  func delAugroupByName(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -223,15 +213,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func execAutocmds(
+  func execAutocmds(
     event: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        event,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      event,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -247,17 +236,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufLineCount(
+  func bufLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -277,17 +265,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufAttach(
+  func bufAttach(
     buffer: RxNeovimApi.Buffer,
     send_buffer: Bool,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .bool(send_buffer),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .bool(send_buffer),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -311,13 +298,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufDetach(
+  func bufDetach(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -341,23 +327,22 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetLines(
+  func bufGetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(strict_indexing),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(strict_indexing),
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -377,7 +362,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufSetLines(
+  func bufSetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -385,13 +370,12 @@ extension RxNeovimApi {
     replacement: [String],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(strict_indexing),
-        .array(replacement.map { .string($0) }),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(strict_indexing),
+      .array(replacement.map { .string($0) }),
     ]
 
     if expectsReturnValue {
@@ -407,7 +391,7 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufSetText(
+  func bufSetText(
     buffer: RxNeovimApi.Buffer,
     start_row: Int,
     start_col: Int,
@@ -416,14 +400,13 @@ extension RxNeovimApi {
     replacement: [String],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start_row)),
-        .int(Int64(start_col)),
-        .int(Int64(end_row)),
-        .int(Int64(end_col)),
-        .array(replacement.map { .string($0) }),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start_row)),
+      .int(Int64(start_col)),
+      .int(Int64(end_row)),
+      .int(Int64(end_col)),
+      .array(replacement.map { .string($0) }),
     ]
 
     if expectsReturnValue {
@@ -439,27 +422,26 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufGetText(
+  func bufGetText(
     buffer: RxNeovimApi.Buffer,
     start_row: Int,
     start_col: Int,
     end_row: Int,
     end_col: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start_row)),
-        .int(Int64(start_col)),
-        .int(Int64(end_row)),
-        .int(Int64(end_col)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start_row)),
+      .int(Int64(start_col)),
+      .int(Int64(end_row)),
+      .int(Int64(end_col)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -479,19 +461,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetOffset(
+  func bufGetOffset(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(index)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(index)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -511,19 +492,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetVar(
+  func bufGetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -543,17 +523,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetChangedtick(
+  func bufGetChangedtick(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -573,20 +552,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetKeymap(
+  func bufGetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     errWhenBlocked: Bool = true
-  ) -> Single<[Dictionary<String, RxNeovimApi.Value>]> {
-
+  ) -> Single<[[String: RxNeovimApi.Value]]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(mode),
+      .int(Int64(buffer.handle)),
+      .string(mode),
     ]
 
-    let transform = { (_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] in
-      guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-        throw RxNeovimApi.Error.conversion(type: [Dictionary<String, RxNeovimApi.Value>].self)
+    let transform = { (_ value: Value) throws -> [[String: RxNeovimApi.Value]] in
+      guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
+        throw RxNeovimApi.Error.conversion(type: [[String: RxNeovimApi.Value]].self)
       }
 
       return result
@@ -605,21 +583,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufSetKeymap(
+  func bufSetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
     rhs: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(mode),
-        .string(lhs),
-        .string(rhs),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .string(mode),
+      .string(lhs),
+      .string(rhs),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -635,17 +612,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufDelKeymap(
+  func bufDelKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(mode),
-        .string(lhs),
+      .int(Int64(buffer.handle)),
+      .string(mode),
+      .string(lhs),
     ]
 
     if expectsReturnValue {
@@ -661,17 +637,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufSetVar(
+  func bufSetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        value,
+      .int(Int64(buffer.handle)),
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -687,15 +662,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufDelVar(
+  func bufDelVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -711,13 +685,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufGetName(
+  func bufGetName(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -741,15 +714,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufSetName(
+  func bufSetName(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -765,13 +737,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufIsLoaded(
+  func bufIsLoaded(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -795,15 +766,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufDelete(
+  func bufDelete(
     buffer: RxNeovimApi.Buffer,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -819,13 +789,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufIsValid(
+  func bufIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -849,15 +818,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufDelMark(
+  func bufDelMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -881,21 +849,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufSetMark(
+  func bufSetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     line: Int,
     col: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        .int(Int64(line)),
-        .int(Int64(col)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .string(name),
+      .int(Int64(line)),
+      .int(Int64(col)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -919,19 +886,21 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetMark(
+  func bufGetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -951,19 +920,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufCall(
+  func bufCall(
     buffer: RxNeovimApi.Buffer,
     fun: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        fun,
+      .int(Int64(buffer.handle)),
+      fun,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -983,20 +951,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func parseCmd(
+  func parseCmd(
     str: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(str),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(str),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1015,15 +982,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func cmd(
-    cmd: Dictionary<String, RxNeovimApi.Value>,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+  func cmd(
+    cmd: [String: RxNeovimApi.Value],
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .map(cmd.mapToDict({ (Value.string($0), $1) })),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .map(cmd.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -1047,17 +1013,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func createUserCommand(
+  func createUserCommand(
     name: String,
     command: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        command,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      command,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -1073,13 +1038,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delUserCommand(
+  func delUserCommand(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -1095,19 +1059,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufCreateUserCommand(
+  func bufCreateUserCommand(
     buffer: RxNeovimApi.Buffer,
     name: String,
     command: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        command,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .string(name),
+      command,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -1123,15 +1086,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func bufDelUserCommand(
+  func bufDelUserCommand(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -1147,18 +1109,17 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getCommands(
-    opts: Dictionary<String, RxNeovimApi.Value>,
+  func getCommands(
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1177,20 +1138,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetCommands(
+  func bufGetCommands(
     buffer: RxNeovimApi.Buffer,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1210,15 +1170,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func exec(
+  func exec(
     src: String,
     output: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(src),
-        .bool(output),
+      .string(src),
+      .bool(output),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -1243,13 +1202,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func commandOutput(
+  func commandOutput(
     command: String,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(command),
+      .string(command),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -1274,19 +1232,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func executeLua(
+  func executeLua(
     code: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(code),
-        args,
+      .string(code),
+      args,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1307,17 +1264,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func bufGetNumber(
+  func bufGetNumber(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1338,19 +1294,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func bufClearHighlight(
+  func bufClearHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(line_start)),
-        .int(Int64(line_end)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(line_start)),
+      .int(Int64(line_end)),
     ]
 
     if expectsReturnValue {
@@ -1367,25 +1322,24 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func bufSetVirtualText(
+  func bufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
     line: Int,
     chunks: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(src_id)),
-        .int(Int64(line)),
-        chunks,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .int(Int64(src_id)),
+      .int(Int64(line)),
+      chunks,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1406,20 +1360,19 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func getHlById(
+  func getHlById(
     hl_id: Int,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(hl_id)),
-        .bool(rgb),
+      .int(Int64(hl_id)),
+      .bool(rgb),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1439,20 +1392,19 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func getHlByName(
+  func getHlByName(
     name: String,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .bool(rgb),
+      .string(name),
+      .bool(rgb),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1472,17 +1424,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rInsert(
+  func rInsert(
     buffer: RxNeovimApi.Buffer,
     lnum: Int,
     lines: [String],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(lnum)),
-        .array(lines.map { .string($0) }),
+      .int(Int64(buffer.handle)),
+      .int(Int64(lnum)),
+      .array(lines.map { .string($0) }),
     ]
 
     if expectsReturnValue {
@@ -1499,15 +1450,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetLine(
+  func rGetLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(index)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(index)),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -1532,17 +1482,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetLine(
+  func rSetLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(index)),
-        .string(line),
+      .int(Int64(buffer.handle)),
+      .int(Int64(index)),
+      .string(line),
     ]
 
     if expectsReturnValue {
@@ -1559,15 +1508,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rDelLine(
+  func rDelLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(index)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(index)),
     ]
 
     if expectsReturnValue {
@@ -1584,7 +1532,7 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetLineSlice(
+  func rGetLineSlice(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -1592,17 +1540,16 @@ extension RxNeovimApi {
     include_end: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(include_start),
-        .bool(include_end),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(include_start),
+      .bool(include_end),
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -1623,7 +1570,7 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetLineSlice(
+  func rSetLineSlice(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -1632,14 +1579,13 @@ extension RxNeovimApi {
     replacement: [String],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(include_start),
-        .bool(include_end),
-        .array(replacement.map { .string($0) }),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(include_start),
+      .bool(include_end),
+      .array(replacement.map { .string($0) }),
     ]
 
     if expectsReturnValue {
@@ -1656,21 +1602,20 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetVar(
+  func rSetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        value,
+      .int(Int64(buffer.handle)),
+      .string(name),
+      value,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1691,19 +1636,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rDelVar(
+  func rDelVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1724,21 +1668,20 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wSetVar(
+  func wSetVar(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-        value,
+      .int(Int64(window.handle)),
+      .string(name),
+      value,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1759,19 +1702,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wDelVar(
+  func wDelVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
+      .int(Int64(window.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1792,21 +1734,20 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geSetVar(
+  func geSetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     value: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
-        value,
+      .int(Int64(tabpage.handle)),
+      .string(name),
+      value,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1827,19 +1768,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geDelVar(
+  func geDelVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
+      .int(Int64(tabpage.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1860,19 +1800,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etVar(
+  func etVar(
     name: String,
     value: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
+      .string(name),
+      value,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1893,17 +1832,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func elVar(
+  func elVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -1923,18 +1861,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getOptionInfo(
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func getOptionInfo(
     name: String,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -1953,17 +1891,216 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func createNamespace(
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func setOption(
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(name),
+      value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_set_option", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_set_option", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func getOption(
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    let params: [RxNeovimApi.Value] = [
+      .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = Optional(value) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_get_option", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_get_option", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func bufGetOption(
+    buffer: RxNeovimApi.Buffer,
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = Optional(value) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_buf_get_option", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_buf_get_option", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func bufSetOption(
+    buffer: RxNeovimApi.Buffer,
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .string(name),
+      value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_buf_set_option", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_buf_set_option", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func winGetOption(
+    window: RxNeovimApi.Window,
+    name: String,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(window.handle)),
+      .string(name),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = Optional(value) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_win_get_option", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_win_get_option", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func winSetOption(
+    window: RxNeovimApi.Window,
+    name: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(window.handle)),
+      .string(name),
+      value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_win_set_option", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_win_set_option", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func callAtomic(
+    calls: RxNeovimApi.Value,
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    let params: [RxNeovimApi.Value] = [
+      calls,
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = Optional(value) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_call_atomic", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_call_atomic", params: params)
+      .map(transform)
+  }
+
+  func createNamespace(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -1983,17 +2120,15 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getNamespaces(
+  func getNamespaces(
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -2012,23 +2147,25 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetExtmarkById(
+  func bufGetExtmarkById(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(id)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(id)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -2048,25 +2185,24 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufGetExtmarks(
+  func bufGetExtmarks(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     start: RxNeovimApi.Value,
     end: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        start,
-        end,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      start,
+      end,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -2086,25 +2222,24 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufSetExtmark(
+  func bufSetExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line: Int,
     col: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(line)),
-        .int(Int64(col)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(line)),
+      .int(Int64(col)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2124,17 +2259,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufDelExtmark(
+  func bufDelExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(id)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(id)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -2158,7 +2292,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufAddHighlight(
+  func bufAddHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     hl_group: String,
@@ -2167,18 +2301,17 @@ extension RxNeovimApi {
     col_end: Int,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .string(hl_group),
-        .int(Int64(line)),
-        .int(Int64(col_start)),
-        .int(Int64(col_end)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2198,19 +2331,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func bufClearNamespace(
+  func bufClearNamespace(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(line_start)),
-        .int(Int64(line_end)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(line_start)),
+      .int(Int64(line_end)),
     ]
 
     if expectsReturnValue {
@@ -2226,15 +2358,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func setDecorationProvider(
+  func setDecorationProvider(
     ns_id: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(ns_id)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(ns_id)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -2250,19 +2381,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getOptionValue(
+  func getOptionValue(
     name: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -2282,17 +2412,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setOptionValue(
+  func setOptionValue(
     name: String,
     value: RxNeovimApi.Value,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      value,
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -2308,17 +2437,15 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getAllOptionsInfo(
+  func getAllOptionsInfo(
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -2337,20 +2464,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getOptionInfo2(
+  func getOptionInfo2(
     name: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -2369,187 +2495,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setOption(
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_set_option", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_set_option", params: params)
-      .asCompletable()
-  }
-
-  public func getOption(
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_get_option", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_get_option", params: params)
-      .map(transform)
-  }
-
-  public func bufGetOption(
-    buffer: RxNeovimApi.Buffer,
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_buf_get_option", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_buf_get_option", params: params)
-      .map(transform)
-  }
-
-  public func bufSetOption(
-    buffer: RxNeovimApi.Buffer,
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_buf_set_option", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_buf_set_option", params: params)
-      .asCompletable()
-  }
-
-  public func winGetOption(
-    window: RxNeovimApi.Window,
-    name: String,
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_win_get_option", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_win_get_option", params: params)
-      .map(transform)
-  }
-
-  public func winSetOption(
-    window: RxNeovimApi.Window,
-    name: String,
-    value: RxNeovimApi.Value,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-        value,
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_win_set_option", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_win_set_option", params: params)
-      .asCompletable()
-  }
-
-  public func tabpageListWins(
+  func tabpageListWins(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Window(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
 
@@ -2569,19 +2524,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func tabpageGetVar(
+  func tabpageGetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
+      .int(Int64(tabpage.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -2601,17 +2555,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func tabpageSetVar(
+  func tabpageSetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
-        value,
+      .int(Int64(tabpage.handle)),
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -2627,15 +2580,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func tabpageDelVar(
+  func tabpageDelVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
+      .int(Int64(tabpage.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -2651,13 +2603,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func tabpageGetWin(
+  func tabpageGetWin(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
@@ -2681,17 +2632,39 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func tabpageGetNumber(
+  func tabpageSetWin(
+    tabpage: RxNeovimApi.Tabpage,
+    win: RxNeovimApi.Window,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(tabpage.handle)),
+      .int(Int64(win.handle)),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_tabpage_set_win", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_tabpage_set_win", params: params)
+      .asCompletable()
+  }
+
+  func tabpageGetNumber(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2711,13 +2684,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func tabpageIsValid(
+  func tabpageIsValid(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -2741,17 +2713,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func uiAttach(
+  func uiAttach(
     width: Int,
     height: Int,
-    options: Dictionary<String, RxNeovimApi.Value>,
+    options: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(width)),
-        .int(Int64(height)),
-        .map(options.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(width)),
+      .int(Int64(height)),
+      .map(options.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -2768,17 +2739,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func tach(
+  func tach(
     width: Int,
     height: Int,
     enable_rgb: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(width)),
-        .int(Int64(height)),
-        .bool(enable_rgb),
+      .int(Int64(width)),
+      .int(Int64(height)),
+      .bool(enable_rgb),
     ]
 
     if expectsReturnValue {
@@ -2794,13 +2764,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiSetFocus(
+  func uiSetFocus(
     gained: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .bool(gained),
+      .bool(gained),
     ]
 
     if expectsReturnValue {
@@ -2816,12 +2785,10 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiDetach(
+  func uiDetach(
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     if expectsReturnValue {
@@ -2837,15 +2804,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiTryResize(
+  func uiTryResize(
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(width)),
-        .int(Int64(height)),
+      .int(Int64(width)),
+      .int(Int64(height)),
     ]
 
     if expectsReturnValue {
@@ -2861,15 +2827,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiSetOption(
+  func uiSetOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -2885,17 +2850,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiTryResizeGrid(
+  func uiTryResizeGrid(
     grid: Int,
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(grid)),
-        .int(Int64(width)),
-        .int(Int64(height)),
+      .int(Int64(grid)),
+      .int(Int64(width)),
+      .int(Int64(height)),
     ]
 
     if expectsReturnValue {
@@ -2911,13 +2875,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiPumSetHeight(
+  func uiPumSetHeight(
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(height)),
+      .int(Int64(height)),
     ]
 
     if expectsReturnValue {
@@ -2933,19 +2896,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func uiPumSetBounds(
+  func uiPumSetBounds(
     width: Float,
     height: Float,
     row: Float,
     col: Float,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .float(width),
-        .float(height),
-        .float(row),
-        .float(col),
+      .float(width),
+      .float(height),
+      .float(row),
+      .float(col),
     ]
 
     if expectsReturnValue {
@@ -2961,17 +2923,39 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getHlIdByName(
+  func uiTermEvent(
+    event: String,
+    value: RxNeovimApi.Value,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(event),
+      value,
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_ui_term_event", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_ui_term_event", params: params)
+      .asCompletable()
+  }
+
+  func getHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -2991,20 +2975,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getHl(
+  func getHl(
     ns_id: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(ns_id)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(ns_id)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -3023,17 +3006,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setHl(
+  func setHl(
     ns_id: Int,
     name: String,
-    val: Dictionary<String, RxNeovimApi.Value>,
+    val: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(ns_id)),
-        .string(name),
-        .map(val.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(ns_id)),
+      .string(name),
+      .map(val.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -3049,13 +3031,41 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func setHlNs(
+  func getHlNs(
+    opts: [String: RxNeovimApi.Value],
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+    let params: [RxNeovimApi.Value] = [
+      .map(opts.mapToDict { (Value.string($0), $1) }),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_get_hl_ns", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_get_hl_ns", params: params)
+      .map(transform)
+  }
+
+  func setHlNs(
     ns_id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(ns_id)),
+      .int(Int64(ns_id)),
     ]
 
     if expectsReturnValue {
@@ -3071,13 +3081,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func setHlNsFast(
+  func setHlNsFast(
     ns_id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(ns_id)),
+      .int(Int64(ns_id)),
     ]
 
     if expectsReturnValue {
@@ -3093,17 +3102,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func feedkeys(
+  func feedkeys(
     keys: String,
     mode: String,
     escape_ks: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(keys),
-        .string(mode),
-        .bool(escape_ks),
+      .string(keys),
+      .string(mode),
+      .bool(escape_ks),
     ]
 
     if expectsReturnValue {
@@ -3119,17 +3127,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func input(
+  func input(
     keys: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(keys),
+      .string(keys),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3149,7 +3156,7 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func inputMouse(
+  func inputMouse(
     button: String,
     action: String,
     modifier: String,
@@ -3158,14 +3165,13 @@ extension RxNeovimApi {
     col: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(button),
-        .string(action),
-        .string(modifier),
-        .int(Int64(grid)),
-        .int(Int64(row)),
-        .int(Int64(col)),
+      .string(button),
+      .string(action),
+      .string(modifier),
+      .int(Int64(grid)),
+      .int(Int64(row)),
+      .int(Int64(col)),
     ]
 
     if expectsReturnValue {
@@ -3181,19 +3187,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func replaceTermcodes(
+  func replaceTermcodes(
     str: String,
     from_part: Bool,
     do_lt: Bool,
     special: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
-        .bool(from_part),
-        .bool(do_lt),
-        .bool(special),
+      .string(str),
+      .bool(from_part),
+      .bool(do_lt),
+      .bool(special),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -3217,19 +3222,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func execLua(
+  func execLua(
     code: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(code),
-        args,
+      .string(code),
+      args,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -3249,21 +3253,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func notify(
+  func notify(
     msg: String,
     log_level: Int,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(msg),
-        .int(Int64(log_level)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(msg),
+      .int(Int64(log_level)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -3283,17 +3286,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func strwidth(
+  func strwidth(
     text: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(text),
+      .string(text),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3313,16 +3315,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func listRuntimePaths(
+  func listRuntimePaths(
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -3342,19 +3342,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getRuntimeFile(
+  func getRuntimeFile(
     name: String,
     all: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .bool(all),
+      .string(name),
+      .bool(all),
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -3374,13 +3373,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setCurrentDir(
+  func setCurrentDir(
     dir: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(dir),
+      .string(dir),
     ]
 
     if expectsReturnValue {
@@ -3396,12 +3394,10 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getCurrentLine(
+  func getCurrentLine(
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -3425,13 +3421,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setCurrentLine(
+  func setCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(line),
+      .string(line),
     ]
 
     if expectsReturnValue {
@@ -3447,12 +3442,10 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delCurrentLine(
+  func delCurrentLine(
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     if expectsReturnValue {
@@ -3468,17 +3461,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getVar(
+  func getVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -3498,15 +3490,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setVar(
+  func setVar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -3522,13 +3513,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delVar(
+  func delVar(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -3544,17 +3534,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getVvar(
+  func getVvar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -3574,15 +3563,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setVvar(
+  func setVvar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -3598,17 +3586,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func echo(
+  func echo(
     chunks: RxNeovimApi.Value,
     history: Bool,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        chunks,
-        .bool(history),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      chunks,
+      .bool(history),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -3624,13 +3611,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func outWrite(
+  func outWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -3646,13 +3632,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func errWrite(
+  func errWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -3668,13 +3653,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func errWriteln(
+  func errWriteln(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -3690,16 +3674,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func listBufs(
+  func listBufs(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Buffer] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Buffer(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Buffer(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Buffer].self)
       }
 
@@ -3719,12 +3701,10 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getCurrentBuf(
+  func getCurrentBuf(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
@@ -3748,13 +3728,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setCurrentBuf(
+  func setCurrentBuf(
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     if expectsReturnValue {
@@ -3770,16 +3749,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func listWins(
+  func listWins(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Window(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
 
@@ -3799,12 +3776,10 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getCurrentWin(
+  func getCurrentWin(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
@@ -3828,13 +3803,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setCurrentWin(
+  func setCurrentWin(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     if expectsReturnValue {
@@ -3850,15 +3824,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func createBuf(
+  func createBuf(
     listed: Bool,
     scratch: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
-
     let params: [RxNeovimApi.Value] = [
-        .bool(listed),
-        .bool(scratch),
+      .bool(listed),
+      .bool(scratch),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
@@ -3882,19 +3855,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func openTerm(
+  func openTerm(
     buffer: RxNeovimApi.Buffer,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -3914,15 +3886,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func chanSend(
+  func chanSend(
     chan: Int,
     data: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(chan)),
-        .string(data),
+      .int(Int64(chan)),
+      .string(data),
     ]
 
     if expectsReturnValue {
@@ -3938,16 +3909,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func listTabpages(
+  func listTabpages(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Tabpage]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Tabpage] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Tabpage(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Tabpage(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Tabpage].self)
       }
 
@@ -3967,12 +3936,10 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getCurrentTabpage(
+  func getCurrentTabpage(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
@@ -3996,13 +3963,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setCurrentTabpage(
+  func setCurrentTabpage(
     tabpage: RxNeovimApi.Tabpage,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     if expectsReturnValue {
@@ -4018,17 +3984,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func paste(
+  func paste(
     data: String,
     crlf: Bool,
     phase: Int,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(data),
-        .bool(crlf),
-        .int(Int64(phase)),
+      .string(data),
+      .bool(crlf),
+      .int(Int64(phase)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -4052,19 +4017,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func put(
+  func put(
     lines: [String],
     type: String,
     after: Bool,
     follow: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .array(lines.map { .string($0) }),
-        .string(type),
-        .bool(after),
-        .bool(follow),
+      .array(lines.map { .string($0) }),
+      .string(type),
+      .bool(after),
+      .bool(follow),
     ]
 
     if expectsReturnValue {
@@ -4080,13 +4044,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func subscribe(
+  func subscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(event),
+      .string(event),
     ]
 
     if expectsReturnValue {
@@ -4102,13 +4065,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func unsubscribe(
+  func unsubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(event),
+      .string(event),
     ]
 
     if expectsReturnValue {
@@ -4124,17 +4086,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getColorByName(
+  func getColorByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -4154,17 +4115,15 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getColorMap(
+  func getColorMap(
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4183,18 +4142,17 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getContext(
-    opts: Dictionary<String, RxNeovimApi.Value>,
+  func getContext(
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4213,17 +4171,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func loadContext(
-    dict: Dictionary<String, RxNeovimApi.Value>,
+  func loadContext(
+    dict: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .map(dict.mapToDict({ (Value.string($0), $1) })),
+      .map(dict.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4243,35 +4200,32 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getMode(
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  func getMode(
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        
     ]
     return self
       .sendRequest(method: "nvim_get_mode", params: params)
       .map { value in
-        guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-          throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+          throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
         }
 
         return result
       }
   }
 
-  public func getKeymap(
+  func getKeymap(
     mode: String,
     errWhenBlocked: Bool = true
-  ) -> Single<[Dictionary<String, RxNeovimApi.Value>]> {
-
+  ) -> Single<[[String: RxNeovimApi.Value]]> {
     let params: [RxNeovimApi.Value] = [
-        .string(mode),
+      .string(mode),
     ]
 
-    let transform = { (_ value: Value) throws -> [Dictionary<String, RxNeovimApi.Value>] in
-      guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-        throw RxNeovimApi.Error.conversion(type: [Dictionary<String, RxNeovimApi.Value>].self)
+    let transform = { (_ value: Value) throws -> [[String: RxNeovimApi.Value]] in
+      guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
+        throw RxNeovimApi.Error.conversion(type: [[String: RxNeovimApi.Value]].self)
       }
 
       return result
@@ -4290,19 +4244,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setKeymap(
+  func setKeymap(
     mode: String,
     lhs: String,
     rhs: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(mode),
-        .string(lhs),
-        .string(rhs),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(mode),
+      .string(lhs),
+      .string(rhs),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -4318,15 +4271,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delKeymap(
+  func delKeymap(
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(mode),
-        .string(lhs),
+      .string(mode),
+      .string(lhs),
     ]
 
     if expectsReturnValue {
@@ -4342,16 +4294,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getApiInfo(
+  func getApiInfo(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4371,21 +4321,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func setClientInfo(
+  func setClientInfo(
     name: String,
-    version: Dictionary<String, RxNeovimApi.Value>,
+    version: [String: RxNeovimApi.Value],
     type: String,
-    methods: Dictionary<String, RxNeovimApi.Value>,
-    attributes: Dictionary<String, RxNeovimApi.Value>,
+    methods: [String: RxNeovimApi.Value],
+    attributes: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .map(version.mapToDict({ (Value.string($0), $1) })),
-        .string(type),
-        .map(methods.mapToDict({ (Value.string($0), $1) })),
-        .map(attributes.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      .map(version.mapToDict { (Value.string($0), $1) }),
+      .string(type),
+      .map(methods.mapToDict { (Value.string($0), $1) }),
+      .map(attributes.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -4401,18 +4350,17 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func getChanInfo(
+  func getChanInfo(
     chan: Int,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(chan)),
+      .int(Int64(chan)),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4431,16 +4379,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func listChans(
+  func listChans(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4460,46 +4406,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func callAtomic(
-    calls: RxNeovimApi.Value,
+  func listUis(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        calls,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_call_atomic", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_call_atomic", params: params)
-      .map(transform)
-  }
-
-  public func listUis(
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-
-    let params: [RxNeovimApi.Value] = [
-        
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4519,17 +4433,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getProcChildren(
+  func getProcChildren(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(pid)),
+      .int(Int64(pid)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4549,17 +4462,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getProc(
+  func getProc(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(pid)),
+      .int(Int64(pid)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4579,19 +4491,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func selectPopupmenuItem(
+  func selectPopupmenuItem(
     item: Int,
     insert: Bool,
     finish: Bool,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(item)),
-        .bool(insert),
-        .bool(finish),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(item)),
+      .bool(insert),
+      .bool(finish),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -4607,13 +4518,12 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func delMark(
+  func delMark(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -4637,19 +4547,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func getMark(
+  func getMark(
     name: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(name),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4669,20 +4578,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func evalStatusline(
+  func evalStatusline(
     str: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(str),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(str),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4701,20 +4609,19 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func exec2(
+  func exec2(
     src: String,
-    opts: Dictionary<String, RxNeovimApi.Value>,
+    opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(src),
-        .map(opts.mapToDict({ (Value.string($0), $1) })),
+      .string(src),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4733,13 +4640,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func command(
+  func command(
     command: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(command),
+      .string(command),
     ]
 
     if expectsReturnValue {
@@ -4755,17 +4661,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func eval(
+  func eval(
     expr: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(expr),
+      .string(expr),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4785,19 +4690,18 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func callFunction(
+  func callFunction(
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(fn),
-        args,
+      .string(fn),
+      args,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4817,21 +4721,20 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func callDictFunction(
+  func callDictFunction(
     dict: RxNeovimApi.Value,
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        dict,
-        .string(fn),
-        args,
+      dict,
+      .string(fn),
+      args,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -4851,22 +4754,21 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func parseExpression(
+  func parseExpression(
     expr: String,
     flags: String,
     highlight: Bool,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .string(expr),
-        .string(flags),
-        .bool(highlight),
+      .string(expr),
+      .string(flags),
+      .bool(highlight),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4885,17 +4787,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func openWin(
+  func openWin(
     buffer: RxNeovimApi.Buffer,
     enter: Bool,
-    config: Dictionary<String, RxNeovimApi.Value>,
+    config: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .bool(enter),
-        .map(config.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(buffer.handle)),
+      .bool(enter),
+      .map(config.mapToDict { (Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
@@ -4919,15 +4820,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetConfig(
+  func winSetConfig(
     window: RxNeovimApi.Window,
-    config: Dictionary<String, RxNeovimApi.Value>,
+    config: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .map(config.mapToDict({ (Value.string($0), $1) })),
+      .int(Int64(window.handle)),
+      .map(config.mapToDict { (Value.string($0), $1) }),
     ]
 
     if expectsReturnValue {
@@ -4943,18 +4843,17 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetConfig(
+  func winGetConfig(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -4973,13 +4872,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winGetBuf(
+  func winGetBuf(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
@@ -5003,15 +4901,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetBuf(
+  func winSetBuf(
     window: RxNeovimApi.Window,
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(buffer.handle)),
+      .int(Int64(window.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     if expectsReturnValue {
@@ -5027,17 +4924,19 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetCursor(
+  func winGetCursor(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -5057,15 +4956,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetCursor(
+  func winSetCursor(
     window: RxNeovimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .array(pos.map { .int(Int64($0)) }),
+      .int(Int64(window.handle)),
+      .array(pos.map { .int(Int64($0)) }),
     ]
 
     if expectsReturnValue {
@@ -5081,17 +4979,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetHeight(
+  func winGetHeight(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -5111,15 +5008,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetHeight(
+  func winSetHeight(
     window: RxNeovimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(height)),
+      .int(Int64(window.handle)),
+      .int(Int64(height)),
     ]
 
     if expectsReturnValue {
@@ -5135,17 +5031,16 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetWidth(
+  func winGetWidth(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -5165,15 +5060,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetWidth(
+  func winSetWidth(
     window: RxNeovimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(width)),
+      .int(Int64(window.handle)),
+      .int(Int64(width)),
     ]
 
     if expectsReturnValue {
@@ -5189,19 +5083,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetVar(
+  func winGetVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
+      .int(Int64(window.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -5221,17 +5114,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetVar(
+  func winSetVar(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-        value,
+      .int(Int64(window.handle)),
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -5247,15 +5139,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winDelVar(
+  func winDelVar(
     window: RxNeovimApi.Window,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
+      .int(Int64(window.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -5271,17 +5162,19 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winGetPosition(
+  func winGetPosition(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -5301,13 +5194,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winGetTabpage(
+  func winGetTabpage(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
@@ -5331,17 +5223,16 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winGetNumber(
+  func winGetNumber(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -5361,13 +5252,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winIsValid(
+  func winIsValid(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -5391,13 +5281,12 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winHide(
+  func winHide(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     if expectsReturnValue {
@@ -5413,15 +5302,14 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winClose(
+  func winClose(
     window: RxNeovimApi.Window,
     force: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .bool(force),
+      .int(Int64(window.handle)),
+      .bool(force),
     ]
 
     if expectsReturnValue {
@@ -5437,19 +5325,18 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
-  public func winCall(
+  func winCall(
     window: RxNeovimApi.Window,
     fun: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        fun,
+      .int(Int64(window.handle)),
+      fun,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -5469,15 +5356,14 @@ extension RxNeovimApi {
       .map(transform)
   }
 
-  public func winSetHlNs(
+  func winSetHlNs(
     window: RxNeovimApi.Window,
     ns_id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(ns_id)),
+      .int(Int64(window.handle)),
+      .int(Int64(ns_id)),
     ]
 
     if expectsReturnValue {
@@ -5493,18 +5379,48 @@ extension RxNeovimApi {
       .asCompletable()
   }
 
+  func winTextHeight(
+    window: RxNeovimApi.Window,
+    opts: [String: RxNeovimApi.Value],
+    errWhenBlocked: Bool = true
+  ) -> Single<[String: RxNeovimApi.Value]> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(window.handle)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
+    ]
+
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_win_text_height", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_win_text_height", params: params)
+      .map(transform)
+  }
+
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rLineCount(
+  func rLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -5525,23 +5441,22 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetLines(
+  func rGetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(strict_indexing),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(strict_indexing),
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -5562,7 +5477,7 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetLines(
+  func rSetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -5570,13 +5485,12 @@ extension RxNeovimApi {
     replacement: [String],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(start)),
-        .int(Int64(end)),
-        .bool(strict_indexing),
-        .array(replacement.map { .string($0) }),
+      .int(Int64(buffer.handle)),
+      .int(Int64(start)),
+      .int(Int64(end)),
+      .bool(strict_indexing),
+      .array(replacement.map { .string($0) }),
     ]
 
     if expectsReturnValue {
@@ -5593,19 +5507,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetVar(
+  func rGetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -5626,13 +5539,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetName(
+  func rGetName(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -5657,15 +5569,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetName(
+  func rSetName(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     if expectsReturnValue {
@@ -5682,13 +5593,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rIsValid(
+  func rIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -5713,19 +5623,21 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetMark(
+  func rGetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -5746,13 +5658,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func ommandOutput(
+  func ommandOutput(
     command: String,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(command),
+      .string(command),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -5777,17 +5688,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetNumber(
+  func rGetNumber(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -5808,19 +5718,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rClearHighlight(
+  func rClearHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .int(Int64(line_start)),
-        .int(Int64(line_end)),
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .int(Int64(line_start)),
+      .int(Int64(line_end)),
     ]
 
     if expectsReturnValue {
@@ -5837,56 +5746,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rAddHighlight(
-    buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Single<Int> {
-
-    let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .int(Int64(ns_id)),
-        .string(hl_group),
-        .int(Int64(line)),
-        .int(Int64(col_start)),
-        .int(Int64(col_end)),
-    ]
-
-    let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
-        throw RxNeovimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "buffer_add_highlight", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "buffer_add_highlight", params: params)
-      .map(transform)
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  public func etOption(
+  func etOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
-        value,
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -5903,17 +5770,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etOption(
+  func etOption(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -5934,19 +5800,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rGetOption(
+  func rGetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
+      .int(Int64(buffer.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -5967,17 +5832,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rSetOption(
+  func rSetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
-        .string(name),
-        value,
+      .int(Int64(buffer.handle)),
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -5994,19 +5858,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetOption(
+  func wGetOption(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
+      .int(Int64(window.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -6027,17 +5890,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wSetOption(
+  func wSetOption(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
-        value,
+      .int(Int64(window.handle)),
+      .string(name),
+      value,
     ]
 
     if expectsReturnValue {
@@ -6054,17 +5916,56 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geGetWindows(
+  func rAddHighlight(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "buffer_add_highlight", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "buffer_add_highlight", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func geGetWindows(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Window(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
 
@@ -6085,19 +5986,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geGetVar(
+  func geGetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
-        .string(name),
+      .int(Int64(tabpage.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -6118,13 +6018,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geGetWindow(
+  func geGetWindow(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
@@ -6149,13 +6048,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func geIsValid(
+  func geIsValid(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -6180,12 +6078,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func tach(
+  func tach(
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     if expectsReturnValue {
@@ -6202,19 +6098,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func yResize(
+  func yResize(
     width: Int,
     height: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(width)),
-        .int(Int64(height)),
+      .int(Int64(width)),
+      .int(Int64(height)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -6235,17 +6130,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func eedkeys(
+  func eedkeys(
     keys: String,
     mode: String,
     escape_ks: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(keys),
-        .string(mode),
-        .bool(escape_ks),
+      .string(keys),
+      .string(mode),
+      .bool(escape_ks),
     ]
 
     if expectsReturnValue {
@@ -6262,17 +6156,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func nput(
+  func nput(
     keys: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(keys),
+      .string(keys),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -6293,19 +6186,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func eplaceTermcodes(
+  func eplaceTermcodes(
     str: String,
     from_part: Bool,
     do_lt: Bool,
     special: Bool,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
-        .bool(from_part),
-        .bool(do_lt),
-        .bool(special),
+      .string(str),
+      .bool(from_part),
+      .bool(do_lt),
+      .bool(special),
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -6330,17 +6222,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func trwidth(
+  func trwidth(
     text: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(text),
+      .string(text),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -6361,16 +6252,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func istRuntimePaths(
+  func istRuntimePaths(
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [String] in
-      guard let result = (value.arrayValue?.compactMap({ v in v.stringValue })) else {
+      guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
         throw RxNeovimApi.Error.conversion(type: [String].self)
       }
 
@@ -6391,13 +6280,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func hangeDirectory(
+  func hangeDirectory(
     dir: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(dir),
+      .string(dir),
     ]
 
     if expectsReturnValue {
@@ -6414,12 +6302,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentLine(
+  func etCurrentLine(
     errWhenBlocked: Bool = true
   ) -> Single<String> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> String in
@@ -6444,13 +6330,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentLine(
+  func etCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(line),
+      .string(line),
     ]
 
     if expectsReturnValue {
@@ -6467,12 +6352,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func elCurrentLine(
+  func elCurrentLine(
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     if expectsReturnValue {
@@ -6489,17 +6372,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etVar(
+  func etVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -6520,17 +6402,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etVvar(
+  func etVvar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -6551,13 +6432,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func utWrite(
+  func utWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -6574,13 +6454,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func rrWrite(
+  func rrWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -6597,13 +6476,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func eportError(
+  func eportError(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(str),
+      .string(str),
     ]
 
     if expectsReturnValue {
@@ -6620,16 +6498,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etBuffers(
+  func etBuffers(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Buffer] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Buffer(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Buffer(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Buffer].self)
       }
 
@@ -6650,12 +6526,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentBuffer(
+  func etCurrentBuffer(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
@@ -6680,13 +6554,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentBuffer(
+  func etCurrentBuffer(
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(buffer.handle)),
+      .int(Int64(buffer.handle)),
     ]
 
     if expectsReturnValue {
@@ -6703,16 +6576,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etWindows(
+  func etWindows(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Window(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Window(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Window].self)
       }
 
@@ -6733,12 +6604,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentWindow(
+  func etCurrentWindow(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Window in
@@ -6763,13 +6632,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentWindow(
+  func etCurrentWindow(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     if expectsReturnValue {
@@ -6786,16 +6654,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etTabpages(
+  func etTabpages(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Tabpage]> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> [RxNeovimApi.Tabpage] in
-      guard let result = (value.arrayValue?.compactMap({ v in RxNeovimApi.Tabpage(v) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in RxNeovimApi.Tabpage(v) }) else {
         throw RxNeovimApi.Error.conversion(type: [RxNeovimApi.Tabpage].self)
       }
 
@@ -6816,12 +6682,10 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentTabpage(
+  func etCurrentTabpage(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
@@ -6846,13 +6710,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etCurrentTabpage(
+  func etCurrentTabpage(
     tabpage: RxNeovimApi.Tabpage,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(tabpage.handle)),
+      .int(Int64(tabpage.handle)),
     ]
 
     if expectsReturnValue {
@@ -6869,13 +6732,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func ubscribe(
+  func ubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(event),
+      .string(event),
     ]
 
     if expectsReturnValue {
@@ -6892,13 +6754,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func nsubscribe(
+  func nsubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(event),
+      .string(event),
     ]
 
     if expectsReturnValue {
@@ -6915,17 +6776,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func ameToColor(
+  func ameToColor(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(name),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -6946,17 +6806,15 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etColorMap(
+  func etColorMap(
     errWhenBlocked: Bool = true
-  ) -> Single<Dictionary<String, RxNeovimApi.Value>> {
-
+  ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
-    let transform = { (_ value: Value) throws -> Dictionary<String, RxNeovimApi.Value> in
-      guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw RxNeovimApi.Error.conversion(type: Dictionary<String, RxNeovimApi.Value>.self)
+    let transform = { (_ value: Value) throws -> [String: RxNeovimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw RxNeovimApi.Error.conversion(type: [String: RxNeovimApi.Value].self)
       }
 
       return result
@@ -6976,16 +6834,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func etApiInfo(
+  func etApiInfo(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -7006,13 +6862,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func ommand(
+  func ommand(
     command: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .string(command),
+      .string(command),
     ]
 
     if expectsReturnValue {
@@ -7029,17 +6884,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func val(
+  func val(
     expr: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(expr),
+      .string(expr),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -7060,19 +6914,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func allFunction(
+  func allFunction(
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .string(fn),
-        args,
+      .string(fn),
+      args,
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -7093,13 +6946,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetBuffer(
+  func wGetBuffer(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Buffer in
@@ -7124,17 +6976,19 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetCursor(
+  func wGetCursor(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -7155,15 +7009,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wSetCursor(
+  func wSetCursor(
     window: RxNeovimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .array(pos.map { .int(Int64($0)) }),
+      .int(Int64(window.handle)),
+      .array(pos.map { .int(Int64($0)) }),
     ]
 
     if expectsReturnValue {
@@ -7180,17 +7033,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetHeight(
+  func wGetHeight(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -7211,15 +7063,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wSetHeight(
+  func wSetHeight(
     window: RxNeovimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(height)),
+      .int(Int64(window.handle)),
+      .int(Int64(height)),
     ]
 
     if expectsReturnValue {
@@ -7236,17 +7087,16 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetWidth(
+  func wGetWidth(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Int in
-      guard let result = ((value.int64Value == nil ? nil : Int(value.int64Value!))) else {
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
         throw RxNeovimApi.Error.conversion(type: Int.self)
       }
 
@@ -7267,15 +7117,14 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wSetWidth(
+  func wSetWidth(
     window: RxNeovimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .int(Int64(width)),
+      .int(Int64(window.handle)),
+      .int(Int64(width)),
     ]
 
     if expectsReturnValue {
@@ -7292,19 +7141,18 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetVar(
+  func wGetVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
-        .string(name),
+      .int(Int64(window.handle)),
+      .string(name),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = (Optional(value)) else {
+      guard let result = Optional(value) else {
         throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
       }
 
@@ -7325,17 +7173,19 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetPosition(
+  func wGetPosition(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> [Int] in
-      guard let result = (value.arrayValue?.compactMap({ v in (v.int64Value == nil ? nil : Int(v.int64Value!)) })) else {
+      guard let result = (value.arrayValue?.compactMap { v in
+        v.int64Value == nil ? nil : Int(v.int64Value!)
+      })
+      else {
         throw RxNeovimApi.Error.conversion(type: [Int].self)
       }
 
@@ -7356,13 +7206,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wGetTabpage(
+  func wGetTabpage(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> RxNeovimApi.Tabpage in
@@ -7387,13 +7236,12 @@ extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  public func wIsValid(
+  func wIsValid(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
-
     let params: [RxNeovimApi.Value] = [
-        .int(Int64(window.handle)),
+      .int(Int64(window.handle)),
     ]
 
     let transform = { (_ value: Value) throws -> Bool in
@@ -7416,12 +7264,10 @@ extension RxNeovimApi {
       .sendRequest(method: "window_is_valid", params: params)
       .map(transform)
   }
-
 }
 
-extension RxNeovimApi.Buffer {
-
-  public init?(_ value: RxNeovimApi.Value) {
+public extension RxNeovimApi.Buffer {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -7438,9 +7284,8 @@ extension RxNeovimApi.Buffer {
   }
 }
 
-extension RxNeovimApi.Window {
-
-  public init?(_ value: RxNeovimApi.Value) {
+public extension RxNeovimApi.Window {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -7457,9 +7302,8 @@ extension RxNeovimApi.Window {
   }
 }
 
-extension RxNeovimApi.Tabpage {
-
-  public init?(_ value: RxNeovimApi.Value) {
+public extension RxNeovimApi.Tabpage {
+  init?(_ value: RxNeovimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -7476,8 +7320,10 @@ extension RxNeovimApi.Tabpage {
   }
 }
 
-fileprivate func msgPackDictToSwift(_ dict: Dictionary<RxNeovimApi.Value, RxNeovimApi.Value>?) -> Dictionary<String, RxNeovimApi.Value>? {
-  return dict?.compactMapToDict { k, v in
+private func msgPackDictToSwift(_ dict: [RxNeovimApi.Value: RxNeovimApi.Value]?)
+  -> [String: RxNeovimApi.Value]?
+{
+  dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
     }
@@ -7486,28 +7332,35 @@ fileprivate func msgPackDictToSwift(_ dict: Dictionary<RxNeovimApi.Value, RxNeov
   }
 }
 
-fileprivate func msgPackArrayDictToSwift(_ array: [RxNeovimApi.Value]?) -> [Dictionary<String, RxNeovimApi.Value>]? {
-  return array?
+private func msgPackArrayDictToSwift(_ array: [RxNeovimApi.Value]?)
+  -> [[String: RxNeovimApi.Value]]?
+{
+  array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }
 }
 
-extension Dictionary {
-
-  fileprivate func mapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+private extension Dictionary {
+  func mapToDict<
+    K,
+    V
+  >(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> [K: V] {
     let array = try self.map(transform)
-    return tuplesToDict(array)
+    return self.tuplesToDict(array)
   }
 
-  fileprivate func compactMapToDict<K, V>(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> Dictionary<K, V> {
+  func compactMapToDict<
+    K,
+    V
+  >(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> [K: V] {
     let array = try self.compactMap(transform)
-    return tuplesToDict(array)
+    return self.tuplesToDict(array)
   }
 
-  fileprivate func tuplesToDict<K:Hashable, V, S:Sequence>(_ sequence: S)
-      -> Dictionary<K, V> where S.Iterator.Element == (K, V) {
-
-    var result = Dictionary<K, V>(minimumCapacity: sequence.underestimatedCount)
+  func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
+    -> [K: V] where S.Iterator.Element == (K, V)
+  {
+    var result = [K: V](minimumCapacity: sequence.underestimatedCount)
 
     for (key, value) in sequence {
       result[key] = value

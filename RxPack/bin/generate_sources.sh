@@ -4,7 +4,7 @@ set -Eeuo pipefail
 readonly clean=${clean:?"true or false"}
 
 build_nvimserver_bin() {
-  ./bin/neovim/bin/build_neovim.sh
+  ./bin/neovim/bin/build_neovim_for_dev.sh
 }
 
 main() {
