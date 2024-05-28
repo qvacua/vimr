@@ -14,13 +14,6 @@ clean=true for_dev=true ./bin/build_nvimserver.sh
 
 This is used when generating source since we need some generated header files.
 
-### Generating sources when upgrading Neovim
-
-```bash
-clean=true ./RxPack/bin/generate_sources.sh # generate API methods
-clean=false for_dev=true ./bin/build_nvimserver.sh # generate auto commands and cursor modes
-```
-
 ### How to enable the Debug menu in Release build
 
 ```bash
@@ -31,7 +24,11 @@ defaults write com.qvacua.VimR enable-debug-menu 1
 
 ### Neovim
 
-* Update Neovim and generate sources.
+* Update Neovim and generate sources:
+    ```bash
+    clean=true ./RxPack/bin/generate_sources.sh # generate API methods
+    clean=true use_committed_nvim=true ./bin/generate_sources.sh # Generate autocmds and cursorshapes
+    ```
 * Commit and push.
 * Tag and push with the following
     ```bash
