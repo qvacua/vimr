@@ -1,12 +1,16 @@
 ## How to develop
 
-To build Neovim for development, i.e., no universal binary, do the following
+In most cases, you can use the pre-built universal Neovim build by running
 
 ```bash
-clean=false for_dev=true ./bin/build_nvimserver.sh
+clean=true for_dev=false ./bin/build_nvimserver.sh
 ```
 
-You can set `clean=true` if you want to clean the existing build.
+If you want to build Neovim locally, i.e., no universal build, you can use
+
+```bash
+clean=true for_dev=true ./bin/build_nvimserver.sh
+```
 
 ### Generating sources when upgrading Neovim
 
@@ -25,7 +29,8 @@ defaults write com.qvacua.VimR enable-debug-menu 1
 
 ### Neovim
 
-* Commit and push the new release of Neovim.
+* Update Neovim and generate sources.
+* Commit and push.
 * Tag and push with the following
     ```bash
    version=neovim-vX.Y.Z-$(date "+%Y%m%d.%H%M%S"); git tag -a "${version}" -m "${version}"; git push origin "${version}"
