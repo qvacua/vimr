@@ -1,7 +1,4 @@
 {
   "deploymentTarget": "12",
-  "gettext": {
-    "arm64BottleTag": "arm64_monterey",
-    "x86_64BottleTag": "monterey"
-  }
+  "neovimRelease": "neovim-v0.10.0-20240527.232810"
 }
