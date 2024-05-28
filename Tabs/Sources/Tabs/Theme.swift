@@ -61,7 +61,6 @@ public struct Theme {
     self.closeButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
       color: self.tabForegroundColor
-      
     )
     self.selectedCloseButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
