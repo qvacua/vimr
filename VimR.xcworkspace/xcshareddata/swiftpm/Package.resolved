@@ -19,33 +19,6 @@
       }
     },
     {
-      "identity" : "dictionarycoding",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elegantchaos/DictionaryCoding",
-      "state" : {
-        "revision" : "ae19e456bd550fed8f341e5bae4318333c53a5b4",
-        "version" : "1.0.9"
-      }
-    },
-    {
-      "identity" : "down",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnxnguyen/Down",
-      "state" : {
-        "revision" : "f34b166be1f1db4aa8f573067e901d72f2a6be57",
-        "version" : "0.11.0"
-      }
-    },
-    {
-      "identity" : "fsevents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/qvacua/FSEvents",
-      "state" : {
-        "branch" : "release-fseventstream",
-        "revision" : "90ed674df15b5e546a061052dad70228b3300fba"
-      }
-    },
-    {
       "identity" : "material-icons",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/material-icons",
@@ -97,42 +70,6 @@
       "state" : {
         "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
         "version" : "6.6.0"
-      }
-    },
-    {
-      "identity" : "shortcutrecorder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kentzo/ShortcutRecorder",
-      "state" : {
-        "revision" : "c86ce0f9be5353ba998966121c7631602a9a36f7",
-        "version" : "3.4.0"
-      }
-    },
-    {
-      "identity" : "sparkle",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sparkle-project/Sparkle",
-      "state" : {
-        "revision" : "0a4caaf7a81eea2cece651ef4b17331fa0634dff",
-        "version" : "2.6.0"
-      }
-    },
-    {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections.git",
-      "state" : {
-        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
-        "version" : "1.1.0"
-      }
-    },
-    {
-      "identity" : "swifter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/httpswift/swifter",
-      "state" : {
-        "revision" : "9483a5d459b45c3ffd059f7b55f9638e268632fd",
-        "version" : "1.5.0"
       }
     }
   ],
