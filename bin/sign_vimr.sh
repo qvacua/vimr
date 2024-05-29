@@ -35,8 +35,7 @@ main () {
 
     for f in "${vimr_app_path}/Contents/Resources/NvimView_NvimView.bundle/Contents/Resources/runtime/parser"/*; do
       codesign --verbose --force -s "${identity}" --timestamp --options=runtime \
-        --entitlements="${entitlements_path}" \
-        "${f}"
+      "${f}"
     done
 
     codesign --verbose --force -s "${identity}" --deep --timestamp --options=runtime \

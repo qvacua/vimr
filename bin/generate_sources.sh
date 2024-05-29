@@ -25,14 +25,14 @@ main() {
       echo "### Using nvim version: $nvim_version"
 
       for_dev=true ../bin/build_nvimserver.sh
-    popd > /dev/null
 
-    pushd Neovim
       version=${nvim_version} ../bin/generate_autocmds.py > "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
       version=${nvim_version} ../bin/generate_cursor_shape.py > "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
       swiftformat "../NvimView/Sources/NvimView/NvimAutoCommandEvent.generated.swift"
       swiftformat "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
     popd > /dev/null
+
+    clean=false ./RxPack/bin/generate_sources.sh
 
   popd > /dev/null
   echo "### Successfully generated autocmds."

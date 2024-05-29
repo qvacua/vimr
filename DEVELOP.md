@@ -26,9 +26,9 @@ defaults write com.qvacua.VimR enable-debug-menu 1
 
 * Update Neovim and generate sources:
     ```bash
-    clean=true ./RxPack/bin/generate_sources.sh # generate API methods
-    clean=true use_committed_nvim=true ./bin/generate_sources.sh # Generate autocmds and cursorshapes
+    clean=true use_committed_nvim=true ./bin/generate_sources.sh
     ```
+  Use `use_committed=false` if you want to use modified local Neovim submodule.
 * Commit and push.
 * Tag and push with the following
     ```bash
