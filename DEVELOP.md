@@ -1,18 +1,26 @@
 ## How to develop
 
-In most cases, you can use the pre-built universal Neovim build by running
+VimR includes a stock Neovim. From Neovim `v0.10.0`, we provide pre-built universal Neovim,
+see for instance <https://github.com/qvacua/vimr/releases/tag/neovim-v0.10.0-20240527.232810>.
+In most cases, you can use the pre-built Neovim.
+Run the following
 
 ```bash
 clean=true for_dev=false ./bin/build_nvimserver.sh
 ```
 
-If you want to build Neovim locally, i.e., no universal build, you can use
+to download and place the files in the appropriate places.
+Now, you can just *run* VimR target in Xcode.
+
+If you want to build Neovim locally, you can use
 
 ```bash
 clean=true for_dev=true ./bin/build_nvimserver.sh
 ```
 
-This is used when generating source since we need some generated header files.
+Afterwards, you can run VimR target in Xcode.
+
+(This is used when generating source since we need some generated header files.)
 
 ### How to enable the Debug menu in Release build
 

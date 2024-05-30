@@ -7,11 +7,10 @@
 
 ## About
 
-Project VimR is a Neovim GUI for macOS written in Swift.
+VimR is a Neovim GUI for macOS written in Swift.
 
-The goal is to build an editor that uses Neovim inside with many of the convenience
-GUI features similar to those present in modern editors. We mainly use Swift,
-but also use C/Objective-C when where appropriate.
+The goal is to build an editor that uses Neovim inside with some of the convenience
+GUI features similar to those present in modern editors.
 
 There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
 
@@ -30,9 +29,11 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 
 ## Reusable Components
 
-* [RxMsgpackRpc](https://github.com/qvacua/vimr/blob/develop/RxPack/RxMsgpackRpc.swift): Implementation of MsgpackRpc using RxSwift.
-* [RxNeovimApi](https://github.com/qvacua/vimr/blob/develop/RxPack/RxNeovimApi.swift): RxSwift wrapper of Neovim API.
-* [NvimView](https://github.com/qvacua/vimr/tree/develop/NvimView): SwiftPM module containing an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to embed Neovim in a Cocoa App.
+* [NvimView](https://github.com/qvacua/vimr/tree/master/NvimView): SwiftPM module containing
+  an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to 
+  embed Neovim in a Cocoa App.
+* [RxMsgpackRpc](https://github.com/qvacua/vimr/tree/master/RxPack/Sources/RxPack/RxMsgpackRpc.swift): Implementation of MsgpackRpc using RxSwift.
+* [RxNeovimApi](https://github.com/qvacua/vimr/tree/master/RxPack/Sources/RxNeovim): RxSwift wrapper of Neovim API.
 
 ## Some Features
 
@@ -50,12 +51,10 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 Clone this repository. Install `homebrew`, then in the project root:
 
 ```bash
-git submodule init
-git submodule update
+git submodule update --init
 
 xcode-select --install # install the Xcode command line tools, if you haven't already
-brew bundle
-
+brew bundle # install dependencies, e.g., build tools for Neovim
 clean=true notarize=false ./bin/build_vimr.sh
 # VimR.app will be placed in ./build/Build/Products/Release/
 ```
