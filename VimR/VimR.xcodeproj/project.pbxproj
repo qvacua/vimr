@@ -1361,7 +1361,7 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = exactVersion;
-				version = 6.6.0;
+				version = 6.7.1;
 			};
 		};
 		4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */ = {
@@ -1393,7 +1393,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 2.6.0;
+				version = 2.6.2;
 			};
 		};
 		4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */ = {

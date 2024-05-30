@@ -1,5 +1,16 @@
 # Next
 
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.7.2
+  - ReactiveX/RxSwift@6.7.1
+
+# v0.47.1-20240528.171603
+
+* Neovim 0.10.0 😀
+  - 0.47.0 did not contain the generated API methods for Neovim 0.10.0...
+
+# v0.47.0-20240528.165939
+
 * Neovim 0.10.0 😀
 
 # v0.46.2-20240517.102525
