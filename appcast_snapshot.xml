@@ -6,25 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.47.1-20240528.171603</title>
+      <title>SNAPSHOT-20240531.221229</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240528.171603</sparkle:version>
-      <sparkle:shortVersionString>v0.47.1</sparkle:shortVersionString>
+      <sparkle:version>20240531.221229</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20240531.221229</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.10.0 😀<ul>
-<li>0.47.0 did not contain the generated API methods for Neovim 0.10.0...</li>
+<li>Always use live resizing</li>
+<li>Dependencies updates:<ul>
+<li>sparkle-project/Sparkle@2.7.2</li>
+<li>ReactiveX/RxSwift@6.7.1</li>
 </ul>
 </li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.47.1-20240528.171603
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20240531.221229
       </releaseNotesLink>
-      <pubDate>2024-05-28T17:19:47.931984</pubDate>
+      <pubDate>2024-05-31T22:16:51.688193</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.47.1-20240528.171603/VimR-v0.47.1.tar.bz2"
-                 sparkle:edSignature="iTLOhPvCHlMTpFMVo77oCiUT8EYKdbUyMeV15xWVUjnc/tB62utjmM7mQvBcUhERbKZWKp7fGPR6frNdvXNNBQ==" length="19379938"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20240531.221229/VimR-SNAPSHOT-20240531.221229.tar.bz2"
+                 sparkle:edSignature="FTWs8UYnTYw2HXvHjOnv+ggOfk1Ol7XBrd8yKdgmuusawwBjd+/Mo0rzefSnwhoeeXUQXA0V7LRLkbUSwCFBCg==" length="19390000"
                  type="application/octet-stream"/>
     </item>
   </channel>
