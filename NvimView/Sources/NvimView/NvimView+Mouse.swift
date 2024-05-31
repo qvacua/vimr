@@ -59,8 +59,8 @@ public extension NvimView {
         cellPosition: cellPosition
       )
       self.api
-        .input(keys: vimInputX).asCompletable()
-        .andThen(self.api.input(keys: vimInputY).asCompletable())
+        .nvimInput(keys: vimInputX).asCompletable()
+        .andThen(self.api.nvimInput(keys: vimInputY).asCompletable())
         .subscribe(onError: { [weak self] error in
           self?.log.error("Error in \(#function): \(error)")
         })
@@ -94,13 +94,13 @@ public extension NvimView {
         "# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)"
       )
 
-    self.api.winGetCursor(window: RxNeovimApi.Window(0))
+    self.api.nvimWinGetCursor(window: RxNeovimApi.Window(0))
       .flatMapCompletable { cursor in
         guard cursor.count == 2 else {
           self.log.error("Error decoding \(cursor)")
           return Completable.empty()
         }
-        return self.api.winSetCursor(
+        return self.api.nvimWinSetCursor(
           window: RxNeovimApi.Window(0),
           pos: [cursor[0] + vertSign * absDeltaY, cursor[1] + horizSign * absDeltaX]
         )
@@ -169,7 +169,7 @@ public extension NvimView {
     }
 
     self.api
-      .input(keys: result)
+      .nvimInput(keys: result)
       .subscribe(onFailure: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })

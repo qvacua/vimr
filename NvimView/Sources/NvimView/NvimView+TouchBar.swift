@@ -121,7 +121,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
 
     let window = tab.currentWindow ?? tab.windows[0]
     self.api
-      .setCurrentWin(window: RxNeovimApi.Window(window.handle))
+      .nvimSetCurrentWin(window: RxNeovimApi.Window(window.handle))
       .subscribe(on: self.scheduler)
       .subscribe(onError: { [weak self] error in
         self?.eventsSubject

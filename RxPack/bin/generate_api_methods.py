@@ -370,10 +370,12 @@ def parse_params(raw_params):
 def parse_function(f):
     args = parse_args(f['parameters'])
     template = void_func_template if f['return_type'] == 'void' else func_template
-    template = get_mode_func_template if f['name'] == 'nvim_get_mode' else template
+    nvim_func_name = f['name']
+    template = get_mode_func_template if nvim_func_name == 'nvim_get_mode' else template
+
     result = template.substitute(
-        func_name=snake_to_camel(f['name'][5:]),
-        nvim_func_name=f['name'],
+        func_name=snake_to_camel(nvim_func_name),
+        nvim_func_name=nvim_func_name,
         args=args,
         params=parse_params(f['parameters']),
         result_type=nvim_type_to_swift(f['return_type']),

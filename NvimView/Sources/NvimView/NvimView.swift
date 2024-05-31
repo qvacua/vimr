@@ -128,7 +128,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
     set {
       self.api
-        .setCurrentDir(dir: newValue.path)
+        .nvimSetCurrentDir(dir: newValue.path)
         .subscribe(on: self.scheduler)
         .subscribe(onError: { [weak self] error in
           self?.eventsSubject
@@ -229,13 +229,13 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
     let db = self.disposeBag
     self.tabBar?.closeHandler = { [weak self] index, _, _ in
       self?.api
-        .command(command: "tabclose \(index + 1)")
+        .nvimCommand(command: "tabclose \(index + 1)")
         .subscribe()
         .disposed(by: db)
     }
     self.tabBar?.selectHandler = { [weak self] _, tabEntry, _ in
       self?.api
-        .setCurrentTabpage(tabpage: tabEntry.tabpage)
+        .nvimSetCurrentTabpage(tabpage: tabEntry.tabpage)
         .subscribe()
         .disposed(by: db)
     }
@@ -243,7 +243,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
       // I don't know why, but `tabm ${last_index}` does not always work.
       let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
       self?.api
-        .command(command: command)
+        .nvimCommand(command: command)
         .subscribe()
         .disposed(by: db)
     }
@@ -350,7 +350,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   private var _characterspacing = NvimView.defaultCharacterspacing
 
   private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) {
-    self.api.getApiInfo(errWhenBlocked: false)
+    self.api.nvimGetApiInfo(errWhenBlocked: false)
       .flatMapCompletable { value in
         guard let info = value.arrayValue,
               info.count == 2,
@@ -360,7 +360,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         }
 
         // swiftformat:disable all
-        return self.api.exec2(src: """
+        return self.api.nvimExec2(src: """
         autocmd BufWinEnter * call rpcnotify(\(channel), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
         autocmd BufWinLeave * call rpcnotify(\(channel), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
         autocmd TabEnter * call rpcnotify(\(channel), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
@@ -371,11 +371,11 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         """, opts: [:], errWhenBlocked: false)
         // swiftformat:enable all
           .asCompletable()
-          .andThen(self.api.subscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
+          .andThen(self.api.nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
           .andThen(
             self.sourceFileUrls.reduce(.empty()) { prev, url in
               prev.andThen(
-                self.api.exec2(
+                self.api.nvimExec2(
                   src: "source \(url.shellEscapedPath)",
                   opts: ["output": true],
                   errWhenBlocked: false
@@ -399,7 +399,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
               guard FileManager.default.fileExists(atPath: ginitPath) else { return .empty() }
 
               self.bridgeLogger.debug("Source'ing ginit.vim")
-              return self.api.command(command: "source \(ginitPath.shellEscapedPath)")
+              return self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)")
             }()
           )
       }

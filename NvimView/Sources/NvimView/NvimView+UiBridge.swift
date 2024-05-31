@@ -730,7 +730,7 @@ extension NvimView {
   }
 
   func focusGained(_ gained: Bool) -> Completable {
-    self.api.uiSetFocus(gained: gained)
+    self.api.nvimUiSetFocus(gained: gained)
   }
 
   private func quit() -> Completable {

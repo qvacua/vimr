@@ -59,7 +59,7 @@ extension NvimView {
     self.offset.x = floor((size.width - self.cellSize.width * discreteSize.width.cgf) / 2)
     self.offset.y = floor((size.height - self.cellSize.height * discreteSize.height.cgf) / 2)
 
-    self.api.uiTryResize(width: discreteSize.width, height: discreteSize.height)
+    self.api.nvimUiTryResize(width: discreteSize.width, height: discreteSize.height)
       .subscribe(onError: { [weak self] error in
         self?.log.error("Error in \(#function): \(error)")
       })
@@ -99,7 +99,7 @@ extension NvimView {
     // NvimView.swift
     try? self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
       .andThen(
-        self.api.getApiInfo(errWhenBlocked: false)
+        self.api.nvimGetApiInfo(errWhenBlocked: false)
           .flatMapCompletable { value in
             guard let info = value.arrayValue,
                   info.count == 2,
@@ -122,7 +122,7 @@ extension NvimView {
             }
 
             // swiftformat:disable all
-            return self.api.exec2(src: """
+            return self.api.nvimExec2(src: """
             let g:gui_vimr = 1
             autocmd VimLeave * call rpcnotify(\(channel), 'autocommand', 'vimleave')
             autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
@@ -134,7 +134,7 @@ extension NvimView {
           }
       )
       .andThen(
-        self.api.uiAttach(width: size.width, height: size.height, options: [
+        self.api.nvimUiAttach(width: size.width, height: size.height, options: [
           "ext_linegrid": true,
           "ext_multigrid": false,
           "ext_tabline": MessagePackValue(self.usesCustomTabBar),

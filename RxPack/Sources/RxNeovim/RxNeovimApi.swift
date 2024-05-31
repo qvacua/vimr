@@ -42,7 +42,7 @@ public final class RxNeovimApi {
 
   public func checkBlocked<T>(_ single: Single<T>) -> Single<T> {
     self
-      .getMode()
+      .nvimGetMode()
       .flatMap { dict -> Single<T> in
         guard (dict["blocking"]?.boolValue ?? false) == false else {
           throw RxNeovimApi.Error.blocked

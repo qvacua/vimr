@@ -56,14 +56,14 @@ extension NvimView {
   final func signalRemoteOptionChange(_ option: RemoteOption) {
     let command: Completable = switch option {
     case let .guifont(fontSpec):
-      self.api.setOptionValue(
+      self.api.nvimSetOptionValue(
         name: "guifont",
         value: .string(fontSpec),
         opts: ["scope": .string("global")]
       )
 
     case let .guifontWide(fontSpec):
-      self.api.setOptionValue(
+      self.api.nvimSetOptionValue(
         name: "guifontwide",
         value: .string(fontSpec),
         opts: ["scope": .string("global")]
@@ -80,7 +80,7 @@ extension NvimView {
   }
 
   public final func signalError(code: Int, message: String) {
-    self.api.errWriteln(str: "E\(code): \(message)")
+    self.api.nvimErrWriteln(str: "E\(code): \(message)")
       .subscribe()
       .disposed(by: self.disposeBag)
   }

@@ -158,7 +158,7 @@ extension MainWindow {
         (
           colorName: colorName,
           observable: self.neoVimView.api
-            .getHl(
+            .nvimGetHl(
               ns_id: 0,
               opts: ["name": MessagePackValue(colorName)]
             )

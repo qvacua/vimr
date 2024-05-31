@@ -38,7 +38,7 @@ public extension RxNeovimApi {
 }
 
 public extension RxNeovimApi {
-  func getAutocmds(
+  func nvimGetAutocmds(
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -67,7 +67,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func createAutocmd(
+  func nvimCreateAutocmd(
     event: RxNeovimApi.Value,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -98,7 +98,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func delAutocmd(
+  func nvimDelAutocmd(
     id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -119,7 +119,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func clearAutocmds(
+  func nvimClearAutocmds(
     opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -140,7 +140,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func createAugroup(
+  func nvimCreateAugroup(
     name: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -171,7 +171,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func delAugroupById(
+  func nvimDelAugroupById(
     id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -192,7 +192,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delAugroupByName(
+  func nvimDelAugroupByName(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -213,7 +213,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func execAutocmds(
+  func nvimExecAutocmds(
     event: RxNeovimApi.Value,
     opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
@@ -236,7 +236,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufLineCount(
+  func nvimBufLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -265,7 +265,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufAttach(
+  func nvimBufAttach(
     buffer: RxNeovimApi.Buffer,
     send_buffer: Bool,
     opts: [String: RxNeovimApi.Value],
@@ -298,7 +298,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDetach(
+  func nvimBufDetach(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -327,7 +327,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetLines(
+  func nvimBufGetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -362,7 +362,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetLines(
+  func nvimBufSetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -391,7 +391,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufSetText(
+  func nvimBufSetText(
     buffer: RxNeovimApi.Buffer,
     start_row: Int,
     start_col: Int,
@@ -422,7 +422,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetText(
+  func nvimBufGetText(
     buffer: RxNeovimApi.Buffer,
     start_row: Int,
     start_col: Int,
@@ -461,7 +461,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetOffset(
+  func nvimBufGetOffset(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
@@ -492,7 +492,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetVar(
+  func nvimBufGetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -523,7 +523,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetChangedtick(
+  func nvimBufGetChangedtick(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -552,7 +552,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetKeymap(
+  func nvimBufGetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     errWhenBlocked: Bool = true
@@ -583,7 +583,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetKeymap(
+  func nvimBufSetKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
@@ -612,7 +612,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufDelKeymap(
+  func nvimBufDelKeymap(
     buffer: RxNeovimApi.Buffer,
     mode: String,
     lhs: String,
@@ -637,7 +637,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufSetVar(
+  func nvimBufSetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -662,7 +662,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufDelVar(
+  func nvimBufDelVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -685,7 +685,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufGetName(
+  func nvimBufGetName(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
@@ -714,7 +714,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetName(
+  func nvimBufSetName(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -737,7 +737,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufIsLoaded(
+  func nvimBufIsLoaded(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -766,7 +766,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDelete(
+  func nvimBufDelete(
     buffer: RxNeovimApi.Buffer,
     opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
@@ -789,7 +789,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufIsValid(
+  func nvimBufIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -818,7 +818,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDelMark(
+  func nvimBufDelMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -849,7 +849,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetMark(
+  func nvimBufSetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     line: Int,
@@ -886,7 +886,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetMark(
+  func nvimBufGetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -920,7 +920,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufCall(
+  func nvimBufCall(
     buffer: RxNeovimApi.Buffer,
     fun: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -951,7 +951,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func parseCmd(
+  func nvimParseCmd(
     str: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -982,7 +982,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func cmd(
+  func nvimCmd(
     cmd: [String: RxNeovimApi.Value],
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -1013,7 +1013,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func createUserCommand(
+  func nvimCreateUserCommand(
     name: String,
     command: RxNeovimApi.Value,
     opts: [String: RxNeovimApi.Value],
@@ -1038,7 +1038,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delUserCommand(
+  func nvimDelUserCommand(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -1059,7 +1059,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufCreateUserCommand(
+  func nvimBufCreateUserCommand(
     buffer: RxNeovimApi.Buffer,
     name: String,
     command: RxNeovimApi.Value,
@@ -1086,7 +1086,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func bufDelUserCommand(
+  func nvimBufDelUserCommand(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -1109,7 +1109,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getCommands(
+  func nvimGetCommands(
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
@@ -1138,7 +1138,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetCommands(
+  func nvimBufGetCommands(
     buffer: RxNeovimApi.Buffer,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -1170,7 +1170,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func exec(
+  func nvimExec(
     src: String,
     output: Bool,
     errWhenBlocked: Bool = true
@@ -1202,7 +1202,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func commandOutput(
+  func nvimCommandOutput(
     command: String,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
@@ -1232,7 +1232,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func executeLua(
+  func nvimExecuteLua(
     code: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -1264,7 +1264,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufGetNumber(
+  func nvimBufGetNumber(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -1294,7 +1294,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufClearHighlight(
+  func nvimBufClearHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
@@ -1322,7 +1322,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufSetVirtualText(
+  func nvimBufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
     line: Int,
@@ -1360,7 +1360,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func getHlById(
+  func nvimGetHlById(
     hl_id: Int,
     rgb: Bool,
     errWhenBlocked: Bool = true
@@ -1392,7 +1392,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func getHlByName(
+  func nvimGetHlByName(
     name: String,
     rgb: Bool,
     errWhenBlocked: Bool = true
@@ -1424,7 +1424,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rInsert(
+  func bufferInsert(
     buffer: RxNeovimApi.Buffer,
     lnum: Int,
     lines: [String],
@@ -1450,7 +1450,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetLine(
+  func bufferGetLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
@@ -1482,7 +1482,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetLine(
+  func bufferSetLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     line: String,
@@ -1508,7 +1508,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rDelLine(
+  func bufferDelLine(
     buffer: RxNeovimApi.Buffer,
     index: Int,
     expectsReturnValue: Bool = false
@@ -1532,7 +1532,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetLineSlice(
+  func bufferGetLineSlice(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -1570,7 +1570,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetLineSlice(
+  func bufferSetLineSlice(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -1602,7 +1602,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetVar(
+  func bufferSetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -1636,7 +1636,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rDelVar(
+  func bufferDelVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -1668,7 +1668,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wSetVar(
+  func windowSetVar(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -1702,7 +1702,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wDelVar(
+  func windowDelVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -1734,7 +1734,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geSetVar(
+  func tabpageSetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     value: RxNeovimApi.Value,
@@ -1768,7 +1768,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geDelVar(
+  func tabpageDelVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
@@ -1800,7 +1800,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etVar(
+  func vimSetVar(
     name: String,
     value: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -1832,7 +1832,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func elVar(
+  func vimDelVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -1862,7 +1862,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func getOptionInfo(
+  func nvimGetOptionInfo(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
@@ -1892,7 +1892,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func setOption(
+  func nvimSetOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -1916,7 +1916,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func getOption(
+  func nvimGetOption(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -1946,7 +1946,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufGetOption(
+  func nvimBufGetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -1978,7 +1978,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufSetOption(
+  func nvimBufSetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -2004,7 +2004,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func winGetOption(
+  func nvimWinGetOption(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -2036,7 +2036,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func winSetOption(
+  func nvimWinSetOption(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -2062,7 +2062,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func callAtomic(
+  func nvimCallAtomic(
     calls: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -2091,7 +2091,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func createNamespace(
+  func nvimCreateNamespace(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -2120,7 +2120,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getNamespaces(
+  func nvimGetNamespaces(
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
@@ -2147,7 +2147,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetExtmarkById(
+  func nvimBufGetExtmarkById(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
@@ -2185,7 +2185,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufGetExtmarks(
+  func nvimBufGetExtmarks(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     start: RxNeovimApi.Value,
@@ -2222,7 +2222,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufSetExtmark(
+  func nvimBufSetExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line: Int,
@@ -2259,7 +2259,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufDelExtmark(
+  func nvimBufDelExtmark(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     id: Int,
@@ -2292,7 +2292,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufAddHighlight(
+  func nvimBufAddHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     hl_group: String,
@@ -2331,7 +2331,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func bufClearNamespace(
+  func nvimBufClearNamespace(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
@@ -2358,7 +2358,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func setDecorationProvider(
+  func nvimSetDecorationProvider(
     ns_id: Int,
     opts: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
@@ -2381,7 +2381,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getOptionValue(
+  func nvimGetOptionValue(
     name: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -2412,7 +2412,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setOptionValue(
+  func nvimSetOptionValue(
     name: String,
     value: RxNeovimApi.Value,
     opts: [String: RxNeovimApi.Value],
@@ -2437,7 +2437,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getAllOptionsInfo(
+  func nvimGetAllOptionsInfo(
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
@@ -2464,7 +2464,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getOptionInfo2(
+  func nvimGetOptionInfo2(
     name: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -2495,7 +2495,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageListWins(
+  func nvimTabpageListWins(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
@@ -2524,7 +2524,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageGetVar(
+  func nvimTabpageGetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
@@ -2555,7 +2555,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageSetVar(
+  func nvimTabpageSetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     value: RxNeovimApi.Value,
@@ -2580,7 +2580,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func tabpageDelVar(
+  func nvimTabpageDelVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     expectsReturnValue: Bool = false
@@ -2603,7 +2603,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func tabpageGetWin(
+  func nvimTabpageGetWin(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
@@ -2632,7 +2632,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageSetWin(
+  func nvimTabpageSetWin(
     tabpage: RxNeovimApi.Tabpage,
     win: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
@@ -2655,7 +2655,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func tabpageGetNumber(
+  func nvimTabpageGetNumber(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -2684,7 +2684,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func tabpageIsValid(
+  func nvimTabpageIsValid(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -2713,7 +2713,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func uiAttach(
+  func nvimUiAttach(
     width: Int,
     height: Int,
     options: [String: RxNeovimApi.Value],
@@ -2739,7 +2739,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func tach(
+  func uiAttach(
     width: Int,
     height: Int,
     enable_rgb: Bool,
@@ -2764,7 +2764,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiSetFocus(
+  func nvimUiSetFocus(
     gained: Bool,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2785,7 +2785,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiDetach(
+  func nvimUiDetach(
     expectsReturnValue: Bool = false
   ) -> Completable {
     let params: [RxNeovimApi.Value] = [
@@ -2804,7 +2804,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiTryResize(
+  func nvimUiTryResize(
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
@@ -2827,7 +2827,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiSetOption(
+  func nvimUiSetOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -2850,7 +2850,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiTryResizeGrid(
+  func nvimUiTryResizeGrid(
     grid: Int,
     width: Int,
     height: Int,
@@ -2875,7 +2875,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiPumSetHeight(
+  func nvimUiPumSetHeight(
     height: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -2896,7 +2896,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiPumSetBounds(
+  func nvimUiPumSetBounds(
     width: Float,
     height: Float,
     row: Float,
@@ -2923,7 +2923,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func uiTermEvent(
+  func nvimUiTermEvent(
     event: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -2946,7 +2946,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getHlIdByName(
+  func nvimGetHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -2975,7 +2975,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getHl(
+  func nvimGetHl(
     ns_id: Int,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -3006,7 +3006,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setHl(
+  func nvimSetHl(
     ns_id: Int,
     name: String,
     val: [String: RxNeovimApi.Value],
@@ -3031,7 +3031,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getHlNs(
+  func nvimGetHlNs(
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3060,7 +3060,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setHlNs(
+  func nvimSetHlNs(
     ns_id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3081,7 +3081,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func setHlNsFast(
+  func nvimSetHlNsFast(
     ns_id: Int,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3102,7 +3102,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func feedkeys(
+  func nvimFeedkeys(
     keys: String,
     mode: String,
     escape_ks: Bool,
@@ -3127,7 +3127,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func input(
+  func nvimInput(
     keys: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3156,7 +3156,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func inputMouse(
+  func nvimInputMouse(
     button: String,
     action: String,
     modifier: String,
@@ -3187,7 +3187,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func replaceTermcodes(
+  func nvimReplaceTermcodes(
     str: String,
     from_part: Bool,
     do_lt: Bool,
@@ -3222,7 +3222,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func execLua(
+  func nvimExecLua(
     code: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -3253,7 +3253,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func notify(
+  func nvimNotify(
     msg: String,
     log_level: Int,
     opts: [String: RxNeovimApi.Value],
@@ -3286,7 +3286,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func strwidth(
+  func nvimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -3315,7 +3315,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func listRuntimePaths(
+  func nvimListRuntimePaths(
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
     let params: [RxNeovimApi.Value] = [
@@ -3342,7 +3342,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getRuntimeFile(
+  func nvimGetRuntimeFile(
     name: String,
     all: Bool,
     errWhenBlocked: Bool = true
@@ -3373,7 +3373,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentDir(
+  func nvimSetCurrentDir(
     dir: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3394,7 +3394,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getCurrentLine(
+  func nvimGetCurrentLine(
     errWhenBlocked: Bool = true
   ) -> Single<String> {
     let params: [RxNeovimApi.Value] = [
@@ -3421,7 +3421,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentLine(
+  func nvimSetCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3442,7 +3442,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delCurrentLine(
+  func nvimDelCurrentLine(
     expectsReturnValue: Bool = false
   ) -> Completable {
     let params: [RxNeovimApi.Value] = [
@@ -3461,7 +3461,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getVar(
+  func nvimGetVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -3490,7 +3490,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setVar(
+  func nvimSetVar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -3513,7 +3513,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delVar(
+  func nvimDelVar(
     name: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3534,7 +3534,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getVvar(
+  func nvimGetVvar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -3563,7 +3563,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setVvar(
+  func nvimSetVvar(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -3586,7 +3586,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func echo(
+  func nvimEcho(
     chunks: RxNeovimApi.Value,
     history: Bool,
     opts: [String: RxNeovimApi.Value],
@@ -3611,7 +3611,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func outWrite(
+  func nvimOutWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3632,7 +3632,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func errWrite(
+  func nvimErrWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3653,7 +3653,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func errWriteln(
+  func nvimErrWriteln(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3674,7 +3674,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func listBufs(
+  func nvimListBufs(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
     let params: [RxNeovimApi.Value] = [
@@ -3701,7 +3701,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentBuf(
+  func nvimGetCurrentBuf(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
     let params: [RxNeovimApi.Value] = [
@@ -3728,7 +3728,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentBuf(
+  func nvimSetCurrentBuf(
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3749,7 +3749,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func listWins(
+  func nvimListWins(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
     let params: [RxNeovimApi.Value] = [
@@ -3776,7 +3776,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentWin(
+  func nvimGetCurrentWin(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
     let params: [RxNeovimApi.Value] = [
@@ -3803,7 +3803,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentWin(
+  func nvimSetCurrentWin(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3824,7 +3824,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func createBuf(
+  func nvimCreateBuf(
     listed: Bool,
     scratch: Bool,
     errWhenBlocked: Bool = true
@@ -3855,7 +3855,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func openTerm(
+  func nvimOpenTerm(
     buffer: RxNeovimApi.Buffer,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -3886,7 +3886,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func chanSend(
+  func nvimChanSend(
     chan: Int,
     data: String,
     expectsReturnValue: Bool = false
@@ -3909,7 +3909,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func listTabpages(
+  func nvimListTabpages(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Tabpage]> {
     let params: [RxNeovimApi.Value] = [
@@ -3936,7 +3936,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getCurrentTabpage(
+  func nvimGetCurrentTabpage(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
     let params: [RxNeovimApi.Value] = [
@@ -3963,7 +3963,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setCurrentTabpage(
+  func nvimSetCurrentTabpage(
     tabpage: RxNeovimApi.Tabpage,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -3984,7 +3984,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func paste(
+  func nvimPaste(
     data: String,
     crlf: Bool,
     phase: Int,
@@ -4017,7 +4017,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func put(
+  func nvimPut(
     lines: [String],
     type: String,
     after: Bool,
@@ -4044,7 +4044,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func subscribe(
+  func nvimSubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -4065,7 +4065,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func unsubscribe(
+  func nvimUnsubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -4086,7 +4086,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getColorByName(
+  func nvimGetColorByName(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -4115,7 +4115,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getColorMap(
+  func nvimGetColorMap(
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
@@ -4142,7 +4142,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getContext(
+  func nvimGetContext(
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
@@ -4171,7 +4171,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func loadContext(
+  func nvimLoadContext(
     dict: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -4200,7 +4200,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getMode(
+  func nvimGetMode(
   ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
     ]
@@ -4215,7 +4215,7 @@ public extension RxNeovimApi {
       }
   }
 
-  func getKeymap(
+  func nvimGetKeymap(
     mode: String,
     errWhenBlocked: Bool = true
   ) -> Single<[[String: RxNeovimApi.Value]]> {
@@ -4244,7 +4244,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setKeymap(
+  func nvimSetKeymap(
     mode: String,
     lhs: String,
     rhs: String,
@@ -4271,7 +4271,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delKeymap(
+  func nvimDelKeymap(
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
@@ -4294,7 +4294,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getApiInfo(
+  func nvimGetApiInfo(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
     let params: [RxNeovimApi.Value] = [
@@ -4321,7 +4321,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func setClientInfo(
+  func nvimSetClientInfo(
     name: String,
     version: [String: RxNeovimApi.Value],
     type: String,
@@ -4350,7 +4350,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func getChanInfo(
+  func nvimGetChanInfo(
     chan: Int,
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
@@ -4379,7 +4379,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func listChans(
+  func nvimListChans(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
     let params: [RxNeovimApi.Value] = [
@@ -4406,7 +4406,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func listUis(
+  func nvimListUis(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
     let params: [RxNeovimApi.Value] = [
@@ -4433,7 +4433,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getProcChildren(
+  func nvimGetProcChildren(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -4462,7 +4462,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getProc(
+  func nvimGetProc(
     pid: Int,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -4491,7 +4491,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func selectPopupmenuItem(
+  func nvimSelectPopupmenuItem(
     item: Int,
     insert: Bool,
     finish: Bool,
@@ -4518,7 +4518,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func delMark(
+  func nvimDelMark(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -4547,7 +4547,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func getMark(
+  func nvimGetMark(
     name: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -4578,7 +4578,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func evalStatusline(
+  func nvimEvalStatusline(
     str: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -4609,7 +4609,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func exec2(
+  func nvimExec2(
     src: String,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -4640,7 +4640,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func command(
+  func nvimCommand(
     command: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -4661,7 +4661,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func eval(
+  func nvimEval(
     expr: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -4690,7 +4690,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func callFunction(
+  func nvimCallFunction(
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -4721,7 +4721,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func callDictFunction(
+  func nvimCallDictFunction(
     dict: RxNeovimApi.Value,
     fn: String,
     args: RxNeovimApi.Value,
@@ -4754,7 +4754,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func parseExpression(
+  func nvimParseExpression(
     expr: String,
     flags: String,
     highlight: Bool,
@@ -4787,7 +4787,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func openWin(
+  func nvimOpenWin(
     buffer: RxNeovimApi.Buffer,
     enter: Bool,
     config: [String: RxNeovimApi.Value],
@@ -4820,7 +4820,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetConfig(
+  func nvimWinSetConfig(
     window: RxNeovimApi.Window,
     config: [String: RxNeovimApi.Value],
     expectsReturnValue: Bool = false
@@ -4843,7 +4843,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetConfig(
+  func nvimWinGetConfig(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
@@ -4872,7 +4872,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winGetBuf(
+  func nvimWinGetBuf(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
@@ -4901,7 +4901,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetBuf(
+  func nvimWinSetBuf(
     window: RxNeovimApi.Window,
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
@@ -4924,7 +4924,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetCursor(
+  func nvimWinGetCursor(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -4956,7 +4956,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetCursor(
+  func nvimWinSetCursor(
     window: RxNeovimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
@@ -4979,7 +4979,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetHeight(
+  func nvimWinGetHeight(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -5008,7 +5008,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetHeight(
+  func nvimWinSetHeight(
     window: RxNeovimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
@@ -5031,7 +5031,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetWidth(
+  func nvimWinGetWidth(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -5060,7 +5060,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetWidth(
+  func nvimWinSetWidth(
     window: RxNeovimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
@@ -5083,7 +5083,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetVar(
+  func nvimWinGetVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -5114,7 +5114,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetVar(
+  func nvimWinSetVar(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -5139,7 +5139,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winDelVar(
+  func nvimWinDelVar(
     window: RxNeovimApi.Window,
     name: String,
     expectsReturnValue: Bool = false
@@ -5162,7 +5162,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winGetPosition(
+  func nvimWinGetPosition(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -5194,7 +5194,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winGetTabpage(
+  func nvimWinGetTabpage(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
@@ -5223,7 +5223,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winGetNumber(
+  func nvimWinGetNumber(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -5252,7 +5252,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winIsValid(
+  func nvimWinIsValid(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -5281,7 +5281,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winHide(
+  func nvimWinHide(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -5302,7 +5302,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winClose(
+  func nvimWinClose(
     window: RxNeovimApi.Window,
     force: Bool,
     expectsReturnValue: Bool = false
@@ -5325,7 +5325,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winCall(
+  func nvimWinCall(
     window: RxNeovimApi.Window,
     fun: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -5356,7 +5356,7 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func winSetHlNs(
+  func nvimWinSetHlNs(
     window: RxNeovimApi.Window,
     ns_id: Int,
     expectsReturnValue: Bool = false
@@ -5379,7 +5379,7 @@ public extension RxNeovimApi {
       .asCompletable()
   }
 
-  func winTextHeight(
+  func nvimWinTextHeight(
     window: RxNeovimApi.Window,
     opts: [String: RxNeovimApi.Value],
     errWhenBlocked: Bool = true
@@ -5411,7 +5411,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rLineCount(
+  func bufferLineCount(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -5441,7 +5441,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetLines(
+  func bufferGetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -5477,7 +5477,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetLines(
+  func bufferSetLines(
     buffer: RxNeovimApi.Buffer,
     start: Int,
     end: Int,
@@ -5507,7 +5507,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetVar(
+  func bufferGetVar(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -5539,7 +5539,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetName(
+  func bufferGetName(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
@@ -5569,7 +5569,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetName(
+  func bufferSetName(
     buffer: RxNeovimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
@@ -5593,7 +5593,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rIsValid(
+  func bufferIsValid(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -5623,7 +5623,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetMark(
+  func bufferGetMark(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -5658,7 +5658,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func ommandOutput(
+  func vimCommandOutput(
     command: String,
     errWhenBlocked: Bool = true
   ) -> Single<String> {
@@ -5688,7 +5688,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetNumber(
+  func bufferGetNumber(
     buffer: RxNeovimApi.Buffer,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -5718,7 +5718,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rClearHighlight(
+  func bufferClearHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     line_start: Int,
@@ -5746,7 +5746,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etOption(
+  func vimSetOption(
     name: String,
     value: RxNeovimApi.Value,
     expectsReturnValue: Bool = false
@@ -5770,7 +5770,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etOption(
+  func vimGetOption(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -5800,7 +5800,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rGetOption(
+  func bufferGetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
@@ -5832,7 +5832,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rSetOption(
+  func bufferSetOption(
     buffer: RxNeovimApi.Buffer,
     name: String,
     value: RxNeovimApi.Value,
@@ -5858,7 +5858,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetOption(
+  func windowGetOption(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -5890,7 +5890,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wSetOption(
+  func windowSetOption(
     window: RxNeovimApi.Window,
     name: String,
     value: RxNeovimApi.Value,
@@ -5916,7 +5916,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rAddHighlight(
+  func bufferAddHighlight(
     buffer: RxNeovimApi.Buffer,
     ns_id: Int,
     hl_group: String,
@@ -5956,7 +5956,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geGetWindows(
+  func tabpageGetWindows(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
@@ -5986,7 +5986,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geGetVar(
+  func tabpageGetVar(
     tabpage: RxNeovimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
@@ -6018,7 +6018,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geGetWindow(
+  func tabpageGetWindow(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
@@ -6048,7 +6048,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func geIsValid(
+  func tabpageIsValid(
     tabpage: RxNeovimApi.Tabpage,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
@@ -6078,7 +6078,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func tach(
+  func uiDetach(
     expectsReturnValue: Bool = false
   ) -> Completable {
     let params: [RxNeovimApi.Value] = [
@@ -6098,7 +6098,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func yResize(
+  func uiTryResize(
     width: Int,
     height: Int,
     errWhenBlocked: Bool = true
@@ -6130,7 +6130,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func eedkeys(
+  func vimFeedkeys(
     keys: String,
     mode: String,
     escape_ks: Bool,
@@ -6156,7 +6156,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func nput(
+  func vimInput(
     keys: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -6186,7 +6186,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func eplaceTermcodes(
+  func vimReplaceTermcodes(
     str: String,
     from_part: Bool,
     do_lt: Bool,
@@ -6222,7 +6222,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func trwidth(
+  func vimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -6252,7 +6252,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func istRuntimePaths(
+  func vimListRuntimePaths(
     errWhenBlocked: Bool = true
   ) -> Single<[String]> {
     let params: [RxNeovimApi.Value] = [
@@ -6280,7 +6280,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func hangeDirectory(
+  func vimChangeDirectory(
     dir: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6302,7 +6302,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentLine(
+  func vimGetCurrentLine(
     errWhenBlocked: Bool = true
   ) -> Single<String> {
     let params: [RxNeovimApi.Value] = [
@@ -6330,7 +6330,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentLine(
+  func vimSetCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6352,7 +6352,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func elCurrentLine(
+  func vimDelCurrentLine(
     expectsReturnValue: Bool = false
   ) -> Completable {
     let params: [RxNeovimApi.Value] = [
@@ -6372,7 +6372,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etVar(
+  func vimGetVar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -6402,7 +6402,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etVvar(
+  func vimGetVvar(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -6432,7 +6432,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func utWrite(
+  func vimOutWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6454,7 +6454,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func rrWrite(
+  func vimErrWrite(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6476,7 +6476,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func eportError(
+  func vimReportError(
     str: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6498,7 +6498,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etBuffers(
+  func vimGetBuffers(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
     let params: [RxNeovimApi.Value] = [
@@ -6526,7 +6526,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentBuffer(
+  func vimGetCurrentBuffer(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
     let params: [RxNeovimApi.Value] = [
@@ -6554,7 +6554,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentBuffer(
+  func vimSetCurrentBuffer(
     buffer: RxNeovimApi.Buffer,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6576,7 +6576,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etWindows(
+  func vimGetWindows(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Window]> {
     let params: [RxNeovimApi.Value] = [
@@ -6604,7 +6604,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentWindow(
+  func vimGetCurrentWindow(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Window> {
     let params: [RxNeovimApi.Value] = [
@@ -6632,7 +6632,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentWindow(
+  func vimSetCurrentWindow(
     window: RxNeovimApi.Window,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6654,7 +6654,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etTabpages(
+  func vimGetTabpages(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Tabpage]> {
     let params: [RxNeovimApi.Value] = [
@@ -6682,7 +6682,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentTabpage(
+  func vimGetCurrentTabpage(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
     let params: [RxNeovimApi.Value] = [
@@ -6710,7 +6710,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etCurrentTabpage(
+  func vimSetCurrentTabpage(
     tabpage: RxNeovimApi.Tabpage,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6732,7 +6732,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func ubscribe(
+  func vimSubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6754,7 +6754,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func nsubscribe(
+  func vimUnsubscribe(
     event: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6776,7 +6776,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func ameToColor(
+  func vimNameToColor(
     name: String,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -6806,7 +6806,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etColorMap(
+  func vimGetColorMap(
     errWhenBlocked: Bool = true
   ) -> Single<[String: RxNeovimApi.Value]> {
     let params: [RxNeovimApi.Value] = [
@@ -6834,7 +6834,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func etApiInfo(
+  func vimGetApiInfo(
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
     let params: [RxNeovimApi.Value] = [
@@ -6862,7 +6862,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func ommand(
+  func vimCommand(
     command: String,
     expectsReturnValue: Bool = false
   ) -> Completable {
@@ -6884,7 +6884,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func val(
+  func vimEval(
     expr: String,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Value> {
@@ -6914,7 +6914,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func allFunction(
+  func vimCallFunction(
     fn: String,
     args: RxNeovimApi.Value,
     errWhenBlocked: Bool = true
@@ -6946,7 +6946,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetBuffer(
+  func windowGetBuffer(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Buffer> {
@@ -6976,7 +6976,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetCursor(
+  func windowGetCursor(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -7009,7 +7009,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wSetCursor(
+  func windowSetCursor(
     window: RxNeovimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
@@ -7033,7 +7033,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetHeight(
+  func windowGetHeight(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -7063,7 +7063,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wSetHeight(
+  func windowSetHeight(
     window: RxNeovimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
@@ -7087,7 +7087,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetWidth(
+  func windowGetWidth(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Int> {
@@ -7117,7 +7117,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wSetWidth(
+  func windowSetWidth(
     window: RxNeovimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
@@ -7141,7 +7141,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetVar(
+  func windowGetVar(
     window: RxNeovimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
@@ -7173,7 +7173,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetPosition(
+  func windowGetPosition(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<[Int]> {
@@ -7206,7 +7206,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wGetTabpage(
+  func windowGetTabpage(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<RxNeovimApi.Tabpage> {
@@ -7236,7 +7236,7 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func wIsValid(
+  func windowIsValid(
     window: RxNeovimApi.Window,
     errWhenBlocked: Bool = true
   ) -> Single<Bool> {
