@@ -38,8 +38,6 @@ extension NvimView {
   }
 
   func resizeNeoVimUi(to size: CGSize) {
-    self.currentEmoji = self.randomEmoji()
-
     let discreteSize = self.discreteSize(size: size)
     if discreteSize == self.ugrid.size {
       self.markForRenderWholeView()

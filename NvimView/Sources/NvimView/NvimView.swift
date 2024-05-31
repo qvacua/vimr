@@ -310,7 +310,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   var pinchBitmap: NSBitmapImageRep?
 
   var currentlyResizing = false
-  var currentEmoji = "😎"
 
   var _font = NvimView.defaultFont
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())

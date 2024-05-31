@@ -140,37 +140,6 @@ extension NvimView {
     context.restoreGState()
   }
 
-  private func drawResizeInfo(
-    in context: CGContext, with dirtyUnionRect: CGRect
-  ) {
-    context.setFillColor(self.theme.background.cgColor)
-    context.fill(dirtyUnionRect)
-
-    let boundsSize = self.bounds.size
-
-    let emojiSize = self.currentEmoji.size(withAttributes: emojiAttrs)
-    let emojiX = (boundsSize.width - emojiSize.width) / 2
-    let emojiY = (boundsSize.height - emojiSize.height) / 2
-
-    let discreteSize = self.discreteSize(size: boundsSize)
-    let displayStr = "\(discreteSize.width) × \(discreteSize.height)"
-    let infoStr = "(You can turn on live resizing feature in the Advanced preferences)"
-
-    var (sizeAttrs, infoAttrs) = (resizeTextAttrs, infoTextAttrs)
-    sizeAttrs[.foregroundColor] = self.theme.foreground
-    infoAttrs[.foregroundColor] = self.theme.foreground
-
-    let size = displayStr.size(withAttributes: sizeAttrs)
-    let (x, y) = ((boundsSize.width - size.width) / 2, emojiY - size.height)
-
-    let infoSize = infoStr.size(withAttributes: infoAttrs)
-    let (infoX, infoY) = ((boundsSize.width - infoSize.width) / 2, y - size.height - 5)
-
-    self.currentEmoji.draw(at: CGPoint(x: emojiX, y: emojiY), withAttributes: emojiAttrs)
-    displayStr.draw(at: CGPoint(x: x, y: y), withAttributes: sizeAttrs)
-    infoStr.draw(at: CGPoint(x: infoX, y: infoY), withAttributes: infoAttrs)
-  }
-
   private func drawPinchImage(in context: CGContext) {
     context.interpolationQuality = .none
 
