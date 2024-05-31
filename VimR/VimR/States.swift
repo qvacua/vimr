@@ -379,7 +379,7 @@ extension MainWindow {
       )
       self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State
         .default.nvimBinary
-      
+
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
       } else {
@@ -431,7 +431,7 @@ extension MainWindow {
         return (tool, value)
       }
       let missingTools = MainWindow.Tools.all.subtracting(self.tools.keys)
-      missingTools.forEach { missingTool in
+      for missingTool in missingTools {
         self.tools[missingTool] = MainWindow.State.defaultTools[missingTool]!
       }
 

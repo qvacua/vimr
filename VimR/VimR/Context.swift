@@ -110,7 +110,7 @@ final class Context: ReduxContext {
   }
 
   private func cleanUpAppState() {
-    self.state.mainWindows.keys.forEach { uuid in
+    for uuid in self.state.mainWindows.keys {
       self.state.mainWindows[uuid]?.cwdToSet = nil
       self.state.mainWindows[uuid]?.currentBufferToSet = nil
       self.state.mainWindows[uuid]?.viewToBeFocused = nil

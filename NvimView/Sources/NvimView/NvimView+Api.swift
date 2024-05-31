@@ -168,7 +168,8 @@ public extension NvimView {
       .map { tabs in tabs.map(\.windows).flatMap { $0 } }
       .flatMapCompletable { [weak self] wins -> Completable in
         if let win = wins.first(where: { $0.buffer == buffer }) {
-          guard let completable = self?.api.nvimSetCurrentWin(window: RxNeovimApi.Window(win.handle))
+          guard let completable = self?.api
+            .nvimSetCurrentWin(window: RxNeovimApi.Window(win.handle))
           else {
             throw RxNeovimApi.Error.exception(message: "Could not set current win")
           }

@@ -21,7 +21,7 @@ final class PrefWindow: NSObject,
   weak var shortcutService: ShortcutService? {
     didSet {
       let shortcutsPref = self.panes.first { pane in pane is ShortcutsPref } as? ShortcutsPref
-      shortcutsPref?.shortcutService = shortcutService
+      shortcutsPref?.shortcutService = self.shortcutService
     }
   }
 

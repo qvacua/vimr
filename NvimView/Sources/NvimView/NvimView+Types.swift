@@ -101,10 +101,10 @@ public extension NvimView {
     public var visualBackground = NSColor.selectedContentBackgroundColor
 
     public var directoryForeground = NSColor.textColor
-	  
+
     public var tabForeground = NSColor.textColor
     public var tabBackground = NSColor.textBackgroundColor
-	  
+
     public init() {}
 
     public init(_ values: [Int]) {
@@ -121,8 +121,8 @@ public extension NvimView {
       self.directoryForeground = values[4] < 0
         ? Theme.default.directoryForeground
         : color(values[4])
-	  self.tabBackground = values[5] < 0 ? Theme.default.background : color(values[5])
-	  self.tabForeground = values[6] < 0 ? Theme.default.foreground : color(values[6])
+      self.tabBackground = values[5] < 0 ? Theme.default.background : color(values[5])
+      self.tabForeground = values[6] < 0 ? Theme.default.foreground : color(values[6])
     }
 
     public var description: String {

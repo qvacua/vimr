@@ -129,7 +129,7 @@ final class FuzzySearchService {
       let foldersToScan = try context.fetch(req)
       // We use the ID of objects since we reset in scanScore(), which resets all properties of
       // foldersToScan after first folderToScan.
-      foldersToScan.forEach { folder in
+      for folder in foldersToScan {
         self.scanScore(
           matcher: matcher,
           folderId: folder.objectID,
@@ -331,7 +331,9 @@ final class FuzzySearchService {
             return
           }
 
-          for child in folder.children ?? [] { ctx.delete(child) }
+          for child in folder.children ?? [] {
+            ctx.delete(child)
+          }
 
           folder.needsScanChildren = true
           self.log.trace("Marked \(folder.url!) for scanning")

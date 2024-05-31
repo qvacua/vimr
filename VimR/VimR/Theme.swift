@@ -45,8 +45,8 @@ struct Theme: CustomStringConvertible {
   var highlightBackground = NSColor.selectedContentBackgroundColor
 
   var directoryForeground = NSColor.textColor
-	
-	  var tabForeground = NSColor.selectedMenuItemTextColor
+
+  var tabForeground = NSColor.selectedMenuItemTextColor
   var tabBackground = NSColor.selectedContentBackgroundColor
 
   var cssColor = NSColor(hex: "24292e")!
@@ -80,10 +80,10 @@ struct Theme: CustomStringConvertible {
     self.highlightBackground = nvimTheme.visualBackground
 
     self.directoryForeground = nvimTheme.directoryForeground
-    
-		self.tabBackground = nvimTheme.tabBackground
-		self.tabForeground = nvimTheme.tabForeground
-		
+
+    self.tabBackground = nvimTheme.tabBackground
+    self.tabForeground = nvimTheme.tabForeground
+
     self.updateCssColors(additionalColorDict)
   }
 

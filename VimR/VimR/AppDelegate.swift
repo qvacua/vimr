@@ -350,9 +350,9 @@ extension AppDelegate {
       self.emit(.openInKeyWindow(config: config))
 
     case .separateWindows:
-      urls.forEach {
+      for url in urls {
         let config = OpenConfig(
-          urls: [$0],
+          urls: [url],
           cwd: cwd,
           cliPipePath: pipePath,
           nvimArgs: nil,

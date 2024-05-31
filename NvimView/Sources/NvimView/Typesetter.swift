@@ -11,7 +11,7 @@ final class Typesetter {
   func clearCache() {
     self.ctRunsCache.clear()
   }
-  
+
   func fontGlyphRunsWithLigatures(
     nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     startColumn: Int,
@@ -264,7 +264,9 @@ final class Typesetter {
           let element = pointer[k]
           if element.isEmpty { continue }
 
-          for j in 0..<element.count { resultPtr[i + j] = element[j] }
+          for j in 0..<element.count {
+            resultPtr[i + j] = element[j]
+          }
 
           i = i + element.count
         }

@@ -176,9 +176,9 @@ final class MainWindow: NSObject,
 
     self.usesTheme = state.appearance.usesTheme
 
-    state.orderedTools.forEach { toolId in
+    for toolId in state.orderedTools {
       guard let tool = tools[toolId] else {
-        return
+        continue
       }
 
       self.workspace.append(
@@ -187,7 +187,7 @@ final class MainWindow: NSObject,
       )
     }
 
-    self.tools.forEach { toolId, toolContainer in
+    for (toolId, toolContainer) in self.tools {
       if state.tools[toolId]?.open == true {
         toolContainer.toggle()
       }
@@ -477,9 +477,9 @@ final class MainWindow: NSObject,
 
     tabsTheme.selectedForegroundColor = self.theme.highlightForeground
     tabsTheme.selectedBackgroundColor = self.theme.highlightBackground
-		
-		tabsTheme.tabBackgroundColor = self.theme.tabBackground;
-		tabsTheme.tabForegroundColor = self.theme.tabForeground;
+
+    tabsTheme.tabBackgroundColor = self.theme.tabBackground
+    tabsTheme.tabForegroundColor = self.theme.tabForeground
 
     tabsTheme.tabSelectedIndicatorColor = self.theme.highlightForeground
 

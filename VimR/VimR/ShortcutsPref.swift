@@ -103,7 +103,7 @@ final class ShortcutsPref: PrefPane,
       return
     }
 
-    legacyDefaultShortcuts.forEach { id in
+    for id in legacyDefaultShortcuts {
       let shortcut: Shortcut? = if let dict = self.shortcutsUserDefaults?
         .value(forKey: id) as? [String: Any]
       {
@@ -121,7 +121,7 @@ final class ShortcutsPref: PrefPane,
 
   private func initShortcutUserDefaults() {
     let transformer = ShortcutValueTransformer.shared
-    defaultShortcuts.forEach { id, shortcut in
+    for (id, shortcut) in defaultShortcuts {
       if self.shortcutsUserDefaults?.value(forKey: id) == nil {
         let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
         self.shortcutsUserDefaults?.set(shortcutData, forKey: id)

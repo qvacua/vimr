@@ -13,7 +13,6 @@ final class AdvancedPrefReducer: ReducerType {
     var state = pair.state
 
     switch pair.action {
-
     case let .setUseInteractiveZsh(value):
       state.mainWindowTemplate.useInteractiveZsh = value
 

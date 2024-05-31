@@ -8,7 +8,7 @@ import Cocoa
 extension NvimView {
   override public func viewDidMoveToWindow() { self.window?.colorSpace = colorSpace }
 
-  override public func draw(_ dirtyUnionRect: NSRect) {
+  override public func draw(_: NSRect) {
     guard self.ugrid.hasData else { return }
 
     guard let context = NSGraphicsContext.current?.cgContext else { return }

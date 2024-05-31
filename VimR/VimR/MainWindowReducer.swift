@@ -53,7 +53,7 @@ final class MainWindowReducer: ReducerType {
 
     case let .setToolsState(tools):
       state.orderedTools = []
-      tools.forEach { toolPair in
+      for toolPair in tools {
         let toolId = toolPair.0
         let tool = toolPair.1
 

@@ -202,17 +202,17 @@ final class OpenQuicklyWindow: NSObject,
     let newUrls = urlsToMonitor.subtracting(currentUrls)
     let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
 
-    newUrls.forEach { url in
+    for url in newUrls {
       self.log.info("Adding \(url) and its service.")
       guard let service = try? FuzzySearchService(root: url) else {
         self.log.error("Could not create FileService for \(url)")
-        return
+        continue
       }
 
       self.searchServicePerRootUrl[url] = service
     }
 
-    obsoleteUrls.forEach { url in
+    for url in obsoleteUrls {
       self.log.info("Removing \(url) and its service.")
       self.searchServicePerRootUrl.removeValue(forKey: url)
     }

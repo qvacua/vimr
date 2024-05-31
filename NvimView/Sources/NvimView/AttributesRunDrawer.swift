@@ -70,7 +70,7 @@ final class AttributesRunDrawer {
 
     context.setFillColor(ColorUtils.cgColorIgnoringAlpha(run.attrs.effectiveForeground))
 
-    fontGlyphRuns.forEach { run in
+    for run in fontGlyphRuns {
       CTFontDrawGlyphs(run.font, run.glyphs, run.positions, run.glyphs.count, context)
     }
 
@@ -189,7 +189,7 @@ final class AttributesRunDrawer {
     self.descent = CTFontGetDescent(self.font)
     self.underlinePosition = CTFontGetUnderlinePosition(self.font)
     self.underlineThickness = CTFontGetUnderlineThickness(self.font)
-    
+
     self.typesetter.clearCache()
   }
 }

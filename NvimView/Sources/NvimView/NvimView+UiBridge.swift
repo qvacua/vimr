@@ -360,7 +360,9 @@ extension NvimView {
   }
 
   private func flush() {
-    for region in self.regionsToFlush { self.markForRender(region: region) }
+    for region in self.regionsToFlush {
+      self.markForRender(region: region)
+    }
     self.regionsToFlush.removeAll(keepingCapacity: true)
   }
 
