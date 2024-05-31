@@ -1,7 +1,7 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-readonly clean=${clean:?"true or false"}
+clean=${clean:?"true or false"}
 readonly use_committed_nvim=${use_committed_nvim:?"If true, checkout the committed version of nvim, otherwise use the workspace."}
 
 main() {
