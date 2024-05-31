@@ -6,10 +6,10 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20240531.221229</title>
+      <title>v0.47.2-20240531.221846</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240531.221229</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20240531.221229</sparkle:shortVersionString>
+      <sparkle:version>20240531.221846</sparkle:version>
+      <sparkle:shortVersionString>v0.47.2</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
 <li>Always use live resizing</li>
@@ -21,12 +21,12 @@
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20240531.221229
+        https://github.com/qvacua/vimr/releases/tag/v0.47.2-20240531.221846
       </releaseNotesLink>
-      <pubDate>2024-05-31T22:16:51.688193</pubDate>
+      <pubDate>2024-05-31T22:25:28.381821</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20240531.221229/VimR-SNAPSHOT-20240531.221229.tar.bz2"
-                 sparkle:edSignature="FTWs8UYnTYw2HXvHjOnv+ggOfk1Ol7XBrd8yKdgmuusawwBjd+/Mo0rzefSnwhoeeXUQXA0V7LRLkbUSwCFBCg==" length="19390000"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.47.2-20240531.221846/VimR-v0.47.2.tar.bz2"
+                 sparkle:edSignature="sYb/KT0vh65Q4DlTe9hKmWu8bGeINujGEjF0Ozsl6MQlwt3wjKJkSZjif/stJE9vHDfr8ggDxhxCvWgt47aoBQ==" length="19388603"
                  type="application/octet-stream"/>
     </item>
   </channel>
