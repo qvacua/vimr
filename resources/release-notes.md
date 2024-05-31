@@ -1,5 +1,6 @@
 # Next
 
+* Always use live resizing
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.2
   - ReactiveX/RxSwift@6.7.1

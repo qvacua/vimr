@@ -207,7 +207,6 @@ final class MainWindow: NSObject,
 
     self.addViews(withTopInset: 0)
 
-    self.neoVimView.usesLiveResize = state.useLiveResize
     self.neoVimView.delegate = self
     self.updateNeoVimAppearance()
 
@@ -427,10 +426,6 @@ final class MainWindow: NSObject,
 
         self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
         self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
-
-        if self.neoVimView.usesLiveResize != state.useLiveResize {
-          self.neoVimView.usesLiveResize = state.useLiveResize
-        }
 
         if self.defaultFont != state.appearance.font
           || self.linespacing != state.appearance.linespacing

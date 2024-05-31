@@ -13,7 +13,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   enum Action {
     case setUseInteractiveZsh(Bool)
     case setUseSnapshotUpdate(Bool)
-    case setUseLiveResize(Bool)
     case setNvimBinary(String)
   }
 
@@ -30,7 +29,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate
-    self.useLiveResize = state.mainWindowTemplate.useLiveResize
     self.nvimBinary = state.mainWindowTemplate.nvimBinary
 
     super.init(frame: .zero)
@@ -44,12 +42,10 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
         if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
           || self.nvimBinary != state.mainWindowTemplate.nvimBinary
           || self.useSnapshotUpdate != state.useSnapshotUpdate
-          || self.useLiveResize != state.mainWindowTemplate.useLiveResize
         {
           self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
           self.nvimBinary = state.mainWindowTemplate.nvimBinary
           self.useSnapshotUpdate = state.useSnapshotUpdate
-          self.useLiveResize = state.mainWindowTemplate.useLiveResize
 
           self.updateViews()
         }
@@ -62,12 +58,10 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
   private var useInteractiveZsh: Bool
   private var useSnapshotUpdate: Bool
-  private var useLiveResize: Bool
   private var nvimBinary: String = ""
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
-  private let useLiveResizeCheckbox = NSButton(forAutoLayout: ())
   private let nvimBinaryField = NSTextField(forAutoLayout: ())
 
   @available(*, unavailable)
@@ -82,7 +76,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private func updateViews() {
     self.useSnapshotUpdateCheckbox.boolState = self.useSnapshotUpdate
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
-    self.useLiveResizeCheckbox.boolState = self.useLiveResize
     self.nvimBinaryField.stringValue = self.nvimBinary
   }
 
@@ -115,18 +108,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     of VimR in no time!
     """#)
 
-    let useLiveResize = self.useLiveResizeCheckbox
-    self.configureCheckbox(
-      button: useLiveResize,
-      title: "Use Live Window Resizing",
-      action: #selector(AdvancedPref.useLiveResizeAction(_:))
-    )
-
-    let useLiveResizeInfo = self.infoTextField(markdown: #"""
-    The Live Resizing is yet experimental. You may experience some issues.\
-    If you do, please report them at [GitHub](https://github.com/qvacua/vimr/issues).
-    """#)
-
     let nvimBinaryTitle = self.titleTextField(title: "NeoVim Binary:")
     let nvimBinaryField = self.nvimBinaryField
 
@@ -136,8 +117,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(useSnapshotUpdateInfo)
     self.addSubview(useInteractiveZsh)
     self.addSubview(useInteractiveZshInfo)
-    self.addSubview(useLiveResize)
-    self.addSubview(useLiveResizeInfo)
     self.addSubview(nvimBinaryTitle)
     self.addSubview(nvimBinaryField)
 
@@ -145,30 +124,24 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
 
-    useLiveResize.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
-    useLiveResize.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-
-    useLiveResizeInfo.autoPinEdge(.top, to: .bottom, of: useLiveResize, withOffset: 5)
-    useLiveResizeInfo.autoPinEdge(.left, to: .left, of: useLiveResize)
-
-    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: useLiveResizeInfo, withOffset: 18)
-    useSnapshotUpdate.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
+    useSnapshotUpdate.autoPinEdge(.top, to: .bottom, of: paneTitle, withOffset: 18)
+    useSnapshotUpdate.autoPinEdge(.left, to: .left, of: paneTitle)
 
     useSnapshotUpdateInfo.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdate, withOffset: 5)
     useSnapshotUpdateInfo.autoPinEdge(.left, to: .left, of: useSnapshotUpdate)
 
     useInteractiveZsh.autoPinEdge(.top, to: .bottom, of: useSnapshotUpdateInfo, withOffset: 18)
-    useInteractiveZsh.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
+    useInteractiveZsh.autoPinEdge(.left, to: .left, of: useSnapshotUpdate)
 
     useInteractiveZshInfo.autoPinEdge(.top, to: .bottom, of: useInteractiveZsh, withOffset: 5)
     useInteractiveZshInfo.autoPinEdge(.left, to: .left, of: useInteractiveZsh)
 
     nvimBinaryTitle.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
-    nvimBinaryTitle.autoPinEdge(.left, to: .left, of: useLiveResize, withOffset: 5)
+    nvimBinaryTitle.autoPinEdge(.left, to: .left, of: useSnapshotUpdate)
     // nvimBinaryTitle.autoAlignAxis(.baseline, toSameAxisOf: nvimBinaryField)
 
     nvimBinaryField.autoPinEdge(.top, to: .bottom, of: useInteractiveZshInfo, withOffset: 18)
-    nvimBinaryField.autoPinEdge(.left, to: .right, of: nvimBinaryTitle, withOffset: 5)
+    nvimBinaryField.autoPinEdge(.left, to: .right, of: nvimBinaryTitle)
     nvimBinaryField.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
     nvimBinaryField.autoSetDimension(.height, toSize: 20, relation: .greaterThanOrEqual)
     NotificationCenter.default.addObserver(
@@ -182,10 +155,6 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 // MARK: - Actions
 
 extension AdvancedPref {
-  @objc func useLiveResizeAction(_ sender: NSButton) {
-    self.emit(.setUseLiveResize(sender.boolState))
-  }
-
   @objc func useInteractiveZshAction(_ sender: NSButton) {
     self.emit(.setUseInteractiveZsh(sender.boolState))
   }

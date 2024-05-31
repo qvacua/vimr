@@ -304,8 +304,6 @@ extension MainWindow {
 
     var fileBrowserShowHidden = false
 
-    var useLiveResize = false
-
     var isTemporarySession = false
 
     var customMarkdownProcessor = ""
@@ -381,10 +379,7 @@ extension MainWindow {
       )
       self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State
         .default.nvimBinary
-      self.useLiveResize = try container.decode(
-        forKey: .useLiveResize,
-        default: State.default.useLiveResize
-      )
+      
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
       } else {
@@ -457,7 +452,6 @@ extension MainWindow {
       try container.encode(self.isAllToolsVisible, forKey: .allToolsVisible)
       try container.encode(self.isToolButtonsVisible, forKey: .toolButtonsVisible)
       try container.encode(NSStringFromRect(self.frame), forKey: .frame)
-      try container.encode(self.useLiveResize, forKey: .useLiveResize)
       try container.encode(self.customMarkdownProcessor, forKey: .customMarkdownProcessor)
       try container.encode(self.isLeftOptionMeta, forKey: .isLeftOptionMeta)
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)

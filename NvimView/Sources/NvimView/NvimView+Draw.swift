@@ -15,11 +15,6 @@ extension NvimView {
     context.saveGState()
     defer { context.restoreGState() }
 
-    if self.inLiveResize || self.currentlyResizing, !self.usesLiveResize {
-      self.drawResizeInfo(in: context, with: dirtyUnionRect)
-      return
-    }
-
     if self.isCurrentlyPinching {
       self.drawPinchImage(in: context)
       return

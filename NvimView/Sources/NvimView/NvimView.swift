@@ -70,8 +70,6 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   public internal(set) var theme = Theme.default
 
-  public var usesLiveResize = true
-
   public var usesLigatures = false {
     didSet {
       self.drawer.usesLigatures = self.usesLigatures
