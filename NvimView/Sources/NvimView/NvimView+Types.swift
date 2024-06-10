@@ -94,7 +94,8 @@ public extension NvimView {
     public var foreground = NSColor.textColor
     public var background = NSColor.textBackgroundColor
 
-    public var visualForeground = NSColor.selectedMenuItemTextColor
+    public var visualForeground: NSColor = NSColor(named: NSColor.Name("controlAccentColor")) ?? .selectedMenuItemTextColor
+    // NSColor.selectedMenuItemTextColor
     // NSColor.selectedMenuItemColor is deprecated. The doc says that
     // NSVisualEffectView.Material.selection should be used instead, but I don't know how to get
     // an NSColor from it.
@@ -102,13 +103,19 @@ public extension NvimView {
 
     public var directoryForeground = NSColor.textColor
 
-    public var tabForeground = NSColor.textColor
-    public var tabBackground = NSColor.textBackgroundColor
+    public var tabForeground = NSColor.controlColor
+    public var tabBackground = NSColor.controlBackgroundColor
+
+    public var tabBarForeground = NSColor.textColor
+    public var tabBarBackground = NSColor.windowBackgroundColor
+
+    public var selectedTabForeground = NSColor.selectedTextColor
+    public var selectedTabBackground = NSColor.selectedTextBackgroundColor
 
     public init() {}
 
     public init(_ values: [Int]) {
-      if values.count < 7 { preconditionFailure("We need 7 colors!") }
+      if values.count < 11 { preconditionFailure("We need 11 colors!") }
 
       let color = ColorUtils.colorIgnoringAlpha
 
@@ -121,8 +128,16 @@ public extension NvimView {
       self.directoryForeground = values[4] < 0
         ? Theme.default.directoryForeground
         : color(values[4])
-      self.tabBackground = values[5] < 0 ? Theme.default.background : color(values[5])
-      self.tabForeground = values[6] < 0 ? Theme.default.foreground : color(values[6])
+
+      self.tabBarBackground = values[5] < 0 ? Theme.default.tabBarBackground : color(values[5])
+      self.tabBarForeground = values[6] < 0 ? Theme.default.tabBarForeground : color(values[6])
+
+      self.tabBackground = values[7] < 0 ? Theme.default.tabBackground : color(values[7])
+      self.tabForeground = values[8] < 0 ? Theme.default.tabForeground : color(values[8])
+
+      self.selectedTabBackground = values[9] < 0 ? Theme.default.selectedTabBackground : color(values[9])
+      self.selectedTabForeground = values[10] < 0 ? Theme.default.selectedTabForeground : color(values[10])
+
     }
 
     public var description: String {
@@ -130,6 +145,8 @@ public extension NvimView {
         "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
         "visual-fg: \(self.visualForeground.hex), visual-bg: \(self.visualBackground.hex)" +
         "tab-fg: \(self.tabForeground.hex), tab-bg: \(self.tabBackground.hex)" +
+        "tabfill-fg: \(self.tabBarForeground.hex), tabfill-bg: \(self.tabBarBackground.hex)" +
+        "tabsel-fg: \(self.selectedTabForeground.hex), tabsel-bg: \(self.selectedTabBackground.hex)" +
         ">"
     }
   }

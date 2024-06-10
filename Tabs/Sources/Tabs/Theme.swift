@@ -9,6 +9,8 @@ import MaterialIcons
 public struct Theme {
   public static let `default` = Self()
 
+  public var separatorColor = NSColor.gridColor
+  public var backgroundColor = NSColor.textBackgroundColor
   public var foregroundColor = NSColor.textColor {
     didSet {
       self.closeButtonImage = Icon.close.asImage(
@@ -17,25 +19,21 @@ public struct Theme {
       )
     }
   }
-
-  public var backgroundColor = NSColor.textBackgroundColor
-  public var separatorColor = NSColor.gridColor
-
+	
+  public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
   public var selectedForegroundColor = NSColor.selectedTextColor {
     didSet {
       self.selectedCloseButtonImage = Icon.close.asImage(
         dimension: self.iconDimension.width,
-        color: self.tabForegroundColor
+        color: self.selectedForegroundColor
       )
     }
   }
-
-  public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
 
-  public var tabBackgroundColor = NSColor.selectedTextBackgroundColor
-  public var tabForegroundColor = NSColor.selectedTextColor
-
+  public var tabBarBackgroundColor = NSColor.windowBackgroundColor
+  public var tabBarForegroundColor = NSColor.textColor
+	
   public var titleFont = NSFont.systemFont(ofSize: 11)
   public var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
 
@@ -60,12 +58,11 @@ public struct Theme {
   public init() {
     self.closeButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.tabForegroundColor
-      
+      color: self.foregroundColor
     )
     self.selectedCloseButtonImage = Icon.close.asImage(
       dimension: self.iconDimension.width,
-      color: self.tabForegroundColor
+      color: self.foregroundColor
     )
   }
 }

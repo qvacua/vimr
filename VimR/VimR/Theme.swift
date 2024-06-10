@@ -49,6 +49,12 @@ struct Theme: CustomStringConvertible {
   var tabForeground = NSColor.selectedMenuItemTextColor
   var tabBackground = NSColor.selectedContentBackgroundColor
 
+  var tabBarForeground = NSColor.selectedMenuItemTextColor
+  var tabBarBackground = NSColor.selectedContentBackgroundColor
+
+  var selectedTabForeground = NSColor.selectedMenuItemTextColor
+  var selectedTabBackground = NSColor.selectedContentBackgroundColor
+
   var cssColor = NSColor(hex: "24292e")!
   var cssBackgroundColor = NSColor.white
   var cssA = NSColor(hex: "0366d6")!
@@ -61,12 +67,14 @@ struct Theme: CustomStringConvertible {
   var cssCodeColor = NSColor(hex: "24292e")!
   var cssCodeBackgroundColor = NSColor(hex: "1b1f23")!
 
-  public var description: String {
+ public var description: String {
     "Theme<" +
       "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
-      "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex)" +
-      "dir-fg: \(self.directoryForeground.hex)," +
-      "tab-bg: \(self.tabBackground.hex), tab-fg: \(self.tabForeground.hex)" +
+      "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex), " +
+      "dir-fg: \(self.directoryForeground.hex), " +
+      "tab-fg: \(self.tabForeground.hex), tab-bg: \(self.tabBackground.hex), " +
+      "tabfill-fg: \(self.tabBarForeground.hex), tabfill-bg: \(self.tabBarBackground.hex), " +
+      "tabsel-bg: \(self.selectedTabBackground.hex), tabsel-fg: \(self.selectedTabForeground.hex)" +
       ">"
   }
 
@@ -83,6 +91,12 @@ struct Theme: CustomStringConvertible {
 
     self.tabBackground = nvimTheme.tabBackground
     self.tabForeground = nvimTheme.tabForeground
+
+    self.tabBarBackground = nvimTheme.tabBarBackground
+    self.tabBarForeground = nvimTheme.tabBarForeground
+
+    self.selectedTabBackground = nvimTheme.selectedTabBackground
+    self.selectedTabForeground = nvimTheme.selectedTabForeground
 
     self.updateCssColors(additionalColorDict)
   }
