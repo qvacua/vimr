@@ -1,5 +1,10 @@
 # Next
 
+* GH-1072: Match the tab colors 1:1 with Neovim's `colorscheme`; thanks @s-daveb for the PR!
+* GH-1073: Scroll the window content instead of moving the cursor; thanks @shanesmith for the PR!
+
+# v0.47.2-20240531.221846
+
 * Always use live resizing
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.2
