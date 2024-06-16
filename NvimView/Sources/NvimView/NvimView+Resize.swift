@@ -109,16 +109,26 @@ extension NvimView {
               throw RxNeovimApi.Error.exception(message: "Incompatible neovim version.")
             }
 
-            // swiftformat:disable all
-            return self.api.nvimExec2(src: """
-            let g:gui_vimr = 1
-            autocmd VimLeave * call rpcnotify(\(channel), 'autocommand', 'vimleave')
-            autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
-            autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', get(nvim_get_hl(0, {'id': hlID('Normal')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Normal')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('Visual')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('Directory')}), 'fg', -1), get(nvim_get_hl(0, {'id': hlID('TablineSel')}), 'bg', -1), get(nvim_get_hl(0, {'id': hlID('TablineSel')}), 'fg', -1))
-            autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
-            """, opts: [:], errWhenBlocked: false)
-            // swiftformat:enable all
-              .asCompletable()
+          // swiftformat:disable all
+          let vimscript = """
+          function! GetHiColor(hlID, component)
+            let color = synIDattr(synIDtrans(hlID(a:hlID)), a:component)
+            if empty(color)
+              return -1
+            else
+              return str2nr(color[1:], 16)
+            endif
+          endfunction
+          let g:gui_vimr = 1
+          autocmd VimLeave * call rpcnotify(\(channel), 'autocommand', 'vimleave')
+          autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
+          autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', GetHiColor('Normal', 'fg'), GetHiColor('Normal', 'bg'), GetHiColor('Visual', 'fg'), GetHiColor('Visual', 'bg'), GetHiColor('Directory', 'fg'), GetHiColor('TablineFill', 'bg'), GetHiColor('TablineFill', 'fg'), GetHiColor('Tabline', 'bg'), GetHiColor('Tabline', 'fg'), GetHiColor('TablineSel', 'bg'), GetHiColor('TablineSel', 'fg'))
+          autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
+          """
+
+          return self.api.nvimExec2(src: vimscript, opts: [:], errWhenBlocked: false)
+            .asCompletable()
+          // swiftformat:enable all
           }
       )
       .andThen(

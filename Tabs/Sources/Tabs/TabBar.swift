@@ -31,14 +31,14 @@ public final class TabBar<Rep: TabRepresentative>: NSView {
     super.init(frame: .zero)
     self.configureForAutoLayout()
     self.wantsLayer = true
-    self.layer?.backgroundColor = theme.backgroundColor.cgColor
+    self.layer?.backgroundColor =  theme.tabBarBackgroundColor.cgColor
 
     self.addViews()
   }
 
   public func update(theme: Theme) {
     self._theme = theme
-    self.layer?.backgroundColor = theme.backgroundColor.cgColor
+    self.layer?.backgroundColor = theme.tabBarBackgroundColor.cgColor
 
     self.needsDisplay = true
     self.tabs.forEach { $0.updateTheme() }

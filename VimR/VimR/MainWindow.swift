@@ -470,16 +470,16 @@ final class MainWindow: NSObject,
   private func set(tabsThemeWith _: Theme) {
     var tabsTheme = Tabs.Theme.default
 
-    tabsTheme.foregroundColor = self.theme.foreground
-    tabsTheme.backgroundColor = self.theme.background
+    tabsTheme.foregroundColor = self.theme.tabForeground
+    tabsTheme.backgroundColor = self.theme.tabBackground
 
     tabsTheme.separatorColor = self.theme.background.brightening(by: 0.75)
 
-    tabsTheme.selectedForegroundColor = self.theme.highlightForeground
-    tabsTheme.selectedBackgroundColor = self.theme.highlightBackground
+    tabsTheme.tabBarBackgroundColor = self.theme.tabBarBackground
+    tabsTheme.tabBarForegroundColor = self.theme.tabBarForeground
 
-    tabsTheme.tabBackgroundColor = self.theme.tabBackground
-    tabsTheme.tabForegroundColor = self.theme.tabForeground
+    tabsTheme.selectedForegroundColor = self.theme.selectedTabForeground
+    tabsTheme.selectedBackgroundColor = self.theme.selectedTabBackground
 
     tabsTheme.tabSelectedIndicatorColor = self.theme.highlightForeground
 
