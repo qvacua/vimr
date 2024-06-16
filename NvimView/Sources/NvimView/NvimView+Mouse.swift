@@ -4,6 +4,7 @@
  */
 
 import Cocoa
+import MessagePack
 import RxNeovim
 import RxSwift
 
@@ -45,28 +46,51 @@ public extension NvimView {
   }
 
   override func scrollWheel(with event: NSEvent) {
-    let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
+    let (deltaX, deltaY) = self.scrollDelta(forEvent: event)
+
     if deltaX == 0, deltaY == 0 { return }
 
-    let cellPosition = self.cellPosition(forEvent: event)
+    let vimInput = self.vimScrollInput(forEvent: event)
 
+    let mousescroll: String
+    if event.hasPreciseScrollingDeltas { // trackpad
+        let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
+        mousescroll = "ver:\(absDeltaY),hor:\(absDeltaX)"
+    } else {
+        mousescroll = ""
+    }
+
+    return self.api.nvimExecLua(code: """
+    local arg = {...}
+
+    if vim.g.vimr_save_mousescroll == nil then
+        vim.g.vimr_save_mousescroll = vim.o.mousescroll
+    end
+
+    if arg[1] ~= "" then
+      vim.o.mousescroll = arg[1]
+    end
+
+    vim.api.nvim_input(arg[2])
+
+    -- nvim_input() only queues input, schedule resetting
+    -- mousescroll to after the input hase been processed
+    vim.schedule(function()
+      vim.o.mousescroll = vim.g.vimr_save_mousescroll
+      vim.g.vimr_save_mousescroll = nil
+    end)
+    """, args: [MessagePackValue(mousescroll), MessagePackValue(vimInput)])
+      .subscribe(onFailure: { [weak self] error in
+                  self?.log.error("Error in \(#function): \(error)")
+                })
+      .disposed(by: self.disposeBag)
+  }
+
+  internal func scrollDelta(forEvent event: NSEvent) -> (Int, Int) {
     let isTrackpad = event.hasPreciseScrollingDeltas
-    if isTrackpad == false {
-      let (vimInputX, vimInputY) = self.vimScrollInputFor(
-        deltaX: deltaX,
-        deltaY: deltaY,
-        modifierFlags: event.modifierFlags,
-        cellPosition: cellPosition
-      )
-      self.api
-        .nvimInput(keys: vimInputX).asCompletable()
-        .andThen(self.api.nvimInput(keys: vimInputY).asCompletable())
-        .subscribe(onError: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
 
-      return
+    if !isTrackpad {
+      return (Int(event.scrollingDeltaX), Int(event.scrollingDeltaY))
     }
 
     if event.phase == .began {
@@ -74,41 +98,23 @@ public extension NvimView {
       self.trackpadScrollDeltaY = 0
     }
 
-    self.trackpadScrollDeltaX += deltaX
-    self.trackpadScrollDeltaY += deltaY
+    self.trackpadScrollDeltaX += event.scrollingDeltaX
+    self.trackpadScrollDeltaY += event.scrollingDeltaY
+
     let (deltaCellX, deltaCellY) = (
       (self.trackpadScrollDeltaX / self.cellSize.width).rounded(.toNearestOrEven),
       (self.trackpadScrollDeltaY / self.cellSize.height).rounded(.toNearestOrEven)
     )
+
     self.trackpadScrollDeltaX.formRemainder(dividingBy: self.cellSize.width)
     self.trackpadScrollDeltaY.formRemainder(dividingBy: self.cellSize.height)
 
-    let (absDeltaX, absDeltaY) = (
-      min(Int(abs(deltaCellX)), maxScrollDeltaX),
-      min(Int(abs(deltaCellY)), maxScrollDeltaY)
+    let (deltaX, deltaY) = (
+      min(Int(deltaCellX), maxScrollDeltaX),
+      min(Int(deltaCellY), maxScrollDeltaY)
     )
-    // Note: sign flip on deltaCellY
-    let (horizSign, vertSign) = (deltaCellX > 0 ? 1 : -1, deltaCellY > 0 ? -1 : 1)
-    self.log
-      .debug(
-        "# scroll: \(cellPosition.row + vertSign * absDeltaY) \(cellPosition.column + horizSign * absDeltaX)"
-      )
 
-    self.api.nvimWinGetCursor(window: RxNeovimApi.Window(0))
-      .flatMapCompletable { cursor in
-        guard cursor.count == 2 else {
-          self.log.error("Error decoding \(cursor)")
-          return Completable.empty()
-        }
-        return self.api.nvimWinSetCursor(
-          window: RxNeovimApi.Window(0),
-          pos: [cursor[0] + vertSign * absDeltaY, cursor[1] + horizSign * absDeltaX]
-        )
-      }
-      .subscribe(onError: { [weak self] error in
-        self?.log.error("Error in \(#function): \(error)")
-      })
-      .disposed(by: self.disposeBag)
+    return (deltaX, deltaY)
   }
 
   override func magnify(with event: NSEvent) {
@@ -203,35 +209,32 @@ public extension NvimView {
     }
   }
 
-  private func vimScrollEventNamesFor(deltaX: CGFloat, deltaY: CGFloat) -> (String, String) {
-    let typeY = if deltaY > 0 { "ScrollWheelUp" }
-    else { "ScrollWheelDown" }
+  private func vimScrollInput(forEvent event: NSEvent) -> String {
+    let cellPosition = self.cellPosition(forEvent: event)
 
-    let typeX = if deltaX < 0 { "ScrollWheelRight" }
-    else { "ScrollWheelLeft" }
-
-    return (typeX, typeY)
-  }
-
-  private func vimScrollInputFor(
-    deltaX: CGFloat, deltaY: CGFloat,
-    modifierFlags: NSEvent.ModifierFlags,
-    cellPosition: Position
-  ) -> (String, String) {
     let vimMouseLocation = self.wrapNamedKeys("\(cellPosition.column),\(cellPosition.row)")
 
-    let (typeX, typeY) = self.vimScrollEventNamesFor(deltaX: deltaX, deltaY: deltaY)
+    let vimModifiers = self.vimModifierFlags(event.modifierFlags) ?? ""
+
+    let (deltaX, deltaY) = (event.scrollingDeltaX, event.scrollingDeltaY)
+
     let resultX: String
-    let resultY: String
-    if let vimModifiers = self.vimModifierFlags(modifierFlags) {
-      resultX = self.wrapNamedKeys("\(vimModifiers)\(typeX)") + vimMouseLocation
-      resultY = self.wrapNamedKeys("\(vimModifiers)\(typeY)") + vimMouseLocation
+    if deltaX == 0 {
+        resultX = ""
     } else {
-      resultX = self.wrapNamedKeys("\(typeX)") + vimMouseLocation
-      resultY = self.wrapNamedKeys("\(typeY)") + vimMouseLocation
+        let wheel = (deltaX < 0) ? "ScrollWheelRight" : "ScrollWheelLeft"
+        resultX = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
     }
 
-    return (resultX, resultY)
+    let resultY: String
+    if deltaY == 0 {
+        resultY = ""
+    } else {
+        let wheel = (deltaY < 0) ? "ScrollWheelDown" : "ScrollWheelUp"
+        resultY = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
+    }
+
+    return "\(resultX)\(resultY)"
   }
 }
 
