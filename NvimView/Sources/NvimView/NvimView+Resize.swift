@@ -109,7 +109,7 @@ extension NvimView {
               throw RxNeovimApi.Error.exception(message: "Incompatible neovim version.")
             }
 
-          // swiftformat:disable all
+            // swiftformat:disable all
           let vimscript = """
           function! GetHiColor(hlID, component)
             let color = synIDattr(synIDtrans(hlID(a:hlID)), a:component)

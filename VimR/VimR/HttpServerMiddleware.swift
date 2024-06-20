@@ -192,7 +192,6 @@ final class HttpServerMiddleware {
         case .bufferWritten: fallthrough
         case .setTheme:
           break
-
         default:
           return result
         }

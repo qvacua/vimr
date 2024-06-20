@@ -356,7 +356,6 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
     case 1: .withFontSmoothing
     case 2: .noFontSmoothing
     case 3: .noAntiAliasing
-
     default: .systemSetting
     }
   }

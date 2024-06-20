@@ -94,7 +94,8 @@ public extension NvimView {
     public var foreground = NSColor.textColor
     public var background = NSColor.textBackgroundColor
 
-    public var visualForeground: NSColor = NSColor(named: NSColor.Name("controlAccentColor")) ?? .selectedMenuItemTextColor
+    public var visualForeground: NSColor =
+      .init(named: NSColor.Name("controlAccentColor")) ?? .selectedMenuItemTextColor
     // NSColor.selectedMenuItemTextColor
     // NSColor.selectedMenuItemColor is deprecated. The doc says that
     // NSVisualEffectView.Material.selection should be used instead, but I don't know how to get
@@ -135,9 +136,10 @@ public extension NvimView {
       self.tabBackground = values[7] < 0 ? Theme.default.tabBackground : color(values[7])
       self.tabForeground = values[8] < 0 ? Theme.default.tabForeground : color(values[8])
 
-      self.selectedTabBackground = values[9] < 0 ? Theme.default.selectedTabBackground : color(values[9])
-      self.selectedTabForeground = values[10] < 0 ? Theme.default.selectedTabForeground : color(values[10])
-
+      self.selectedTabBackground = values[9] < 0 ? Theme.default
+        .selectedTabBackground : color(values[9])
+      self.selectedTabForeground = values[10] < 0 ? Theme.default
+        .selectedTabForeground : color(values[10])
     }
 
     public var description: String {

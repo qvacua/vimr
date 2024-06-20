@@ -194,7 +194,6 @@ final class MarkdownPreviewMiddleware {
         case .bufferWritten: fallthrough
         case .setTheme:
           self.generator.apply(result.state, uuid: uuidAction.uuid)
-
         default: return result
         }
 

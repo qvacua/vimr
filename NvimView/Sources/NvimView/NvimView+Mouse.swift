@@ -54,10 +54,10 @@ public extension NvimView {
 
     let mousescroll: String
     if event.hasPreciseScrollingDeltas { // trackpad
-        let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
-        mousescroll = "ver:\(absDeltaY),hor:\(absDeltaX)"
+      let (absDeltaX, absDeltaY) = (abs(deltaX), abs(deltaY))
+      mousescroll = "ver:\(absDeltaY),hor:\(absDeltaX)"
     } else {
-        mousescroll = ""
+      mousescroll = ""
     }
 
     return self.api.nvimExecLua(code: """
@@ -81,8 +81,8 @@ public extension NvimView {
     end)
     """, args: [MessagePackValue(mousescroll), MessagePackValue(vimInput)])
       .subscribe(onFailure: { [weak self] error in
-                  self?.log.error("Error in \(#function): \(error)")
-                })
+        self?.log.error("Error in \(#function): \(error)")
+      })
       .disposed(by: self.disposeBag)
   }
 
@@ -220,18 +220,18 @@ public extension NvimView {
 
     let resultX: String
     if deltaX == 0 {
-        resultX = ""
+      resultX = ""
     } else {
-        let wheel = (deltaX < 0) ? "ScrollWheelRight" : "ScrollWheelLeft"
-        resultX = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
+      let wheel = (deltaX < 0) ? "ScrollWheelRight" : "ScrollWheelLeft"
+      resultX = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
     }
 
     let resultY: String
     if deltaY == 0 {
-        resultY = ""
+      resultY = ""
     } else {
-        let wheel = (deltaY < 0) ? "ScrollWheelDown" : "ScrollWheelUp"
-        resultY = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
+      let wheel = (deltaY < 0) ? "ScrollWheelDown" : "ScrollWheelUp"
+      resultY = self.wrapNamedKeys("\(vimModifiers)\(wheel)") + vimMouseLocation
     }
 
     return "\(resultX)\(resultY)"
