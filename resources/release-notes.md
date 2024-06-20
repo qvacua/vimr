@@ -1,5 +1,9 @@
 # Next
 
+* ...
+
+# v0.47.3-20240616.090032
+
 * GH-1072: Match the tab colors 1:1 with Neovim's `colorscheme`; thanks @s-daveb for the PR!
 * GH-1073: Scroll the window content instead of moving the cursor; thanks @shanesmith for the PR!
 
