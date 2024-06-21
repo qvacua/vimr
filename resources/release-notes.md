@@ -1,6 +1,8 @@
 # Next
 
-* ...
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.7.3
+  - apple/swift-collections@1.1.1
 
 # v0.47.3-20240616.090032
 
