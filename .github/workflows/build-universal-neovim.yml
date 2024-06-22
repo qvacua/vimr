@@ -76,5 +76,5 @@ jobs:
           gh release create $TAG_NAME \
              --prerelease \
              --title "Universal ${TAG_NAME}" \
-             --notes "Neovim universal build with `libintl`" \
+             --notes "Neovim universal build with `libintl`, not signed." \
              --target $GITHUB_SHA nvim-macos-x86_64.tar.gz nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
