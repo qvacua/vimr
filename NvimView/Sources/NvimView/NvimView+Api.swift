@@ -40,13 +40,14 @@ public extension NvimView {
   func hasDirtyBuffers() -> Single<Bool> {
     self.api
       .nvimExecLua(code: """
-      return vim.fn.getbufinfo({"bufmodified": v:true})
+      local buffers = vim.fn.getbufinfo({bufmodified = true})
+      return #buffers > 0
       """, args: [])
       .map { result -> Bool in
-        guard let info_array = result.arrayValue else {
-          throw RxNeovimApi.Error.exception(message: "Could not convert values into info array.")
+        guard let bool = result.boolValue else {
+          throw RxNeovimApi.Error.exception(message: "Could not convert values into boolean.")
         }
-        return info_array.count > 0
+        return bool
       }
   }
 
@@ -264,25 +265,18 @@ public extension NvimView {
     currentBuffer: RxNeovimApi.Buffer?
   ) -> Single<NvimView.Buffer> {
     self.api.nvimExecLua(code: """
-    local function map(tbl, f)
-        local t = {}
-        for k,v in pairs(tbl) do
-            t[k] = f(v)
-        end
-        return t
-    end
-    return map(vim.fn.getbufinfo(...), function(i)
-         i.buftype = vim.api.nvim_get_option_value("buftype",
-           {buf=i.bufnr})
-         return i
-       end)
+    local info = vim.fn.getbufinfo(...)[1]
+    local result = {}
+    result.name = info.name
+    result.changed = info.changed
+    result.listed = info.listed
+    result.buftype = vim.api.nvim_get_option_value("buftype", {buf=info.bufnr})
+    return result
     """, args: [MessagePackValue(buf.handle)])
       .map { result -> NvimView.Buffer in
-        guard let info_array = result.arrayValue,
-              info_array.count == 1,
-              let raw_info = info_array[0].dictionaryValue
+        guard let raw_info = result.dictionaryValue
         else {
-          throw RxNeovimApi.Error.exception(message: "Could not convert values into info array.")
+          throw RxNeovimApi.Error.exception(message: "Could not convert values into info dictionary.")
         }
         let info: [String: MessagePackValue] = .init(
           uniqueKeysWithValues: raw_info.map {
