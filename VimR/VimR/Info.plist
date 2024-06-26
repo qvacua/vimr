@@ -1224,7 +1224,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.47.3</string>
+	<string>0.47.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -1241,7 +1241,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20240616.090032</string>
+	<string>20240626.184903</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
