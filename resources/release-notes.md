@@ -1,5 +1,6 @@
 # Next
 
+* GH-1075: Fix "E1502: Lua failed to grow stack to 4001". Thanks @shanesmith for the PR!
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.3
   - apple/swift-collections@1.1.1
