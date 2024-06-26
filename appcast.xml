@@ -6,23 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.47.3-20240616.090032</title>
+      <title>v0.47.4-20240626.190016</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240616.090032</sparkle:version>
-      <sparkle:shortVersionString>v0.47.3</sparkle:shortVersionString>
+      <sparkle:version>20240626.190016</sparkle:version>
+      <sparkle:shortVersionString>v0.47.4</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1072: Match the tab colors 1:1 with Neovim's <code>colorscheme</code>; thanks @s-daveb for the PR!</li>
-<li>GH-1073: Scroll the window content instead of moving the cursor; thanks @shanesmith for the PR!</li>
+<li>GH-1075: Fix "E1502: Lua failed to grow stack to 4001". Thanks @shanesmith for the PR!</li>
+<li>Dependencies updates:<ul>
+<li>sparkle-project/Sparkle@2.7.3</li>
+<li>apple/swift-collections@1.1.1</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.47.3-20240616.090032
+        https://github.com/qvacua/vimr/releases/tag/v0.47.4-20240626.190016
       </releaseNotesLink>
-      <pubDate>2024-06-16T09:05:41.468955</pubDate>
+      <pubDate>2024-06-26T19:04:00.452614</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.47.3-20240616.090032/VimR-v0.47.3.tar.bz2"
-                 sparkle:edSignature="V+/THcm7Alw5JeBs0wiWkI01b7iQe77teESvKPZPim0eQuDeutoTq+UOC8n+t3pBp0Ptlov/9gimKaXWm8RHDQ==" length="19391605"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.47.4-20240626.190016/VimR-v0.47.4.tar.bz2"
+                 sparkle:edSignature="YWqNsLlttqQjp5Zv3VQgCW6O7rx4iqUb+wFMwzVVC8ymmUg1WgJ0MY0VKOGiUdos8Ll9y6FjYeJQ2sZSsHQXAA==" length="19392062"
                  type="application/octet-stream"/>
     </item>
   </channel>
