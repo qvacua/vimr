@@ -1,5 +1,9 @@
 # Next
 
+* GH-1078: Fix lcd/tcd. Thanks @shanesmith for the PR!
+
+# 0.47.4-20240626.190016
+
 * GH-1075: Fix "E1502: Lua failed to grow stack to 4001". Thanks @shanesmith for the PR!
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.3
