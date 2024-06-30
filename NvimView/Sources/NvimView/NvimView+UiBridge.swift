@@ -508,6 +508,7 @@ extension NvimView {
 
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
+    self.tabBar?.cwd = cwd
     self.eventsSubject.onNext(.cwdChanged)
   }
 
