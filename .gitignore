@@ -185,3 +185,4 @@ tags.*
 /Workspace/.swiftpm
 .swiftpm
 /NvimServer/.build
+Package.resolved
