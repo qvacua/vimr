@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.47.5-20240630.155444</title>
+      <title>v0.48.0-20240727.082947</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240630.155444</sparkle:version>
-      <sparkle:shortVersionString>v0.47.5</sparkle:shortVersionString>
+      <sparkle:version>20240727.082947</sparkle:version>
+      <sparkle:shortVersionString>v0.48.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1078: Fix lcd/tcd. Thanks @shanesmith for the PR!</li>
+<li>Neovim 0.10.1 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.47.5-20240630.155444
+        https://github.com/qvacua/vimr/releases/tag/v0.48.0-20240727.082947
       </releaseNotesLink>
-      <pubDate>2024-06-30T15:58:45.910474</pubDate>
+      <pubDate>2024-07-27T08:33:23.712056</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.47.5-20240630.155444/VimR-v0.47.5.tar.bz2"
-                 sparkle:edSignature="d79xsvHtk3WVnhSIUfrFZahoR5t/1DYSD/dEyWcpd4muMbyc0r4Cl11QYlIv7D4pcoMtwYzNUVNglRQtJ2e4DQ==" length="19386898"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.48.0-20240727.082947/VimR-v0.48.0.tar.bz2"
+                 sparkle:edSignature="JeSnN813HjWG3OUnfomQP6uhRGTjGLTgkGM42nHdIVJv5mx3gTkfEzcZNA0buETrk8gcB/FtnQ691BAlhoH7DA==" length="18736108"
                  type="application/octet-stream"/>
     </item>
   </channel>
