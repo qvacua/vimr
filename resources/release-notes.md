@@ -1,5 +1,9 @@
 # Next
 
+* Neovim 0.10.1 😀
+
+# 0.47.5-20240630.155444
+
 * GH-1078: Fix lcd/tcd. Thanks @shanesmith for the PR!
 
 # 0.47.4-20240626.190016
