@@ -11,8 +11,8 @@ let package = Package(
   dependencies: [
     .package(name: "RxPack", path: "../RxPack"),
     .package(url: "https://github.com/a2/MessagePack.swift", from: "4.0.0"),
-    .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.6.0"),
-    .package(url: "https://github.com/Quick/Nimble", from: "13.3.0"),
+    .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.7.1"),
+    .package(url: "https://github.com/Quick/Nimble", from: "13.4.0"),
     .package(name: "Commons", path: "../Commons"),
     .package(name: "Tabs", path: "../Tabs"),
   ],

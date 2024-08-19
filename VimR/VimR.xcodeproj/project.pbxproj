@@ -1393,7 +1393,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 2.6.3;
+				version = 2.6.4;
 			};
 		};
 		4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -1401,7 +1401,7 @@
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
+				minimumVersion = 1.1.2;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
@@ -1433,7 +1433,7 @@
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 13.3.0;
+				minimumVersion = 13.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

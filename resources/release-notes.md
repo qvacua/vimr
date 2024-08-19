@@ -1,5 +1,12 @@
 # Next
 
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.7.4
+  - Quick/Nimble@13.4.0
+  - apple/swift-collections@1.1.2
+
+# 0.48.0-20240727.082947
+
 * Neovim 0.10.1 😀
 
 # 0.47.5-20240630.155444
