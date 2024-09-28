@@ -1,5 +1,6 @@
 # Next
 
+* Bugfix: `lcd/cwd` fix.
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.4
   - Quick/Nimble@13.4.0
