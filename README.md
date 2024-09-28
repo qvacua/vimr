@@ -9,7 +9,7 @@
 
 VimR is a Neovim GUI for macOS written in Swift.
 
-The goal is to build an editor that uses Neovim inside with some of the convenience
+The goal is to build an editor that uses Neovim inside with some of the convenient
 GUI features similar to those present in modern editors.
 
 There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
