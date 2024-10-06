@@ -1,5 +1,9 @@
 # Next
 
+* Neovim 0.10.2 😀
+
+# 0.48.1-20240928.193147
+
 * Bugfix: `lcd/cwd` fix.
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.4
