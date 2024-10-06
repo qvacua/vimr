@@ -6,26 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.48.1-20240928.193147</title>
+      <title>v0.49.0-20241006.202133</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20240928.193147</sparkle:version>
-      <sparkle:shortVersionString>v0.48.1</sparkle:shortVersionString>
+      <sparkle:version>20241006.202133</sparkle:version>
+      <sparkle:shortVersionString>v0.49.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Bugfix: <code>lcd/cwd</code> fix.</li>
-<li>Dependencies updates:</li>
-<li>sparkle-project/Sparkle@2.7.4</li>
-<li>Quick/Nimble@13.4.0</li>
-<li>apple/swift-collections@1.1.2</li>
+<li>Neovim 0.10.2 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.48.1-20240928.193147
+        https://github.com/qvacua/vimr/releases/tag/v0.49.0-20241006.202133
       </releaseNotesLink>
-      <pubDate>2024-09-28T19:35:34.417780</pubDate>
+      <pubDate>2024-10-06T20:25:54.342656</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.48.1-20240928.193147/VimR-v0.48.1.tar.bz2"
-                 sparkle:edSignature="neGmv0Ee67WPfnsNNBpez+Rp7q6IWoiztu368VdDYIEBJPbLXTo1sdYXlFWQka8xITq+nsU2mH7bn8JmzWNcDA==" length="18628241"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.49.0-20241006.202133/VimR-v0.49.0.tar.bz2"
+                 sparkle:edSignature="sAB6rOG9r7bSHP5bpOXz5QFeYhXUztpF3gGmxuY81IttpybxcyI/wZeJraFGNvK8eDTp3+DG6cjTLWMKUTBzDQ==" length="18689635"
                  type="application/octet-stream"/>
     </item>
   </channel>
