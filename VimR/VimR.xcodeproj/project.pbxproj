@@ -1350,10 +1350,10 @@
 		};
 		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/a2/MessagePack.swift";
+			repositoryURL = "https://github.com/qvacua/MessagePack.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 4.0.0;
+				version = 4.1.0;
 			};
 		};
 		4B9BC41F24EB2E45000209B5 /* XCRemoteSwiftPackageReference "RxSwift" */ = {

@@ -11,7 +11,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.7.1"),
-    .package(url: "https://github.com/a2/MessagePack.swift", .upToNextMinor(from: "4.0.0")),
+    .package(url: "https://github.com/qvacua/MessagePack.swift", .upToNextMinor(from: "4.1.0")),
     .package(url: "https://github.com/Quick/Nimble", from: "13.4.0"),
   ],
   targets: [
