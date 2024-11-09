@@ -10,7 +10,7 @@ let package = Package(
     .library(name: "RxNeovim", targets: ["RxNeovim"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.7.1"),
+    .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.8.0"),
     .package(url: "https://github.com/qvacua/MessagePack.swift", .upToNextMinor(from: "4.1.0")),
     .package(url: "https://github.com/Quick/Nimble", from: "13.4.0"),
   ],
