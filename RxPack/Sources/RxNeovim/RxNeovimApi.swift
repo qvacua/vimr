@@ -47,7 +47,6 @@ public final class RxNeovimApi {
       }
   }
 
-
   public func sendRequest(
     method: String,
     params: [RxNeovimApi.Value]

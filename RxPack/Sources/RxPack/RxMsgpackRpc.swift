@@ -26,7 +26,7 @@ public final class RxMsgpackRpc {
 
   public struct Response {
     public static func nilResponse(_ msgid: UInt32) -> Self {
-      return .init(msgid: msgid, error: .nil, result: .nil)
+      .init(msgid: msgid, error: .nil, result: .nil)
     }
 
     public let msgid: UInt32
@@ -328,7 +328,7 @@ public final class RxMsgpackRpc {
   // Call only in self.streamQueue
   private func processResponse(msgid: UInt32, error: Value, result: Value) {
     guard let single = self.singles.removeValue(forKey: msgid) else { return }
-    
+
     single(.success(Response(msgid: msgid, error: error, result: result)))
   }
 }
