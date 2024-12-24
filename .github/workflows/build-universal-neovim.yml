@@ -8,9 +8,9 @@ on:
 jobs:
   macos:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        runner: [ macos-12, macos-14 ]
+        runner: [ macos-13, macos-14 ]
         include:
           - runner: macos-12
             arch: x86_64
