@@ -70,7 +70,7 @@ public final class RxMsgpackRpc {
     self.outPipe = outPipe
     self.errorPipe = errorPipe
 
-    return Completable.create { completable in
+    return .create { completable in
       self.startReading()
       completable(.completed)
 
@@ -79,7 +79,7 @@ public final class RxMsgpackRpc {
   }
 
   public func stop() -> Completable {
-    Completable.create { completable in
+    .create { completable in
       self.cleanUp()
       completable(.completed)
 
@@ -88,7 +88,7 @@ public final class RxMsgpackRpc {
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
-    Completable.create { [weak self] completable in
+    .create { [weak self] completable in
       self?.queue.async {
         if self?.closed == true {
           self?.log.warning("Not sending response because closed")
@@ -130,7 +130,7 @@ public final class RxMsgpackRpc {
     params: [Value],
     expectsReturnValue: Bool
   ) -> Single<Response> {
-    Single.create { [weak self] single in
+    .create { [weak self] single in
       self?.queue.async {
         if self?.closed == true {
           self?.log.warning("Not sending request because closed")
