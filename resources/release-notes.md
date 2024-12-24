@@ -1,5 +1,6 @@
 # Next
 
+* Neovim 0.10.3 😀
 * Dependencies updates:
   - qvacua/MessagePack.swift@4.1.0
   - ReactiveX/RxSwift@6.8.0
