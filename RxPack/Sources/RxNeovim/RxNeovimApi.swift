@@ -27,11 +27,6 @@ public final class RxNeovimApi {
 
   public typealias Value = RxMsgpackRpc.Value
 
-  public var streamResponses: Bool {
-    get { self.msgpackRpc.streamResponses }
-    set { self.msgpackRpc.streamResponses = newValue }
-  }
-
   public var msgpackRawStream: Observable<RxMsgpackRpc.Message> { self.msgpackRpc.stream }
 
   public func run(inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe) -> Completable {

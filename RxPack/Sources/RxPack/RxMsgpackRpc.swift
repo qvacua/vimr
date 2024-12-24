@@ -50,14 +50,6 @@ public final class RxMsgpackRpc {
    */
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
-  /**
-   When `true`, all messages of type `MessageType.response` are also streamed
-   to `stream` as `Message.response`. When `false`, only the `Single`s
-   you get from `request(msgid, method, params, expectsReturnValue)` will
-   get the response as `Response`.
-   */
-  public var streamResponses = false
-
   public let uuid = UUID()
 
   public init(queueQos: DispatchQoS) {
@@ -335,13 +327,9 @@ public final class RxMsgpackRpc {
 
   // Call only in self.streamQueue
   private func processResponse(msgid: UInt32, error: Value, result: Value) {
-    if let single = self.singles.removeValue(forKey: msgid) {
-      single(.success(Response(msgid: msgid, error: error, result: result)))
-    }
-
-    if self.streamResponses {
-      self.streamSubject.onNext(.response(msgid: msgid, error: error, result: result))
-    }
+    guard let single = self.singles.removeValue(forKey: msgid) else { return }
+    
+    single(.success(Response(msgid: msgid, error: error, result: result)))
   }
 }
 
