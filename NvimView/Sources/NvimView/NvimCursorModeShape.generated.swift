@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.10.2
+// Auto generated for nvim v0.10.3
 // See bin/generate_cursor_shape.py
 
 public enum CursorModeShape: String {
