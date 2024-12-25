@@ -7,8 +7,15 @@ import AppKit
 import Cocoa
 import UniformTypeIdentifiers
 
-private let workspace = NSWorkspace.shared
-private let iconsCache = NSCache<NSURL, NSImage>()
+// icon(forFile:) is thread-safe: https://developer.apple.com/documentation/appkit/nsworkspace/icon(forfile:)
+// icon(for:) probably is thread-safe
+private nonisolated(unsafe) let workspace = NSWorkspace.shared
+
+// NSCache is thread-safe: https://developer.apple.com/documentation/foundation/nscache#overview
+private nonisolated(unsafe) let iconsCache = NSCache<NSURL, NSImage>()
+
+// FileManager is thread-safe: https://developer.apple.com/documentation/foundation/filemanager#1651181
+private nonisolated(unsafe) let fm = FileManager.default
 
 public final class FileUtils {
   private static let keysToGet: [URLResourceKey] = [
@@ -23,14 +30,13 @@ public final class FileUtils {
     .skipsPackageDescendants,
   ]
 
-  private static let fileManager = FileManager.default
   public static let userHomeUrl = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true)
   public static func tempDir() -> URL {
     URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
   }
 
   public static func directDescendants(of url: URL) -> [URL] {
-    guard let childUrls = try? self.fileManager.contentsOfDirectory(
+    guard let childUrls = try? fm.contentsOfDirectory(
       at: url, includingPropertiesForKeys: self.keysToGet, options: self.scanOptions
     ) else { return [] }
 
@@ -41,7 +47,7 @@ public final class FileUtils {
     guard url.isFileURL else { return false }
 
     let path = url.path
-    return self.fileManager.fileExists(atPath: path)
+    return fm.fileExists(atPath: path)
   }
 
   public static func commonParent(of urls: [URL]) -> URL {
