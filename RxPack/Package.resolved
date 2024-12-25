@@ -1,12 +1,13 @@
 {
+  "originHash" : "d716518ed8eda1186b077a02a342175353f14db7edbde3c0b8666ce1c80c3258",
   "pins" : [
     {
       "identity" : "cwlcatchexception",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlCatchException.git",
       "state" : {
-        "revision" : "35f9e770f54ce62dd8526470f14c6e137cef3eea",
-        "version" : "2.1.1"
+        "revision" : "07b2ba21d361c223e25e3c1e924288742923f08c",
+        "version" : "2.2.1"
       }
     },
     {
@@ -14,17 +15,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlPreconditionTesting.git",
       "state" : {
-        "revision" : "c21f7bab5ca8eee0a9998bbd17ca1d0eb45d4688",
-        "version" : "2.1.0"
+        "revision" : "0139c665ebb45e6a9fbdb68aabfd7c39f3fe0071",
+        "version" : "2.2.2"
       }
     },
     {
       "identity" : "messagepack.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/a2/MessagePack.swift",
+      "location" : "https://github.com/qvacua/MessagePack.swift",
       "state" : {
-        "revision" : "27b35fd49e92fcae395bf8ccb233499d89cc7890",
-        "version" : "4.0.0"
+        "revision" : "e5e7708911a1032f0fa120c38292797734f4160c",
+        "version" : "4.1.0"
       }
     },
     {
@@ -32,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "revision" : "d616f15123bfb36db1b1075153f73cf40605b39d",
-        "version" : "13.0.0"
+        "revision" : "7795df4fff1a9cd231fe4867ae54f4dc5f5734f9",
+        "version" : "13.7.1"
       }
     },
     {
@@ -41,10 +42,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveX/RxSwift",
       "state" : {
-        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
-        "version" : "6.6.0"
+        "revision" : "c7c7d2cf50a3211fe2843f76869c698e4e417930",
+        "version" : "6.8.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

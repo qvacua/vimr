@@ -6,7 +6,7 @@ import MessagePack
 import os
 import RxSwift
 
-public final class RxMsgpackRpc {
+public final class RxMsgpackRpc: @unchecked Sendable {
   public static let defaultReadBufferSize = 10240
 
   public typealias Value = MessagePackValue
@@ -85,7 +85,7 @@ public final class RxMsgpackRpc {
 
   public func response(msgid: UInt32, error: Value, result: Value) -> Completable {
     .create { [weak self] completable in
-      self?.queue.async {
+      self?.queue.async { [weak self] in
         if self?.closed == true {
           self?.log.warning("Not sending response because closed")
           completable(.error(Error(msg: "Rpc closed")))
@@ -127,7 +127,7 @@ public final class RxMsgpackRpc {
     expectsReturnValue: Bool
   ) -> Single<Response> {
     .create { [weak self] single in
-      self?.queue.async {
+      self?.queue.async { [weak self] in
         if self?.closed == true {
           self?.log.warning("Not sending request because closed")
           single(.failure(Error(msg: "Rpc closed")))
@@ -239,15 +239,15 @@ public final class RxMsgpackRpc {
           else { dataToUnmarshall.removeAll(keepingCapacity: true) }
           _ = consume remainderData
 
-          self?.queue.async {
+          self?.queue.async { [weak self] in
             if self?.closed == true {
               self?.log.info("Not processing msgs because closed.")
               return
             }
-            values.forEach { value in self?.processMessage(value) }
+            values.forEach { [weak self] value in self?.processMessage(value) }
           }
         } catch {
-          self?.queue.async {
+          self?.queue.async { [weak self] in
             self?.streamSubject.onError(Error(msg: "Could not read from pipe", cause: error))
           }
         }
