@@ -44,10 +44,6 @@ public final class RxMsgpackRpc {
     }
   }
 
-  /**
-   Streams `Message.notification`s and `Message.error`s by default.
-   When `streamResponses` is set to `true`, then also `Message.response`s.
-   */
   public var stream: Observable<Message> { self.streamSubject.asObservable() }
 
   public let uuid = UUID()
