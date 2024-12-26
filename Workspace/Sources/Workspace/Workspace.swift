@@ -30,7 +30,7 @@ public final class Workspace: NSView, WorkspaceBarDelegate {
     public init(mainViewMinimumSize: CGSize) { self.mainViewMinimumSize = mainViewMinimumSize }
   }
 
-  public struct Theme {
+  public struct Theme: Sendable {
     public static let `default` = Workspace.Theme()
 
     public var foreground = NSColor.black
@@ -89,9 +89,9 @@ public final class Workspace: NSView, WorkspaceBarDelegate {
     self.configureForAutoLayout()
 
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)])
-    self.bars.values.forEach {
-      $0.workspace = self
-      $0.delegate = self
+    for value in self.bars.values {
+      value.workspace = self
+      value.delegate = self
     }
 
     self.relayout()
