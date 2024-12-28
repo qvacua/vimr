@@ -19,15 +19,7 @@ void_func_template = Template('''\
         ${params}
     ]
 
-    if expectsReturnValue {
-      let blockedResult = await self.isBlocked()
-      switch blockedResult {
-      case let .success(blocked):
-        if blocked { return .failure(.blocked) }
-      case let .failure(error):
-        return .failure(.other(cause: error))
-      }
-    }
+    if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
     
     let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
@@ -78,15 +70,7 @@ func_template = Template('''\
       return result
     }
 
-    if errWhenBlocked {
-      let blockedResult = await self.isBlocked()
-      switch blockedResult {
-      case let .success(blocked):
-        if blocked { return .failure(.blocked) }
-      case let .failure(error):
-        return .failure(.other(cause: error))
-      }
-    }
+    if errWhenBlocked, let error = await self.blockedError() { return .failure(error) }
     
     let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {

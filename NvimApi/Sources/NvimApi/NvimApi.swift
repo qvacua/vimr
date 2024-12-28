@@ -83,6 +83,19 @@ public actor NvimApi {
   }
 
   public init() {}
+  
+  func blockedError() async -> NvimApi.Error? {
+    let blockedResult = await self.isBlocked()
+    
+    switch blockedResult {
+    case let .success(blocked):
+      if blocked { return .blocked }
+    case let .failure(error):
+      return .other(cause: error)
+    }
+    
+    return nil
+  }
 
   private let msgpackRpc = MsgpackRpc()
 }
