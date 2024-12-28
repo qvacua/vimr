@@ -56,18 +56,18 @@ class RxNeovimApiExample: XCTestCase {
   override func tearDown() {
     super.tearDown()
 
-    try! self.api.command(command: "q!").waitCompletion()
+    try! self.api.nvimCommand(command: "q!").waitCompletion()
     self.proc.waitUntilExit()
   }
 
   func testExample() throws {
-    try self.api.uiAttach(width: 80, height: 24, options: [:]).waitCompletion()
+    try self.api.nvimUiAttach(width: 80, height: 24, options: [:]).waitCompletion()
 
     let formatter = DateFormatter()
     formatter.dateFormat = "mm:ss.SSS"
     for i in 0...100 {
       let date = Date()
-      let response = try self.api.exec2(
+      let response = try self.api.nvimExec2(
         src: "echo '\(i) \(formatter.string(from: date))'", opts: ["output": true]
       ).toBlocking().first()!
       Swift.print(response)
@@ -76,29 +76,29 @@ class RxNeovimApiExample: XCTestCase {
     let testFileUrl: URL = FileManager.default
       .homeDirectoryForCurrentUser.appending(components: "test/big.swift")
     guard FileManager.default.fileExists(atPath: testFileUrl.path) else {
-      try self.api.uiDetach().waitCompletion()
+      try self.api.nvimUiDetach().waitCompletion()
 
       return
     }
 
-    try self.api.command(command: "e \(testFileUrl.path)").waitCompletion()
+    try self.api.nvimCommand(command: "e \(testFileUrl.path)").waitCompletion()
 
-    let lineCount = try self.api.bufLineCount(buffer: .init(0)).toBlocking().first()!
+    let lineCount = try self.api.nvimBufLineCount(buffer: .init(0)).toBlocking().first()!
     Swift.print("Line count of \(testFileUrl): \(lineCount)")
 
     let repeatCount = 200
     for _ in 0...repeatCount {
-      try self.api.input(keys: "<PageDown>").waitCompletion()
+      try self.api.nvimInput(keys: "<PageDown>").waitCompletion()
       try delayingCompletable().waitCompletion()
     }
     for _ in 0...repeatCount {
-      try self.api.input(keys: "<PageUp>").waitCompletion()
+      try self.api.nvimInput(keys: "<PageUp>").waitCompletion()
       try delayingCompletable().waitCompletion()
     }
 
     Thread.sleep(forTimeInterval: 1)
 
-    try self.api.uiDetach().waitCompletion()
+    try self.api.nvimUiDetach().waitCompletion()
   }
 }
 

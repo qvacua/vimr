@@ -1345,7 +1345,7 @@
 			repositoryURL = "https://github.com/qvacua/material-icons";
 			requirement = {
 				kind = exactVersion;
-				version = 0.1.0;
+				version = 0.2.0;
 			};
 		};
 		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
@@ -1385,7 +1385,7 @@
 			repositoryURL = "https://github.com/qvacua/misc.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 0.2.0;
+				version = 0.3.0;
 			};
 		};
 		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {

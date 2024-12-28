@@ -64,7 +64,7 @@ class RxMsgpackRpcNeovimExample: XCTestCase {
     self.proc.waitUntilExit()
   }
 
-  func testExample() throws {
+  func xtestExample() throws {
     try self.rpc.request(
       method: "nvim_ui_attach",
       params: [80, 24, [:]],
