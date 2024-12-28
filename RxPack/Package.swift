@@ -6,7 +6,6 @@ let package = Package(
   name: "RxPack",
   platforms: [.macOS(.v12)],
   products: [
-    .library(name: "NvimApi", targets: ["NvimApi"]),
     .library(name: "RxPack", targets: ["RxPack"]),
     .library(name: "RxNeovim", targets: ["RxNeovim"]),
   ],
@@ -16,15 +15,6 @@ let package = Package(
     .package(url: "https://github.com/Quick/Nimble", from: "13.7.1"),
   ],
   targets: [
-    .target(name: "NvimApi", dependencies: [
-      .product(name: "MessagePack", package: "MessagePack.swift"),
-    ]),
-    .testTarget(
-      name: "NvimApiTests",
-      dependencies: [
-        "NvimApi",
-      ]
-    ),
     .target(name: "RxPack", dependencies: [
       .product(name: "RxSwift", package: "RxSwift"),
       .product(name: "MessagePack", package: "MessagePack.swift"),
