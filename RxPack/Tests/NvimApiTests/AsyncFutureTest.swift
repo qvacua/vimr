@@ -2,7 +2,7 @@
 /// See LICENSE
 
 import Foundation
-import NeovimApi
+import NvimApi
 import Testing
 
 class AsyncFutureTest {

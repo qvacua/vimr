@@ -4,7 +4,7 @@
 import Foundation
 import MessagePack
 
-public actor NeovimApi {
+public actor NvimApi {
   public enum Event {
     case error(msg: String)
   }
@@ -34,7 +34,7 @@ public actor NeovimApi {
 
   public func stop() async { await self.msgpackRpc.stop() }
 
-  public func isBlocked() async -> Result<Bool, NeovimApi.Error> {
+  public func isBlocked() async -> Result<Bool, NvimApi.Error> {
     let modeResult = await self.nvimGetMode()
     switch modeResult {
     case let .success(dict):
@@ -51,8 +51,8 @@ public actor NeovimApi {
 
   public func sendRequest(
     method: String,
-    params: [NeovimApi.Value]
-  ) async -> Result<Value, NeovimApi.Error> {
+    params: [NvimApi.Value]
+  ) async -> Result<Value, NvimApi.Error> {
     do {
       let reqResponse = try await self.msgpackRpc.request(
         method: method, params: params, expectsReturnValue: true
@@ -70,7 +70,7 @@ public actor NeovimApi {
 
   public func sendResponse(
     _ response: MsgpackRpc.Response
-  ) async -> Result<Void, NeovimApi.Error> {
+  ) async -> Result<Void, NvimApi.Error> {
     do {
       return try await .success(
         self.msgpackRpc.response(

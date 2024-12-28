@@ -2,13 +2,13 @@
 /// See LICENSE
 
 import Foundation
-import NeovimApi
+import NvimApi
 import Testing
 
 /// No real test, just a sample code to see that it works with Neovim
-class MsgpackRpcNeovimExample {
-  let rpc = MsgpackRpc()
-  let proc: Process
+class NvimApiExample {
+  let api = NvimApi()
+  var proc: Process
 
   init() async throws {
     self.proc = neovimProcess()
@@ -17,19 +17,19 @@ class MsgpackRpcNeovimExample {
     let errorPipe = self.proc.standardError as! Pipe
     try self.proc.run()
 
-    let stream = await self.rpc.messagesStream
+    let stream = await self.api.msgpackRawStream
 
-    try await self.rpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
+    try await self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
 
     Task.detached {
       for await msg in stream {
         switch msg {
         case let .notification(method, params):
-          Swift.print("NOTIFICATION: \(method): array of \(params.count) elements")
+          print("NOTIFICATION: \(method): array of \(params.count) elements")
         case let .error(value, msg):
-          Swift.print("ERROR: \(msg) with \(value)")
+          print("ERROR: \(msg) with \(value)")
         case let .response(msgid, error, result):
-          Swift.print("RESPONSE: \(msgid), \(error), \(result)")
+          print("RESPONSE: \(msgid), \(error), \(result)")
         default:
           Issue.record("Unknown msg type from rpc")
         }
@@ -38,70 +38,47 @@ class MsgpackRpcNeovimExample {
   }
 
   func cleanUp() async throws {
-    _ = try await self.rpc.request(
-      method: "nvim_command", params: [.string("q!")],
-      expectsReturnValue: false
-    )
-
-    await self.rpc.stop()
+    try await self.api.nvimCommand(command: "q!").get()
     self.proc.waitUntilExit()
   }
 
   @Test func testExample() async throws {
-    Swift.print("###############################################")
-    _ = try await self.rpc.request(
-      method: "nvim_ui_attach",
-      params: [80, 24, [:]],
-      expectsReturnValue: false
-    )
+    try await self.api.nvimUiAttach(width: 80, height: 24, options: [:]).get()
 
     let formatter = DateFormatter()
     formatter.dateFormat = "mm:ss.SSS"
     for i in 0...100 {
       let date = Date()
-      let response = try await self.rpc
-        .request(
-          method: "nvim_exec2",
-          params: [.string("echo '\(i) \(formatter.string(from: date))'"), ["output": true]],
-          expectsReturnValue: true
-        )
+      let response = try await self.api.nvimExec2(
+        src: "echo '\(i) \(formatter.string(from: date))'", opts: ["output": true]
+      ).get()
       Swift.print(response)
     }
 
     let testFileUrl: URL = FileManager.default
       .homeDirectoryForCurrentUser.appending(components: "test/big.swift")
     guard FileManager.default.fileExists(atPath: testFileUrl.path) else {
-      try await self.cleanUp()
+      try await self.api.nvimUiDetach().get()
+
       return
     }
 
-    _ = try await self.rpc.request(
-      method: "nvim_command",
-      params: [.string("e \(testFileUrl.path)")],
-      expectsReturnValue: false
-    )
+    try await self.api.nvimCommand(command: "e \(testFileUrl.path)").get()
 
-    let lineCount = try await self.rpc.request(
-      method: "nvim_buf_line_count",
-      params: [.int(0)],
-      expectsReturnValue: true
-    )
+    let lineCount = try await self.api.nvimBufLineCount(buffer: .init(0)).get()
     Swift.print("Line count of \(testFileUrl): \(lineCount)")
 
-    let repeatCount = 200
+    let repeatCount = 10
     for _ in 0...repeatCount {
-      _ = try await self.rpc
-        .request(method: "nvim_input", params: ["<PageDown>"], expectsReturnValue: false)
+      _ = try await self.api.nvimInput(keys: "<PageDown>").get()
+      Swift.print("############################ PageDown")
     }
     for _ in 0...repeatCount {
-      _ = try await self.rpc
-        .request(method: "nvim_input", params: ["<PageUp>"], expectsReturnValue: false)
+      _ = try await self.api.nvimInput(keys: "<PageUp>").get()
+      Swift.print("############################ PageUp")
     }
 
-    _ = try await self.rpc.request(
-      method: "nvim_ui_detach", params: [], expectsReturnValue: false
-    )
-
+    try await self.api.nvimUiDetach().get()
     try await self.cleanUp()
   }
 }

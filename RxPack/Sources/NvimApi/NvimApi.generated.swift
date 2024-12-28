@@ -4,7 +4,7 @@
 import Foundation
 import MessagePack
 
-public extension NeovimApi {
+public extension NvimApi {
   enum Error: Swift.Error {
     public static let exceptionRawValue = UInt64(0)
     public static let validationRawValue = UInt64(1)
@@ -16,7 +16,7 @@ public extension NeovimApi {
     case other(cause: Swift.Error)
     case unknown
 
-    init(_ value: NeovimApi.Value?) {
+    init(_ value: NvimApi.Value?) {
       let array = value?.arrayValue
       guard array?.count == 2 else {
         self = .unknown
@@ -37,18 +37,18 @@ public extension NeovimApi {
   }
 }
 
-public extension NeovimApi {
+public extension NvimApi {
   func nvimGetAutocmds(
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -67,7 +67,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_autocmds", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -76,18 +76,18 @@ public extension NeovimApi {
   }
 
   func nvimCreateAutocmd(
-    event: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    event: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       event,
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -106,7 +106,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_create_autocmd", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -117,8 +117,8 @@ public extension NeovimApi {
   func nvimDelAutocmd(
     id: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(id)),
     ]
 
@@ -142,10 +142,10 @@ public extension NeovimApi {
   }
 
   func nvimClearAutocmds(
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
@@ -170,17 +170,17 @@ public extension NeovimApi {
 
   func nvimCreateAugroup(
     name: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -199,7 +199,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_create_augroup", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -210,8 +210,8 @@ public extension NeovimApi {
   func nvimDelAugroupById(
     id: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(id)),
     ]
 
@@ -237,8 +237,8 @@ public extension NeovimApi {
   func nvimDelAugroupByName(
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
@@ -262,11 +262,11 @@ public extension NeovimApi {
   }
 
   func nvimExecAutocmds(
-    event: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    event: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       event,
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
@@ -291,16 +291,16 @@ public extension NeovimApi {
   }
 
   func nvimBufLineCount(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -319,7 +319,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_line_count", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -328,20 +328,20 @@ public extension NeovimApi {
   }
 
   func nvimBufAttach(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     send_buffer: Bool,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .bool(send_buffer),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -360,7 +360,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_attach", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -369,16 +369,16 @@ public extension NeovimApi {
   }
 
   func nvimBufDetach(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -397,7 +397,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_detach", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -406,22 +406,22 @@ public extension NeovimApi {
   }
 
   func nvimBufGetLines(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
       .bool(strict_indexing),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -440,7 +440,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_lines", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -449,14 +449,14 @@ public extension NeovimApi {
   }
 
   func nvimBufSetLines(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     replacement: [String],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
@@ -484,15 +484,15 @@ public extension NeovimApi {
   }
 
   func nvimBufSetText(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start_row: Int,
     start_col: Int,
     end_row: Int,
     end_col: Int,
     replacement: [String],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start_row)),
       .int(Int64(start_col)),
@@ -521,15 +521,15 @@ public extension NeovimApi {
   }
 
   func nvimBufGetText(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start_row: Int,
     start_col: Int,
     end_row: Int,
     end_col: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start_row)),
       .int(Int64(start_col)),
@@ -538,9 +538,9 @@ public extension NeovimApi {
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -559,7 +559,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_text", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -568,18 +568,18 @@ public extension NeovimApi {
   }
 
   func nvimBufGetOffset(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(index)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -598,7 +598,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_offset", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -607,18 +607,18 @@ public extension NeovimApi {
   }
 
   func nvimBufGetVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -637,7 +637,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -646,16 +646,16 @@ public extension NeovimApi {
   }
 
   func nvimBufGetChangedtick(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -674,7 +674,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_changedtick", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -683,23 +683,22 @@ public extension NeovimApi {
   }
 
   func nvimBufGetKeymap(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     mode: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<[[String: NeovimApi.Value]], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[[String: NvimApi.Value]], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(mode),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [[String: NeovimApi.Value]] in
-        guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
-          throw NeovimApi.Error.conversion(type: [[String: NeovimApi.Value]].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
+      guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
+        throw NvimApi.Error.conversion(type: [[String: NvimApi.Value]].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -714,7 +713,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_keymap", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [[String: NeovimApi.Value]] in
+      return Result { () throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
         try transform(value)
       }
     case let .failure(error):
@@ -723,14 +722,14 @@ public extension NeovimApi {
   }
 
   func nvimBufSetKeymap(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     mode: String,
     lhs: String,
     rhs: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(mode),
       .string(lhs),
@@ -758,12 +757,12 @@ public extension NeovimApi {
   }
 
   func nvimBufDelKeymap(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(mode),
       .string(lhs),
@@ -789,12 +788,12 @@ public extension NeovimApi {
   }
 
   func nvimBufSetVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       value,
@@ -820,11 +819,11 @@ public extension NeovimApi {
   }
 
   func nvimBufDelVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
@@ -849,16 +848,16 @@ public extension NeovimApi {
   }
 
   func nvimBufGetName(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -877,7 +876,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -886,11 +885,11 @@ public extension NeovimApi {
   }
 
   func nvimBufSetName(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
@@ -915,16 +914,16 @@ public extension NeovimApi {
   }
 
   func nvimBufIsLoaded(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -943,7 +942,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_is_loaded", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -952,11 +951,11 @@ public extension NeovimApi {
   }
 
   func nvimBufDelete(
-    buffer: NeovimApi.Buffer,
-    opts: [String: NeovimApi.Value],
+    buffer: NvimApi.Buffer,
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
@@ -981,16 +980,16 @@ public extension NeovimApi {
   }
 
   func nvimBufIsValid(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -1009,7 +1008,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -1018,18 +1017,18 @@ public extension NeovimApi {
   }
 
   func nvimBufDelMark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -1048,7 +1047,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_del_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -1057,14 +1056,14 @@ public extension NeovimApi {
   }
 
   func nvimBufSetMark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     line: Int,
     col: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       .int(Int64(line)),
@@ -1072,9 +1071,9 @@ public extension NeovimApi {
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -1093,7 +1092,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_set_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -1102,21 +1101,21 @@ public extension NeovimApi {
   }
 
   func nvimBufGetMark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -1135,7 +1134,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -1144,18 +1143,18 @@ public extension NeovimApi {
   }
 
   func nvimBufCall(
-    buffer: NeovimApi.Buffer,
-    fun: NeovimApi.Value,
+    buffer: NvimApi.Buffer,
+    fun: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       fun,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -1174,7 +1173,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_call", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -1184,22 +1183,21 @@ public extension NeovimApi {
 
   func nvimParseCmd(
     str: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -1214,7 +1212,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_parse_cmd", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1223,18 +1221,18 @@ public extension NeovimApi {
   }
 
   func nvimCmd(
-    cmd: [String: NeovimApi.Value],
-    opts: [String: NeovimApi.Value],
+    cmd: [String: NvimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(cmd.mapToDict { (Value.string($0), $1) }),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -1253,7 +1251,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_cmd", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -1263,11 +1261,11 @@ public extension NeovimApi {
 
   func nvimCreateUserCommand(
     name: String,
-    command: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    command: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       command,
       .map(opts.mapToDict { (Value.string($0), $1) }),
@@ -1295,8 +1293,8 @@ public extension NeovimApi {
   func nvimDelUserCommand(
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
@@ -1320,13 +1318,13 @@ public extension NeovimApi {
   }
 
   func nvimBufCreateUserCommand(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
-    command: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    command: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       command,
@@ -1353,11 +1351,11 @@ public extension NeovimApi {
   }
 
   func nvimBufDelUserCommand(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
@@ -1382,21 +1380,20 @@ public extension NeovimApi {
   }
 
   func nvimGetCommands(
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -1411,7 +1408,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_commands", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1420,23 +1417,22 @@ public extension NeovimApi {
   }
 
   func nvimBufGetCommands(
-    buffer: NeovimApi.Buffer,
-    opts: [String: NeovimApi.Value],
+    buffer: NvimApi.Buffer,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -1451,7 +1447,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_commands", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1464,15 +1460,15 @@ public extension NeovimApi {
     src: String,
     output: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(src),
       .bool(output),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -1491,7 +1487,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_exec", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -1503,14 +1499,14 @@ public extension NeovimApi {
   func nvimCommandOutput(
     command: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(command),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -1529,7 +1525,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_command_output", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -1540,17 +1536,17 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimExecuteLua(
     code: String,
-    args: NeovimApi.Value,
+    args: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(code),
       args,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -1569,7 +1565,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_execute_lua", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -1579,16 +1575,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufGetNumber(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -1607,7 +1603,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_number", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -1617,13 +1613,13 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufClearHighlight(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(line_start)),
@@ -1651,14 +1647,14 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufSetVirtualText(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     src_id: Int,
     line: Int,
-    chunks: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    chunks: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(src_id)),
       .int(Int64(line)),
@@ -1666,9 +1662,9 @@ public extension NeovimApi {
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -1687,7 +1683,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_set_virtual_text", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -1700,20 +1696,19 @@ public extension NeovimApi {
     hl_id: Int,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(hl_id)),
       .bool(rgb),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -1728,7 +1723,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_hl_by_id", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1741,20 +1736,19 @@ public extension NeovimApi {
     name: String,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .bool(rgb),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -1769,7 +1763,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_hl_by_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1779,12 +1773,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferInsert(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     lnum: Int,
     lines: [String],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(lnum)),
       .array(lines.map { .string($0) }),
@@ -1811,18 +1805,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetLine(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     index: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(index)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -1841,7 +1835,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_line", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -1851,12 +1845,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetLine(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     index: Int,
     line: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(index)),
       .string(line),
@@ -1883,11 +1877,11 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferDelLine(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     index: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(index)),
     ]
@@ -1913,14 +1907,14 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetLineSlice(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     include_start: Bool,
     include_end: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
@@ -1928,9 +1922,9 @@ public extension NeovimApi {
       .bool(include_end),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -1949,7 +1943,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_line_slice", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -1959,15 +1953,15 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetLineSlice(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     include_start: Bool,
     include_end: Bool,
     replacement: [String],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
@@ -1997,20 +1991,20 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       value,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2029,7 +2023,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_set_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2039,18 +2033,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferDelVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2069,7 +2063,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_del_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2079,20 +2073,20 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowSetVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
       value,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2111,7 +2105,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_set_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2121,18 +2115,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowDelVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2151,7 +2145,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_del_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2161,20 +2155,20 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageSetVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
       value,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2193,7 +2187,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_set_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2203,18 +2197,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageDelVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2233,7 +2227,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_del_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2244,17 +2238,17 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetVar(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2273,7 +2267,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_set_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2285,14 +2279,14 @@ public extension NeovimApi {
   func vimDelVar(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2311,7 +2305,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_del_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2323,19 +2317,18 @@ public extension NeovimApi {
   func nvimGetOptionInfo(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -2350,7 +2343,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_option_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2361,10 +2354,10 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimSetOption(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
@@ -2392,14 +2385,14 @@ public extension NeovimApi {
   func nvimGetOption(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2418,7 +2411,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2428,18 +2421,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufGetOption(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2458,7 +2451,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2468,12 +2461,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufSetOption(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       value,
@@ -2500,18 +2493,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimWinGetOption(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2530,7 +2523,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2540,12 +2533,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimWinSetOption(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
       value,
@@ -2572,16 +2565,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func nvimCallAtomic(
-    calls: NeovimApi.Value,
+    calls: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       calls,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2600,7 +2593,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_call_atomic", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2611,14 +2604,14 @@ public extension NeovimApi {
   func nvimCreateNamespace(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -2637,7 +2630,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_create_namespace", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -2647,18 +2640,17 @@ public extension NeovimApi {
 
   func nvimGetNamespaces(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -2673,7 +2665,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_namespaces", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2682,25 +2674,25 @@ public extension NeovimApi {
   }
 
   func nvimBufGetExtmarkById(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     id: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(id)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -2719,7 +2711,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_extmark_by_id", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -2728,14 +2720,14 @@ public extension NeovimApi {
   }
 
   func nvimBufGetExtmarks(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
-    start: NeovimApi.Value,
-    end: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    start: NvimApi.Value,
+    end: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       start,
@@ -2743,9 +2735,9 @@ public extension NeovimApi {
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2764,7 +2756,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_get_extmarks", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -2773,14 +2765,14 @@ public extension NeovimApi {
   }
 
   func nvimBufSetExtmark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     line: Int,
     col: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(line)),
@@ -2788,9 +2780,9 @@ public extension NeovimApi {
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -2809,7 +2801,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_set_extmark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -2818,20 +2810,20 @@ public extension NeovimApi {
   }
 
   func nvimBufDelExtmark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     id: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(id)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -2850,7 +2842,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_del_extmark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -2859,15 +2851,15 @@ public extension NeovimApi {
   }
 
   func nvimBufAddHighlight(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     hl_group: String,
     line: Int,
     col_start: Int,
     col_end: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .string(hl_group),
@@ -2876,9 +2868,9 @@ public extension NeovimApi {
       .int(Int64(col_end)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -2897,7 +2889,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_buf_add_highlight", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -2906,13 +2898,13 @@ public extension NeovimApi {
   }
 
   func nvimBufClearNamespace(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(line_start)),
@@ -2940,10 +2932,10 @@ public extension NeovimApi {
 
   func nvimSetDecorationProvider(
     ns_id: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
@@ -2969,17 +2961,17 @@ public extension NeovimApi {
 
   func nvimGetOptionValue(
     name: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -2998,7 +2990,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_option_value", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -3008,11 +3000,11 @@ public extension NeovimApi {
 
   func nvimSetOptionValue(
     name: String,
-    value: NeovimApi.Value,
-    opts: [String: NeovimApi.Value],
+    value: NvimApi.Value,
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
       .map(opts.mapToDict { (Value.string($0), $1) }),
@@ -3039,18 +3031,17 @@ public extension NeovimApi {
 
   func nvimGetAllOptionsInfo(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -3065,7 +3056,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_all_options_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3075,22 +3066,21 @@ public extension NeovimApi {
 
   func nvimGetOptionInfo2(
     name: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -3105,7 +3095,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_option_info2", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3114,16 +3104,16 @@ public extension NeovimApi {
   }
 
   func nvimTabpageListWins(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Window], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Window], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Window(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Window].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Window] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Window(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Window].self)
       }
 
       return result
@@ -3142,7 +3132,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_tabpage_list_wins", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Window] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Window] in
         try transform(value)
       }
     case let .failure(error):
@@ -3151,18 +3141,18 @@ public extension NeovimApi {
   }
 
   func nvimTabpageGetVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -3181,7 +3171,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_tabpage_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -3190,12 +3180,12 @@ public extension NeovimApi {
   }
 
   func nvimTabpageSetVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
       value,
@@ -3221,11 +3211,11 @@ public extension NeovimApi {
   }
 
   func nvimTabpageDelVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
     ]
@@ -3250,16 +3240,16 @@ public extension NeovimApi {
   }
 
   func nvimTabpageGetWin(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Window, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Window, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Window in
-      guard let result = (NeovimApi.Window(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Window.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
+      guard let result = (NvimApi.Window(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Window.self)
       }
 
       return result
@@ -3278,7 +3268,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_tabpage_get_win", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Window in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Window in
         try transform(value)
       }
     case let .failure(error):
@@ -3287,11 +3277,11 @@ public extension NeovimApi {
   }
 
   func nvimTabpageSetWin(
-    tabpage: NeovimApi.Tabpage,
-    win: NeovimApi.Window,
+    tabpage: NvimApi.Tabpage,
+    win: NvimApi.Window,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .int(Int64(win.handle)),
     ]
@@ -3316,16 +3306,16 @@ public extension NeovimApi {
   }
 
   func nvimTabpageGetNumber(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -3344,7 +3334,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_tabpage_get_number", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -3353,16 +3343,16 @@ public extension NeovimApi {
   }
 
   func nvimTabpageIsValid(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -3381,7 +3371,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_tabpage_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -3392,10 +3382,10 @@ public extension NeovimApi {
   func nvimUiAttach(
     width: Int,
     height: Int,
-    options: [String: NeovimApi.Value],
+    options: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(width)),
       .int(Int64(height)),
       .map(options.mapToDict { (Value.string($0), $1) }),
@@ -3426,8 +3416,8 @@ public extension NeovimApi {
     height: Int,
     enable_rgb: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(width)),
       .int(Int64(height)),
       .bool(enable_rgb),
@@ -3455,8 +3445,8 @@ public extension NeovimApi {
   func nvimUiSetFocus(
     gained: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .bool(gained),
     ]
 
@@ -3481,8 +3471,8 @@ public extension NeovimApi {
 
   func nvimUiDetach(
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
     if expectsReturnValue {
@@ -3508,8 +3498,8 @@ public extension NeovimApi {
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(width)),
       .int(Int64(height)),
     ]
@@ -3535,10 +3525,10 @@ public extension NeovimApi {
 
   func nvimUiSetOption(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
@@ -3567,8 +3557,8 @@ public extension NeovimApi {
     width: Int,
     height: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(grid)),
       .int(Int64(width)),
       .int(Int64(height)),
@@ -3596,8 +3586,8 @@ public extension NeovimApi {
   func nvimUiPumSetHeight(
     height: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(height)),
     ]
 
@@ -3626,8 +3616,8 @@ public extension NeovimApi {
     row: Float,
     col: Float,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .float(width),
       .float(height),
       .float(row),
@@ -3655,10 +3645,10 @@ public extension NeovimApi {
 
   func nvimUiTermEvent(
     event: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(event),
       value,
     ]
@@ -3685,14 +3675,14 @@ public extension NeovimApi {
   func nvimGetHlIdByName(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -3711,7 +3701,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_hl_id_by_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -3721,22 +3711,21 @@ public extension NeovimApi {
 
   func nvimGetHl(
     ns_id: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -3751,7 +3740,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_hl", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3762,10 +3751,10 @@ public extension NeovimApi {
   func nvimSetHl(
     ns_id: Int,
     name: String,
-    val: [String: NeovimApi.Value],
+    val: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
       .string(name),
       .map(val.mapToDict { (Value.string($0), $1) }),
@@ -3791,16 +3780,16 @@ public extension NeovimApi {
   }
 
   func nvimGetHlNs(
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -3819,7 +3808,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_hl_ns", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -3830,8 +3819,8 @@ public extension NeovimApi {
   func nvimSetHlNs(
     ns_id: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
     ]
 
@@ -3857,8 +3846,8 @@ public extension NeovimApi {
   func nvimSetHlNsFast(
     ns_id: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
     ]
 
@@ -3886,8 +3875,8 @@ public extension NeovimApi {
     mode: String,
     escape_ks: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(keys),
       .string(mode),
       .bool(escape_ks),
@@ -3915,14 +3904,14 @@ public extension NeovimApi {
   func nvimInput(
     keys: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(keys),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -3941,7 +3930,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_input", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -3957,8 +3946,8 @@ public extension NeovimApi {
     row: Int,
     col: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(button),
       .string(action),
       .string(modifier),
@@ -3992,17 +3981,17 @@ public extension NeovimApi {
     do_lt: Bool,
     special: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
       .bool(from_part),
       .bool(do_lt),
       .bool(special),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -4021,7 +4010,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_replace_termcodes", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -4031,17 +4020,17 @@ public extension NeovimApi {
 
   func nvimExecLua(
     code: String,
-    args: NeovimApi.Value,
+    args: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(code),
       args,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -4060,7 +4049,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_exec_lua", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -4071,18 +4060,18 @@ public extension NeovimApi {
   func nvimNotify(
     msg: String,
     log_level: Int,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(msg),
       .int(Int64(log_level)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -4101,7 +4090,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_notify", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -4112,14 +4101,14 @@ public extension NeovimApi {
   func nvimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(text),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -4138,7 +4127,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_strwidth", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -4148,13 +4137,13 @@ public extension NeovimApi {
 
   func nvimListRuntimePaths(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -4173,7 +4162,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_runtime_paths", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -4185,15 +4174,15 @@ public extension NeovimApi {
     name: String,
     all: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .bool(all),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -4212,7 +4201,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_runtime_file", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -4223,8 +4212,8 @@ public extension NeovimApi {
   func nvimSetCurrentDir(
     dir: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(dir),
     ]
 
@@ -4249,13 +4238,13 @@ public extension NeovimApi {
 
   func nvimGetCurrentLine(
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -4274,7 +4263,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_current_line", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -4285,8 +4274,8 @@ public extension NeovimApi {
   func nvimSetCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(line),
     ]
 
@@ -4311,8 +4300,8 @@ public extension NeovimApi {
 
   func nvimDelCurrentLine(
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
     if expectsReturnValue {
@@ -4337,14 +4326,14 @@ public extension NeovimApi {
   func nvimGetVar(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -4363,7 +4352,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -4373,10 +4362,10 @@ public extension NeovimApi {
 
   func nvimSetVar(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
@@ -4403,8 +4392,8 @@ public extension NeovimApi {
   func nvimDelVar(
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
@@ -4430,14 +4419,14 @@ public extension NeovimApi {
   func nvimGetVvar(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -4456,7 +4445,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_vvar", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -4466,10 +4455,10 @@ public extension NeovimApi {
 
   func nvimSetVvar(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
@@ -4494,12 +4483,12 @@ public extension NeovimApi {
   }
 
   func nvimEcho(
-    chunks: NeovimApi.Value,
+    chunks: NvimApi.Value,
     history: Bool,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       chunks,
       .bool(history),
       .map(opts.mapToDict { (Value.string($0), $1) }),
@@ -4527,8 +4516,8 @@ public extension NeovimApi {
   func nvimOutWrite(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -4554,8 +4543,8 @@ public extension NeovimApi {
   func nvimErrWrite(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -4581,8 +4570,8 @@ public extension NeovimApi {
   func nvimErrWriteln(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -4607,13 +4596,13 @@ public extension NeovimApi {
 
   func nvimListBufs(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Buffer], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Buffer], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Buffer] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Buffer(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Buffer].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Buffer] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Buffer(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Buffer].self)
       }
 
       return result
@@ -4632,7 +4621,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_bufs", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Buffer] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Buffer] in
         try transform(value)
       }
     case let .failure(error):
@@ -4642,13 +4631,13 @@ public extension NeovimApi {
 
   func nvimGetCurrentBuf(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Buffer, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Buffer, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Buffer in
-      guard let result = (NeovimApi.Buffer(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Buffer.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Buffer in
+      guard let result = (NvimApi.Buffer(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Buffer.self)
       }
 
       return result
@@ -4667,7 +4656,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_current_buf", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Buffer in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Buffer in
         try transform(value)
       }
     case let .failure(error):
@@ -4676,10 +4665,10 @@ public extension NeovimApi {
   }
 
   func nvimSetCurrentBuf(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
@@ -4704,13 +4693,13 @@ public extension NeovimApi {
 
   func nvimListWins(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Window], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Window], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Window(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Window].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Window] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Window(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Window].self)
       }
 
       return result
@@ -4729,7 +4718,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_wins", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Window] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Window] in
         try transform(value)
       }
     case let .failure(error):
@@ -4739,13 +4728,13 @@ public extension NeovimApi {
 
   func nvimGetCurrentWin(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Window, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Window, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Window in
-      guard let result = (NeovimApi.Window(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Window.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
+      guard let result = (NvimApi.Window(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Window.self)
       }
 
       return result
@@ -4764,7 +4753,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_current_win", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Window in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Window in
         try transform(value)
       }
     case let .failure(error):
@@ -4773,10 +4762,10 @@ public extension NeovimApi {
   }
 
   func nvimSetCurrentWin(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
@@ -4803,15 +4792,15 @@ public extension NeovimApi {
     listed: Bool,
     scratch: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Buffer, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Buffer, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .bool(listed),
       .bool(scratch),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Buffer in
-      guard let result = (NeovimApi.Buffer(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Buffer.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Buffer in
+      guard let result = (NvimApi.Buffer(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Buffer.self)
       }
 
       return result
@@ -4830,7 +4819,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_create_buf", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Buffer in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Buffer in
         try transform(value)
       }
     case let .failure(error):
@@ -4839,18 +4828,18 @@ public extension NeovimApi {
   }
 
   func nvimOpenTerm(
-    buffer: NeovimApi.Buffer,
-    opts: [String: NeovimApi.Value],
+    buffer: NvimApi.Buffer,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -4869,7 +4858,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_open_term", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -4881,8 +4870,8 @@ public extension NeovimApi {
     chan: Int,
     data: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(chan)),
       .string(data),
     ]
@@ -4908,13 +4897,13 @@ public extension NeovimApi {
 
   func nvimListTabpages(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Tabpage], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Tabpage], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Tabpage] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Tabpage(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Tabpage].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Tabpage] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Tabpage(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Tabpage].self)
       }
 
       return result
@@ -4933,7 +4922,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_tabpages", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Tabpage] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Tabpage] in
         try transform(value)
       }
     case let .failure(error):
@@ -4943,13 +4932,13 @@ public extension NeovimApi {
 
   func nvimGetCurrentTabpage(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Tabpage, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Tabpage, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Tabpage in
-      guard let result = (NeovimApi.Tabpage(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Tabpage.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Tabpage in
+      guard let result = (NvimApi.Tabpage(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Tabpage.self)
       }
 
       return result
@@ -4968,7 +4957,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_current_tabpage", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Tabpage in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Tabpage in
         try transform(value)
       }
     case let .failure(error):
@@ -4977,10 +4966,10 @@ public extension NeovimApi {
   }
 
   func nvimSetCurrentTabpage(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
@@ -5008,16 +4997,16 @@ public extension NeovimApi {
     crlf: Bool,
     phase: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(data),
       .bool(crlf),
       .int(Int64(phase)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -5036,7 +5025,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_paste", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -5050,8 +5039,8 @@ public extension NeovimApi {
     after: Bool,
     follow: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .array(lines.map { .string($0) }),
       .string(type),
       .bool(after),
@@ -5080,8 +5069,8 @@ public extension NeovimApi {
   func nvimSubscribe(
     event: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(event),
     ]
 
@@ -5107,8 +5096,8 @@ public extension NeovimApi {
   func nvimUnsubscribe(
     event: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(event),
     ]
 
@@ -5134,14 +5123,14 @@ public extension NeovimApi {
   func nvimGetColorByName(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -5160,7 +5149,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_color_by_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -5170,18 +5159,17 @@ public extension NeovimApi {
 
   func nvimGetColorMap(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5196,7 +5184,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_color_map", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5205,21 +5193,20 @@ public extension NeovimApi {
   }
 
   func nvimGetContext(
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5234,7 +5221,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_context", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5243,16 +5230,16 @@ public extension NeovimApi {
   }
 
   func nvimLoadContext(
-    dict: [String: NeovimApi.Value],
+    dict: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .map(dict.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5271,7 +5258,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_load_context", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5280,15 +5267,15 @@ public extension NeovimApi {
   }
 
   func nvimGetMode(
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
     let reqResult = await self.sendRequest(method: "nvim_get_mode", params: params)
     switch reqResult {
     case let .success(value):
       guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-        return .failure(Error.conversion(type: [String: NeovimApi.Value].self))
+        return .failure(Error.conversion(type: [String: NvimApi.Value].self))
       }
       return .success(result)
 
@@ -5300,19 +5287,18 @@ public extension NeovimApi {
   func nvimGetKeymap(
     mode: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<[[String: NeovimApi.Value]], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[[String: NvimApi.Value]], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(mode),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [[String: NeovimApi.Value]] in
-        guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
-          throw NeovimApi.Error.conversion(type: [[String: NeovimApi.Value]].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
+      guard let result = msgPackArrayDictToSwift(value.arrayValue) else {
+        throw NvimApi.Error.conversion(type: [[String: NvimApi.Value]].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5327,7 +5313,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_keymap", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [[String: NeovimApi.Value]] in
+      return Result { () throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
         try transform(value)
       }
     case let .failure(error):
@@ -5339,10 +5325,10 @@ public extension NeovimApi {
     mode: String,
     lhs: String,
     rhs: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(mode),
       .string(lhs),
       .string(rhs),
@@ -5372,8 +5358,8 @@ public extension NeovimApi {
     mode: String,
     lhs: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(mode),
       .string(lhs),
     ]
@@ -5399,13 +5385,13 @@ public extension NeovimApi {
 
   func nvimGetApiInfo(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5424,7 +5410,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_api_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5434,13 +5420,13 @@ public extension NeovimApi {
 
   func nvimSetClientInfo(
     name: String,
-    version: [String: NeovimApi.Value],
+    version: [String: NvimApi.Value],
     type: String,
-    methods: [String: NeovimApi.Value],
-    attributes: [String: NeovimApi.Value],
+    methods: [String: NvimApi.Value],
+    attributes: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .map(version.mapToDict { (Value.string($0), $1) }),
       .string(type),
@@ -5470,19 +5456,18 @@ public extension NeovimApi {
   func nvimGetChanInfo(
     chan: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(chan)),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5497,7 +5482,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_chan_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5507,13 +5492,13 @@ public extension NeovimApi {
 
   func nvimListChans(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5532,7 +5517,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_chans", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5542,13 +5527,13 @@ public extension NeovimApi {
 
   func nvimListUis(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5567,7 +5552,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_list_uis", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5578,14 +5563,14 @@ public extension NeovimApi {
   func nvimGetProcChildren(
     pid: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(pid)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5604,7 +5589,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_proc_children", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5615,14 +5600,14 @@ public extension NeovimApi {
   func nvimGetProc(
     pid: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(pid)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5641,7 +5626,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_proc", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5653,10 +5638,10 @@ public extension NeovimApi {
     item: Int,
     insert: Bool,
     finish: Bool,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(item)),
       .bool(insert),
       .bool(finish),
@@ -5685,14 +5670,14 @@ public extension NeovimApi {
   func nvimDelMark(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -5711,7 +5696,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_del_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -5721,17 +5706,17 @@ public extension NeovimApi {
 
   func nvimGetMark(
     name: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5750,7 +5735,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_get_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5760,22 +5745,21 @@ public extension NeovimApi {
 
   func nvimEvalStatusline(
     str: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5790,7 +5774,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_eval_statusline", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5800,22 +5784,21 @@ public extension NeovimApi {
 
   func nvimExec2(
     src: String,
-    opts: [String: NeovimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(src),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -5830,7 +5813,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_exec2", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5841,8 +5824,8 @@ public extension NeovimApi {
   func nvimCommand(
     command: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(command),
     ]
 
@@ -5868,14 +5851,14 @@ public extension NeovimApi {
   func nvimEval(
     expr: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(expr),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5894,7 +5877,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_eval", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5904,17 +5887,17 @@ public extension NeovimApi {
 
   func nvimCallFunction(
     fn: String,
-    args: NeovimApi.Value,
+    args: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(fn),
       args,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5933,7 +5916,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_call_function", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5942,20 +5925,20 @@ public extension NeovimApi {
   }
 
   func nvimCallDictFunction(
-    dict: NeovimApi.Value,
+    dict: NvimApi.Value,
     fn: String,
-    args: NeovimApi.Value,
+    args: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       dict,
       .string(fn),
       args,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -5974,7 +5957,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_call_dict_function", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -5987,21 +5970,20 @@ public extension NeovimApi {
     flags: String,
     highlight: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(expr),
       .string(flags),
       .bool(highlight),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -6016,7 +5998,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_parse_expression", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -6025,20 +6007,20 @@ public extension NeovimApi {
   }
 
   func nvimOpenWin(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     enter: Bool,
-    config: [String: NeovimApi.Value],
+    config: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Window, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Window, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .bool(enter),
       .map(config.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Window in
-      guard let result = (NeovimApi.Window(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Window.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
+      guard let result = (NvimApi.Window(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Window.self)
       }
 
       return result
@@ -6057,7 +6039,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_open_win", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Window in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Window in
         try transform(value)
       }
     case let .failure(error):
@@ -6066,11 +6048,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetConfig(
-    window: NeovimApi.Window,
-    config: [String: NeovimApi.Value],
+    window: NvimApi.Window,
+    config: [String: NvimApi.Value],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .map(config.mapToDict { (Value.string($0), $1) }),
     ]
@@ -6095,21 +6077,20 @@ public extension NeovimApi {
   }
 
   func nvimWinGetConfig(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -6124,7 +6105,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_config", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -6133,16 +6114,16 @@ public extension NeovimApi {
   }
 
   func nvimWinGetBuf(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Buffer, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Buffer, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Buffer in
-      guard let result = (NeovimApi.Buffer(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Buffer.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Buffer in
+      guard let result = (NvimApi.Buffer(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Buffer.self)
       }
 
       return result
@@ -6161,7 +6142,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_buf", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Buffer in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Buffer in
         try transform(value)
       }
     case let .failure(error):
@@ -6170,11 +6151,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetBuf(
-    window: NeovimApi.Window,
-    buffer: NeovimApi.Buffer,
+    window: NvimApi.Window,
+    buffer: NvimApi.Buffer,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(buffer.handle)),
     ]
@@ -6199,19 +6180,19 @@ public extension NeovimApi {
   }
 
   func nvimWinGetCursor(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -6230,7 +6211,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_cursor", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -6239,11 +6220,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetCursor(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .array(pos.map { .int(Int64($0)) }),
     ]
@@ -6268,16 +6249,16 @@ public extension NeovimApi {
   }
 
   func nvimWinGetHeight(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -6296,7 +6277,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_height", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -6305,11 +6286,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetHeight(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(height)),
     ]
@@ -6334,16 +6315,16 @@ public extension NeovimApi {
   }
 
   func nvimWinGetWidth(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -6362,7 +6343,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_width", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -6371,11 +6352,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetWidth(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(width)),
     ]
@@ -6400,18 +6381,18 @@ public extension NeovimApi {
   }
 
   func nvimWinGetVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -6430,7 +6411,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -6439,12 +6420,12 @@ public extension NeovimApi {
   }
 
   func nvimWinSetVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
       value,
@@ -6470,11 +6451,11 @@ public extension NeovimApi {
   }
 
   func nvimWinDelVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
@@ -6499,19 +6480,19 @@ public extension NeovimApi {
   }
 
   func nvimWinGetPosition(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -6530,7 +6511,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_position", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -6539,16 +6520,16 @@ public extension NeovimApi {
   }
 
   func nvimWinGetTabpage(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Tabpage, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Tabpage, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Tabpage in
-      guard let result = (NeovimApi.Tabpage(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Tabpage.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Tabpage in
+      guard let result = (NvimApi.Tabpage(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Tabpage.self)
       }
 
       return result
@@ -6567,7 +6548,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_tabpage", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Tabpage in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Tabpage in
         try transform(value)
       }
     case let .failure(error):
@@ -6576,16 +6557,16 @@ public extension NeovimApi {
   }
 
   func nvimWinGetNumber(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -6604,7 +6585,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_get_number", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -6613,16 +6594,16 @@ public extension NeovimApi {
   }
 
   func nvimWinIsValid(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -6641,7 +6622,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -6650,10 +6631,10 @@ public extension NeovimApi {
   }
 
   func nvimWinHide(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
@@ -6677,11 +6658,11 @@ public extension NeovimApi {
   }
 
   func nvimWinClose(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     force: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .bool(force),
     ]
@@ -6706,18 +6687,18 @@ public extension NeovimApi {
   }
 
   func nvimWinCall(
-    window: NeovimApi.Window,
-    fun: NeovimApi.Value,
+    window: NvimApi.Window,
+    fun: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       fun,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -6736,7 +6717,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_call", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -6745,11 +6726,11 @@ public extension NeovimApi {
   }
 
   func nvimWinSetHlNs(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     ns_id: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(ns_id)),
     ]
@@ -6774,23 +6755,22 @@ public extension NeovimApi {
   }
 
   func nvimWinTextHeight(
-    window: NeovimApi.Window,
-    opts: [String: NeovimApi.Value],
+    window: NvimApi.Window,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .map(opts.mapToDict { (Value.string($0), $1) }),
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -6805,7 +6785,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "nvim_win_text_height", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -6815,16 +6795,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferLineCount(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -6843,7 +6823,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_line_count", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -6853,22 +6833,22 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetLines(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
       .bool(strict_indexing),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -6887,7 +6867,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_lines", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -6897,14 +6877,14 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetLines(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     start: Int,
     end: Int,
     strict_indexing: Bool,
     replacement: [String],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(start)),
       .int(Int64(end)),
@@ -6933,18 +6913,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetVar(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -6963,7 +6943,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -6973,16 +6953,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetName(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -7001,7 +6981,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -7011,11 +6991,11 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetName(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
@@ -7041,16 +7021,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferIsValid(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -7069,7 +7049,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -7079,21 +7059,21 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetMark(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -7112,7 +7092,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_mark", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -7124,14 +7104,14 @@ public extension NeovimApi {
   func vimCommandOutput(
     command: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(command),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -7150,7 +7130,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_command_output", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -7160,16 +7140,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetNumber(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -7188,7 +7168,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_number", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -7198,13 +7178,13 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferClearHighlight(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     line_start: Int,
     line_end: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(line_start)),
@@ -7233,10 +7213,10 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetOption(
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
       value,
     ]
@@ -7264,14 +7244,14 @@ public extension NeovimApi {
   func vimGetOption(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -7290,7 +7270,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -7300,18 +7280,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferGetOption(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -7330,7 +7310,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -7340,12 +7320,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferSetOption(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(name),
       value,
@@ -7372,18 +7352,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetOption(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -7402,7 +7382,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_option", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -7412,12 +7392,12 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowSetOption(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
-    value: NeovimApi.Value,
+    value: NvimApi.Value,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
       value,
@@ -7444,15 +7424,15 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func bufferAddHighlight(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     ns_id: Int,
     hl_group: String,
     line: Int,
     col_start: Int,
     col_end: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .string(hl_group),
@@ -7461,9 +7441,9 @@ public extension NeovimApi {
       .int(Int64(col_end)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -7482,7 +7462,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "buffer_add_highlight", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -7492,16 +7472,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageGetWindows(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Window], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Window], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Window(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Window].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Window] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Window(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Window].self)
       }
 
       return result
@@ -7520,7 +7500,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_get_windows", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Window] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Window] in
         try transform(value)
       }
     case let .failure(error):
@@ -7530,18 +7510,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageGetVar(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -7560,7 +7540,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -7570,16 +7550,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageGetWindow(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Window, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Window, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Window in
-      guard let result = (NeovimApi.Window(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Window.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
+      guard let result = (NvimApi.Window(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Window.self)
       }
 
       return result
@@ -7598,7 +7578,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_get_window", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Window in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Window in
         try transform(value)
       }
     case let .failure(error):
@@ -7608,16 +7588,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func tabpageIsValid(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -7636,7 +7616,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "tabpage_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -7647,8 +7627,8 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func uiDetach(
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
     if expectsReturnValue {
@@ -7675,15 +7655,15 @@ public extension NeovimApi {
     width: Int,
     height: Int,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(width)),
       .int(Int64(height)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -7702,7 +7682,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "ui_try_resize", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -7716,8 +7696,8 @@ public extension NeovimApi {
     mode: String,
     escape_ks: Bool,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(keys),
       .string(mode),
       .bool(escape_ks),
@@ -7746,14 +7726,14 @@ public extension NeovimApi {
   func vimInput(
     keys: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(keys),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -7772,7 +7752,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_input", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -7787,17 +7767,17 @@ public extension NeovimApi {
     do_lt: Bool,
     special: Bool,
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
       .bool(from_part),
       .bool(do_lt),
       .bool(special),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -7816,7 +7796,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_replace_termcodes", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -7828,14 +7808,14 @@ public extension NeovimApi {
   func vimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(text),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -7854,7 +7834,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_strwidth", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -7865,13 +7845,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimListRuntimePaths(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
       guard let result = (value.arrayValue?.compactMap { v in v.stringValue }) else {
-        throw NeovimApi.Error.conversion(type: [String].self)
+        throw NvimApi.Error.conversion(type: [String].self)
       }
 
       return result
@@ -7890,7 +7870,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_list_runtime_paths", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String] in
+      return Result { () throws(NvimApi.Error) -> [String] in
         try transform(value)
       }
     case let .failure(error):
@@ -7902,8 +7882,8 @@ public extension NeovimApi {
   func vimChangeDirectory(
     dir: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(dir),
     ]
 
@@ -7929,13 +7909,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetCurrentLine(
     errWhenBlocked: Bool = true
-  ) async -> Result<String, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<String, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> String in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
       guard let result = (value.stringValue) else {
-        throw NeovimApi.Error.conversion(type: String.self)
+        throw NvimApi.Error.conversion(type: String.self)
       }
 
       return result
@@ -7954,7 +7934,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_current_line", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> String in
+      return Result { () throws(NvimApi.Error) -> String in
         try transform(value)
       }
     case let .failure(error):
@@ -7966,8 +7946,8 @@ public extension NeovimApi {
   func vimSetCurrentLine(
     line: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(line),
     ]
 
@@ -7993,8 +7973,8 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimDelCurrentLine(
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
     if expectsReturnValue {
@@ -8020,14 +8000,14 @@ public extension NeovimApi {
   func vimGetVar(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -8046,7 +8026,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -8058,14 +8038,14 @@ public extension NeovimApi {
   func vimGetVvar(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -8084,7 +8064,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_vvar", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -8096,8 +8076,8 @@ public extension NeovimApi {
   func vimOutWrite(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -8124,8 +8104,8 @@ public extension NeovimApi {
   func vimErrWrite(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -8152,8 +8132,8 @@ public extension NeovimApi {
   func vimReportError(
     str: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(str),
     ]
 
@@ -8179,13 +8159,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetBuffers(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Buffer], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Buffer], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Buffer] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Buffer(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Buffer].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Buffer] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Buffer(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Buffer].self)
       }
 
       return result
@@ -8204,7 +8184,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_buffers", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Buffer] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Buffer] in
         try transform(value)
       }
     case let .failure(error):
@@ -8215,13 +8195,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetCurrentBuffer(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Buffer, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Buffer, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Buffer in
-      guard let result = (NeovimApi.Buffer(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Buffer.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Buffer in
+      guard let result = (NvimApi.Buffer(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Buffer.self)
       }
 
       return result
@@ -8240,7 +8220,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_current_buffer", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Buffer in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Buffer in
         try transform(value)
       }
     case let .failure(error):
@@ -8250,10 +8230,10 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetCurrentBuffer(
-    buffer: NeovimApi.Buffer,
+    buffer: NvimApi.Buffer,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
     ]
 
@@ -8279,13 +8259,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetWindows(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Window], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Window], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Window] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Window(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Window].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Window] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Window(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Window].self)
       }
 
       return result
@@ -8304,7 +8284,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_windows", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Window] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Window] in
         try transform(value)
       }
     case let .failure(error):
@@ -8315,13 +8295,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetCurrentWindow(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Window, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Window, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Window in
-      guard let result = (NeovimApi.Window(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Window.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
+      guard let result = (NvimApi.Window(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Window.self)
       }
 
       return result
@@ -8340,7 +8320,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_current_window", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Window in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Window in
         try transform(value)
       }
     case let .failure(error):
@@ -8350,10 +8330,10 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetCurrentWindow(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
@@ -8379,13 +8359,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetTabpages(
     errWhenBlocked: Bool = true
-  ) async -> Result<[NeovimApi.Tabpage], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[NvimApi.Tabpage], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [NeovimApi.Tabpage] in
-      guard let result = (value.arrayValue?.compactMap { v in NeovimApi.Tabpage(v) }) else {
-        throw NeovimApi.Error.conversion(type: [NeovimApi.Tabpage].self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [NvimApi.Tabpage] in
+      guard let result = (value.arrayValue?.compactMap { v in NvimApi.Tabpage(v) }) else {
+        throw NvimApi.Error.conversion(type: [NvimApi.Tabpage].self)
       }
 
       return result
@@ -8404,7 +8384,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_tabpages", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [NeovimApi.Tabpage] in
+      return Result { () throws(NvimApi.Error) -> [NvimApi.Tabpage] in
         try transform(value)
       }
     case let .failure(error):
@@ -8415,13 +8395,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetCurrentTabpage(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Tabpage, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Tabpage, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Tabpage in
-      guard let result = (NeovimApi.Tabpage(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Tabpage.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Tabpage in
+      guard let result = (NvimApi.Tabpage(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Tabpage.self)
       }
 
       return result
@@ -8440,7 +8420,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_current_tabpage", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Tabpage in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Tabpage in
         try transform(value)
       }
     case let .failure(error):
@@ -8450,10 +8430,10 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetCurrentTabpage(
-    tabpage: NeovimApi.Tabpage,
+    tabpage: NvimApi.Tabpage,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(tabpage.handle)),
     ]
 
@@ -8480,8 +8460,8 @@ public extension NeovimApi {
   func vimSubscribe(
     event: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(event),
     ]
 
@@ -8508,8 +8488,8 @@ public extension NeovimApi {
   func vimUnsubscribe(
     event: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(event),
     ]
 
@@ -8536,14 +8516,14 @@ public extension NeovimApi {
   func vimNameToColor(
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -8562,7 +8542,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_name_to_color", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -8573,18 +8553,17 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetColorMap(
     errWhenBlocked: Bool = true
-  ) async -> Result<[String: NeovimApi.Value], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform =
-      { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
-        guard let result = msgPackDictToSwift(value.dictionaryValue) else {
-          throw NeovimApi.Error.conversion(type: [String: NeovimApi.Value].self)
-        }
-
-        return result
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
+      guard let result = msgPackDictToSwift(value.dictionaryValue) else {
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
+
+      return result
+    }
 
     if errWhenBlocked {
       let blockedResult = await self.isBlocked()
@@ -8599,7 +8578,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_color_map", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [String: NeovimApi.Value] in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -8610,13 +8589,13 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetApiInfo(
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -8635,7 +8614,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_get_api_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -8647,8 +8626,8 @@ public extension NeovimApi {
   func vimCommand(
     command: String,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(command),
     ]
 
@@ -8675,14 +8654,14 @@ public extension NeovimApi {
   func vimEval(
     expr: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(expr),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -8701,7 +8680,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_eval", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -8712,17 +8691,17 @@ public extension NeovimApi {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimCallFunction(
     fn: String,
-    args: NeovimApi.Value,
+    args: NvimApi.Value,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .string(fn),
       args,
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -8741,7 +8720,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "vim_call_function", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -8751,16 +8730,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetBuffer(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Buffer, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Buffer, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Buffer in
-      guard let result = (NeovimApi.Buffer(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Buffer.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Buffer in
+      guard let result = (NvimApi.Buffer(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Buffer.self)
       }
 
       return result
@@ -8779,7 +8758,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_buffer", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Buffer in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Buffer in
         try transform(value)
       }
     case let .failure(error):
@@ -8789,19 +8768,19 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetCursor(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -8820,7 +8799,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_cursor", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -8830,11 +8809,11 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowSetCursor(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     pos: [Int],
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .array(pos.map { .int(Int64($0)) }),
     ]
@@ -8860,16 +8839,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetHeight(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -8888,7 +8867,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_height", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -8898,11 +8877,11 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowSetHeight(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     height: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(height)),
     ]
@@ -8928,16 +8907,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetWidth(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Int, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Int in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
       guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NeovimApi.Error.conversion(type: Int.self)
+        throw NvimApi.Error.conversion(type: Int.self)
       }
 
       return result
@@ -8956,7 +8935,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_width", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Int in
+      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -8966,11 +8945,11 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowSetWidth(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     width: Int,
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .int(Int64(width)),
     ]
@@ -8996,18 +8975,18 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetVar(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     name: String,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Value, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .string(name),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Value in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
       guard let result = Optional(value) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Value.self)
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
       }
 
       return result
@@ -9026,7 +9005,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_var", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Value in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
         try transform(value)
       }
     case let .failure(error):
@@ -9036,19 +9015,19 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetPosition(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<[Int], NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<[Int], NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> [Int] in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
       guard let result = (value.arrayValue?.compactMap { v in
         v.int64Value == nil ? nil : Int(v.int64Value!)
       })
       else {
-        throw NeovimApi.Error.conversion(type: [Int].self)
+        throw NvimApi.Error.conversion(type: [Int].self)
       }
 
       return result
@@ -9067,7 +9046,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_position", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> [Int] in
+      return Result { () throws(NvimApi.Error) -> [Int] in
         try transform(value)
       }
     case let .failure(error):
@@ -9077,16 +9056,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowGetTabpage(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<NeovimApi.Tabpage, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<NvimApi.Tabpage, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> NeovimApi.Tabpage in
-      guard let result = (NeovimApi.Tabpage(value)) else {
-        throw NeovimApi.Error.conversion(type: NeovimApi.Tabpage.self)
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Tabpage in
+      guard let result = (NvimApi.Tabpage(value)) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Tabpage.self)
       }
 
       return result
@@ -9105,7 +9084,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_get_tabpage", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> NeovimApi.Tabpage in
+      return Result { () throws(NvimApi.Error) -> NvimApi.Tabpage in
         try transform(value)
       }
     case let .failure(error):
@@ -9115,16 +9094,16 @@ public extension NeovimApi {
 
   @available(*, deprecated, message: "This method has been deprecated.")
   func windowIsValid(
-    window: NeovimApi.Window,
+    window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) async -> Result<Bool, NeovimApi.Error> {
-    let params: [NeovimApi.Value] = [
+  ) async -> Result<Bool, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> Bool in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
       guard let result = (value.boolValue) else {
-        throw NeovimApi.Error.conversion(type: Bool.self)
+        throw NvimApi.Error.conversion(type: Bool.self)
       }
 
       return result
@@ -9143,7 +9122,7 @@ public extension NeovimApi {
     let reqResult = await self.sendRequest(method: "window_is_valid", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> Bool in
+      return Result { () throws(NvimApi.Error) -> Bool in
         try transform(value)
       }
     case let .failure(error):
@@ -9152,8 +9131,8 @@ public extension NeovimApi {
   }
 }
 
-public extension NeovimApi.Buffer {
-  init?(_ value: NeovimApi.Value) {
+public extension NvimApi.Buffer {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -9170,8 +9149,8 @@ public extension NeovimApi.Buffer {
   }
 }
 
-public extension NeovimApi.Window {
-  init?(_ value: NeovimApi.Value) {
+public extension NvimApi.Window {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -9188,8 +9167,8 @@ public extension NeovimApi.Window {
   }
 }
 
-public extension NeovimApi.Tabpage {
-  init?(_ value: NeovimApi.Value) {
+public extension NvimApi.Tabpage {
+  init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -9206,8 +9185,8 @@ public extension NeovimApi.Tabpage {
   }
 }
 
-private func msgPackDictToSwift(_ dict: [NeovimApi.Value: NeovimApi.Value]?)
-  -> [String: NeovimApi.Value]?
+private func msgPackDictToSwift(_ dict: [NvimApi.Value: NvimApi.Value]?)
+  -> [String: NvimApi.Value]?
 {
   dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
@@ -9218,7 +9197,7 @@ private func msgPackDictToSwift(_ dict: [NeovimApi.Value: NeovimApi.Value]?)
   }
 }
 
-private func msgPackArrayDictToSwift(_ array: [NeovimApi.Value]?) -> [[String: NeovimApi.Value]]? {
+private func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [[String: NvimApi.Value]]? {
   array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }

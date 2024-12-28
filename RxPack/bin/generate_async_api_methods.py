@@ -13,9 +13,9 @@ import io
 void_func_template = Template('''\
   func ${func_name}(${args}
     expectsReturnValue: Bool = false
-  ) async -> Result<Void, NeovimApi.Error> {
+  ) async -> Result<Void, NvimApi.Error> {
 
-    let params: [NeovimApi.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
 
@@ -41,9 +41,9 @@ void_func_template = Template('''\
 
 get_mode_func_template = Template('''\
   func ${func_name}(${args}
-  ) async -> Result<${result_type}, NeovimApi.Error> {
+  ) async -> Result<${result_type}, NvimApi.Error> {
 
-    let params: [NeovimApi.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
     
@@ -64,15 +64,15 @@ get_mode_func_template = Template('''\
 func_template = Template('''\
   func ${func_name}(${args}
     errWhenBlocked: Bool = true
-  ) async -> Result<${result_type}, NeovimApi.Error> {
+  ) async -> Result<${result_type}, NvimApi.Error> {
 
-    let params: [NeovimApi.Value] = [
+    let params: [NvimApi.Value] = [
         ${params}
     ]
 
-    let transform = { (_ value: NeovimApi.Value) throws(NeovimApi.Error) -> ${result_type} in
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> ${result_type} in
       guard let result = (${return_value}) else {
-        throw NeovimApi.Error.conversion(type: ${result_type}.self)
+        throw NvimApi.Error.conversion(type: ${result_type}.self)
       }
 
       return result
@@ -91,7 +91,7 @@ func_template = Template('''\
     let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NeovimApi.Error) -> ${result_type} in
+      return Result { () throws(NvimApi.Error) -> ${result_type} in
         try transform(value)
       }
     case let .failure(error):
@@ -107,7 +107,7 @@ extension_template = Template('''\
 import Foundation
 import MessagePack
 
-extension NeovimApi {
+extension NvimApi {
 
   public enum Error: Swift.Error {
 
@@ -120,7 +120,7 @@ extension NeovimApi {
     case other(cause: Swift.Error)
     case unknown
 
-    init(_ value: NeovimApi.Value?) {
+    init(_ value: NvimApi.Value?) {
       let array = value?.arrayValue
       guard array?.count == 2 else {
         self = .unknown
@@ -140,14 +140,14 @@ extension NeovimApi {
   }
 }
 
-public extension NeovimApi {
+public extension NvimApi {
 
 $body
 }
 
-extension NeovimApi.Buffer {
+extension NvimApi.Buffer {
 
-  public init?(_ value: NeovimApi.Value) {
+  public init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -164,9 +164,9 @@ extension NeovimApi.Buffer {
   }
 }
 
-extension NeovimApi.Window {
+extension NvimApi.Window {
 
-  public init?(_ value: NeovimApi.Value) {
+  public init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -183,9 +183,9 @@ extension NeovimApi.Window {
   }
 }
 
-extension NeovimApi.Tabpage {
+extension NvimApi.Tabpage {
 
-  public init?(_ value: NeovimApi.Value) {
+  public init?(_ value: NvimApi.Value) {
     guard let (type, data) = value.extendedValue else {
       return nil
     }
@@ -202,7 +202,7 @@ extension NeovimApi.Tabpage {
   }
 }
 
-fileprivate func msgPackDictToSwift(_ dict: Dictionary<NeovimApi.Value, NeovimApi.Value>?) -> Dictionary<String, NeovimApi.Value>? {
+fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
   return dict?.compactMapToDict { k, v in
     guard let strKey = k.stringValue else {
       return nil
@@ -212,7 +212,7 @@ fileprivate func msgPackDictToSwift(_ dict: Dictionary<NeovimApi.Value, NeovimAp
   }
 }
 
-fileprivate func msgPackArrayDictToSwift(_ array: [NeovimApi.Value]?) -> [Dictionary<String, NeovimApi.Value>]? {
+fileprivate func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [Dictionary<String, NvimApi.Value>]? {
   return array?
     .compactMap { v in v.dictionaryValue }
     .compactMap { d in msgPackDictToSwift(d) }
@@ -267,28 +267,28 @@ def nvim_type_to_swift(nvim_type):
         return 'String'
 
     if nvim_type == 'Array':
-        return 'NeovimApi.Value'
+        return 'NvimApi.Value'
 
     if nvim_type == 'Dictionary':
-        return 'Dictionary<String, NeovimApi.Value>'
+        return 'Dictionary<String, NvimApi.Value>'
 
     if nvim_type == 'Buffer':
-        return 'NeovimApi.Buffer'
+        return 'NvimApi.Buffer'
 
     if nvim_type == 'Window':
-        return 'NeovimApi.Window'
+        return 'NvimApi.Window'
 
     if nvim_type == 'Tabpage':
-        return 'NeovimApi.Tabpage'
+        return 'NvimApi.Tabpage'
 
     if nvim_type == 'Object':
-        return 'NeovimApi.Value'
+        return 'NvimApi.Value'
 
     if nvim_type.startswith('ArrayOf('):
         match = re.match(r'ArrayOf\((.*?)(?:, \d+)*\)', nvim_type)
         return '[{}]'.format(nvim_type_to_swift(match.group(1)))
 
-    return 'NeovimApi.Value'
+    return 'NvimApi.Value'
 
 
 def msgpack_to_swift(msgpack_value_name, type):
@@ -307,17 +307,17 @@ def msgpack_to_swift(msgpack_value_name, type):
     if type == 'String':
         return f'{msgpack_value_name}.stringValue'
 
-    if type == 'NeovimApi.Value':
+    if type == 'NvimApi.Value':
         return f'Optional({msgpack_value_name})'
 
-    if type in 'NeovimApi.Buffer':
-        return f'NeovimApi.Buffer({msgpack_value_name})'
+    if type in 'NvimApi.Buffer':
+        return f'NvimApi.Buffer({msgpack_value_name})'
 
-    if type in 'NeovimApi.Window':
-        return f'NeovimApi.Window({msgpack_value_name})'
+    if type in 'NvimApi.Window':
+        return f'NvimApi.Window({msgpack_value_name})'
 
-    if type in 'NeovimApi.Tabpage':
-        return f'NeovimApi.Tabpage({msgpack_value_name})'
+    if type in 'NvimApi.Tabpage':
+        return f'NvimApi.Tabpage({msgpack_value_name})'
 
     if type.startswith('Dictionary<'):
         return f'msgPackDictToSwift({msgpack_value_name}.dictionaryValue)'
@@ -329,7 +329,7 @@ def msgpack_to_swift(msgpack_value_name, type):
         element_type = re.match(r'\[(.*)\]', type).group(1)
         return f'{msgpack_value_name}.arrayValue?.compactMap({{ v in {msgpack_to_swift("v", element_type)} }})'
 
-    return 'NeovimApi.Value'
+    return 'NvimApi.Value'
 
 
 def swift_to_msgpack_value(name, type):
@@ -348,13 +348,13 @@ def swift_to_msgpack_value(name, type):
     if type == 'String':
         return f'.string({name})'
 
-    if type == 'Dictionary<String, NeovimApi.Value>':
+    if type == 'Dictionary<String, NvimApi.Value>':
         return f'.map({name}.mapToDict({{ (Value.string($0), $1) }}))'
 
-    if type == 'NeovimApi.Value':
+    if type == 'NvimApi.Value':
         return name
 
-    if type in ['NeovimApi.Buffer', 'NeovimApi.Window', 'NeovimApi.Tabpage']:
+    if type in ['NvimApi.Buffer', 'NvimApi.Window', 'NvimApi.Tabpage']:
         return f'.int(Int64({name}.handle))'
 
     if type.startswith('['):
@@ -428,7 +428,7 @@ def parse_error_cases(error_types):
 
 
 if __name__ == '__main__':
-    result_file_path = './Sources/NeovimApi/NeovimApi.generated.swift'
+    result_file_path = './Sources/NvimApi/NvimApi.generated.swift'
 
     nvim_path = os.environ['NVIM_PATH'] if 'NVIM_PATH' in os.environ else 'nvim'
 

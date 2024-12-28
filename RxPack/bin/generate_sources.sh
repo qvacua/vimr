@@ -17,7 +17,7 @@ main() {
     NVIM_PATH="../Neovim/build/bin/nvim" ./bin/generate_api_methods.py
     NVIM_PATH="../Neovim/build/bin/nvim" ./bin/generate_async_api_methods.py
     swiftformat ./Sources/RxNeovim/RxNeovimApi.generated.swift
-    swiftformat ./Sources/NeovimApi/NeovimApi.generated.swift
+    swiftformat ./Sources/NvimApi/NvimApi.generated.swift
   popd >/dev/null
 
   popd >/dev/null
