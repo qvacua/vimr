@@ -5,9 +5,6 @@
       location = "group:NvimApi">
    </FileRef>
    <FileRef
-      location = "group:RxPack">
-   </FileRef>
-   <FileRef
       location = "group:Ignore">
    </FileRef>
    <FileRef
