@@ -7,15 +7,15 @@ import Cocoa
 
 public extension NvimView {
   override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-    isFile(sender: sender) ? .copy : NSDragOperation()
+    self.isFile(sender: sender) ? .copy : NSDragOperation()
   }
 
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-    isFile(sender: sender) ? .copy : NSDragOperation()
+    self.isFile(sender: sender) ? .copy : NSDragOperation()
   }
 
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-    guard isFile(sender: sender) else { return false }
+    guard self.isFile(sender: sender) else { return false }
 
     guard let urls = sender.draggingPasteboard
       .readObjects(forClasses: [NSURL.self]) as? [URL] else { return false }
@@ -31,8 +31,8 @@ public extension NvimView {
 
     return true
   }
-}
 
-private func isFile(sender: NSDraggingInfo) -> Bool {
-  (sender.draggingPasteboard.types?.contains(NSPasteboard.PasteboardType.fileURL)) ?? false
+  private func isFile(sender: NSDraggingInfo) -> Bool {
+    (sender.draggingPasteboard.types?.contains(NSPasteboard.PasteboardType.fileURL)) ?? false
+  }
 }

@@ -6,8 +6,7 @@
 import Cocoa
 import MessagePack
 import NvimView
-import RxNeovim
-import RxPack
+import NvimApi
 import RxSwift
 import Workspace
 
@@ -149,7 +148,7 @@ extension MainWindow {
       "CursorColumn", // code background and foreground
     ]
 
-    typealias HlResult = [String: RxNeovimApi.Value]
+    typealias HlResult = [String: NvimApi.Value]
     typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
     typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
 

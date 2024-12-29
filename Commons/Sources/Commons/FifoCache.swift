@@ -6,7 +6,7 @@
 import Foundation
 import os
 
-public final class ThreadSafeFifoCache<Key: Hashable, Value> {
+public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendable {
   public init(count: Int) {
     self.count = count
     self.keyWriteIndex = 0

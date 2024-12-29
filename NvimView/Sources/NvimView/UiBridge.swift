@@ -6,9 +6,8 @@
 import Commons
 import Foundation
 import MessagePack
+import NvimApi
 import os
-import RxNeovim
-import RxPack
 import RxSwift
 
 let kMinAlphaVersion = 0
@@ -100,8 +99,7 @@ final class UiBridge {
     do {
       try process.run()
     } catch {
-      throw RxNeovimApi.Error
-        .exception(message: "Could not run neovim process.")
+      throw NvimApi.Error.exception(message: "Could not run neovim process.")
     }
 
     self.nvimServerProc = process

@@ -40,7 +40,7 @@ public extension NvimView {
     public var handle: Int { self.apiBuffer.handle }
   }
 
-  struct Window: Sendable  {
+  struct Window: Sendable {
     public let apiWindow: NvimApi.Window
     public let buffer: Buffer
     public let isCurrentInTab: Bool

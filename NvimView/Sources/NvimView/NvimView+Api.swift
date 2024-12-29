@@ -157,7 +157,9 @@ public extension NvimView {
             let wins = tabs.map(\.windows).flatMap { $0 }
             if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
               return Single
-                .create { await self?.api.nvimSetCurrentWin(window: NvimApi.Window(win.handle)) }
+                .create { [weak self] in
+                  await self?.api.nvimSetCurrentWin(window: NvimApi.Window(win.handle))
+                }
                 .asCompletable()
             }
 

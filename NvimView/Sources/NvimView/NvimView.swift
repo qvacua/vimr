@@ -9,8 +9,6 @@ import Commons
 import MessagePack
 import NvimApi
 import os
-import RxNeovim
-import RxPack
 @preconcurrency import RxSwift
 import SpriteKit
 import Tabs
@@ -84,6 +82,8 @@ public final class NvimView: NSView,
 
   public static let rpcEventName = "com.qvacua.NvimView"
 
+  // static immutable properties should be safe to access from any isolation domains,
+  // but FontUtils errs
   public static let minFontSize = 4.0
   public static let maxFontSize = 128.0
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
@@ -210,7 +210,7 @@ public final class NvimView: NSView,
 
     super.init(frame: .zero)
 
-    Task.detached(priority: .high) {
+    Task(priority: .high) {
       let stream = await self.api.msgpackRawStream
       for await msg in stream {
         switch msg {
@@ -244,7 +244,7 @@ public final class NvimView: NSView,
         case let .response(_, error, _):
           guard let array = error.arrayValue,
                 array.count >= 2,
-                array[0].uint64Value == RxNeovimApi.Error.exceptionRawValue,
+                array[0].uint64Value == NvimApi.Error.exceptionRawValue,
                 let errorMsg = array[1].stringValue else { return }
 
           // FIXME:
@@ -347,7 +347,9 @@ public final class NvimView: NSView,
   // cache the tabs for Touch Bar use
   var tabsCache = [NvimView.Tabpage]()
 
-  let eventsSubject = PublishSubject<Event>()
+  // The subject is thread-safe
+  nonisolated(unsafe) let eventsSubject = PublishSubject<Event>()
+
   let disposeBag = DisposeBag()
 
   var markedText: String?

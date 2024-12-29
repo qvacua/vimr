@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -9,7 +9,6 @@ let package = Package(
     .library(name: "NvimView", targets: ["NvimView"]),
   ],
   dependencies: [
-    .package(name: "RxPack", path: "../RxPack"),
     .package(url: "https://github.com/qvacua/MessagePack.swift", from: "4.1.0"),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.8.0"),
     .package(url: "https://github.com/Quick/Nimble", from: "13.7.1"),
@@ -22,9 +21,7 @@ let package = Package(
       name: "NvimView",
       dependencies: [
         .product(name: "RxSwift", package: "RxSwift"),
-        .product(name: "RxPack", package: "RxPack"),
         "Tabs",
-        .product(name: "RxNeovim", package: "RxPack"),
         .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",
         "NvimApi",
@@ -34,17 +31,11 @@ let package = Package(
       resources: [
         .copy("Resources/runtime"),
         .copy("Resources/NvimServer"),
-      ],
-      swiftSettings: [
-        .enableUpcomingFeature("StrictConcurrency"),
       ]
     ),
     .testTarget(
       name: "NvimViewTests",
-      dependencies: ["NvimView", "Nimble"],
-      swiftSettings: [
-        .enableUpcomingFeature("StrictConcurrency"),
-      ]
+      dependencies: ["NvimView", "Nimble"]
     ),
   ]
 )

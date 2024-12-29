@@ -100,7 +100,7 @@ extension NvimView {
       return
     }
 
-    gui.async {
+    Task(priority: .high) {
       self.font = newFont
       // Cell size likely changed, do a resize.
       self.resizeNeoVimUi(to: self.frame.size)

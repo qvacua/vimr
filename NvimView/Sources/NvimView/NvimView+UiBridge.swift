@@ -45,7 +45,7 @@ extension NvimView {
   final func renderData(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
-    gui.async { [self] in
+    Task {
       var (recompute, rowStart) = (false, Int.max)
       for value in renderData {
         guard let renderEntry = value.arrayValue else { continue }
@@ -237,15 +237,6 @@ extension NvimView {
 // MARK: Private
 
 extension NvimView {
-  private func optionSet(_ value: MessagePackValue) {
-    guard let options = value.dictionaryValue else {
-      self.bridgeLogger.error("Could not convert \(value)")
-      return
-    }
-
-    self.handleRemoteOptions(options)
-  }
-
   private func resize(_ value: MessagePackValue) {
     guard let array = value.arrayValue else {
       self.bridgeLogger.error("Could not convert \(value)")
@@ -507,9 +498,7 @@ extension NvimView {
 
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
-    gui.async { [self] in
-      self.tabBar?.cwd = cwd
-    }
+    Task { self.tabBar?.cwd = cwd }
     self.eventsSubject.onNext(.cwdChanged)
   }
 

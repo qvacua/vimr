@@ -7,9 +7,11 @@ import Cocoa
 import MessagePack
 import NvimApi
 import PureLayout
-import RxNeovim
-import RxPack
 import Tabs
+
+extension NSColor: @retroactive @unchecked Sendable {}
+extension NSFont: @retroactive @unchecked Sendable {}
+extension NSImage: @retroactive @unchecked Sendable {}
 
 public extension NvimView {
   struct TabEntry: Hashable, TabRepresentative {
