@@ -2,7 +2,6 @@
 /// See LICENSE
 
 import Foundation
-import os
 
 public final class AsyncFuture<Element: Sendable>: Sendable {
   public typealias ResultType = Result<Element, Swift.Error>

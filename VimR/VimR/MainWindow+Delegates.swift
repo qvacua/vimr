@@ -157,12 +157,18 @@ extension MainWindow {
       .from(colorNames.map { colorName -> ColorNameObservableTuple in
         (
           colorName: colorName,
-          observable: self.neoVimView.api
-            .nvimGetHl(
-              ns_id: 0,
-              opts: ["name": MessagePackValue(colorName)]
-            )
-            .asObservable()
+          observable: Single.create {
+            let result = await self.neoVimView.api
+              .nvimGetHl(
+                ns_id: 0,
+                opts: ["name": MessagePackValue(colorName)]
+              )
+            switch result {
+            case let .success(value): return value
+            case let .failure(error): throw error
+            }
+          }
+          .asObservable()
         )
       })
       .flatMap { tuple -> Observable<(String, HlResult)> in

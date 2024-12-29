@@ -115,7 +115,7 @@ enum FontUtils {
   }
 }
 
-private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 50)
-private let nilFontCache = FifoCache<SizedFontTrait, Int>(count: 50)
-private let fontHeightCache = FifoCache<NSFont, CGFloat>(count: 100)
-private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(count: 100)
+private let fontCache = ThreadSafeFifoCache<SizedFontTrait, NSFont>(count: 50)
+private let nilFontCache = ThreadSafeFifoCache<SizedFontTrait, Int>(count: 50)
+private let fontHeightCache = ThreadSafeFifoCache<NSFont, CGFloat>(count: 100)
+private let cellSizeWithDefaultLinespacingCache = ThreadSafeFifoCache<NSFont, CGSize>(count: 100)

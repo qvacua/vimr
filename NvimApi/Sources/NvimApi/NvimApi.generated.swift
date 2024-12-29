@@ -5,7 +5,7 @@ import Foundation
 import MessagePack
 
 public extension NvimApi {
-  enum Error: Swift.Error {
+  enum Error: Swift.Error, Sendable {
     public static let exceptionRawValue = UInt64(0)
     public static let validationRawValue = UInt64(1)
 

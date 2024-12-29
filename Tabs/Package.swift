@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "Tabs",
-  platforms: [.macOS(.v12)],
+  platforms: [.macOS(.v13)],
   products: [
     .library(name: "Tabs", targets: ["Tabs"]),
   ],

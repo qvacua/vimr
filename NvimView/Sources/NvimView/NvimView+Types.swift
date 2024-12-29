@@ -5,6 +5,7 @@
 
 import Cocoa
 import MessagePack
+import NvimApi
 import PureLayout
 import RxNeovim
 import RxPack
@@ -17,7 +18,7 @@ public extension NvimView {
     public var title: String
     public var isSelected = false
 
-    public var tabpage: RxNeovimApi.Tabpage
+    public var tabpage: NvimApi.Tabpage
   }
 
   struct Config {
@@ -88,7 +89,7 @@ public extension NvimView {
     case ipc(msg: String, cause: Swift.Error)
   }
 
-  struct Theme: CustomStringConvertible {
+  struct Theme: CustomStringConvertible, Sendable {
     public static let `default` = Theme()
 
     public var foreground = NSColor.textColor

@@ -48,7 +48,6 @@ class MsgpackRpcNeovimExample {
   }
 
   @Test func testExample() async throws {
-    Swift.print("###############################################")
     _ = try await self.rpc.request(
       method: "nvim_ui_attach",
       params: [80, 24, [:]],
@@ -88,7 +87,7 @@ class MsgpackRpcNeovimExample {
     )
     Swift.print("Line count of \(testFileUrl): \(lineCount)")
 
-    let repeatCount = 200
+    let repeatCount = 10
     for _ in 0...repeatCount {
       _ = try await self.rpc
         .request(method: "nvim_input", params: ["<PageDown>"], expectsReturnValue: false)

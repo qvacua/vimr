@@ -4,7 +4,7 @@
 import Foundation
 import MessagePack
 import os
-import RxSwift
+@preconcurrency import RxSwift
 
 public final class RxMsgpackRpc: @unchecked Sendable {
   public static let defaultReadBufferSize = 10240

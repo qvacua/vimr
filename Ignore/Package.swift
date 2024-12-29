@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "Ignore",
-  platforms: [.macOS(.v12)],
+  platforms: [.macOS(.v13)],
   products: [
     .library(name: "Ignore", targets: ["Ignore"]),
   ],

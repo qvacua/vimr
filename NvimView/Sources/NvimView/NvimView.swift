@@ -7,16 +7,54 @@ import Carbon
 import Cocoa
 import Commons
 import MessagePack
+import NvimApi
 import os
 import RxNeovim
 import RxPack
-import RxSwift
+@preconcurrency import RxSwift
 import SpriteKit
 import Tabs
 import UniformTypeIdentifiers
 import UserNotifications
 
-public struct FontTrait: OptionSet {
+extension Result {
+  var isSuccess: Bool { if case .success = self { true } else { false } }
+  var isFailure: Bool { !self.isSuccess }
+
+  func cauterize() {}
+
+  func tryAsyncMap<NewSuccess>(
+    _ transform: @Sendable (Success) async throws(Failure) -> NewSuccess
+  ) async -> Result<NewSuccess, Failure> {
+    switch self {
+    case let .success(success):
+      do {
+        return try await .success(transform(success))
+      } catch {
+        return .failure(error)
+      }
+    case let .failure(failure):
+      return .failure(failure)
+    }
+  }
+
+  func tryFlatAsyncMap<NewSuccess>(
+    _ transform: @Sendable (Success) async throws(Failure) -> Result<NewSuccess, Failure>
+  ) async -> Result<NewSuccess, Failure> {
+    switch self {
+    case let .success(success):
+      do {
+        return try await transform(success)
+      } catch {
+        return .failure(error)
+      }
+    case let .failure(failure):
+      return .failure(failure)
+    }
+  }
+}
+
+public struct FontTrait: OptionSet, Sendable {
   public let rawValue: UInt
 
   public init(rawValue: UInt) { self.rawValue = rawValue }
@@ -38,7 +76,10 @@ public protocol NvimViewDelegate: AnyObject {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
 }
 
-public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClient {
+public final class NvimView: NSView,
+  NSUserInterfaceValidations,
+  @preconcurrency NSTextInputClient
+{
   // MARK: - Public
 
   public static let rpcEventName = "com.qvacua.NvimView"
@@ -63,7 +104,7 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   public var activateAsciiImInNormalMode = true
 
   public let uuid = UUID()
-  public let api = RxNeovimApi()
+  public let api = NvimApi()
 
   public internal(set) var mode: CursorModeShape = .normal
   public internal(set) var modeInfos = [String: ModeInfo]()
@@ -123,16 +164,13 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
   public var cwd: URL {
     get { self._cwd }
-
     set {
-      self.api
-        .nvimSetCurrentDir(dir: newValue.path)
-        .subscribe(on: self.scheduler)
-        .subscribe(onError: { [weak self] error in
-          self?.eventsSubject
+      Task {
+        if case let .failure(error) = await self.api.nvimSetCurrentDir(dir: newValue.path) {
+          self.eventsSubject
             .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
-        })
-        .disposed(by: self.disposeBag)
+        }
+      }
     }
   }
 
@@ -172,8 +210,9 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
     super.init(frame: .zero)
 
-    self.api.msgpackRawStream
-      .subscribe(onNext: { [weak self] msg in
+    Task.detached(priority: .high) {
+      let stream = await self.api.msgpackRawStream
+      for await msg in stream {
         switch msg {
         case let .request(msgid, method, _):
           // See https://neovim.io/doc/user/ui.html#ui-startup
@@ -183,24 +222,24 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
           // NvimView+Resize.swift
           // This is the only request sent from Neovim to the UI, afaics.
           guard method == "vimenter" else { break }
-          self?.log.debug("Processing blocking vimenter request")
-          self?.doSetupForVimenterAndSendResponse(forMsgid: msgid)
+          self.log.debug("Processing blocking vimenter request")
+          await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
         case let .notification(method, params):
           if method == NvimView.rpcEventName {
-            self?.eventsSubject.onNext(.rpcEvent(params))
+            self.eventsSubject.onNext(.rpcEvent(params))
           }
 
           if method == "redraw" {
-            self?.renderData(params)
+            self.renderData(params)
           } else if method == "autocommand" {
-            self?.autoCommandEvent(params)
+            self.autoCommandEvent(params)
           } else {
-            self?.log.debug("MSG ERROR: \(msg)")
+            self.log.debug("MSG ERROR: \(msg)")
           }
 
         case let .error(_, msg):
-          self?.log.debug("MSG ERROR: \(msg)")
+          self.log.debug("MSG ERROR: \(msg)")
 
         case let .response(_, error, _):
           guard let array = error.arrayValue,
@@ -210,39 +249,29 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
 
           // FIXME:
           if errorMsg.contains("Vim(tabclose):E784") {
-            self?.eventsSubject.onNext(.warning(.cannotCloseLastTab))
+            self.eventsSubject.onNext(.warning(.cannotCloseLastTab))
           }
           if errorMsg.starts(with: "Vim(tabclose):E37") {
-            self?.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
+            self.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
           }
         }
-      }, onError: { [weak self] error in
-        self?.log.error(error)
-      }, onCompleted: { [weak self] in
-        self?.stop()
-      })
-      .disposed(by: self.disposeBag)
+      }
 
-    let db = self.disposeBag
+      self.stop()
+    }
+
     self.tabBar?.closeHandler = { [weak self] index, _, _ in
-      self?.api
-        .nvimCommand(command: "tabclose \(index + 1)")
-        .subscribe()
-        .disposed(by: db)
+      Task { await self?.api.nvimCommand(command: "tabclose \(index + 1)") }
     }
     self.tabBar?.selectHandler = { [weak self] _, tabEntry, _ in
-      self?.api
-        .nvimSetCurrentTabpage(tabpage: tabEntry.tabpage)
-        .subscribe()
-        .disposed(by: db)
+      Task { await self?.api.nvimSetCurrentTabpage(tabpage: tabEntry.tabpage) }
     }
     self.tabBar?.reorderHandler = { [weak self] index, _, entries in
-      // I don't know why, but `tabm ${last_index}` does not always work.
-      let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
-      self?.api
-        .nvimCommand(command: command)
-        .subscribe()
-        .disposed(by: db)
+      Task {
+        // I don't know why, but `tabm ${last_index}` does not always work.
+        let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
+        return await self?.api.nvimCommand(command: command)
+      }
     }
 
     self.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
@@ -345,18 +374,22 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
 
-  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) {
-    self.api.nvimGetApiInfo(errWhenBlocked: false)
-      .flatMapCompletable { value in
+  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
+    // TODO: Proper error handling
+    await self.api
+      .nvimGetApiInfo(errWhenBlocked: false)
+      .tryFlatAsyncMap { value throws(NvimApi.Error)
+        -> Result<[String: NvimApi.Value], NvimApi.Error> in
+
         guard let info = value.arrayValue,
               info.count == 2,
               let channel = info[0].int32Value
         else {
-          throw RxNeovimApi.Error.exception(message: "Could not convert values to api info.")
+          throw NvimApi.Error.exception(message: "Could not convert values to api info.")
         }
 
         // swiftformat:disable all
-        return self.api.nvimExec2(src: """
+        return await self.api.nvimExec2(src: """
         autocmd BufWinEnter * call rpcnotify(\(channel), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
         autocmd BufWinLeave * call rpcnotify(\(channel), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
         autocmd TabEnter * call rpcnotify(\(channel), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
@@ -366,39 +399,29 @@ public final class NvimView: NSView, NSUserInterfaceValidations, NSTextInputClie
         autocmd BufModifiedSet * call rpcnotify(\(channel), 'autocommand', 'bufmodifiedset', str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
         """, opts: [:], errWhenBlocked: false)
         // swiftformat:enable all
-          .asCompletable()
-          .andThen(self.api.nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false))
-          .andThen(
-            self.sourceFileUrls.reduce(.empty()) { prev, url in
-              prev.andThen(
-                self.api.nvimExec2(
-                  src: "source \(url.shellEscapedPath)",
-                  opts: ["output": true],
-                  errWhenBlocked: false
-                )
-                .map { retval in
-                  guard let output = retval["output"]?.stringValue else {
-                    throw RxNeovimApi.Error
-                      .exception(message: "Could not convert values to output.")
-                  }
-                  return output
-                }
-                .asCompletable()
-              )
-            }
-          )
-          .andThen(self.api.sendResponse(.nilResponse(msgid)))
-          .andThen(
-            {
-              let ginitPath = FileManager.default.homeDirectoryForCurrentUser
-                .appendingPathComponent(".config/nvim/ginit.vim").path
-              guard FileManager.default.fileExists(atPath: ginitPath) else { return .empty() }
-
-              self.bridgeLogger.debug("Source'ing ginit.vim")
-              return self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)")
-            }()
-          )
       }
-      .subscribe().disposed(by: self.disposeBag)
+      .cauterize()
+
+    await self.api
+      .nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false)
+      .cauterize()
+
+    for url in self.sourceFileUrls {
+      await self.api
+        .nvimExec2(
+          src: "source \(url.shellEscapedPath)",
+          opts: ["output": true],
+          errWhenBlocked: false
+        ).cauterize()
+      // TODO: Do proper error handling
+    }
+    await self.api.sendResponse(.nilResponse(msgid)).cauterize()
+
+    let ginitPath = FileManager.default.homeDirectoryForCurrentUser
+      .appendingPathComponent(".config/nvim/ginit.vim").path
+    if FileManager.default.fileExists(atPath: ginitPath) {
+      self.bridgeLogger.debug("Source'ing ginit.vim")
+      await self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)").cauterize()
+    }
   }
 }

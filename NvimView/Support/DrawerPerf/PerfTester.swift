@@ -144,14 +144,14 @@ class PerfTester {
 
   private func randomFontTrait() -> FontTrait {
     switch self.fontTraitRd.nextInt() {
-    case 0: return []
-    case 1: return [.italic]
-    case 2: return [.bold]
-    case 3: return [.underline]
-    case 4: return [.undercurl]
-    case 5: return [.italic, .bold]
-    case 6: return [.bold, .underline]
-    default: return []
+    case 0: []
+    case 1: [.italic]
+    case 2: [.bold]
+    case 3: [.underline]
+    case 4: [.undercurl]
+    case 5: [.italic, .bold]
+    case 6: [.bold, .underline]
+    default: []
     }
   }
 }

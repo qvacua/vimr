@@ -19,7 +19,6 @@ class Document: NSDocument, NSWindowDelegate {
     self.nvimView.font = NSFont(name: "Iosevka", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
-    self.nvimView.usesLiveResize = true
 
     self.nvimView
       .events

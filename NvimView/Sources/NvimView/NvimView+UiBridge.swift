@@ -7,9 +7,8 @@ import Carbon
 import Cocoa
 import Foundation
 import MessagePack
+import NvimApi
 import os
-import RxNeovim
-import RxPack
 import RxSwift
 
 extension NvimView {
@@ -26,7 +25,7 @@ extension NvimView {
   final func stop() {
     self.bridgeLogger.debug()
     self.quit()
-      .andThen(self.api.stop())
+      .andThen(Single.create { await self.api.stop() }.asCompletable())
       .andThen(Completable.create { [weak self] completable in
         self?.eventsSubject.onNext(.neoVimStopped)
         self?.eventsSubject.onCompleted()
@@ -48,15 +47,15 @@ extension NvimView {
 
     gui.async { [self] in
       var (recompute, rowStart) = (false, Int.max)
-      renderData.forEach { value in
-        guard let renderEntry = value.arrayValue else { return }
-        guard renderEntry.count >= 2 else { return }
+      for value in renderData {
+        guard let renderEntry = value.arrayValue else { continue }
+        guard renderEntry.count >= 2 else { continue }
 
         guard let rawType = renderEntry[0].stringValue,
               let innerArray = renderEntry[1].arrayValue
         else {
           self.bridgeLogger.error("Could not convert \(value)")
-          return
+          continue
         }
 
         switch rawType {
@@ -67,7 +66,7 @@ extension NvimView {
           for index in 1..<renderEntry.count {
             guard let grid_line = renderEntry[index].arrayValue else {
               self.bridgeLogger.error("Could not convert \(value)")
-              return
+              continue
             }
             let possibleNewRowStart = self.doRawLineNu(data: grid_line)
             rowStart = min(rowStart, possibleNewRowStart)
@@ -130,7 +129,7 @@ extension NvimView {
           guard let _ /* grid */ = innerArray[0].uintValue,
                 let row = innerArray[1].uintValue,
                 let col = innerArray[2].uintValue
-          else { return }
+          else { continue }
 
           if let possibleNewRowStart = self.doGoto(
             position: Position(row: Int(row), column: Int(col)),
@@ -147,7 +146,7 @@ extension NvimView {
           let values = innerArray.compactMap(\.intValue)
           guard values.count == 7 else {
             self.bridgeLogger.error("Could not convert \(values)")
-            return
+            continue
           }
 
           let possibleNewRowStart = self.doScrollNu(values)
@@ -348,9 +347,9 @@ extension NvimView {
     self.eventsSubject.onCompleted()
 
     self.bridgeLogger.fault("Force-closing due to IPC error.")
-    try? self.api
-      .stop()
-      .andThen(self.bridge.forceQuit())
+    Task { await self.api.stop() }
+    try? self
+      .bridge.forceQuit()
       .observe(on: MainScheduler.instance)
       .wait(onCompleted: { [weak self] in
         self?.bridgeLogger.fault("Successfully force-closed the bridge.")
@@ -653,14 +652,14 @@ extension NvimView {
 
   private func tablineUpdate(_ args: [MessagePackValue]) {
     guard args.count >= 2,
-          let curTab = RxNeovimApi.Tabpage(args[0]),
+          let curTab = NvimApi.Tabpage(args[0]),
           let tabsValue = args[1].arrayValue else { return }
 
     self.tabEntries = tabsValue.compactMap { dictValue in
       guard let dict = dictValue.dictionaryValue,
             let name = dict[.string("name")]?.stringValue,
             let tabpageValue = dict[.string("tab")],
-            let tabpage = RxNeovimApi.Tabpage(tabpageValue) else { return nil }
+            let tabpage = NvimApi.Tabpage(tabpageValue) else { return nil }
 
       return TabEntry(title: name, isSelected: tabpage == curTab, tabpage: tabpage)
     }
@@ -698,7 +697,7 @@ extension NvimView {
       .currentBuffer()
       .flatMap { curBuf -> Single<NvimView.Buffer> in
         self.neoVimBuffer(
-          for: RxNeovimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
+          for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
         )
       }
       .subscribe(onSuccess: { [weak self] in
@@ -735,7 +734,7 @@ extension NvimView {
   }
 
   func focusGained(_ gained: Bool) -> Completable {
-    self.api.nvimUiSetFocus(gained: gained)
+    Single.create { await self.api.nvimUiSetFocus(gained: gained) }.asCompletable()
   }
 
   private func quit() -> Completable {

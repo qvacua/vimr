@@ -9,17 +9,17 @@ public actor NvimApi {
     case error(msg: String)
   }
 
-  public struct Buffer: Equatable, Hashable {
+  public struct Buffer: Equatable, Hashable, Sendable {
     public let handle: Int
     public init(_ handle: Int) { self.handle = handle }
   }
 
-  public struct Window: Equatable, Hashable {
+  public struct Window: Equatable, Hashable, Sendable {
     public let handle: Int
     public init(_ handle: Int) { self.handle = handle }
   }
 
-  public struct Tabpage: Equatable, Hashable {
+  public struct Tabpage: Equatable, Hashable, Sendable {
     public let handle: Int
     public init(_ handle: Int) { self.handle = handle }
   }
@@ -83,17 +83,17 @@ public actor NvimApi {
   }
 
   public init() {}
-  
+
   func blockedError() async -> NvimApi.Error? {
     let blockedResult = await self.isBlocked()
-    
+
     switch blockedResult {
     case let .success(blocked):
       if blocked { return .blocked }
     case let .failure(error):
       return .other(cause: error)
     }
-    
+
     return nil
   }
 

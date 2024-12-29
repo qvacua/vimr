@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "NvimView",
-  platforms: [.macOS(.v12)],
+  platforms: [.macOS(.v13)],
   products: [
     .library(name: "NvimView", targets: ["NvimView"]),
   ],
@@ -15,6 +15,7 @@ let package = Package(
     .package(url: "https://github.com/Quick/Nimble", from: "13.7.1"),
     .package(name: "Commons", path: "../Commons"),
     .package(name: "Tabs", path: "../Tabs"),
+    .package(name: "NvimApi", path: "../NvimApi"),
   ],
   targets: [
     .target(
@@ -26,14 +27,24 @@ let package = Package(
         .product(name: "RxNeovim", package: "RxPack"),
         .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",
+        "NvimApi",
       ],
       // com.qvacua.NvimView.vim is copied by the build NvimServer script.
       exclude: ["Resources/com.qvacua.NvimView.vim"],
       resources: [
         .copy("Resources/runtime"),
         .copy("Resources/NvimServer"),
+      ],
+      swiftSettings: [
+        .enableUpcomingFeature("StrictConcurrency"),
       ]
     ),
-    .testTarget(name: "NvimViewTests", dependencies: ["NvimView", "Nimble"]),
+    .testTarget(
+      name: "NvimViewTests",
+      dependencies: ["NvimView", "Nimble"],
+      swiftSettings: [
+        .enableUpcomingFeature("StrictConcurrency"),
+      ]
+    ),
   ]
 )

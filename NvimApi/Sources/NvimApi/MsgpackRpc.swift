@@ -174,8 +174,9 @@ public actor MsgpackRpc {
 
           let (values, remainder) = try self.unpackAllWithRemainder(dataToUnmarshall)
 
+          dataToUnmarshall.removeAll(keepingCapacity: true)
           if let remainder { remainderData = remainder }
-          else { remainderData.removeAll() }
+          else { remainderData.removeAll(keepingCapacity: true) }
 
           // Do we have to check closed here before processing the msgs?
           for value in values {

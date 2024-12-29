@@ -216,18 +216,6 @@ extension NvimView {
   }
 }
 
-private let emojiAttrs = [NSAttributedString.Key.font: NSFont(name: "AppleColorEmoji", size: 72)!]
-
-private let resizeTextAttrs = [
-  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 18),
-  NSAttributedString.Key.foregroundColor: NSColor.darkGray,
-]
-
-private let infoTextAttrs = [
-  NSAttributedString.Key.font: NSFont.systemFont(ofSize: 16),
-  NSAttributedString.Key.foregroundColor: NSColor.darkGray,
-]
-
 private let colorSpace = NSColorSpace.sRGB
 
 /// When we use the following private function instead of the public extension function in

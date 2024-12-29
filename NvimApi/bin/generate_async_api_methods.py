@@ -93,7 +93,7 @@ import MessagePack
 
 extension NvimApi {
 
-  public enum Error: Swift.Error {
+  public enum Error: Swift.Error, Sendable {
 
     ${error_types}
 

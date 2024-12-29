@@ -6,6 +6,7 @@
 
 import Cocoa
 import MessagePack
+import NvimApi
 import RxSwift
 
 extension NvimView {
@@ -54,35 +55,28 @@ extension NvimView {
   }
 
   final func signalRemoteOptionChange(_ option: RemoteOption) {
-    let command: Completable = switch option {
-    case let .guifont(fontSpec):
-      self.api.nvimSetOptionValue(
-        name: "guifont",
-        value: .string(fontSpec),
-        opts: ["scope": .string("global")]
-      )
-
-    case let .guifontWide(fontSpec):
-      self.api.nvimSetOptionValue(
-        name: "guifontwide",
-        value: .string(fontSpec),
-        opts: ["scope": .string("global")]
-      )
+    Task {
+      switch option {
+      case let .guifont(fontSpec):
+        await self.api.nvimSetOptionValue(
+          name: "guifont",
+          value: .string(fontSpec),
+          opts: ["scope": .string("global")]
+        ).cauterize()
+      case let .guifontWide(fontSpec):
+        await self.api.nvimSetOptionValue(
+          name: "guifontwide",
+          value: .string(fontSpec),
+          opts: ["scope": .string("global")]
+        ).cauterize()
+      }
     }
-
-    command
-      .subscribe(onError: { [weak self] error in
-        // We're here probably because the font of NvimView is set before the API socket connection
-        // is established. Let's ignore the error.
-        self?.log.info("Setting \(option) did not go through: \(error).")
-      })
-      .disposed(by: self.disposeBag)
   }
 
   public final func signalError(code: Int, message: String) {
-    self.api.nvimErrWriteln(str: "E\(code): \(message)")
-      .subscribe()
-      .disposed(by: self.disposeBag)
+    Task {
+      await self.api.nvimErrWriteln(str: "E\(code): \(message)").cauterize()
+    }
   }
 
   private func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {

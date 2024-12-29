@@ -71,11 +71,9 @@ class NvimApiExample {
     let repeatCount = 10
     for _ in 0...repeatCount {
       _ = try await self.api.nvimInput(keys: "<PageDown>").get()
-      Swift.print("############################ PageDown")
     }
     for _ in 0...repeatCount {
       _ = try await self.api.nvimInput(keys: "<PageUp>").get()
-      Swift.print("############################ PageUp")
     }
 
     try await self.api.nvimUiDetach().get()
