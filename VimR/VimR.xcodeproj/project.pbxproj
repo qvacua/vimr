@@ -88,7 +88,6 @@
 		4B19BEFD1E110183007E823C /* preview in Resources */ = {isa = PBXBuildFile; fileRef = 4B19BEFB1E110183007E823C /* preview */; };
 		4B238BE11D3BF24200CBDD98 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B238BE01D3BF24200CBDD98 /* Application.swift */; };
 		4B37ADB91D6E471B00970D55 /* vimr in Resources */ = {isa = PBXBuildFile; fileRef = 4B37ADB81D6E471B00970D55 /* vimr */; };
-		4B479507293CEA43004C027A /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4B479506293CEA43004C027A /* EonilFSEvents */; };
 		4B6A70941D60E04200E12030 /* AppKitCommons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A70931D60E04200E12030 /* AppKitCommons.swift */; };
 		4B6C6AE3267C71ED00F77527 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE2267C71ED00F77527 /* RxCocoa */; };
 		4B6C6AE5267C71ED00F77527 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 4B6C6AE4267C71ED00F77527 /* RxRelay */; };
@@ -159,6 +158,7 @@
 		4BADD55B283A847100C6B16D /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55A283A847100C6B16D /* Ignore */; };
 		4BADD55E283ABD0200C6B16D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55D283ABD0200C6B16D /* OrderedCollections */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
+		4BBE7F512D21C12B006090D9 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBE7F502D21C12B006090D9 /* EonilFSEvents */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
 		4BE73F99285C9A9A00B63585 /* IgnoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B71F6A82A34F16BB52BE /* IgnoreService.swift */; };
 		4BE73F9B285C9AC100B63585 /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BE73F9A285C9AC100B63585 /* Ignore */; };
@@ -370,7 +370,7 @@
 				4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */,
 				4B6C6AE7267C71ED00F77527 /* RxSwift in Frameworks */,
 				4B0B36292595236000B06899 /* NvimView in Frameworks */,
-				4B479507293CEA43004C027A /* EonilFSEvents in Frameworks */,
+				4BBE7F512D21C12B006090D9 /* EonilFSEvents in Frameworks */,
 				4B0B36252595236000B06899 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -750,7 +750,7 @@
 				4BADD55A283A847100C6B16D /* Ignore */,
 				4BADD55D283ABD0200C6B16D /* OrderedCollections */,
 				4BA19811285B4BA600B49309 /* Misc */,
-				4B479506293CEA43004C027A /* EonilFSEvents */,
+				4BBE7F502D21C12B006090D9 /* EonilFSEvents */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -827,7 +827,7 @@
 				4B9D049B273481AD007E8614 /* XCRemoteSwiftPackageReference "Down" */,
 				4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */,
 				4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */,
-				4B479505293CEA43004C027A /* XCRemoteSwiftPackageReference "FSEvents" */,
+				4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1154,6 +1154,7 @@
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1214,6 +1215,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1332,14 +1334,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4B479505293CEA43004C027A /* XCRemoteSwiftPackageReference "FSEvents" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/qvacua/FSEvents";
-			requirement = {
-				branch = "release-fseventstream";
-				kind = branch;
-			};
-		};
 		4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/qvacua/material-icons";
@@ -1404,6 +1398,14 @@
 				minimumVersion = 1.1.2;
 			};
 		};
+		4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eonil/FSEvents/";
+			requirement = {
+				kind = revision;
+				revision = a54369c44ab9caabf611d01080e64fe30608d83f;
+			};
+		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/httpswift/swifter";
@@ -1439,11 +1441,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4B479506293CEA43004C027A /* EonilFSEvents */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4B479505293CEA43004C027A /* XCRemoteSwiftPackageReference "FSEvents" */;
-			productName = EonilFSEvents;
-		};
 		4B69B31A24EDBAF000B1E5EB /* MaterialIcons */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */;
@@ -1505,6 +1502,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		4BBE7F502D21C12B006090D9 /* EonilFSEvents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */;
+			productName = EonilFSEvents;
 		};
 		4BD5655224E8014100D52809 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
