@@ -6,8 +6,7 @@
 import Cocoa
 import MessagePack
 import NvimView
-import RxNeovim
-import RxPack
+import NvimApi
 import RxSwift
 import Workspace
 
@@ -149,7 +148,7 @@ extension MainWindow {
       "CursorColumn", // code background and foreground
     ]
 
-    typealias HlResult = [String: RxNeovimApi.Value]
+    typealias HlResult = [String: NvimApi.Value]
     typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
     typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
 
@@ -157,12 +156,18 @@ extension MainWindow {
       .from(colorNames.map { colorName -> ColorNameObservableTuple in
         (
           colorName: colorName,
-          observable: self.neoVimView.api
-            .nvimGetHl(
-              ns_id: 0,
-              opts: ["name": MessagePackValue(colorName)]
-            )
-            .asObservable()
+          observable: Single.create {
+            let result = await self.neoVimView.api
+              .nvimGetHl(
+                ns_id: 0,
+                opts: ["name": MessagePackValue(colorName)]
+              )
+            switch result {
+            case let .success(value): return value
+            case let .failure(error): throw error
+            }
+          }
+          .asObservable()
         )
       })
       .flatMap { tuple -> Observable<(String, HlResult)> in

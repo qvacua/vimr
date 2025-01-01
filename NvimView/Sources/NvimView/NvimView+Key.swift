@@ -43,8 +43,10 @@ public extension NvimView {
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
       : self.vimPlainString(chars)
 
-    _ = self.api.nvimInput(keys: finalInput, errWhenBlocked: false).syncValue()
-
+    // FIXME: Should we set keyDownDone outside the Task?
+    Task {
+      await self.api.nvimInput(keys: finalInput, errWhenBlocked: false).cauterize()
+    }
     self.keyDownDone = true
   }
 
@@ -60,7 +62,11 @@ public extension NvimView {
 
     // try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
     //  .wait()
-    _ = self.api.nvimInput(keys: self.vimPlainString(text), errWhenBlocked: false).syncValue()
+    Task {
+      await self.api
+        .nvimInput(keys: self.vimPlainString(text), errWhenBlocked: false)
+        .cauterize()
+    }
 
     if self.hasMarkedText() { self._unmarkText() }
     self.keyDownDone = true
@@ -124,12 +130,11 @@ public extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.api
-        .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+      Task {
+        await self.api
+          .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
+          .cauterize()
+      }
       return true
     }
 
@@ -137,23 +142,21 @@ public extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if flags == .control, chars == "6" {
-      self.api
-        .nvimInput(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+      Task {
+        await self.api
+          .nvimInput(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
+          .cauterize()
+      }
       return true
     }
 
     if flags == .control, chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.api
-        .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+      Task {
+        await self.api
+          .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
+          .cauterize()
+      }
       return true
     }
 
@@ -181,19 +184,24 @@ public extension NvimView {
       // FIXME: here not validate location, only delete by length.
       // after delete, cusor should be the location
     }
+
+    // FIXME: We should be careful here re. timing
     if replacementRange.length > 0 {
       let text = String(repeating: "<BS>", count: replacementRange.length)
-      try? self.api.nvimFeedkeys(keys: text, mode: "i", escape_ks: false)
-        .wait()
+      Task {
+        await self.api.nvimFeedkeys(keys: text, mode: "i", escape_ks: false).cauterize()
+      }
     }
 
     // delay to wait async gui update handled.
     // this avoid insert and then delete flicker
     // the markedPosition is not needed since marked Text should always following cursor..
-    DispatchQueue.main.async { [self, markedText] in
+    // Do we need Task { @MainActor } here?
+    Task {
       ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
       markForRender(region: regionForRow(at: ugrid.cursorPosition))
     }
+
     self.keyDownDone = true
   }
 

@@ -5,7 +5,7 @@
 
 import Cocoa
 
-public struct Position: CustomStringConvertible, Equatable {
+public struct Position: CustomStringConvertible, Equatable, Sendable {
   public static let zero = Position(row: 0, column: 0)
   public static let null = Position(row: -1, column: -1)
 

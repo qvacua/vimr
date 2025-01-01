@@ -5,8 +5,7 @@
  */
 
 import Cocoa
-import RxNeovim
-import RxPack
+import NvimApi
 import RxSwift
 
 extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate {
@@ -120,14 +119,9 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     guard tab.windows.count > 0 else { return }
 
     let window = tab.currentWindow ?? tab.windows[0]
-    self.api
-      .nvimSetCurrentWin(window: RxNeovimApi.Window(window.handle))
-      .subscribe(on: self.scheduler)
-      .subscribe(onError: { [weak self] error in
-        self?.eventsSubject
-          .onNext(.apiError(msg: "Could not set current window to \(window.handle).", cause: error))
-      })
-      .disposed(by: self.disposeBag)
+    Task {
+      await self.api.nvimSetCurrentWin(window: .init(window.handle)).cauterize()
+    }
   }
 }
 
