@@ -1,5 +1,10 @@
 # Next
 
+* Dependencies updates:
+  - Quick/Nimble@13.7.1
+
+# v0.50.0-20241224.155723
+
 * Neovim 0.10.3 😀
 * Dependencies updates:
   - qvacua/MessagePack.swift@4.1.0

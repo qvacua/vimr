@@ -6,6 +6,7 @@
 import Cocoa
 import PureLayout
 
+@MainActor
 protocol WorkspaceToolDelegate: AnyObject {
   func toggle(_ tool: WorkspaceTool)
 }

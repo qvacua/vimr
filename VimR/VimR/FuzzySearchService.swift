@@ -13,15 +13,6 @@ import os
 final class FuzzySearchService {
   typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void
 
-  var root: URL {
-    didSet {
-      self.queue.sync {
-        self.deleteAllFiles()
-        self.ensureRootFileInStore()
-      }
-    }
-  }
-
   var usesVcsIgnores = true {
     willSet { self.stopScanScore() }
     didSet {
@@ -291,8 +282,7 @@ final class FuzzySearchService {
   init(root: URL) throws {
     self.coreDataStack = try CoreDataStack(
       modelName: "FuzzySearch",
-      storeLocation: .temp(UUID().uuidString),
-      deleteOnDeinit: true
+      storeLocation: .temp(UUID().uuidString)
     )
     self.root = root
     self.writeContext = self.coreDataStack.newBackgroundContext()
@@ -420,6 +410,8 @@ final class FuzzySearchService {
   private let coreDataStack: CoreDataStack
   private let writeContext: NSManagedObjectContext
   private let ignoreService: IgnoreService
+
+  private var root: URL
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }

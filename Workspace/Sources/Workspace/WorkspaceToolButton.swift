@@ -46,9 +46,9 @@ public final class WorkspaceToolButton: NSView, NSDraggingSource {
   static func size(forLocation loc: WorkspaceBarLocation) -> CGSize {
     switch loc {
     case .top, .bottom:
-      return self.dummyButton.intrinsicContentSize
+      self.dummyButton.intrinsicContentSize
     case .right, .left:
-      return CGSize(
+      CGSize(
         width: self.dummyButton.intrinsicContentSize.height,
         height: self.dummyButton.intrinsicContentSize.width
       )
