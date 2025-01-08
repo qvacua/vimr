@@ -5,7 +5,6 @@
 
 import Cocoa
 import NvimApi
-import RxSwift
 
 // MARK: - NSUserInterfaceValidationsProtocol
 

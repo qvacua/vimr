@@ -20,15 +20,7 @@ public extension NvimView {
     guard let urls = sender.draggingPasteboard
       .readObjects(forClasses: [NSURL.self]) as? [URL] else { return false }
 
-    self.open(urls: urls)
-      .subscribe(on: self.scheduler)
-      .subscribe(onError: { [weak self] error in
-        self?.eventsSubject.onNext(
-          .apiError(msg: "\(urls) could not be opened.", cause: error)
-        )
-      })
-      .disposed(by: self.disposeBag)
-
+    Task { await self.open(urls: urls) }
     return true
   }
 

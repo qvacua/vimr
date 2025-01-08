@@ -9,7 +9,6 @@ import Commons
 import MessagePack
 import NvimApi
 import os
-@preconcurrency import RxSwift
 import SpriteKit
 import Tabs
 import UniformTypeIdentifiers
@@ -70,10 +69,13 @@ public enum FontSmoothing: String, Codable, CaseIterable {
   case noAntiAliasing
 }
 
-public protocol NvimViewDelegate: AnyObject {
+@MainActor
+public protocol NvimViewDelegate: AnyObject, Sendable {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
+  func nextEvent(_: NvimView.Event)
 }
 
+@MainActor
 public final class NvimView: NSView,
   NSUserInterfaceValidations,
   @preconcurrency NSTextInputClient
@@ -82,8 +84,6 @@ public final class NvimView: NSView,
 
   public static let rpcEventName = "com.qvacua.NvimView"
 
-  // static immutable properties should be safe to access from any isolation domains,
-  // but FontUtils errs
   public static let minFontSize = 4.0
   public static let maxFontSize = 128.0
   public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
@@ -166,10 +166,8 @@ public final class NvimView: NSView,
     get { self._cwd }
     set {
       Task {
-        if case let .failure(error) = await self.api.nvimSetCurrentDir(dir: newValue.path) {
-          self.eventsSubject
-            .onError(Error.ipc(msg: "Could not set cwd to \(newValue)", cause: error))
-        }
+        // FIXME: Error handling?
+        await self.api.nvimSetCurrentDir(dir: newValue.path).cauterize()
       }
     }
   }
@@ -180,11 +178,7 @@ public final class NvimView: NSView,
 
   override public var acceptsFirstResponder: Bool { true }
 
-  public let scheduler: SerialDispatchQueueScheduler
-
   public internal(set) var currentPosition = Position.beginning
-
-  public var events: Observable<Event> { self.eventsSubject.asObservable() }
 
   public init(frame _: NSRect, config: Config) {
     self.drawer = AttributesRunDrawer(
@@ -194,10 +188,6 @@ public final class NvimView: NSView,
       usesLigatures: self.usesLigatures
     )
     self.bridge = UiBridge(uuid: self.uuid, config: config)
-    self.scheduler = SerialDispatchQueueScheduler(
-      queue: self.queue,
-      internalSerialQueueName: "com.qvacua.NvimView.NvimView"
-    )
 
     self.sourceFileUrls = config.sourceFiles
 
@@ -227,13 +217,13 @@ public final class NvimView: NSView,
 
         case let .notification(method, params):
           if method == NvimView.rpcEventName {
-            self.eventsSubject.onNext(.rpcEvent(params))
+            self.delegate?.nextEvent(.rpcEvent(params))
           }
 
           if method == "redraw" {
             self.renderData(params)
           } else if method == "autocommand" {
-            self.autoCommandEvent(params)
+            await self.autoCommandEvent(params)
           } else {
             self.log.debug("MSG ERROR: \(msg)")
           }
@@ -249,17 +239,18 @@ public final class NvimView: NSView,
 
           // FIXME:
           if errorMsg.contains("Vim(tabclose):E784") {
-            self.eventsSubject.onNext(.warning(.cannotCloseLastTab))
+            self.delegate?.nextEvent(.warning(.cannotCloseLastTab))
           }
           if errorMsg.starts(with: "Vim(tabclose):E37") {
-            self.eventsSubject.onNext(.warning(.noWriteSinceLastChange))
+            self.delegate?.nextEvent(.warning(.noWriteSinceLastChange))
           }
         }
       }
 
-      self.stop()
+      await self.stop()
     }
 
+    // FIXME: Make callbacks async
     self.tabBar?.closeHandler = { [weak self] index, _, _ in
       Task { await self?.api.nvimCommand(command: "tabclose \(index + 1)") }
     }
@@ -347,18 +338,11 @@ public final class NvimView: NSView,
   // cache the tabs for Touch Bar use
   var tabsCache = [NvimView.Tabpage]()
 
-  // The subject is thread-safe
-  nonisolated(unsafe) let eventsSubject = PublishSubject<Event>()
-
-  let disposeBag = DisposeBag()
-
   var markedText: String?
   let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
   let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   let sourceFileUrls: [URL]
-
-  let nvimExitedCondition = ConditionVariable()
 
   var tabEntries = [TabEntry]()
 
@@ -370,6 +354,8 @@ public final class NvimView: NSView,
   var regionsToFlush = [Region]()
 
   var framerateView: SKView?
+
+  var stopped = false
 
   // MARK: - Private
 

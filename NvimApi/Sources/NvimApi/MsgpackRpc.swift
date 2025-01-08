@@ -8,11 +8,9 @@ import os
 // Inspired by https://stackoverflow.com/a/76941591
 extension Pipe {
   private struct DataReader {
-    private let pipe: Pipe
     fileprivate let dataStream: AsyncStream<Data>
 
     init(pipe: Pipe) {
-      self.pipe = pipe
       self.dataStream = AsyncStream { continuation in
         pipe.fileHandleForReading.readabilityHandler = { handle in
           let data = handle.availableData
@@ -34,8 +32,6 @@ extension Pipe {
 }
 
 public actor MsgpackRpc {
-  public static let defaultReadBufferSize = 10240
-
   public typealias Value = MessagePackValue
 
   public enum MessageType: UInt64 {
@@ -90,6 +86,7 @@ public actor MsgpackRpc {
   }
 
   public func stop() {
+    self.log.debug("Stopping")
     self.cleanUp()
   }
 
@@ -196,6 +193,7 @@ public actor MsgpackRpc {
       return
     }
 
+    self.log.debug("Cleaning up")
     self.closed = true
 
     self.inPipe = nil
@@ -206,6 +204,7 @@ public actor MsgpackRpc {
     for (msgid, future) in self.futures {
       future.yield(.success(.nilResponse(msgid)))
     }
+    self.futures.removeAll()
 
     self.log.info("MsgpackRpc closed")
   }

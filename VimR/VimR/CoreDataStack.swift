@@ -26,7 +26,6 @@ final class CoreDataStack {
   let container: NSPersistentContainer
   let storeFile: URL
   var storeLocation: URL { self.storeFile.parent }
-  var deleteOnDeinit: Bool
 
   func newBackgroundContext() -> NSManagedObjectContext {
     let context = self.container.newBackgroundContext()
@@ -35,8 +34,7 @@ final class CoreDataStack {
     return context
   }
 
-  init(modelName: String, storeLocation: StoreLocation, deleteOnDeinit: Bool = false) throws {
-    self.deleteOnDeinit = deleteOnDeinit
+  init(modelName: String, storeLocation: StoreLocation) throws {
     self.container = NSPersistentContainer(name: modelName)
 
     let fileManager = FileManager.default
@@ -86,7 +84,6 @@ final class CoreDataStack {
   }
 
   func deleteStore() throws {
-    guard self.deleteOnDeinit else { return }
     guard let store = self.container.persistentStoreCoordinator.persistentStore(
       for: self.storeFile
     ) else { return }
@@ -102,7 +99,6 @@ final class CoreDataStack {
   }
 
   deinit {
-    guard self.deleteOnDeinit else { return }
     do {
       try self.deleteStore()
     } catch {

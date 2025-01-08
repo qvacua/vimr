@@ -8,7 +8,6 @@ import Foundation
 import MessagePack
 import NvimApi
 import os
-import RxSwift
 
 let kMinAlphaVersion = 0
 let kMinMinorVersion = 9
@@ -44,23 +43,15 @@ final class UiBridge {
     return try self.launchNvimUsingLoginShellEnv()
   }
 
-  func quit() -> Completable {
-    Completable.create { completable in
-      self.nvimServerProc?.waitUntilExit()
-      self.log.info("NvimServer \(self.uuid) exited successfully.")
-      completable(.completed)
-      return Disposables.create()
-    }
+  func quit() {
+    self.nvimServerProc?.waitUntilExit()
+    self.log.info("NvimServer \(self.uuid) exited successfully.")
   }
 
-  func forceQuit() -> Completable {
+  func forceQuit() {
     self.log.fault("Force-exiting NvimServer \(self.uuid).")
-
-    return Completable.create { _ in
-      self.forceExitNvimServer()
-      self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
-      return Disposables.create()
-    }
+    self.forceExitNvimServer()
+    self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
   }
 
   private func forceExitNvimServer() {
@@ -125,8 +116,6 @@ final class UiBridge {
 
   private var initialWidth = 40
   private var initialHeight = 20
-
-  private let disposeBag = DisposeBag()
 }
 
 private let timeout = 5

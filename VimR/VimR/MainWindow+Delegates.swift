@@ -5,8 +5,8 @@
 
 import Cocoa
 import MessagePack
-import NvimView
 import NvimApi
+import NvimView
 import RxSwift
 import Workspace
 

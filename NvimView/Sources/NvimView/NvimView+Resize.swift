@@ -6,7 +6,6 @@
 import Cocoa
 import MessagePack
 import NvimApi
-@preconcurrency import RxSwift
 
 extension NvimView {
   override public func setFrameSize(_ newSize: NSSize) {
@@ -63,15 +62,10 @@ extension NvimView {
         width: size.width, height: size.height
       )
     } catch let err as NvimApi.Error {
-      self.eventsSubject.onNext(.ipcBecameInvalid(
-        "Could not launch neovim (\(err))."
-      ))
-
+      self.delegate?.nextEvent(.ipcBecameInvalid("Could not launch neovim (\(err))."))
       return
     } catch {
-      self.eventsSubject.onNext(.ipcBecameInvalid(
-        "Could not launch neovim."
-      ))
+      self.delegate?.nextEvent(.ipcBecameInvalid("Could not launch neovim."))
 
       return
     }
@@ -104,7 +98,7 @@ extension NvimView {
           guard (major >= kMinAlphaVersion && minor >= kMinMinorVersion) || major >=
             kMinMajorVersion
           else {
-            self.eventsSubject.onNext(.ipcBecameInvalid(
+            await self.delegate?.nextEvent(.ipcBecameInvalid(
               "Incompatible neovim version \(major).\(minor)"
             ))
             throw NvimApi.Error.exception(message: "Incompatible neovim version.")

@@ -5,7 +5,6 @@
 
 import Cocoa
 import MessagePack
-import RxSwift
 
 public extension NvimView {
   override func keyDown(with event: NSEvent) {

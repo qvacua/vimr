@@ -6,40 +6,53 @@
 import Cocoa
 import NvimView
 import PureLayout
-import RxSwift
 import Tabs
+
+@MainActor
+final class ViewDelegate: NvimViewDelegate, Sendable {
+  var doc: Document?
+
+  func isMenuItemKeyEquivalent(_: NSEvent) -> Bool {
+    false
+  }
+
+  func nextEvent(_ event: NvimView.Event) {
+    Swift.print("EVENT: ", event)
+    switch event {
+    case .neoVimStopped:
+      self.doc?.close()
+    default: break
+    }
+  }
+}
 
 class Document: NSDocument, NSWindowDelegate {
   private let nvimView = NvimView(forAutoLayout: ())
-  private let disposeBag = DisposeBag()
+  private let viewDelegate = ViewDelegate()
 
   override init() {
     super.init()
 
+    self.viewDelegate.doc = self
+    self.nvimView.delegate = self.viewDelegate
     self.nvimView.font = NSFont(name: "Iosevka", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
-
-    self.nvimView
-      .events
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] event in
-        switch event {
-        case .neoVimStopped: self?.close()
-        default: break
-        }
-      })
-      .disposed(by: self.disposeBag)
   }
 
-  func quitWithoutSaving() {
-    try? self.nvimView.quitNeoVimWithoutSaving().wait()
-    self.nvimView.waitTillNvimExits()
+  func quitWithoutSaving() async {
+    await self.nvimView.quitNeoVimWithoutSaving()
+    await self.nvimView.stop()
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
-    self.quitWithoutSaving()
-    return false
+    Task {
+      await self.quitWithoutSaving()
+      await self.nvimView.stop()
+    }
+    
+    self.close()
+    return true
   }
 
   override func windowControllerDidLoadNib(_ windowController: NSWindowController) {

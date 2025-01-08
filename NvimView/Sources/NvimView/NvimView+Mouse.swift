@@ -6,7 +6,6 @@
 import Cocoa
 import MessagePack
 import NvimApi
-import RxSwift
 
 public extension NvimView {
   override func mouseDown(with event: NSEvent) {

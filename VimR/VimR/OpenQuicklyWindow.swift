@@ -115,6 +115,7 @@ final class OpenQuicklyWindow: NSObject,
       self.useVcsIgnoresCheckBox.boolState = curWinState.usesVcsIgnores
 
       self.scanToken = Token()
+      // FIXME: recreate the service?
       self.currentSearchService?.usesVcsIgnores = self.usesVcsIgnores
       self.unsortedScoredUrls.removeAll()
 

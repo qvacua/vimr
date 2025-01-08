@@ -7,7 +7,6 @@
 import Cocoa
 import MessagePack
 import NvimApi
-import RxSwift
 
 extension NvimView {
   enum RemoteOption {
@@ -105,7 +104,7 @@ extension NvimView {
       // Cell size likely changed, do a resize.
       self.resizeNeoVimUi(to: self.frame.size)
       self.markForRenderWholeView()
-      self.eventsSubject.onNext(.guifontChanged(newFont))
+      self.delegate?.nextEvent(.guifontChanged(newFont))
     }
   }
 }

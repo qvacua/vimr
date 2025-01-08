@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,7 @@
 		1929BD694DE393302A1AF42E /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B51A7E7A07A38C8497FF /* ColorUtils.swift */; };
 		1929BE00E22B5E472B89C7AA /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B201A097751F817A23B1 /* Defs.swift */; };
 		1929BE88F4A892215227D0AB /* UGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BEB34345F348237FE0E4 /* UGrid.swift */; };
+		4B015A882D2DBDBB00C7E03A /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4B015A872D2DBDBB00C7E03A /* Commons */; };
 		4B0225F3224AAE260052362B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0225F2224AAE260052362B /* AppDelegate.swift */; };
 		4B0225F5224AAE260052362B /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0225F4224AAE260052362B /* Document.swift */; };
 		4B0225F8224AAE260052362B /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B0225F6224AAE260052362B /* Document.xib */; };
@@ -30,7 +31,6 @@
 		4B90B6842775F0F400ACF552 /* KeyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90B6832775F0F400ACF552 /* KeyUtils.swift */; };
 		4B90B6852775F0F400ACF552 /* KeyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B90B6832775F0F400ACF552 /* KeyUtils.swift */; };
 		4BD67C9924ECF53E00147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7C24ECF35300147C51 /* Commons */; };
-		4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C9624ECF4B300147C51 /* MessagePack */; };
 		4BD67CA524ED037000147C51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD67CA424ED037000147C51 /* AppDelegate.swift */; };
 		4BD67CA724ED037100147C51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BD67CA624ED037100147C51 /* Assets.xcassets */; };
 		4BD67CAA24ED037100147C51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BD67CA824ED037100147C51 /* MainMenu.xib */; };
@@ -49,7 +49,6 @@
 		4BD67CC624ED041A00147C51 /* FontUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B9AC87B65FDA23239EA7 /* FontUtils.swift */; };
 		4BD67CC724ED042000147C51 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B78E7E39A629E6F562E0 /* Geometry.swift */; };
 		4BD67CC824ED042600147C51 /* Defs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B201A097751F817A23B1 /* Defs.swift */; };
-		4BD67CCA24ED042F00147C51 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CC924ED042F00147C51 /* MessagePack */; };
 		4BD67CCC24ED089800147C51 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CCB24ED089800147C51 /* Commons */; };
 		4BD67CD124ED08D400147C51 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67CD024ED08D400147C51 /* PureLayout */; };
 		4BF1852321313EE400954FE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF1852221313EE400954FE7 /* AppDelegate.swift */; };
@@ -117,6 +116,7 @@
 				4BD67CD124ED08D400147C51 /* PureLayout in Frameworks */,
 				4B0B365D25953D3D00B06899 /* NvimView in Frameworks */,
 				4BD67CCC24ED089800147C51 /* Commons in Frameworks */,
+				4B015A882D2DBDBB00C7E03A /* Commons in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,7 +125,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67CBB24ED03BF00147C51 /* Commons in Frameworks */,
-				4BD67CCA24ED042F00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,7 +133,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BD67C9924ECF53E00147C51 /* Commons in Frameworks */,
-				4BD67C9B24ECF53E00147C51 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +250,7 @@
 				4BD67CCB24ED089800147C51 /* Commons */,
 				4BD67CD024ED08D400147C51 /* PureLayout */,
 				4B0B365C25953D3D00B06899 /* NvimView */,
+				4B015A872D2DBDBB00C7E03A /* Commons */,
 			);
 			productName = MinimalNvimViewDemo;
 			productReference = 4B0225F0224AAE260052362B /* MinimalNvimViewDemo.app */;
@@ -272,7 +271,6 @@
 			name = DrawerPerf;
 			packageProductDependencies = (
 				4BD67CBA24ED03BF00147C51 /* Commons */,
-				4BD67CC924ED042F00147C51 /* MessagePack */,
 			);
 			productName = DrawerPerf;
 			productReference = 4BD67CA224ED037000147C51 /* DrawerPerf.app */;
@@ -293,7 +291,6 @@
 			name = DrawerDev;
 			packageProductDependencies = (
 				4BD67C7C24ECF35300147C51 /* Commons */,
-				4BD67C9624ECF4B300147C51 /* MessagePack */,
 			);
 			productName = DrawerDev;
 			productReference = 4BF1852021313EE300954FE7 /* DrawerDev.app */;
@@ -306,7 +303,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1610;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
@@ -333,8 +330,8 @@
 			);
 			mainGroup = 4B90EFFA1FD2AF59008A39E0;
 			packageReferences = (
-				4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */,
 				4BD67CCF24ED08CB00147C51 /* XCRemoteSwiftPackageReference "PureLayout" */,
+				4B015AC32D2EE86200C7E03A /* XCLocalSwiftPackageReference "../../NvimView" */,
 			);
 			productRefGroup = 4B90F0051FD2AF59008A39E0 /* Products */;
 			projectDirPath = "";
@@ -759,15 +756,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/a2/MessagePack.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		4B015AC32D2EE86200C7E03A /* XCLocalSwiftPackageReference "../../NvimView" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../NvimView;
 		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
 		4BD67CCF24ED08CB00147C51 /* XCRemoteSwiftPackageReference "PureLayout" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
@@ -779,6 +775,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B015A872D2DBDBB00C7E03A /* Commons */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Commons;
+		};
 		4B0B365C25953D3D00B06899 /* NvimView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NvimView;
@@ -787,19 +787,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
 		};
-		4BD67C9624ECF4B300147C51 /* MessagePack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */;
-			productName = MessagePack;
-		};
 		4BD67CBA24ED03BF00147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Commons;
-		};
-		4BD67CC924ED042F00147C51 /* MessagePack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BD67C9524ECF4AB00147C51 /* XCRemoteSwiftPackageReference "MessagePack" */;
-			productName = MessagePack;
 		};
 		4BD67CCB24ED089800147C51 /* Commons */ = {
 			isa = XCSwiftPackageProductDependency;

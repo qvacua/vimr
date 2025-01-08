@@ -9,7 +9,6 @@ import Foundation
 import MessagePack
 import NvimApi
 import os
-import RxSwift
 
 extension NvimView {
   final func markForRenderWholeView() {
@@ -20,26 +19,6 @@ extension NvimView {
   final func markForRender(region: Region) {
     self.bridgeLogger.debug(region)
     self.setNeedsDisplay(self.rect(for: region))
-  }
-
-  final func stop() {
-    self.bridgeLogger.debug()
-    self.quit()
-      .andThen(Single.create { await self.api.stop() }.asCompletable())
-      .andThen(Completable.create { [weak self] completable in
-        self?.eventsSubject.onNext(.neoVimStopped)
-        self?.eventsSubject.onCompleted()
-
-        completable(.completed)
-        return Disposables.create()
-      })
-      .subscribe(onCompleted: { [weak self] in
-        self?.bridgeLogger.info("Successfully stopped the bridge.")
-        self?.nvimExitedCondition.broadcast()
-      }, onError: {
-        self.bridgeLogger.fault("There was an error stopping the bridge: \($0)")
-      })
-      .disposed(by: self.disposeBag)
   }
 
   final func renderData(_ renderData: [MessagePackValue]) {
@@ -171,7 +150,7 @@ extension NvimView {
     }
   }
 
-  final func autoCommandEvent(_ array: [MessagePackValue]) {
+  final func autoCommandEvent(_ array: [MessagePackValue]) async {
     guard array.count > 0,
           let aucmd = array[0].stringValue?.lowercased(),
           let event = NvimAutoCommandEvent(rawValue: aucmd)
@@ -185,7 +164,7 @@ extension NvimView {
     // vimenter is handled in NvimView.swift
 
     if event == .vimleave {
-      self.stop()
+      await self.stop()
       return
     }
 
@@ -217,19 +196,19 @@ extension NvimView {
     }
 
     if event == .bufwinenter || event == .bufwinleave {
-      self.bufferListChanged()
+      await self.bufferListChanged()
     }
 
     if event == .tabenter {
-      self.eventsSubject.onNext(.tabChanged)
+      self.delegate?.nextEvent(.tabChanged)
     }
 
     if event == .bufwritepost {
-      self.bufferWritten(bufferHandle)
+      await self.bufferWritten(bufferHandle)
     }
 
     if event == .bufenter {
-      self.newCurrentBuffer(bufferHandle)
+      await self.newCurrentBuffer(bufferHandle)
     }
   }
 }
@@ -328,25 +307,18 @@ extension NvimView {
     }
 
     self.bridgeLogger.debug(title)
-    self.eventsSubject.onNext(.setTitle(title))
+    self.delegate?.nextEvent(.setTitle(title))
   }
 
-  private func ipcBecameInvalid(_ error: Swift.Error) {
+  private func ipcBecameInvalid(_ error: Swift.Error) async {
     self.bridgeLogger.fault("Bridge became invalid: \(error)")
 
-    self.eventsSubject.onNext(.ipcBecameInvalid(error.localizedDescription))
-    self.eventsSubject.onCompleted()
+    self.delegate?.nextEvent(.ipcBecameInvalid(error.localizedDescription))
 
     self.bridgeLogger.fault("Force-closing due to IPC error.")
-    Task { await self.api.stop() }
-    try? self
-      .bridge.forceQuit()
-      .observe(on: MainScheduler.instance)
-      .wait(onCompleted: { [weak self] in
-        self?.bridgeLogger.fault("Successfully force-closed the bridge.")
-      }, onError: { [weak self] in
-        self?.bridgeLogger.fault("There was an error force-closing the bridge: \($0)")
-      })
+    await self.api.stop()
+    self.bridge.forceQuit()
+    self.bridgeLogger.fault("Successfully force-closed the bridge.")
   }
 
   private func flush() {
@@ -443,7 +415,7 @@ extension NvimView {
       )
     }
 
-    self.eventsSubject.onNext(.cursor(textPosition))
+    self.delegate?.nextEvent(.cursor(textPosition))
     return rowStart
   }
 
@@ -460,7 +432,7 @@ extension NvimView {
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.regionsToFlush.append(scrollRegion)
-    self.eventsSubject.onNext(.scroll)
+    self.delegate?.nextEvent(.scroll)
 
     return min(0, top)
   }
@@ -499,7 +471,7 @@ extension NvimView {
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     Task { self.tabBar?.cwd = cwd }
-    self.eventsSubject.onNext(.cwdChanged)
+    self.delegate?.nextEvent(.cwdChanged)
   }
 
   private func colorSchemeChanged(_ value: MessagePackValue) {
@@ -514,7 +486,7 @@ extension NvimView {
     self.bridgeLogger.debug(theme)
 
     self.theme = theme
-    self.eventsSubject.onNext(.colorschemeChanged(theme))
+    self.delegate?.nextEvent(.colorschemeChanged(theme))
   }
 
   private func setDirty(with value: MessagePackValue) {
@@ -524,7 +496,7 @@ extension NvimView {
     }
 
     self.bridgeLogger.debug(dirty)
-    self.eventsSubject.onNext(.setDirtyStatus(dirty == 1))
+    self.delegate?.nextEvent(.setDirtyStatus(dirty == 1))
   }
 
   private func setAttr(with value: MessagePackValue) {
@@ -681,53 +653,28 @@ extension NvimView {
      */
   }
 
-  private func bufferWritten(_ handle: Int) {
-    self
-      .currentBuffer()
-      .flatMap { curBuf -> Single<NvimView.Buffer> in
-        self.neoVimBuffer(
-          for: NvimApi.Buffer(handle), currentBuffer: curBuf.apiBuffer
-        )
-      }
-      .subscribe(onSuccess: { [weak self] in
-        self?.eventsSubject.onNext(.bufferWritten($0))
-        self?.updateTouchBarTab()
-      }, onFailure: { [weak self] error in
-        self?.bridgeLogger.error("Could not get the buffer \(handle): \(error)")
-        self?.eventsSubject.onNext(
-          .apiError(msg: "Could not get the buffer \(handle).", cause: error)
-        )
-      })
-      .disposed(by: self.disposeBag)
+  private func bufferWritten(_ handle: Int) async {
+    let curBuf = await self.currentBuffer()
+    guard let buf = await self.neoVimBuffer(for: .init(handle), currentBuffer: curBuf?.apiBuffer)
+    else { return }
+    self.delegate?.nextEvent(.bufferWritten(buf))
+    await self.updateTouchBarTab()
   }
 
-  private func newCurrentBuffer(_ handle: Int) {
-    self
-      .currentBuffer()
-      .filter { $0.apiBuffer.handle == handle }
-      .subscribe(onSuccess: { [weak self] in
-        self?.eventsSubject.onNext(.newCurrentBuffer($0))
-        self?.updateTouchBarTab()
-      }, onError: { [weak self] error in
-        self?.bridgeLogger.error("Could not get the current buffer: \(error)")
-        self?.eventsSubject.onNext(
-          .apiError(msg: "Could not get the current buffer.", cause: error)
-        )
-      })
-      .disposed(by: self.disposeBag)
+  private func newCurrentBuffer(_ handle: Int) async {
+    guard let curBuf = await self.currentBuffer(),
+          curBuf.apiBuffer.handle == handle else { return }
+    self.delegate?.nextEvent(.newCurrentBuffer(curBuf))
+    await self.updateTouchBarTab()
   }
 
-  private func bufferListChanged() {
-    self.eventsSubject.onNext(.bufferListChanged)
-    self.updateTouchBarCurrentBuffer()
+  private func bufferListChanged() async {
+    self.delegate?.nextEvent(.bufferListChanged)
+    await self.updateTouchBarCurrentBuffer()
   }
 
-  func focusGained(_ gained: Bool) -> Completable {
-    Single.create { await self.api.nvimUiSetFocus(gained: gained) }.asCompletable()
-  }
-
-  private func quit() -> Completable {
-    self.bridge.quit()
+  func focusGained(_ gained: Bool) async {
+    await self.api.nvimUiSetFocus(gained: gained).cauterize()
   }
 }
 

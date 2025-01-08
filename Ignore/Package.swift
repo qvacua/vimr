@@ -9,7 +9,7 @@ let package = Package(
     .library(name: "Ignore", targets: ["Ignore"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/qvacua/misc.swift", exact: "0.3.0"),
+    .package(url: "https://github.com/qvacua/misc.swift", exact: "0.4.0"),
     .package(url: "https://github.com/Quick/Nimble", from: "13.7.1"),
   ],
   targets: [

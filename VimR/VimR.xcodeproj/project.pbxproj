@@ -1379,7 +1379,7 @@
 			repositoryURL = "https://github.com/qvacua/misc.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 0.3.0;
+				version = 0.4.0;
 			};
 		};
 		4BA284B0256471ED00CFDF7F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
