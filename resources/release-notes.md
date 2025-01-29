@@ -1,5 +1,9 @@
 # Next
 
+* Neovim 0.10.4 😀
+
+# 0.50.0-20241224.155723
+
 * Neovim 0.10.3 😀
 * Dependencies updates:
   - qvacua/MessagePack.swift@4.1.0
