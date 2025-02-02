@@ -6,7 +6,10 @@
 import Cocoa
 
 enum KeyUtils {
-  static func isControlCode(key: String) -> Bool {
+    static func isControlCode(key: String, flags: String = "") -> Bool {
+    if flags.contains("C-") {
+        return false
+    }
     guard key.count == 1 else {
       return false
     }
