@@ -47,7 +47,7 @@ public extension NvimView {
 
     let flags = self.vimModifierFlags(modifierFlags) ?? ""
     let isNamedKey = KeyUtils.isSpecial(key: charsIgnoringModifiers)
-    let isControlCode = KeyUtils.isControlCode(key: chars, flags: flags) && !isNamedKey
+    let isControlCode = KeyUtils.isControlCode(key: chars, modifiers: modifierFlags) && !isNamedKey
     let isPlain = flags.isEmpty && !isNamedKey
     let isWrapNeeded = !isControlCode && !isPlain
 

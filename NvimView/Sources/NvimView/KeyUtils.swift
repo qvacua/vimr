@@ -6,10 +6,11 @@
 import Cocoa
 
 enum KeyUtils {
-    static func isControlCode(key: String, flags: String = "") -> Bool {
-    if flags.contains("C-") {
-        return false
+  static func isControlCode(key: String, modifiers: NSEvent.ModifierFlags) -> Bool {
+    guard !modifiers.contains(.control) else {
+      return false
     }
+
     guard key.count == 1 else {
       return false
     }
