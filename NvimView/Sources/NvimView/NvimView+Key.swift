@@ -8,16 +8,28 @@ import MessagePack
 import RxSwift
 
 public extension NvimView {
+  private func isMeta(_ event: NSEvent) -> Bool {
+    let modifierFlags = event.modifierFlags
+
+    if (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
+        || (self.isRightOptionMeta && modifierFlags.contains(.rightOption)) {
+      return true
+    }
+
+    if modifierFlags.contains(.control) || modifierFlags.contains(.command) || event.specialKey != nil {
+      return true
+    }
+    return false
+  }
+
   override func keyDown(with event: NSEvent) {
     self.keyDownDone = false
 
     NSCursor.setHiddenUntilMouseMoves(true)
 
     let modifierFlags = event.modifierFlags
-    let isMeta = (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
 
-    if !isMeta {
+    if !isMeta(event) {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
       if self.hasMarkedText() {
         // mark state ignore Down,Up,Left,Right,=,- etc keys
@@ -35,7 +47,7 @@ public extension NvimView {
 
     let flags = self.vimModifierFlags(modifierFlags) ?? ""
     let isNamedKey = KeyUtils.isSpecial(key: charsIgnoringModifiers)
-    let isControlCode = KeyUtils.isControlCode(key: chars) && !isNamedKey
+    let isControlCode = KeyUtils.isControlCode(key: chars, modifiers: modifierFlags) && !isNamedKey
     let isPlain = flags.isEmpty && !isNamedKey
     let isWrapNeeded = !isControlCode && !isPlain
 
