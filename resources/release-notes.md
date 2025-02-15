@@ -1,4 +1,8 @@
-# Next
+# 0.51.1-...
+
+* GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!
+
+# 0.51.0-20250129.234141
 
 * Neovim 0.10.4 😀
 
