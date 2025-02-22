@@ -70,7 +70,6 @@ public actor MsgpackRpc {
     }
   }
 
-  public let uuid = UUID()
   public let messagesStream: AsyncStream<Message>
 
   public init() {

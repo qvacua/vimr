@@ -6,6 +6,7 @@
 import Cocoa
 import RxSwift
 
+@MainActor
 final class UiRoot: UiComponent {
   typealias StateType = AppState
 
@@ -72,22 +73,20 @@ final class UiRoot: UiComponent {
   }
 
   // The following should only be used when Cmd-Q'ing
-  func hasBlockedWindows() -> Bool {
+  func hasBlockedWindows() async -> Bool {
     for mainWin in self.mainWindows.values {
-      if mainWin.neoVimView.isBlocked().syncValue() == true { return true }
+      if await mainWin.neoVimView.isBlocked() { return true }
     }
 
     return false
   }
 
   // The following should only be used when Cmd-Q'ing
-  func prepareQuit() {
+  func prepareQuit() async {
     self.mainWindows.values.forEach { $0.prepareClosing() }
 
     if !self.mainWindows.isEmpty {
-      try? Completable
-        .concat(self.mainWindows.values.map { $0.quitNeoVimWithoutSaving() })
-        .wait()
+      await self.mainWindows.values.asyncMap { await $0.quitNeoVimWithoutSaving() }
     }
 
     self.mainWindows.values.forEach { $0.waitTillNvimExits() }

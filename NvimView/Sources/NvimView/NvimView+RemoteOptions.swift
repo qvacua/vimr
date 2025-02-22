@@ -104,7 +104,7 @@ extension NvimView {
       // Cell size likely changed, do a resize.
       self.resizeNeoVimUi(to: self.frame.size)
       self.markForRenderWholeView()
-      self.delegate?.nextEvent(.guifontChanged(newFont))
+      await self.delegate?.nextEvent(.guifontChanged(newFont))
     }
   }
 }

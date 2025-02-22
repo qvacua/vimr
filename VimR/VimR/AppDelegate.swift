@@ -28,6 +28,7 @@ final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
 }
 
 @main
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
   struct OpenConfig {
     var urls: [URL]
@@ -183,42 +184,50 @@ extension AppDelegate {
   func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
     self.context.savePrefs()
 
-    guard self.hasMainWindows else {
-      self.uiRoot?.prepareQuit()
-      return .terminateNow
-    }
-
-    // check first whether there are blocked nvim instances, if so, abort and inform the user
-    if self.uiRoot?.hasBlockedWindows() == true {
-      let alert = NSAlert()
-      alert.messageText = "There are windows waiting for your input."
-      alert.alertStyle = .informational
-      alert.runModal()
-      return .terminateCancel
-    }
-
-    if self.hasDirtyWindows {
-      let alert = NSAlert()
-      let cancelButton = alert.addButton(withTitle: "Cancel")
-      let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
-      cancelButton.keyEquivalent = "\u{1b}"
-      alert.messageText = "There are windows with unsaved buffers!"
-      alert.alertStyle = .warning
-      discardAndQuitButton.keyEquivalentModifierMask = .command
-      discardAndQuitButton.keyEquivalent = "d"
-
-      if alert.runModal() == .alertSecondButtonReturn {
-        self.updateMainWindowTemplateBeforeQuitting()
-        self.uiRoot?.prepareQuit()
-        return .terminateNow
+    Task {
+      guard self.hasMainWindows else {
+        await self.uiRoot?.prepareQuit()
+        NSApplication.shared.reply(toApplicationShouldTerminate: true)
+        return
       }
 
-      return .terminateCancel
+      if await self.uiRoot?.hasBlockedWindows() == true {
+        let alert = NSAlert()
+        alert.messageText = "There are windows waiting for your input."
+        alert.alertStyle = .informational
+        alert.runModal()
+
+        return
+      }
+
+      if self.hasDirtyWindows {
+        let alert = NSAlert()
+        let cancelButton = alert.addButton(withTitle: "Cancel")
+        let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
+        cancelButton.keyEquivalent = "\u{1b}"
+        alert.messageText = "There are windows with unsaved buffers!"
+        alert.alertStyle = .warning
+        discardAndQuitButton.keyEquivalentModifierMask = .command
+        discardAndQuitButton.keyEquivalent = "d"
+
+        if alert.runModal() == .alertSecondButtonReturn {
+          self.updateMainWindowTemplateBeforeQuitting()
+          await self.uiRoot?.prepareQuit()
+
+          NSApplication.shared.reply(toApplicationShouldTerminate: true)
+          return
+        }
+
+        return
+      }
+
+      self.updateMainWindowTemplateBeforeQuitting()
+      await self.uiRoot?.prepareQuit()
+
+      NSApplication.shared.reply(toApplicationShouldTerminate: true)
     }
 
-    self.updateMainWindowTemplateBeforeQuitting()
-    self.uiRoot?.prepareQuit()
-    return .terminateNow
+    return .terminateLater
   }
 
   // For drag & dropping files on the App icon.

@@ -17,7 +17,7 @@ public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendabl
   public func set(_ value: Value, forKey key: Key) {
     self.lock.lock()
     defer { self.lock.unlock() }
-    
+
     if let keyToDel = self.keys[self.keyWriteIndex] { self.storage.removeValue(forKey: keyToDel) }
 
     self.keys[self.keyWriteIndex] = key
@@ -27,15 +27,15 @@ public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendabl
   }
 
   public func valueForKey(_ key: Key) -> Value? {
-    lock.lock()
+    self.lock.lock()
     let value = self.storage[key]
-    lock.unlock()
-    
+    self.lock.unlock()
+
     return value
   }
-  
+
   public func clear() {
-    self.keys = Array(repeating: nil, count: count)
+    self.keys = Array(repeating: nil, count: self.count)
     self.storage.removeAll(keepingCapacity: true)
   }
 
@@ -43,7 +43,7 @@ public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendabl
   private var keys: [Key?]
   private var keyWriteIndex: Int
   private var storage: [Key: Value]
-  
+
   private let lock = OSAllocatedUnfairLock()
 }
 
@@ -65,9 +65,9 @@ public final class FifoCache<Key: Hashable, Value> {
   }
 
   public func valueForKey(_ key: Key) -> Value? { self.storage[key] }
-  
+
   public func clear() {
-    self.keys = Array(repeating: nil, count: count)
+    self.keys = Array(repeating: nil, count: self.count)
     self.storage.removeAll(keepingCapacity: true)
   }
 

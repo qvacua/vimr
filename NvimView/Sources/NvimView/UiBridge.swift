@@ -9,9 +9,9 @@ import MessagePack
 import NvimApi
 import os
 
-let kMinAlphaVersion = 0
-let kMinMinorVersion = 9
-let kMinMajorVersion = 1
+let kMinMajorVersion = 0
+let kMinMinorVersion = 10
+let kMinPatchVersion = 0
 
 final class UiBridge {
   init(uuid: UUID, config: NvimView.Config) {
@@ -36,11 +36,8 @@ final class UiBridge {
     }
   }
 
-  func runLocalServerAndNvim(width: Int, height: Int) throws -> (Pipe, Pipe, Pipe) {
-    self.initialWidth = width
-    self.initialHeight = height
-
-    return try self.launchNvimUsingLoginShellEnv()
+  func runLocalServerAndNvim(width _: Int, height _: Int) throws -> (Pipe, Pipe, Pipe) {
+    try self.launchNvimUsingLoginShellEnv()
   }
 
   func quit() {
@@ -113,9 +110,6 @@ final class UiBridge {
   private let nvimBinary: String
 
   private var nvimServerProc: Process?
-
-  private var initialWidth = 40
-  private var initialHeight = 20
 }
 
 private let timeout = 5

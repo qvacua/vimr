@@ -24,7 +24,7 @@ extension NvimView {
   final func renderData(_ renderData: [MessagePackValue]) {
     self.bridgeLogger.trace("# of render data: \(renderData.count)")
 
-    Task {
+    Task(priority: .high) {
       var (recompute, rowStart) = (false, Int.max)
       for value in renderData {
         guard let renderEntry = value.arrayValue else { continue }
@@ -89,7 +89,7 @@ extension NvimView {
           self.optionSet(renderEntry)
 
         case "set_title":
-          self.setTitle(with: innerArray[0])
+          await self.setTitle(with: innerArray[0])
 
         case "update_menu":
           self.updateMenu()
@@ -110,7 +110,7 @@ extension NvimView {
                 let col = innerArray[2].uintValue
           else { continue }
 
-          if let possibleNewRowStart = self.doGoto(
+          if let possibleNewRowStart = await self.doGoto(
             position: Position(row: Int(row), column: Int(col)),
             textPosition: Position(row: Int(row), column: Int(col))
           ) {
@@ -128,7 +128,7 @@ extension NvimView {
             continue
           }
 
-          let possibleNewRowStart = self.doScrollNu(values)
+          let possibleNewRowStart = await self.doScrollNu(values)
           rowStart = min(possibleNewRowStart, rowStart)
           recompute = true
 
@@ -173,12 +173,12 @@ extension NvimView {
         self.bridgeLogger.error("Could not convert \(array)")
         return
       }
-      self.cwdChanged(array[1])
+      await self.cwdChanged(array[1])
       return
     }
 
     if event == .colorscheme {
-      self.colorSchemeChanged(MessagePackValue(Array(array[1..<array.count])))
+      await self.colorSchemeChanged(MessagePackValue(Array(array[1..<array.count])))
       return
     }
 
@@ -192,7 +192,7 @@ extension NvimView {
         self.bridgeLogger.error("Could not convert \(array)")
         return
       }
-      self.setDirty(with: array[2])
+      await self.setDirty(with: array[2])
     }
 
     if event == .bufwinenter || event == .bufwinleave {
@@ -200,7 +200,7 @@ extension NvimView {
     }
 
     if event == .tabenter {
-      self.delegate?.nextEvent(.tabChanged)
+      await self.delegate?.nextEvent(.tabChanged)
     }
 
     if event == .bufwritepost {
@@ -300,20 +300,20 @@ extension NvimView {
     }
   }
 
-  private func setTitle(with value: MessagePackValue) {
+  private func setTitle(with value: MessagePackValue) async {
     guard let title = value.stringValue else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
     self.bridgeLogger.debug(title)
-    self.delegate?.nextEvent(.setTitle(title))
+    await self.delegate?.nextEvent(.setTitle(title))
   }
 
   private func ipcBecameInvalid(_ error: Swift.Error) async {
     self.bridgeLogger.fault("Bridge became invalid: \(error)")
 
-    self.delegate?.nextEvent(.ipcBecameInvalid(error.localizedDescription))
+    await self.delegate?.nextEvent(.ipcBecameInvalid(error.localizedDescription))
 
     self.bridgeLogger.fault("Force-closing due to IPC error.")
     await self.api.stop()
@@ -388,7 +388,7 @@ extension NvimView {
     return row
   }
 
-  private func doGoto(position: Position, textPosition: Position) -> Int? {
+  private func doGoto(position: Position, textPosition: Position) async -> Int? {
     self.bridgeLogger.debug(position)
 
     var rowStart: Int?
@@ -415,11 +415,11 @@ extension NvimView {
       )
     }
 
-    self.delegate?.nextEvent(.cursor(textPosition))
+    await self.delegate?.nextEvent(.cursor(textPosition))
     return rowStart
   }
 
-  private func doScrollNu(_ array: [Int]) -> Int {
+  private func doScrollNu(_ array: [Int]) async -> Int {
     self.bridgeLogger.trace("[grid, top, bot, left, right, rows, cols] = \(array)")
 
     let (_ /* grid */, top, bottom, left, right, rows, cols)
@@ -432,7 +432,7 @@ extension NvimView {
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.regionsToFlush.append(scrollRegion)
-    self.delegate?.nextEvent(.scroll)
+    await self.delegate?.nextEvent(.scroll)
 
     return min(0, top)
   }
@@ -462,7 +462,7 @@ extension NvimView {
     NSSound.beep()
   }
 
-  private func cwdChanged(_ value: MessagePackValue) {
+  private func cwdChanged(_ value: MessagePackValue) async {
     guard let cwd = value.stringValue else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
@@ -471,10 +471,10 @@ extension NvimView {
     self.bridgeLogger.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     Task { self.tabBar?.cwd = cwd }
-    self.delegate?.nextEvent(.cwdChanged)
+    await self.delegate?.nextEvent(.cwdChanged)
   }
 
-  private func colorSchemeChanged(_ value: MessagePackValue) {
+  private func colorSchemeChanged(_ value: MessagePackValue) async {
     guard let values = MessagePackUtils.array(
       from: value, ofSize: 11, conversion: { $0.intValue }
     ) else {
@@ -486,17 +486,17 @@ extension NvimView {
     self.bridgeLogger.debug(theme)
 
     self.theme = theme
-    self.delegate?.nextEvent(.colorschemeChanged(theme))
+    await self.delegate?.nextEvent(.colorschemeChanged(theme))
   }
 
-  private func setDirty(with value: MessagePackValue) {
+  private func setDirty(with value: MessagePackValue) async {
     guard let dirty = value.intValue else {
       self.bridgeLogger.error("Could not convert \(value)")
       return
     }
 
     self.bridgeLogger.debug(dirty)
-    self.delegate?.nextEvent(.setDirtyStatus(dirty == 1))
+    await self.delegate?.nextEvent(.setDirtyStatus(dirty == 1))
   }
 
   private func setAttr(with value: MessagePackValue) {
@@ -657,19 +657,20 @@ extension NvimView {
     let curBuf = await self.currentBuffer()
     guard let buf = await self.neoVimBuffer(for: .init(handle), currentBuffer: curBuf?.apiBuffer)
     else { return }
-    self.delegate?.nextEvent(.bufferWritten(buf))
+    await self.delegate?.nextEvent(.bufferWritten(buf))
     await self.updateTouchBarTab()
   }
 
   private func newCurrentBuffer(_ handle: Int) async {
     guard let curBuf = await self.currentBuffer(),
           curBuf.apiBuffer.handle == handle else { return }
-    self.delegate?.nextEvent(.newCurrentBuffer(curBuf))
+
     await self.updateTouchBarTab()
+    await self.delegate?.nextEvent(.newCurrentBuffer(curBuf))
   }
 
   private func bufferListChanged() async {
-    self.delegate?.nextEvent(.bufferListChanged)
+    await self.delegate?.nextEvent(.bufferListChanged)
     await self.updateTouchBarCurrentBuffer()
   }
 

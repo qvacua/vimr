@@ -35,7 +35,7 @@ public extension NvimView {
     self.bridgeLogger.debug()
     self.bridge.quit()
     await self.api.stop()
-    self.delegate?.nextEvent(.neoVimStopped)
+    await self.delegate?.nextEvent(.neoVimStopped)
     self.bridgeLogger.info("Successfully stopped the bridge.")
   }
 

@@ -104,6 +104,7 @@ protocol EpicType: MiddlewareType {
   init(emitter: ActionEmitter)
 }
 
+@MainActor
 protocol UiComponent {
   associatedtype StateType
 

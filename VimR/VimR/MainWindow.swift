@@ -211,7 +211,6 @@ final class MainWindow: NSObject,
     self.updateNeoVimAppearance()
 
     self.setupScrollAndCursorDebouncers()
-    self.subscribeToNvimViewEvents()
     self.subscribeToStateChange(source: source)
 
     self.window.setFrame(state.frame, display: true)
@@ -228,9 +227,8 @@ final class MainWindow: NSObject,
     self.windowController.showWindow(self)
   }
 
-  // The following should only be used when Cmd-Q'ing
-  func quitNeoVimWithoutSaving() -> Completable {
-    self.neoVimView.quitNeoVimWithoutSaving()
+  func quitNeoVimWithoutSaving() async {
+    await self.neoVimView.quitNeoVimWithoutSaving()
   }
 
   @IBAction func toggleFramerate(_: Any?) { self.neoVimView.toggleFramerateView() }
@@ -270,56 +268,6 @@ final class MainWindow: NSObject,
       .subscribe(onNext: { [weak self] action in
         guard let action = self?.uuidAction(for: action) else { return }
         self?.emit(action)
-      })
-      .disposed(by: self.disposeBag)
-  }
-
-  private func subscribeToNvimViewEvents() {
-    self.neoVimView.events
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] event in
-        switch event {
-        case .neoVimStopped: self?.neoVimStopped()
-
-        case let .setTitle(title): self?.set(title: title)
-
-        case let .setDirtyStatus(dirty): self?.set(dirtyStatus: dirty)
-
-        case .cwdChanged: self?.cwdChanged()
-
-        case .bufferListChanged: self?.bufferListChanged()
-
-        case .tabChanged: self?.tabChanged()
-
-        case let .newCurrentBuffer(curBuf): self?.newCurrentBuffer(curBuf)
-
-        case let .bufferWritten(buf): self?.bufferWritten(buf)
-
-        case let .colorschemeChanged(theme): self?.colorschemeChanged(to: theme)
-
-        case let .guifontChanged(font): self?.guifontChanged(to: font)
-
-        case let .ipcBecameInvalid(reason):
-          self?.ipcBecameInvalid(reason: reason)
-
-        case .scroll: self?.scroll()
-
-        case let .cursor(position): self?.cursor(to: position)
-
-        case .initVimError: self?.showInitError()
-
-        case let .apiError(error, msg):
-          self?.log.error("Got api error with msg '\(msg)' and error: \(error)")
-
-        case let .rpcEvent(params): self?.rpcEventAction(params: params)
-
-        case let .warning(warning): self?.show(warning: warning)
-
-        case .rpcEventSubscribed: break
-        }
-      }, onError: { error in
-        // FIXME: call onError
-        self.log.error(error)
       })
       .disposed(by: self.disposeBag)
   }
@@ -612,5 +560,47 @@ final class MainWindow: NSObject,
 extension MainWindow {
   func isMenuItemKeyEquivalent(_ event: NSEvent) -> Bool {
     self.shortcutService?.isMenuItemShortcut(event) == true
+  }
+
+  func nextEvent(_ event: NvimView.Event) {
+    switch event {
+    case .neoVimStopped: self.neoVimStopped()
+
+    case let .setTitle(title): self.set(title: title)
+
+    case let .setDirtyStatus(dirty): self.set(dirtyStatus: dirty)
+
+    case .cwdChanged: self.cwdChanged()
+
+    case .bufferListChanged: self.bufferListChanged()
+
+    case .tabChanged: self.tabChanged()
+
+    case let .newCurrentBuffer(curBuf): self.newCurrentBuffer(curBuf)
+
+    case let .bufferWritten(buf): self.bufferWritten(buf)
+
+    case let .colorschemeChanged(theme): self.colorschemeChanged(to: theme)
+
+    case let .guifontChanged(font): self.guifontChanged(to: font)
+
+    case let .ipcBecameInvalid(reason):
+      self.ipcBecameInvalid(reason: reason)
+
+    case .scroll: self.scroll()
+
+    case let .cursor(position): self.cursor(to: position)
+
+    case .initVimError: self.showInitError()
+
+    case let .apiError(error, msg):
+      self.log.error("Got api error with msg '\(msg)' and error: \(error)")
+
+    case let .rpcEvent(params): self.rpcEventAction(params: params)
+
+    case let .warning(warning): self.show(warning: warning)
+
+    case .rpcEventSubscribed: break
+    }
   }
 }

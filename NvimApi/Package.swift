@@ -10,10 +10,12 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/qvacua/MessagePack.swift", .upToNextMinor(from: "4.1.0")),
+    .package(url: "https://github.com/Kitura/BlueSocket", .upToNextMinor(from: "2.0.2")),
   ],
   targets: [
     .target(name: "NvimApi", dependencies: [
       .product(name: "MessagePack", package: "MessagePack.swift"),
+      .product(name: "Socket", package: "BlueSocket"),
     ]),
     .testTarget(
       name: "NvimApiTests",

@@ -14,7 +14,8 @@ private nonisolated(unsafe) let workspace = NSWorkspace.shared
 // NSCache is thread-safe: https://developer.apple.com/documentation/foundation/nscache#overview
 private nonisolated(unsafe) let iconsCache = NSCache<NSURL, NSImage>()
 
-// FileManager is thread-safe: https://developer.apple.com/documentation/foundation/filemanager#1651181
+// FileManager is thread-safe:
+// https://developer.apple.com/documentation/foundation/filemanager#1651181
 private nonisolated(unsafe) let fm = FileManager.default
 
 public final class FileUtils {
@@ -57,8 +58,8 @@ public final class FileUtils {
     let min = pathComps.map(\.count).min()!
     let pathCompsOnlyMin = pathComps.map { $0[0..<min] }
     let commonIdx = (0..<min).reversed().reduce(min - 1) { result, idx in
-      if Set(pathCompsOnlyMin.map { $0[idx] }).count > 1 { return idx - 1 }
-      else { return result }
+      if Set(pathCompsOnlyMin.map { $0[idx] }).count > 1 { idx - 1 }
+      else { result }
     }
 
     let result = pathCompsOnlyMin[0]

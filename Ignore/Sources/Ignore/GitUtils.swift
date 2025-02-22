@@ -62,5 +62,6 @@ public enum GitUtils {
   }
 }
 
-// FileManager is thread-safe: https://developer.apple.com/documentation/foundation/filemanager#1651181
+// FileManager is thread-safe:
+// https://developer.apple.com/documentation/foundation/filemanager#1651181
 private nonisolated(unsafe) let fm = FileManager.default

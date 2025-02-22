@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 
 readonly clean=${clean:?"true or false"}
+readonly NVIM_PATH="../Neovim/build/bin/nvim"
 
 build_nvimserver_bin() {
   ./bin/neovim/bin/build_neovim_for_dev.sh
@@ -14,8 +15,11 @@ main() {
   build_nvimserver_bin
 
   pushd NvimApi >/dev/null
-    NVIM_PATH="../Neovim/build/bin/nvim" ./bin/generate_async_api_methods.py
-    swiftformat ./Sources/NvimApi/NvimApi.generated.swift
+    ./bin/generate_async_api_methods.py
+    ./bin/generate_sync_api_methods.py
+
+    swiftformat ./Sources/NvimApi/NvimApi.generated.swift \
+                ./Sources/NvimApi/NvimApiSync.generated.swift
   popd >/dev/null
 
   popd >/dev/null

@@ -19,7 +19,7 @@ public extension Array {
 }
 
 public extension RandomAccessCollection where Index == Int {
-  func groupedRanges<T: Equatable>(with marker: (Element) -> T) -> [ClosedRange<Index>] {
+  func groupedRanges(with marker: (Element) -> some Equatable) -> [ClosedRange<Index>] {
     if self.isEmpty { return [] }
     if self.count == 1 { return [self.startIndex...self.startIndex] }
 

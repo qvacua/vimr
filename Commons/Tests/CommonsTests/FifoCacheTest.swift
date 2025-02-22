@@ -17,15 +17,25 @@ class FifoCacheTest: XCTestCase {
   }
 
   func testSimpleGet() {
-    for i in 0...5 { self.fifo.set(i, forKey: i) }
+    for i in 0...5 {
+      self.fifo.set(i, forKey: i)
+    }
 
-    for i in 0...5 { expect(self.fifo.valueForKey(i)).to(equal(i)) }
-    for i in 6..<10 { expect(self.fifo.valueForKey(i)).to(beNil()) }
+    for i in 0...5 {
+      expect(self.fifo.valueForKey(i)).to(equal(i))
+    }
+    for i in 6..<10 {
+      expect(self.fifo.valueForKey(i)).to(beNil())
+    }
   }
 
   func testGet() {
-    for i in 0..<(10 * 3) { self.fifo.set(i, forKey: i) }
-    for i in 20..<30 { expect(self.fifo.valueForKey(i)).to(equal(i)) }
+    for i in 0..<(10 * 3) {
+      self.fifo.set(i, forKey: i)
+    }
+    for i in 20..<30 {
+      expect(self.fifo.valueForKey(i)).to(equal(i))
+    }
     expect(self.fifo.valueForKey(19)).to(beNil())
     expect(self.fifo.valueForKey(30)).to(beNil())
   }

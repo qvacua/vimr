@@ -13,11 +13,6 @@ import Workspace
 // MARK: - NvimViewDelegate
 
 extension MainWindow {
-  // Use only when Cmd-Q'ing
-  func waitTillNvimExits() {
-    self.neoVimView.waitTillNvimExits()
-  }
-
   func neoVimStopped() {
     if self.isClosing { return }
     self.prepareClosing()
@@ -227,36 +222,42 @@ extension MainWindow {
   func windowShouldClose(_: NSWindow) -> Bool {
     defer { self.closeWindow = false }
 
-    if self.neoVimView.isBlocked().syncValue() ?? false {
-      let alert = NSAlert()
-      alert.messageText = "Nvim is waiting for your input."
-      alert.alertStyle = .informational
-      alert.runModal()
-      return false
-    }
-
-    if self.closeWindow {
-      if self.neoVimView.hasDirtyBuffers().syncValue() == true {
-        self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
-          if response == .alertSecondButtonReturn {
-            try? self.neoVimView.quitNeoVimWithoutSaving().wait()
-          }
-        }
-      } else {
-        try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+    Task {
+      if await self.neoVimView.isBlocked() {
+        let alert = NSAlert()
+        alert.messageText = "Nvim is waiting for your input."
+        alert.alertStyle = .informational
+        alert.runModal()
+        return
       }
 
-      return false
-    }
+      if self.closeWindow {
+        if await self.neoVimView.hasDirtyBuffers() {
+          self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+            if response == .alertSecondButtonReturn {
+              Task {
+                await self.neoVimView.quitNeoVimWithoutSaving()
+              }
+            }
+          }
+        } else {
+          await self.neoVimView.quitNeoVimWithoutSaving()
+        }
 
-    guard self.neoVimView.isCurrentBufferDirty().syncValue() ?? false else {
-      try? self.neoVimView.closeCurrentTab().wait()
-      return false
-    }
+        return
+      }
 
-    self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
-      if response == .alertSecondButtonReturn {
-        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
+      guard await self.neoVimView.isCurrentBufferDirty() else {
+        await self.neoVimView.closeCurrentTab()
+        return
+      }
+
+      self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+        if response == .alertSecondButtonReturn {
+          Task {
+            await self.neoVimView.closeCurrentTabWithoutSaving()
+          }
+        }
       }
     }
 

@@ -12,16 +12,13 @@ import io
 
 void_func_template = Template('''\
   func ${func_name}(${args}
-    expectsReturnValue: Bool = false
-  ) async -> Result<Void, NvimApi.Error> {
+  ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         ${params}
     ]
 
-    if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
-    
-    let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
+    let reqResult = self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case .success:
       return .success(())
@@ -33,17 +30,17 @@ void_func_template = Template('''\
 
 get_mode_func_template = Template('''\
   func ${func_name}(${args}
-  ) async -> Result<${result_type}, NvimApi.Error> {
+  ) -> Result<${result_type}, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         ${params}
     ]
     
-    let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
+    let reqResult = self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case let .success(value):
       guard let result =  (${return_value}) else {
-        return .failure(Error.conversion(type: ${result_type}.self))
+        return .failure(NvimApi.Error.conversion(type: ${result_type}.self))
       }
       return .success(result)
 
@@ -56,7 +53,7 @@ get_mode_func_template = Template('''\
 func_template = Template('''\
   func ${func_name}(${args}
     errWhenBlocked: Bool = true
-  ) async -> Result<${result_type}, NvimApi.Error> {
+  ) -> Result<${result_type}, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         ${params}
@@ -70,9 +67,9 @@ func_template = Template('''\
       return result
     }
 
-    if errWhenBlocked, let error = await self.blockedError() { return .failure(error) }
+    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
     
-    let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
+    let reqResult = self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case let .success(value):
       return Result { () throws(NvimApi.Error) -> ${result_type} in
@@ -91,100 +88,9 @@ extension_template = Template('''\
 import Foundation
 import MessagePack
 
-extension NvimApi {
-
-  public enum Error: Swift.Error, Sendable {
-
-    ${error_types}
-
-    case exception(message: String)
-    case validation(message: String)
-    case blocked
-    case conversion(type: Any.Type)
-    case other(cause: Swift.Error)
-    case other(description: String)
-    case unknown
-
-    init(_ value: NvimApi.Value?) {
-      let array = value?.arrayValue
-      guard array?.count == 2 else {
-        self = .unknown
-        return
-      }
-
-      guard let rawValue = array?[0].uint64Value, let message = array?[1].stringValue else {
-        self = .unknown
-        return
-      }
-
-      switch rawValue {
-      ${error_cases}
-      default: self = .unknown
-      }
-    }
-  }
-}
-
-public extension NvimApi {
+public extension NvimApiSync {
 
 $body
-}
-
-extension NvimApi.Buffer {
-
-  public init?(_ value: NvimApi.Value) {
-    guard let (type, data) = value.extendedValue else {
-      return nil
-    }
-
-    guard type == ${buffer_type} else {
-      return nil
-    }
-
-    guard let handle = (try? unpack(data))?.value.int64Value else {
-      return nil
-    }
-
-    self.handle = Int(handle)
-  }
-}
-
-extension NvimApi.Window {
-
-  public init?(_ value: NvimApi.Value) {
-    guard let (type, data) = value.extendedValue else {
-      return nil
-    }
-
-    guard type == ${window_type} else {
-      return nil
-    }
-
-    guard let handle = (try? unpack(data))?.value.int64Value else {
-      return nil
-    }
-
-    self.handle = Int(handle)
-  }
-}
-
-extension NvimApi.Tabpage {
-
-  public init?(_ value: NvimApi.Value) {
-    guard let (type, data) = value.extendedValue else {
-      return nil
-    }
-
-    guard type == ${tabpage_type} else {
-      return nil
-    }
-
-    guard let handle = (try? unpack(data))?.value.int64Value else {
-      return nil
-    }
-
-    self.handle = Int(handle)
-  }
 }
 
 fileprivate func msgPackDictToSwift(_ dict: Dictionary<NvimApi.Value, NvimApi.Value>?) -> Dictionary<String, NvimApi.Value>? {
@@ -334,7 +240,7 @@ def swift_to_msgpack_value(name, type):
         return f'.string({name})'
 
     if type == 'Dictionary<String, NvimApi.Value>':
-        return f'.map({name}.mapToDict({{ (Value.string($0), $1) }}))'
+        return f'.map({name}.mapToDict({{ (NvimApi.Value.string($0), $1) }}))'
 
     if type == 'NvimApi.Value':
         return name
@@ -370,8 +276,13 @@ def parse_params(raw_params):
 
 
 def parse_function(f):
+    is_void_func = f['return_type'] == 'void'
     args = parse_args(f['parameters'])
-    template = void_func_template if f['return_type'] == 'void' else func_template
+    
+    if is_void_func:
+        args = args[:-1] if args else args
+
+    template = void_func_template if is_void_func else func_template
     nvim_func_name = f['name']
     template = get_mode_func_template if nvim_func_name == 'nvim_get_mode' else template
 
@@ -413,7 +324,7 @@ def parse_error_cases(error_types):
 
 
 if __name__ == '__main__':
-    result_file_path = './Sources/NvimApi/NvimApi.generated.swift'
+    result_file_path = './Sources/NvimApi/NvimApiSync.generated.swift'
 
     nvim_path = os.environ['NVIM_PATH'] if 'NVIM_PATH' in os.environ else 'nvim'
 
@@ -426,12 +337,7 @@ if __name__ == '__main__':
 
     result = extension_template.substitute(
         body=body,
-        version=version,
-        error_types=parse_error_types(api['error_types']),
-        error_cases=parse_error_cases(api['error_types']),
-        buffer_type=api['types']['Buffer']['id'],
-        window_type=api['types']['Window']['id'],
-        tabpage_type=api['types']['Tabpage']['id']
+        version=version
     )
 
     with io.open(result_file_path, 'w') as api_methods_file:

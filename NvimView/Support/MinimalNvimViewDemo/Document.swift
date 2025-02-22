@@ -27,11 +27,13 @@ final class ViewDelegate: NvimViewDelegate, Sendable {
 }
 
 class Document: NSDocument, NSWindowDelegate {
-  private let nvimView = NvimView(forAutoLayout: ())
+  private let nvimView = NvimView(frame: CGRect(x: 0, y: 0, width: 640, height: 480))
   private let viewDelegate = ViewDelegate()
 
   override init() {
     super.init()
+
+    self.nvimView.translatesAutoresizingMaskIntoConstraints = false
 
     self.viewDelegate.doc = self
     self.nvimView.delegate = self.viewDelegate
@@ -50,7 +52,7 @@ class Document: NSDocument, NSWindowDelegate {
       await self.quitWithoutSaving()
       await self.nvimView.stop()
     }
-    
+
     self.close()
     return true
   }

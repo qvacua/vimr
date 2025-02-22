@@ -18,7 +18,7 @@ final class FileMonitor: @unchecked Sendable {
   func monitor(url: URL, eventHandler: @escaping (URL) -> Void) throws {
     self.monitorLock.lock()
     defer { self.monitorLock.unlock() }
-    
+
     self.stopMonitor()
     self.urlToMonitor = url
     self.monitor = try EonilFSEventStream(

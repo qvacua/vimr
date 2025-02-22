@@ -19,7 +19,7 @@ public struct Theme: Sendable {
       )
     }
   }
-	
+
   public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
   public var selectedForegroundColor = NSColor.selectedTextColor {
     didSet {
@@ -29,11 +29,12 @@ public struct Theme: Sendable {
       )
     }
   }
+
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
 
   public var tabBarBackgroundColor = NSColor.windowBackgroundColor
   public var tabBarForegroundColor = NSColor.textColor
-	
+
   // I guess NSFont should be safe to send around
   public nonisolated(unsafe) var titleFont = NSFont.systemFont(ofSize: 11)
   public nonisolated(unsafe) var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
