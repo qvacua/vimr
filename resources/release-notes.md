@@ -1,4 +1,9 @@
-# 0.51.1-...
+# Next
+
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.7.0
+
+# 0.51.1-20250215.143933 
 
 * GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!
 
