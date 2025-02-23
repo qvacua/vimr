@@ -9,21 +9,9 @@ import NvimApi
 
 extension NvimView {
   override public func setFrameSize(_ newSize: NSSize) {
-    self.log.debug("################### setFrameSize: \(newSize)")
+    self.log.debug("setFrameSize: \(newSize)")
+
     super.setFrameSize(newSize)
-
-//    if self.isInitialResize {
-//      self.isInitialResize = false
-//
-//      Task {
-//        let size = self.discreteSize(size: newSize)
-//        self.ugrid.resize(size)
-//        await self.launchNeoVim(size)
-//      }
-//
-//      return
-//    }
-
     self.resizeNeoVimUi(to: newSize)
   }
 

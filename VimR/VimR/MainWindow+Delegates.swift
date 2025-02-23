@@ -60,16 +60,10 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
-  func bufferListChanged() {
-    self.neoVimView
-      .allBuffers()
-      .subscribe(onSuccess: { [weak self] buffers in
-        guard let action = self?.uuidAction(for: .setBufferList(buffers.filter(\.isListed))) else {
-          return
-        }
-        self?.emit(action)
-      })
-      .disposed(by: self.disposeBag)
+  func bufferListChanged() async {
+    let bufs = await self.neoVimView.allBuffers() ?? []
+    let action = self.uuidAction(for: .setBufferList(bufs.filter(\.isListed)))
+    self.emit(action)
   }
 
   func bufferWritten(_ buffer: NvimView.Buffer) {
@@ -80,13 +74,10 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .newCurrentBuffer(currentBuffer)))
   }
 
-  func tabChanged() {
-    self.neoVimView
-      .currentBuffer()
-      .subscribe(onSuccess: { [weak self] in
-        self?.newCurrentBuffer($0)
-      })
-      .disposed(by: self.disposeBag)
+  func tabChanged() async {
+    if let curBuf = await self.neoVimView.currentBuffer() {
+      self.newCurrentBuffer(curBuf)
+    }
   }
 
   func colorschemeChanged(to nvimTheme: NvimView.Theme) {
@@ -136,6 +127,7 @@ extension MainWindow {
   }
 
   private func updateCssColors() -> Single<[String: CellAttributes]> {
+//    return Single.just([:])
     let colorNames = [
       "Normal", // color and background-color
       "Directory", // a
@@ -171,6 +163,9 @@ extension MainWindow {
       .reduce([ColorNameHlResultTuple]()) { (result, element: ColorNameHlResultTuple) in
         result + [element]
       }
+      // w/o observe(on:), we crash. self.neoVimView.defaultCellAttributes needs to be executed
+      // on main
+      .observe(on: MainScheduler.instance)
       .map { (array: [ColorNameHlResultTuple]) in
         Dictionary(uniqueKeysWithValues: array)
           .mapValues { value in
@@ -200,11 +195,16 @@ extension MainWindow {
         self
           .uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen)))
       )
-    self.neoVimView.didBecomeMain().subscribe().disposed(by: self.disposeBag)
+
+    Task {
+      await self.neoVimView.didBecomeMain()
+    }
   }
 
   func windowDidResignMain(_: Notification) {
-    self.neoVimView.didResignMain().subscribe().disposed(by: self.disposeBag)
+    Task {
+      await self.neoVimView.didResignMain()
+    }
   }
 
   func windowDidMove(_: Notification) {

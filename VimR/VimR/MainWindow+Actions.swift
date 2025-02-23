@@ -278,7 +278,7 @@ extension MainWindow {
 
 extension MainWindow {
   func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-    let canSave = self.neoVimView.cachedCurrentBuffer?.type == ""
+    let canSave = self.neoVimView.currentBufferSync()?.type == ""
     let canSaveAs = canSave
     let canOpen = canSave
     let canOpenQuickly = canSave

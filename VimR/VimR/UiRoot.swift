@@ -86,10 +86,11 @@ final class UiRoot: UiComponent {
     self.mainWindows.values.forEach { $0.prepareClosing() }
 
     if !self.mainWindows.isEmpty {
-      await self.mainWindows.values.asyncMap { await $0.quitNeoVimWithoutSaving() }
+      for mainWin in self.mainWindows.values {
+        await mainWin.quitNeoVimWithoutSaving()
+      }
     }
 
-    self.mainWindows.values.forEach { $0.waitTillNvimExits() }
     self.openQuicklyWindow.cleanUp()
   }
 

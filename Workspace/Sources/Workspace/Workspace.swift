@@ -85,7 +85,7 @@ public final class Workspace: NSView, WorkspaceBarDelegate {
       .left: WorkspaceBar(location: .left),
     ]
 
-    super.init(frame: .zero)
+    super.init(frame: .init(x: 0, y: 0, width: 640, height: 480))
     self.configureForAutoLayout()
 
     self.registerForDraggedTypes([NSPasteboard.PasteboardType(WorkspaceToolButton.toolUti)])

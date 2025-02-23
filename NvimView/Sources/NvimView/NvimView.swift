@@ -352,7 +352,6 @@ public final class NvimView: NSView,
 
   var _font = NvimView.defaultFont
   var _cwd = URL(fileURLWithPath: NSHomeDirectory())
-  var isInitialResize = true
 
   // FIXME: Use self.tabEntries
   // cache the tabs for Touch Bar use

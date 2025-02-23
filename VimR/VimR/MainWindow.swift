@@ -92,7 +92,10 @@ final class MainWindow: NSObject,
       envDict: state.envDict,
       sourceFiles: sourceFileUrls
     )
-    self.neoVimView = NvimView(frame: .zero, config: neoVimViewConfig)
+    self.neoVimView = NvimView(
+      frame: .init(x: 0, y: 0, width: 640, height: 480),
+      config: neoVimViewConfig
+    )
     self.neoVimView.configureForAutoLayout()
 
     self.workspace = Workspace(mainView: self.neoVimView)
@@ -216,7 +219,9 @@ final class MainWindow: NSObject,
     self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
 
-    self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
+    Task {
+      await self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
+    }
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -274,137 +279,112 @@ final class MainWindow: NSObject,
 
   private func subscribeToStateChange(source: Observable<StateType>) {
     source
-      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { state in
-        if self.isClosing {
-          return
-        }
-
-        if state.viewToBeFocused != nil,
-           case .neoVimView = state.viewToBeFocused!
-        {
-          self.window.makeFirstResponder(self.neoVimView)
-        }
-
-        self.windowController.setDocumentEdited(state.isDirty)
-
-        if let cwd = state.cwdToSet {
-          self.neoVimView.cwd = cwd
-          self.neoVimView.tabBar?.cwd = cwd.path
-        }
-
-        Completable
-          .empty()
-          .andThen {
-            if state.preview.status == .markdown,
-               state.previewTool.isReverseSearchAutomatically,
-               state.preview.previewPosition
-               .hasDifferentMark(as: self.previewPosition)
-            {
-              self.previewPosition = state.preview.previewPosition
-              return self.neoVimView.cursorGo(
-                to: state.preview.previewPosition.payload
-              )
-            }
-
-            return .empty()
+        Task { @MainActor in
+          if self.isClosing {
+            return
           }
-          .andThen(self.open(urls: state.urlsToOpen))
-          .andThen {
+
+          if state.viewToBeFocused != nil,
+             case .neoVimView = state.viewToBeFocused!
+          {
+            self.window.makeFirstResponder(self.neoVimView)
+          }
+
+          self.windowController.setDocumentEdited(state.isDirty)
+
+          if let cwd = state.cwdToSet {
+            self.neoVimView.cwd = cwd
+            self.neoVimView.tabBar?.cwd = cwd.path
+          }
+
+          if state.preview.status == .markdown,
+             state.previewTool.isReverseSearchAutomatically,
+             state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
+          {
+            self.previewPosition = state.preview.previewPosition
+            await self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+            self.open(urls: state.urlsToOpen)
             if let currentBuffer = state.currentBufferToSet {
-              return self.neoVimView.select(buffer: currentBuffer)
+              await self.neoVimView.select(buffer: currentBuffer)
             }
-
-            return .empty()
-          }
-          .andThen {
             if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
               self.goToLineFromCli = state.goToLineFromCli
               if let goToLine = self.goToLineFromCli {
-                return self.neoVimView.goTo(line: goToLine.payload)
+                await self.neoVimView.goTo(line: goToLine.payload)
               }
             }
-
-            return .empty()
           }
-          .subscribe()
-          .disposed(by: self.disposeBag)
 
-        let usesTheme = state.appearance.usesTheme
-        let themePrefChanged = state.appearance.usesTheme != self.usesTheme
-        let themeChanged = state.appearance.theme.mark != self.lastThemeMark
+          let usesTheme = state.appearance.usesTheme
+          let themePrefChanged = state.appearance.usesTheme != self.usesTheme
+          let themeChanged = state.appearance.theme.mark != self.lastThemeMark
 
-        if themeChanged {
-          self.theme = state.appearance.theme.payload
-        }
-
-        _ = changeTheme(
-          themePrefChanged: themePrefChanged,
-          themeChanged: themeChanged,
-          usesTheme: usesTheme,
-          forTheme: {
-            self.themeTitlebar(grow: !self.titlebarThemed)
-            self.window.backgroundColor = state.appearance
-              .theme.payload.background.brightening(by: 0.9)
-
-            self.set(workspaceThemeWith: state.appearance.theme.payload)
-            self.set(tabsThemeWith: state.appearance.theme.payload)
-
-            self.lastThemeMark = state.appearance.theme.mark
-          },
-          forDefaultTheme: {
-            self.unthemeTitlebar(dueFullScreen: false)
-            self.window.backgroundColor = .windowBackgroundColor
-
-            self.workspace.theme = .default
-            self.neoVimView.tabBar?.update(theme: .default)
+          if themeChanged {
+            self.theme = state.appearance.theme.payload
           }
-        )
 
-        self.usesTheme = state.appearance.usesTheme
+          _ = changeTheme(
+            themePrefChanged: themePrefChanged,
+            themeChanged: themeChanged,
+            usesTheme: usesTheme,
+            forTheme: {
+              self.themeTitlebar(grow: !self.titlebarThemed)
+              self.window.backgroundColor = state.appearance
+                .theme.payload.background.brightening(by: 0.9)
 
-        if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
-          self.currentBuffer = state.currentBuffer
-          if state.appearance.showsFileIcon {
-            self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
-          } else {
-            self.set(repUrl: nil, themed: self.titlebarThemed)
+              self.set(workspaceThemeWith: state.appearance.theme.payload)
+              self.set(tabsThemeWith: state.appearance.theme.payload)
+
+              self.lastThemeMark = state.appearance.theme.mark
+            },
+            forDefaultTheme: {
+              self.unthemeTitlebar(dueFullScreen: false)
+              self.window.backgroundColor = .windowBackgroundColor
+
+              self.workspace.theme = .default
+              self.neoVimView.tabBar?.update(theme: .default)
+            }
+          )
+
+          self.usesTheme = state.appearance.usesTheme
+
+          if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
+            self.currentBuffer = state.currentBuffer
+            if state.appearance.showsFileIcon {
+              self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
+            } else {
+              self.set(repUrl: nil, themed: self.titlebarThemed)
+            }
           }
-        }
 
-        self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
-        self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
+          self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
+          self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
 
-        if self.defaultFont != state.appearance.font
-          || self.linespacing != state.appearance.linespacing
-          || self.characterspacing != state.appearance.characterspacing
-          || self.usesLigatures != state.appearance.usesLigatures
-          || self.fontSmoothing != state.appearance.fontSmoothing
-        {
-          self.fontSmoothing = state.appearance.fontSmoothing
-          self.defaultFont = state.appearance.font
-          self.linespacing = state.appearance.linespacing
-          self.characterspacing = state.appearance.characterspacing
-          self.usesLigatures = state.appearance.usesLigatures
+          if self.defaultFont != state.appearance.font
+            || self.linespacing != state.appearance.linespacing
+            || self.characterspacing != state.appearance.characterspacing
+            || self.usesLigatures != state.appearance.usesLigatures
+            || self.fontSmoothing != state.appearance.fontSmoothing
+          {
+            self.fontSmoothing = state.appearance.fontSmoothing
+            self.defaultFont = state.appearance.font
+            self.linespacing = state.appearance.linespacing
+            self.characterspacing = state.appearance.characterspacing
+            self.usesLigatures = state.appearance.usesLigatures
 
-          self.updateNeoVimAppearance()
+            self.updateNeoVimAppearance()
+          }
         }
       })
       .disposed(by: self.disposeBag)
   }
 
-  private func openInitialUrlsAndGoToLine(urlsToOpen: [URL: OpenMode]) {
-    self
-      .open(urls: urlsToOpen)
-      .andThen {
-        if let goToLine = self.goToLineFromCli {
-          return self.neoVimView.goTo(line: goToLine.payload)
-        }
-
-        return .empty()
-      }
-      .subscribe()
-      .disposed(by: self.disposeBag)
+  private func openInitialUrlsAndGoToLine(urlsToOpen: [URL: OpenMode]) async {
+    self.open(urls: urlsToOpen)
+    if let goToLine = self.goToLineFromCli {
+      await self.neoVimView.goTo(line: goToLine.payload)
+    }
   }
 
   private func updateNeoVimAppearance() {
@@ -452,27 +432,25 @@ final class MainWindow: NSObject,
     self.workspace.theme = workspaceTheme
   }
 
-  private func open(urls: [URL: OpenMode]) -> Completable {
-    if urls.isEmpty {
-      return .empty()
-    }
+  private func open(urls: [URL: OpenMode]) {
+    Task {
+      if urls.isEmpty { return }
 
-    return .concat(
-      urls.map { entry -> Completable in
+      for entry in urls {
         let url = entry.key
         let mode = entry.value
 
         switch mode {
-        case .default: return self.neoVimView.open(urls: [url])
-        case .currentTab: return self.neoVimView.openInCurrentTab(url: url)
-        case .newTab: return self.neoVimView.openInNewTab(urls: [url])
+        case .default: return await self.neoVimView.open(urls: [url])
+        case .currentTab: return await self.neoVimView.openInCurrentTab(url: url)
+        case .newTab: return await self.neoVimView.openInNewTab(urls: [url])
         case .horizontalSplit:
-          return self.neoVimView.openInHorizontalSplit(urls: [url])
+          return await self.neoVimView.openInHorizontalSplit(urls: [url])
         case .verticalSplit:
-          return self.neoVimView.openInVerticalSplit(urls: [url])
+          return await self.neoVimView.openInVerticalSplit(urls: [url])
         }
       }
-    )
+    }
   }
 
   func addViews(withTopInset topInset: CGFloat) {
@@ -562,7 +540,7 @@ extension MainWindow {
     self.shortcutService?.isMenuItemShortcut(event) == true
   }
 
-  func nextEvent(_ event: NvimView.Event) {
+  func nextEvent(_ event: NvimView.Event) async {
     switch event {
     case .neoVimStopped: self.neoVimStopped()
 
@@ -572,9 +550,9 @@ extension MainWindow {
 
     case .cwdChanged: self.cwdChanged()
 
-    case .bufferListChanged: self.bufferListChanged()
+    case .bufferListChanged: await self.bufferListChanged()
 
-    case .tabChanged: self.tabChanged()
+    case .tabChanged: await self.tabChanged()
 
     case let .newCurrentBuffer(curBuf): self.newCurrentBuffer(curBuf)
 

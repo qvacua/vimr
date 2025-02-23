@@ -17,5 +17,5 @@ enum Defs {
     static let service = "service"
   }
 
-  static let webViewProcessPool = WKProcessPool()
+  @MainActor static let webViewProcessPool = WKProcessPool()
 }

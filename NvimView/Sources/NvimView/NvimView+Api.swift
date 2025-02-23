@@ -92,6 +92,50 @@ public extension NvimView {
     self.resizeNeoVimUi(to: self.bounds.size)
   }
 
+  func neoVimBufferSync(
+    for buf: NvimApi.Buffer,
+    currentBuffer: NvimApi.Buffer?
+  ) -> NvimView.Buffer? {
+    let result = self.apiSync.nvimExecLua(code: """
+    local info = vim.fn.getbufinfo(...)[1]
+    local result = {}
+    result.name = info.name
+    result.changed = info.changed
+    result.listed = info.listed
+    result.buftype = vim.api.nvim_get_option_value("buftype", {buf=info.bufnr})
+    return result
+    """, args: [MessagePackValue(buf.handle)])
+
+    guard case let .success(value) = result, let raw_info = value.dictionaryValue else {
+      return nil
+    }
+
+    let info: [String: MessagePackValue] = .init(
+      uniqueKeysWithValues: raw_info.map {
+        (key: MessagePackValue, value: MessagePackValue) in
+        (key.stringValue!, value)
+      }
+    )
+
+    let current = buf == currentBuffer
+    guard let path = info["name"]?.stringValue,
+          let dirty = info["changed"]?.intValue,
+          let buftype = info["buftype"]?.stringValue,
+          let listed = info["listed"]?.intValue
+    else { return nil }
+
+    let url = path == "" || buftype != "" ? nil : URL(fileURLWithPath: path)
+
+    return NvimView.Buffer(
+      apiBuffer: buf,
+      url: url,
+      type: buftype,
+      isDirty: dirty != 0,
+      isCurrent: current,
+      isListed: listed != 0
+    )
+  }
+
   func neoVimBuffer(
     for buf: NvimApi.Buffer,
     currentBuffer: NvimApi.Buffer?
@@ -134,6 +178,14 @@ public extension NvimView {
       isCurrent: current,
       isListed: listed != 0
     )
+  }
+
+  func currentBufferSync() -> NvimView.Buffer? {
+    guard case let .success(value) = self.apiSync.nvimGetCurrentBuf(),
+          let buffer = self.neoVimBufferSync(for: value, currentBuffer: value)
+    else { return nil }
+
+    return buffer
   }
 
   func currentBuffer() async -> NvimView.Buffer? {
