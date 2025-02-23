@@ -1,11 +1,10 @@
-# 0.51.1-...
+#Next
+* Dependencies updates:
+  - sparkle-project/Sparkle@2.7.0
+
+# 0.51.1-20250215.143933 
 
 * GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!
-
-# 0.51.0-20250129.234141
-
-* Dependencies updates:
-  - Quick/Nimble@13.7.1
 
 # 0.51.0-20250129.234141
 
@@ -13,7 +12,6 @@
 
 # 0.50.0-20241224.155723
 
->>>>>>> master
 * Neovim 0.10.3 😀
 * Dependencies updates:
   - qvacua/MessagePack.swift@4.1.0

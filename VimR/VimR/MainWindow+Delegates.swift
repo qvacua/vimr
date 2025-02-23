@@ -163,8 +163,8 @@ extension MainWindow {
       .reduce([ColorNameHlResultTuple]()) { (result, element: ColorNameHlResultTuple) in
         result + [element]
       }
-      // w/o observe(on:), we crash. self.neoVimView.defaultCellAttributes needs to be executed
-      // on main
+      // FIXME: w/o observe(on:), we crash. self.neoVimView.defaultCellAttributes
+      // needs to be executed on main
       .observe(on: MainScheduler.instance)
       .map { (array: [ColorNameHlResultTuple]) in
         Dictionary(uniqueKeysWithValues: array)

@@ -9,7 +9,7 @@ import NvimView
 import RxSwift
 import Workspace
 
-struct AppState: Codable {
+struct AppState: Codable, Sendable {
   enum OpenFilesFromApplicationsAction: String, Codable, CaseIterable {
     case inNewWindow
     case inCurrentWindow
@@ -187,7 +187,7 @@ struct HtmlPreviewState {
   var server: Marked<URL>?
 }
 
-struct AppearanceState: Codable {
+struct AppearanceState: Codable, Sendable {
   static let `default` = AppearanceState()
 
   enum CodingKeys: String, CodingKey {
@@ -262,7 +262,7 @@ struct AppearanceState: Codable {
 }
 
 extension MainWindow {
-  struct State: Codable {
+  struct State: Codable, Sendable {
     static let `default` = State(
       isAllToolsVisible: true,
       isToolButtonsVisible: true,
@@ -476,7 +476,7 @@ extension MainWindow {
   }
 }
 
-struct WorkspaceToolState: Codable {
+struct WorkspaceToolState: Codable, Sendable {
   static let `default` = WorkspaceToolState()
 
   enum CodingKeys: String, CodingKey {

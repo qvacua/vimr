@@ -62,7 +62,7 @@ public struct FontTrait: OptionSet, Sendable {
   static let undercurl = FontTrait(rawValue: 1 << 3)
 }
 
-public enum FontSmoothing: String, Codable, CaseIterable {
+public enum FontSmoothing: String, Codable, CaseIterable, Sendable {
   case systemSetting
   case withFontSmoothing
   case noFontSmoothing

@@ -3,8 +3,12 @@
  * See LICENSE
  */
 
-import Foundation
+import Cocoa
 import RxSwift
+
+extension NSColor: @retroactive @unchecked Sendable {}
+extension NSFont: @retroactive @unchecked Sendable {}
+extension NSImage: @retroactive @unchecked Sendable {}
 
 struct StateActionPair<S, A> {
   var state: S
@@ -44,7 +48,7 @@ final class UuidState<S>: UuidTagged, CustomStringConvertible {
   }
 }
 
-final class Token: Hashable, CustomStringConvertible {
+final class Token: Hashable, CustomStringConvertible, Sendable {
   func hash(into hasher: inout Hasher) {
     hasher.combine(ObjectIdentifier(self))
   }
@@ -58,7 +62,7 @@ final class Token: Hashable, CustomStringConvertible {
   }
 }
 
-final class Marked<T>: CustomStringConvertible {
+final class Marked<T: Sendable>: CustomStringConvertible, Sendable {
   let mark: Token
   let payload: T
 
