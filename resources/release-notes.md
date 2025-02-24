@@ -1,6 +1,7 @@
 # Next
 
 * Dependencies updates:
+  - ReactiveX/RxSwift@6.9.0
   - sparkle-project/Sparkle@2.7.0
 
 # 0.51.1-20250215.143933 
