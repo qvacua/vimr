@@ -12,6 +12,20 @@
 
 # 0.50.0-20241224.155723
 
+* Dependencies updates:
+  - ReactiveX/RxSwift@6.9.0
+  - sparkle-project/Sparkle@2.7.0
+
+# 0.51.1-20250215.143933 
+
+* GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!
+
+# 0.51.0-20250129.234141
+
+* Neovim 0.10.4 😀
+
+# 0.50.0-20241224.155723
+
 * Neovim 0.10.3 😀
 * Dependencies updates:
   - qvacua/MessagePack.swift@4.1.0
