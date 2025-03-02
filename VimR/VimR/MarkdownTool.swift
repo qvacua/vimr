@@ -7,7 +7,7 @@ import Cocoa
 import NvimView
 import os
 import PureLayout
-import RxSwift
+@preconcurrency import RxSwift
 import WebKit
 
 final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {

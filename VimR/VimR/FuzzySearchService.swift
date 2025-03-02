@@ -4,14 +4,17 @@
  */
 
 import Commons
-import CoreData
+@preconcurrency import CoreData
 import Foundation
 import Ignore
 import Misc
 import os
 
-final class FuzzySearchService {
-  typealias ScoredUrlsCallback = ([ScoredUrl]) -> Void
+extension ScoredUrl: @unchecked Sendable {}
+extension FileItem: @unchecked Sendable {}
+
+final class FuzzySearchService: @unchecked Sendable {
+  typealias ScoredUrlsCallback = @Sendable ([ScoredUrl]) -> Void
 
   var usesVcsIgnores = true {
     willSet { self.stopScanScore() }
@@ -40,9 +43,9 @@ final class FuzzySearchService {
 
   func scanScore(
     for pattern: String,
-    beginCallback: @escaping () -> Void,
-    endCallback: @escaping () -> Void,
-    callback: @escaping ScoredUrlsCallback
+    beginCallback: @Sendable @escaping () -> Void,
+    endCallback: @Sendable @escaping () -> Void,
+    callback: @Sendable @escaping ([ScoredUrl]) -> Void
   ) {
     self.queue.async {
       self.log.info("Starting fuzzy search for \(pattern) in \(self.root)")
@@ -113,7 +116,7 @@ final class FuzzySearchService {
   private func scanScoreFilesNeedScanning(
     matcher: FzyMatcher,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> Void
+    callback: ScoredUrlsCallback
   ) {
     let req = self.fileFetchRequest("needsScanChildren == TRUE AND direntType == %d", [DT_DIR])
     do {
@@ -137,7 +140,7 @@ final class FuzzySearchService {
     matcher: FzyMatcher,
     folderId: NSManagedObjectID,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> Void
+    callback: ScoredUrlsCallback
   ) {
     var saveCounter = 1
     var counter = 1
@@ -239,7 +242,7 @@ final class FuzzySearchService {
   private func scoreAllRegisteredFiles(
     matcher: FzyMatcher,
     context: NSManagedObjectContext,
-    callback: ([ScoredUrl]) -> Void
+    callback: ScoredUrlsCallback
   ) {
     let files = context.registeredObjects
       .compactMap { $0 as? FileItem }

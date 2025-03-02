@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import Down
+@preconcurrency import Down
 
 extension NSView {
   @objc var isFirstResponder: Bool { self.window?.firstResponder == self }

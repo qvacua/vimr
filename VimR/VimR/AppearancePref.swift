@@ -6,7 +6,7 @@
 import Cocoa
 import NvimView
 import PureLayout
-import RxSwift
+@preconcurrency import RxSwift
 
 final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate,
   NSFontChanging
@@ -281,7 +281,9 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
       forName: NSControl.textDidEndEditingNotification,
       object: linespacingField,
       queue: nil
-    ) { [weak self] _ in self?.linespacingAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.linespacingAction() }
+    }
 
     characterspacingTitle.autoPinEdge(
       toSuperviewEdge: .left,
@@ -298,7 +300,9 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
       forName: NSControl.textDidEndEditingNotification,
       object: characterspacingField,
       queue: nil
-    ) { [weak self] _ in self?.characterspacingAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.characterspacingAction() }
+    }
 
     characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
     characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
@@ -447,5 +451,5 @@ extension AppearancePref {
   }
 }
 
-private let sharedFontManager = NSFontManager.shared
-private let sharedFontPanel = NSFontPanel.shared
+@MainActor private let sharedFontManager = NSFontManager.shared
+@MainActor private let sharedFontPanel = NSFontPanel.shared

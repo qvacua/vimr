@@ -188,11 +188,13 @@ final class OpenQuicklyWindow: NSObject,
     }
   }
 
-  private func startProgress() {
+  // Since we use GCD's main queue, we can set it to nonisolated
+  private nonisolated func startProgress() {
     DispatchQueue.main.async { self.progressIndicator.startAnimation(self) }
   }
 
-  private func endProgress() {
+  // Since we use GCD's main queue, we can set it to nonisolated
+  private nonisolated func endProgress() {
     DispatchQueue.main.async { self.progressIndicator.stopAnimation(self) }
   }
 

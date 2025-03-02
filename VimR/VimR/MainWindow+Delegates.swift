@@ -127,7 +127,6 @@ extension MainWindow {
   }
 
   private func updateCssColors() -> Single<[String: CellAttributes]> {
-//    return Single.just([:])
     let colorNames = [
       "Normal", // color and background-color
       "Directory", // a
@@ -143,7 +142,7 @@ extension MainWindow {
       .from(colorNames.map { colorName -> ColorNameObservableTuple in
         (
           colorName: colorName,
-          observable: Single.create {
+          observable: Single.create { @MainActor in
             let result = await self.neoVimView.api
               .nvimGetHl(
                 ns_id: 0,

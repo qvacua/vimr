@@ -148,7 +148,9 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       forName: NSControl.textDidEndEditingNotification,
       object: nvimBinaryField,
       queue: nil
-    ) { [weak self] _ in self?.nvimBinaryFieldAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.nvimBinaryFieldAction() }
+    }
   }
 }
 

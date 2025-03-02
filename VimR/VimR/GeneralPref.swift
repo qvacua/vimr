@@ -178,8 +178,8 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       forName: NSControl.textDidEndEditingNotification,
       object: customMarkdownProcessorField,
       queue: nil
-    ) { [unowned self] _ in
-      self.customMarkdownProcessorAction()
+    ) { [weak self] _ in
+      Task { @MainActor in self?.customMarkdownProcessorAction() }
     }
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")

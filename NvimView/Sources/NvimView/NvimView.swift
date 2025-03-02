@@ -86,7 +86,10 @@ public final class NvimView: NSView,
 
   public static let minFontSize = 4.0
   public static let maxFontSize = 128.0
-  public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
+  
+  // NSFont seems to be immutable
+  nonisolated(unsafe) public static let defaultFont = NSFont.userFixedPitchFont(ofSize: 12)!
+  
   public static let defaultLinespacing = 1.0
   public static let defaultCharacterspacing = 1.0
 

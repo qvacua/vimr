@@ -10,7 +10,7 @@ import PureLayout
 import Tabs
 
 extension NSColor: @retroactive @unchecked Sendable {}
-extension NSFont: @retroactive @unchecked Sendable {}
+//extension NSFont: @retroactive @unchecked Sendable {}
 extension NSImage: @retroactive @unchecked Sendable {}
 
 public extension NvimView {

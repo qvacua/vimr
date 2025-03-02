@@ -5,11 +5,12 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
-import ShortcutRecorder
+@preconcurrency import RxSwift
+@preconcurrency import ShortcutRecorder
 
 final class ShortcutValueTransformer: ValueTransformer {
-  static let shared = ShortcutValueTransformer()
+  // Should be fine to be nonisolated
+  nonisolated(unsafe) static let shared = ShortcutValueTransformer()
 
   override class func allowsReverseTransformation() -> Bool { true }
 
@@ -29,7 +30,7 @@ final class ShortcutValueTransformer: ValueTransformer {
 final class ShortcutsPref: PrefPane,
   UiComponent,
   NSOutlineViewDelegate,
-  RecorderControlDelegate
+  @preconcurrency RecorderControlDelegate
 {
   typealias StateType = AppState
 

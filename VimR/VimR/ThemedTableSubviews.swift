@@ -7,6 +7,7 @@ import Cocoa
 import NvimView
 import PureLayout
 
+@MainActor
 protocol ThemedView: AnyObject {
   var theme: Theme { get }
   var lastThemeMark: Token { get }

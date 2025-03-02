@@ -4,11 +4,17 @@
  */
 
 import Cocoa
-import RxSwift
+@preconcurrency import RxSwift
+import UserNotifications
 
 extension NSColor: @retroactive @unchecked Sendable {}
 extension NSFont: @retroactive @unchecked Sendable {}
 extension NSImage: @retroactive @unchecked Sendable {}
+extension UNNotification: @retroactive @unchecked Sendable {}
+
+// UNUserNotificationCenter is thread-safe
+// https://developer.apple.com/documentation/usernotifications/unusernotificationcenter#overview
+extension UNUserNotificationCenter: @retroactive @unchecked Sendable {}
 
 struct StateActionPair<S, A> {
   var state: S

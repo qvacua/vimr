@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import EonilFSEvents
+@preconcurrency import EonilFSEvents
 import MaterialIcons
 import os
 import PureLayout

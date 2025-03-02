@@ -82,36 +82,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     UNUserNotificationCenter.current().delegate = self
   }
 
+  // awakeFromNib is not @MainActor isolated
+  // https://www.massicotte.org/awakefromnib
   override func awakeFromNib() {
     super.awakeFromNib()
 
-    let source = self.context.stateSource
+    MainActor.assumeIsolated {
+      let source = self.context.stateSource
 
-    // We want to build the menu items tree at some point, eg in the init() of
-    // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
-    // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
-    self.uiRoot = UiRoot(
-      source: source,
-      emitter: self.context.actionEmitter,
-      state: self.context.state
-    )
+      // We want to build the menu items tree at some point, eg in the init() of
+      // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
+      // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
+      self.uiRoot = UiRoot(
+        source: source,
+        emitter: self.context.actionEmitter,
+        state: self.context.state
+      )
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { appState in
-        self.hasMainWindows = !appState.mainWindows.isEmpty
-        self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+      source
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { appState in
+          self.hasMainWindows = !appState.mainWindows.isEmpty
+          self.hasDirtyWindows = appState.mainWindows.values
+            .reduce(false) { $1.isDirty ? true : $0 }
 
-        self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
-        self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
+          self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
+          self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
 
-        if self.updaterDelegate.useSnapshotChannel != appState.useSnapshotUpdate {
-          self.updaterDelegate.useSnapshotChannel = appState.useSnapshotUpdate
-        }
+          if self.updaterDelegate.useSnapshotChannel != appState.useSnapshotUpdate {
+            self.updaterDelegate.useSnapshotChannel = appState.useSnapshotUpdate
+          }
 
-        if appState.quit { NSApp.terminate(self) }
-      })
-      .disposed(by: self.disposeBag)
+          if appState.quit { NSApp.terminate(self) }
+        })
+        .disposed(by: self.disposeBag)
+    }
   }
 
   private let context: Context
