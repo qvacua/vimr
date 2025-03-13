@@ -6,7 +6,6 @@
 import Cocoa
 import Commons
 import MessagePack
-import RxSwift
 import Workspace
 
 // MARK: - RpcEvent Actions

@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-@preconcurrency import RxSwift
 @preconcurrency import ShortcutRecorder
 
 final class ShortcutValueTransformer: ValueTransformer {
@@ -33,6 +32,9 @@ final class ShortcutsPref: PrefPane,
   @preconcurrency RecorderControlDelegate
 {
   typealias StateType = AppState
+  typealias ActionType = Sendable
+
+  let uuid = UUID()
 
   @objc dynamic var content = [ShortcutItem]()
 
@@ -44,7 +46,7 @@ final class ShortcutsPref: PrefPane,
     didSet { self.updateShortcutService() }
   }
 
-  required init(source _: Observable<StateType>, emitter _: ActionEmitter, state _: StateType) {
+  required init(context _: ReduxContext, emitter _: ActionEmitter, state _: StateType) {
     // We know that the identifier is not empty.
     let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
     self.shortcutsUserDefaults = UserDefaults(suiteName: shortcutSuiteName)

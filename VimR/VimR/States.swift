@@ -6,7 +6,6 @@
 import Cocoa
 import Commons
 import NvimView
-@preconcurrency import RxSwift
 import Workspace
 
 struct AppState: Codable, Sendable {

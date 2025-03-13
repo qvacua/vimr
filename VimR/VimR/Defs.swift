@@ -12,6 +12,7 @@ enum Defs {
   enum LoggerCategory {
     static let general = "general"
 
+    static let redux = "redux"
     static let ui = "ui"
     static let middleware = "middleware"
     static let service = "service"

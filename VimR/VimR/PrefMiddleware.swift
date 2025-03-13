@@ -10,7 +10,7 @@ import UserNotifications
 
 final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
-  typealias ActionType = AnyAction
+  typealias ActionType = Sendable
 
   static let compatibleVersion = "168"
 

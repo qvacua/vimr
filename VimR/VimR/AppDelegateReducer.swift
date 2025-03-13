@@ -13,10 +13,12 @@ final class AppDelegateReducer: ReducerType {
     self.baseServerUrl = baseServerUrl
   }
 
-  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-    var state = pair.state
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action {
     case let .newMainWindow(config):
       let mainWindow = self.newMainWindow(with: state, config: config)
       state.mainWindows[mainWindow.uuid] = mainWindow
@@ -38,7 +40,7 @@ final class AppDelegateReducer: ReducerType {
       state.preferencesOpen = Marked(true)
     }
 
-    return (state, pair.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 
   private let baseServerUrl: URL

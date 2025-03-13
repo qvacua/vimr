@@ -4,10 +4,10 @@
  */
 
 import Cocoa
+import Combine
 import Commons
 import NvimView
 import PureLayout
-import RxSwift
 
 final class BuffersList: NSView,
   UiComponent,
@@ -21,16 +21,14 @@ final class BuffersList: NSView,
     case open(NvimView.Buffer)
   }
 
+  let uuid = UUID()
   private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
-  required init(
-    source: Observable<StateType>,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+    self.context = context
     self.emit = emitter.typedEmit()
-    self.uuid = state.uuid
+    self.mainWinUuid = state.uuid
 
     self.usesTheme = state.appearance.usesTheme
     self.showsFileIcon = state.appearance.showsFileIcon
@@ -45,43 +43,47 @@ final class BuffersList: NSView,
 
     self.addViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil,
-           case .bufferList = state.viewToBeFocused!
-        {
-          self.beFirstResponder()
-        }
+    context.subscribe(uuid: self.uuid) { appState in
+      guard let state = appState.mainWindows[self.mainWinUuid] else { return }
 
-        let themeChanged = changeTheme(
-          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
-          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
-          usesTheme: state.appearance.usesTheme,
-          forTheme: { self.updateTheme(state.appearance.theme) },
-          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
-        )
+      if state.viewToBeFocused != nil,
+         case .bufferList = state.viewToBeFocused!
+      {
+        self.beFirstResponder()
+      }
 
-        self.usesTheme = state.appearance.usesTheme
+      let themeChanged = changeTheme(
+        themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+        themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+        usesTheme: state.appearance.usesTheme,
+        forTheme: { self.updateTheme(state.appearance.theme) },
+        forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
+      )
 
-        if self.buffers == state.buffers,
-           !themeChanged,
-           self.showsFileIcon == state.appearance.showsFileIcon
-        {
-          return
-        }
+      self.usesTheme = state.appearance.usesTheme
 
-        self.showsFileIcon = state.appearance.showsFileIcon
-        self.buffers = state.buffers
-        self.bufferList.reloadData()
-      })
-      .disposed(by: self.disposeBag)
+      if self.buffers == state.buffers,
+         !themeChanged,
+         self.showsFileIcon == state.appearance.showsFileIcon
+      {
+        return
+      }
+
+      self.showsFileIcon = state.appearance.showsFileIcon
+      self.buffers = state.buffers
+      self.bufferList.reloadData()
+    }
   }
 
-  private let emit: (UuidAction<Action>) -> Void
-  private let disposeBag = DisposeBag()
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
+  }
 
-  private let uuid: UUID
+  private let context: ReduxContext
+  private let emit: (UuidAction<Action>) -> Void
+  private var cancellables = Set<AnyCancellable>()
+
+  private let mainWinUuid: UUID
   private var usesTheme: Bool
   private var showsFileIcon: Bool
 
@@ -120,7 +122,7 @@ extension BuffersList {
       return
     }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .open(self.buffers[clickedRow])))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(self.buffers[clickedRow])))
   }
 }
 

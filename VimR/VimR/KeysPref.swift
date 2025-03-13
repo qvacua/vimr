@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
 
 final class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
   typealias StateType = AppState
@@ -15,6 +14,8 @@ final class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case isRightOptionMeta(Bool)
   }
 
+  let uuid = UUID()
+
   override var displayName: String {
     "Keys"
   }
@@ -23,7 +24,7 @@ final class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     true
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
 
     self.isLeftOptionMeta = state.mainWindowTemplate.isLeftOptionMeta
@@ -34,23 +35,19 @@ final class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addViews()
     self.updateViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if self.isLeftOptionMeta != state.mainWindowTemplate.isLeftOptionMeta
-          || self.isRightOptionMeta != state.mainWindowTemplate.isRightOptionMeta
-        {
-          self.isLeftOptionMeta = state.mainWindowTemplate.isLeftOptionMeta
-          self.isRightOptionMeta = state.mainWindowTemplate.isRightOptionMeta
+    context.subscribe(uuid: self.uuid) { state in
+      if self.isLeftOptionMeta != state.mainWindowTemplate.isLeftOptionMeta
+        || self.isRightOptionMeta != state.mainWindowTemplate.isRightOptionMeta
+      {
+        self.isLeftOptionMeta = state.mainWindowTemplate.isLeftOptionMeta
+        self.isRightOptionMeta = state.mainWindowTemplate.isRightOptionMeta
 
-          self.updateViews()
-        }
-      })
-      .disposed(by: self.disposeBag)
+        self.updateViews()
+      }
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var isLeftOptionMeta: Bool
   private var isRightOptionMeta: Bool

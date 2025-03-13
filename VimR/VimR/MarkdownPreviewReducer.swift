@@ -60,7 +60,9 @@ final class MarkdownPreviewReducer {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MarkdownTool.Action>
 
-    func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
       var state = tuple.state
 
       switch tuple.action.payload {
@@ -102,7 +104,7 @@ final class MarkdownPreviewReducer {
         return tuple
       }
 
-      return (state, tuple.action, true)
+      return ReduceTuple(state: state, action: tuple.action, modified: true)
     }
 
     init(baseServerUrl: URL) { self.baseServerUrl = baseServerUrl }
@@ -114,7 +116,9 @@ final class MarkdownPreviewReducer {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<BuffersList.Action>
 
-    func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
       var state = tuple.state
 
       switch tuple.action.payload {
@@ -129,7 +133,7 @@ final class MarkdownPreviewReducer {
         state.preview.lastSearch = .none
       }
 
-      return (state, tuple.action, true)
+      return ReduceTuple(state: state, action: tuple.action, modified: true)
     }
 
     init(baseServerUrl: URL) { self.baseServerUrl = baseServerUrl }
@@ -141,7 +145,9 @@ final class MarkdownPreviewReducer {
     typealias StateType = MainWindow.State
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
       var state = tuple.state
 
       switch tuple.action.payload {
@@ -195,7 +201,7 @@ final class MarkdownPreviewReducer {
         return tuple
       }
 
-      return (state, tuple.action, true)
+      return ReduceTuple(state: state, action: tuple.action, modified: true)
     }
 
     init(baseServerUrl: URL) { self.baseServerUrl = baseServerUrl }

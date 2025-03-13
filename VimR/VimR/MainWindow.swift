@@ -3,11 +3,12 @@
  * See LICENSE
  */
 
+import AsyncAlgorithms
 import Cocoa
+@preconcurrency import Combine
 import NvimView
 import os
 import PureLayout
-import RxSwift
 import Tabs
 import UserNotifications
 import Workspace
@@ -20,8 +21,6 @@ final class MainWindow: NSObject,
   NvimViewDelegate
 {
   typealias StateType = State
-
-  let disposeBag = DisposeBag()
 
   let uuid: UUID
   let emit: (UuidAction<Action>) -> Void
@@ -39,8 +38,8 @@ final class MainWindow: NSObject,
 
   weak var shortcutService: ShortcutService?
 
-  let scrollDebouncer = Debouncer<Action>(interval: .milliseconds(750))
-  let cursorDebouncer = Debouncer<Action>(interval: .milliseconds(750))
+  let scrollThrottler = Throttler<Action>(interval: .milliseconds(750))
+  let cursorThrottler = Throttler<Action>(interval: .milliseconds(750))
   var editorPosition = Marked(Position.beginning)
 
   let tools: [Tools: WorkspaceTool]
@@ -60,20 +59,15 @@ final class MainWindow: NSObject,
   var isClosing = false
   let cliPipePath: String?
 
-  required init(
-    source: Observable<StateType>,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+    self.context = context
     self.emit = emitter.typedEmit()
     self.uuid = state.uuid
 
     self.cliPipePath = state.cliPipePath
     self.goToLineFromCli = state.goToLineFromCli
 
-    self.windowController = NSWindowController(
-      windowNibName: NSNib.Name("MainWindow")
-    )
+    self.windowController = NSWindowController(windowNibName: NSNib.Name("MainWindow"))
 
     var sourceFileUrls = [URL]()
     if let sourceFileUrl = Bundle(for: MainWindow.self)
@@ -102,7 +96,7 @@ final class MainWindow: NSObject,
 
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
-      self.preview = MarkdownTool(source: source, emitter: emitter, state: state)
+      self.preview = MarkdownTool(context: context, emitter: emitter, state: state)
       let previewConfig = WorkspaceTool.Config(
         title: "Markdown",
         view: self.preview!,
@@ -114,11 +108,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.htmlPreview] == true {
-      self.htmlPreview = HtmlPreviewTool(
-        source: source,
-        emitter: emitter,
-        state: state
-      )
+      self.htmlPreview = HtmlPreviewTool(context: context, emitter: emitter, state: state)
       let htmlPreviewConfig = WorkspaceTool.Config(
         title: "HTML",
         view: self.htmlPreview!,
@@ -131,9 +121,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.fileBrowser] == true {
-      self.fileBrowser = FileBrowser(
-        source: source, emitter: emitter, state: state
-      )
+      self.fileBrowser = FileBrowser(context: context, emitter: emitter, state: state)
       let fileBrowserConfig = WorkspaceTool.Config(
         title: "Files",
         view: self.fileBrowser!,
@@ -148,9 +136,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.buffersList] == true {
-      self.buffersList = BuffersList(
-        source: source, emitter: emitter, state: state
-      )
+      self.buffersList = BuffersList(context: context, emitter: emitter, state: state)
       let buffersListConfig = WorkspaceTool.Config(
         title: "Buffers",
         view: self.buffersList!
@@ -214,7 +200,7 @@ final class MainWindow: NSObject,
     self.updateNeoVimAppearance()
 
     self.setupScrollAndCursorDebouncers()
-    self.subscribeToStateChange(source: source)
+    self.subscribeToStateChange(context)
 
     self.window.setFrame(state.frame, display: true)
     self.window.makeFirstResponder(self.neoVimView)
@@ -222,6 +208,15 @@ final class MainWindow: NSObject,
     Task {
       await self.openInitialUrlsAndGoToLine(urlsToOpen: state.urlsToOpen)
     }
+  }
+
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
+
+    self.preview?.cleanup()
+    self.htmlPreview?.cleanup()
+    self.fileBrowser?.cleanup()
+    self.buffersList?.cleanup()
   }
 
   func uuidAction(for action: Action) -> UuidAction<Action> {
@@ -239,6 +234,8 @@ final class MainWindow: NSObject,
   @IBAction func toggleFramerate(_: Any?) { self.neoVimView.toggleFramerateView() }
 
   // MARK: - Private
+
+  private let context: ReduxContext
 
   private var currentBuffer: NvimView.Buffer?
 
@@ -267,117 +264,118 @@ final class MainWindow: NSObject,
   )
 
   private func setupScrollAndCursorDebouncers() {
-    Observable
-      .of(self.scrollDebouncer.observable, self.cursorDebouncer.observable)
-      .merge()
-      .subscribe(onNext: { [weak self] action in
-        guard let action = self?.uuidAction(for: action) else { return }
-        self?.emit(action)
-      })
-      .disposed(by: self.disposeBag)
+    Task { @MainActor in
+      for await action in merge(
+        self.scrollThrottler.publisher.values,
+        self.cursorThrottler.publisher.values
+      ) {
+        self.emit(self.uuidAction(for: action))
+      }
+    }
   }
 
-  private func subscribeToStateChange(source: Observable<StateType>) {
-    source
-      .subscribe(onNext: { state in
-        Task { @MainActor in
-          if self.isClosing {
-            return
+  private func subscribeToStateChange(_ context: ReduxContext) {
+    context.subscribe(uuid: self.uuid) { appState in
+      // FIXME: proper error handling?
+      guard let state = appState.mainWindows[self.uuid] else { return }
+
+      if self.isClosing {
+        return
+      }
+
+      if state.viewToBeFocused != nil,
+         case .neoVimView = state.viewToBeFocused!
+      {
+        self.window.makeFirstResponder(self.neoVimView)
+      }
+
+      self.windowController.setDocumentEdited(state.isDirty)
+
+      if let cwd = state.cwdToSet {
+        self.neoVimView.cwd = cwd
+        self.neoVimView.tabBar?.cwd = cwd.path
+      }
+
+      if state.preview.status == .markdown,
+         state.previewTool.isReverseSearchAutomatically,
+         state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
+      {
+        Task {
+          self.previewPosition = state.preview.previewPosition
+          await self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
+          self.open(urls: state.urlsToOpen)
+          if let currentBuffer = state.currentBufferToSet {
+            await self.neoVimView.select(buffer: currentBuffer)
           }
-
-          if state.viewToBeFocused != nil,
-             case .neoVimView = state.viewToBeFocused!
-          {
-            self.window.makeFirstResponder(self.neoVimView)
-          }
-
-          self.windowController.setDocumentEdited(state.isDirty)
-
-          if let cwd = state.cwdToSet {
-            self.neoVimView.cwd = cwd
-            self.neoVimView.tabBar?.cwd = cwd.path
-          }
-
-          if state.preview.status == .markdown,
-             state.previewTool.isReverseSearchAutomatically,
-             state.preview.previewPosition.hasDifferentMark(as: self.previewPosition)
-          {
-            self.previewPosition = state.preview.previewPosition
-            await self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-            self.open(urls: state.urlsToOpen)
-            if let currentBuffer = state.currentBufferToSet {
-              await self.neoVimView.select(buffer: currentBuffer)
+          if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
+            self.goToLineFromCli = state.goToLineFromCli
+            if let goToLine = self.goToLineFromCli {
+              await self.neoVimView.goTo(line: goToLine.payload)
             }
-            if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
-              self.goToLineFromCli = state.goToLineFromCli
-              if let goToLine = self.goToLineFromCli {
-                await self.neoVimView.goTo(line: goToLine.payload)
-              }
-            }
-          }
-
-          let usesTheme = state.appearance.usesTheme
-          let themePrefChanged = state.appearance.usesTheme != self.usesTheme
-          let themeChanged = state.appearance.theme.mark != self.lastThemeMark
-
-          if themeChanged {
-            self.theme = state.appearance.theme.payload
-          }
-
-          _ = changeTheme(
-            themePrefChanged: themePrefChanged,
-            themeChanged: themeChanged,
-            usesTheme: usesTheme,
-            forTheme: {
-              self.themeTitlebar(grow: !self.titlebarThemed)
-              self.window.backgroundColor = state.appearance
-                .theme.payload.background.brightening(by: 0.9)
-
-              self.set(workspaceThemeWith: state.appearance.theme.payload)
-              self.set(tabsThemeWith: state.appearance.theme.payload)
-
-              self.lastThemeMark = state.appearance.theme.mark
-            },
-            forDefaultTheme: {
-              self.unthemeTitlebar(dueFullScreen: false)
-              self.window.backgroundColor = .windowBackgroundColor
-
-              self.workspace.theme = .default
-              self.neoVimView.tabBar?.update(theme: .default)
-            }
-          )
-
-          self.usesTheme = state.appearance.usesTheme
-
-          if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
-            self.currentBuffer = state.currentBuffer
-            if state.appearance.showsFileIcon {
-              self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
-            } else {
-              self.set(repUrl: nil, themed: self.titlebarThemed)
-            }
-          }
-
-          self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
-          self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
-
-          if self.defaultFont != state.appearance.font
-            || self.linespacing != state.appearance.linespacing
-            || self.characterspacing != state.appearance.characterspacing
-            || self.usesLigatures != state.appearance.usesLigatures
-            || self.fontSmoothing != state.appearance.fontSmoothing
-          {
-            self.fontSmoothing = state.appearance.fontSmoothing
-            self.defaultFont = state.appearance.font
-            self.linespacing = state.appearance.linespacing
-            self.characterspacing = state.appearance.characterspacing
-            self.usesLigatures = state.appearance.usesLigatures
-
-            self.updateNeoVimAppearance()
           }
         }
-      })
-      .disposed(by: self.disposeBag)
+      }
+
+      let usesTheme = state.appearance.usesTheme
+      let themePrefChanged = state.appearance.usesTheme != self.usesTheme
+      let themeChanged = state.appearance.theme.mark != self.lastThemeMark
+
+      if themeChanged {
+        self.theme = state.appearance.theme.payload
+      }
+
+      _ = changeTheme(
+        themePrefChanged: themePrefChanged,
+        themeChanged: themeChanged,
+        usesTheme: usesTheme,
+        forTheme: {
+          self.themeTitlebar(grow: !self.titlebarThemed)
+          self.window.backgroundColor = state.appearance
+            .theme.payload.background.brightening(by: 0.9)
+
+          self.set(workspaceThemeWith: state.appearance.theme.payload)
+          self.set(tabsThemeWith: state.appearance.theme.payload)
+
+          self.lastThemeMark = state.appearance.theme.mark
+        },
+        forDefaultTheme: {
+          self.unthemeTitlebar(dueFullScreen: false)
+          self.window.backgroundColor = .windowBackgroundColor
+
+          self.workspace.theme = .default
+          self.neoVimView.tabBar?.update(theme: .default)
+        }
+      )
+
+      self.usesTheme = state.appearance.usesTheme
+
+      if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
+        self.currentBuffer = state.currentBuffer
+        if state.appearance.showsFileIcon {
+          self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
+        } else {
+          self.set(repUrl: nil, themed: self.titlebarThemed)
+        }
+      }
+
+      self.neoVimView.isLeftOptionMeta = state.isLeftOptionMeta
+      self.neoVimView.isRightOptionMeta = state.isRightOptionMeta
+
+      if self.defaultFont != state.appearance.font
+        || self.linespacing != state.appearance.linespacing
+        || self.characterspacing != state.appearance.characterspacing
+        || self.usesLigatures != state.appearance.usesLigatures
+        || self.fontSmoothing != state.appearance.fontSmoothing
+      {
+        self.fontSmoothing = state.appearance.fontSmoothing
+        self.defaultFont = state.appearance.font
+        self.linespacing = state.appearance.linespacing
+        self.characterspacing = state.appearance.characterspacing
+        self.usesLigatures = state.appearance.usesLigatures
+
+        self.updateNeoVimAppearance()
+      }
+    }
   }
 
   private func openInitialUrlsAndGoToLine(urlsToOpen: [URL: OpenMode]) async {

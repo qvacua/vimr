@@ -7,7 +7,6 @@ import Cocoa
 import MessagePack
 import NvimApi
 import NvimView
-import RxSwift
 import Workspace
 
 // MARK: - NvimViewDelegate
@@ -81,18 +80,13 @@ extension MainWindow {
   }
 
   func colorschemeChanged(to nvimTheme: NvimView.Theme) {
-    self
-      .updateCssColors()
-      .subscribe(onSuccess: { colors in
-        self.emit(
-          self.uuidAction(
-            for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors))
-          )
-        )
-      }, onFailure: {
-        _ in self.log.trace("oops couldn't set theme")
-      })
-      .disposed(by: self.disposeBag)
+    if let colors = self.updatedCssColors() {
+      self.emit(
+        self.uuidAction(for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
+      )
+    } else {
+      self.log.trace("oops couldn't set theme")
+    }
   }
 
   func guifontChanged(to font: NSFont) {
@@ -114,7 +108,7 @@ extension MainWindow {
   }
 
   func scroll() {
-    self.scrollDebouncer.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
+    self.scrollThrottler.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
   }
 
   func cursor(to position: Position) {
@@ -123,10 +117,10 @@ extension MainWindow {
     }
 
     self.editorPosition = Marked(position)
-    self.cursorDebouncer.call(.setCursor(to: self.editorPosition))
+    self.cursorThrottler.call(.setCursor(to: self.editorPosition))
   }
 
-  private func updateCssColors() -> Single<[String: CellAttributes]> {
+  private func updatedCssColors() -> [String: CellAttributes]? {
     let colorNames = [
       "Normal", // color and background-color
       "Directory", // a
@@ -134,44 +128,17 @@ extension MainWindow {
       "CursorColumn", // code background and foreground
     ]
 
-    typealias HlResult = [String: NvimApi.Value]
-    typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
-    typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
+    let map: [String: CellAttributes] = colorNames.reduce(into: [:]) { dict, colorName in
+      guard let name = try? self.neoVimView.apiSync.nvimGetHl(
+        ns_id: 0,
+        opts: ["name": MessagePackValue(colorName)]
+      ).get() else { return }
 
-    return Observable
-      .from(colorNames.map { colorName -> ColorNameObservableTuple in
-        (
-          colorName: colorName,
-          observable: Single.create { @MainActor in
-            let result = await self.neoVimView.api
-              .nvimGetHl(
-                ns_id: 0,
-                opts: ["name": MessagePackValue(colorName)]
-              )
-            switch result {
-            case let .success(value): return value
-            case let .failure(error): throw error
-            }
-          }
-          .asObservable()
-        )
-      })
-      .flatMap { tuple -> Observable<(String, HlResult)> in
-        Observable.zip(Observable.just(tuple.colorName), tuple.observable)
-      }
-      .reduce([ColorNameHlResultTuple]()) { (result, element: ColorNameHlResultTuple) in
-        result + [element]
-      }
-      // FIXME: w/o observe(on:), we crash. self.neoVimView.defaultCellAttributes
-      // needs to be executed on main
-      .observe(on: MainScheduler.instance)
-      .map { (array: [ColorNameHlResultTuple]) in
-        Dictionary(uniqueKeysWithValues: array)
-          .mapValues { value in
-            CellAttributes(withDict: value, with: self.neoVimView.defaultCellAttributes)
-          }
-      }
-      .asSingle()
+      dict[colorName] = CellAttributes(withDict: name, with: self.neoVimView.defaultCellAttributes)
+    }.compactMapValues { $0 }
+
+    if map.count == colorNames.count { return map }
+    else { return nil }
   }
 }
 
@@ -287,25 +254,34 @@ extension MainWindow {
   func resizeDidEnd(workspace _: Workspace, tool: WorkspaceTool?) {
     self.neoVimView.exitResizeMode()
 
-    if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
+    if let tool, let toolIdentifier = self.toolIdentifier(for: tool) {
+      self.emit(self.uuidAction(for: .setState(
+        for: toolIdentifier,
+        with: .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+      )))
     }
   }
 
   func toggled(tool: WorkspaceTool) {
     if let toolIdentifier = self.toolIdentifier(for: tool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+      self.emit(self.uuidAction(for: .setState(
+        for: toolIdentifier,
+        with: .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+      )))
     }
   }
 
   func moved(tool: WorkspaceTool) {
     let tools = self.workspace.orderedTools
-      .compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
+      .compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceToolState)? in
         guard let toolId = self.toolIdentifier(for: tool) else {
           return nil
         }
 
-        return (toolId, tool)
+        return (
+          toolId,
+          .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+        )
       }
 
     self.emit(self.uuidAction(for: .setToolsState(tools)))

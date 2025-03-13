@@ -9,7 +9,6 @@ import MaterialIcons
 import NvimView
 import os
 import PureLayout
-import RxSwift
 
 final class FileOutlineView: NSOutlineView,
   UiComponent,
@@ -18,14 +17,18 @@ final class FileOutlineView: NSOutlineView,
 {
   typealias StateType = MainWindow.State
 
+  let uuid = UUID()
+
   @objc dynamic var content = [Node]()
 
   private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+    self.context = context
     self.emit = emitter.typedEmit()
-    self.uuid = state.uuid
+
+    self.mainWinUuid = state.uuid
     self.root = Node(url: state.cwd)
     self.usesTheme = state.appearance.usesTheme
     self.showsFileIcon = state.appearance.showsFileIcon
@@ -50,43 +53,48 @@ final class FileOutlineView: NSOutlineView,
     NSOutlineView.configure(toStandard: self)
     self.delegate = self
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
-          self.beFirstResponder()
+    context.subscribe(uuid: self.uuid) { appState in
+      guard let state = appState.mainWindows[self.mainWinUuid] else { return }
+
+      if state.viewToBeFocused != nil, case .fileBrowser = state.viewToBeFocused! {
+        self.beFirstResponder()
+      }
+
+      let themeChanged = changeTheme(
+        themePrefChanged: state.appearance.usesTheme != self.usesTheme,
+        themeChanged: state.appearance.theme.mark != self.lastThemeMark,
+        usesTheme: state.appearance.usesTheme,
+        forTheme: { self.updateTheme(state.appearance.theme) },
+        forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
+      )
+
+      self.usesTheme = state.appearance.usesTheme
+
+      guard self.shouldReloadData(for: state, themeChanged: themeChanged) else { return }
+
+      self.showsFileIcon = state.appearance.showsFileIcon
+      self.isShowHidden = state.fileBrowserShowHidden
+      self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
+
+      if self.root.url != state.cwd {
+        self.root = Node(url: state.cwd)
+        try? self.fileMonitor.monitor(url: state.cwd) { [weak self] url in
+          self?.handleFileSystemChanges(url)
         }
+      }
 
-        let themeChanged = changeTheme(
-          themePrefChanged: state.appearance.usesTheme != self.usesTheme,
-          themeChanged: state.appearance.theme.mark != self.lastThemeMark,
-          usesTheme: state.appearance.usesTheme,
-          forTheme: { self.updateTheme(state.appearance.theme) },
-          forDefaultTheme: { self.updateTheme(Marked(Theme.default)) }
-        )
-
-        self.usesTheme = state.appearance.usesTheme
-
-        guard self.shouldReloadData(for: state, themeChanged: themeChanged) else { return }
-
-        self.showsFileIcon = state.appearance.showsFileIcon
-        self.isShowHidden = state.fileBrowserShowHidden
-        self.lastFileSystemUpdateMark = state.lastFileSystemUpdate.mark
-
-        if self.root.url != state.cwd {
-          self.root = Node(url: state.cwd)
-          try? self.fileMonitor.monitor(url: state.cwd) { [weak self] url in
-            self?.handleFileSystemChanges(url)
-          }
-        }
-
-        self.reloadRoot()
-      })
-      .disposed(by: self.disposeBag)
+      self.reloadRoot()
+    }
 
     self.initContextMenu()
     self.initBindings()
     self.reloadRoot()
+  }
+
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
+
+    self.unbindTreeController()
   }
 
   // We cannot use outlineView(_:willDisplayOutlineCell:for:item:) delegate
@@ -163,10 +171,10 @@ final class FileOutlineView: NSOutlineView,
     }
   }
 
+  private let context: ReduxContext
   private let emit: (UuidAction<FileBrowser.Action>) -> Void
-  private let disposeBag = DisposeBag()
 
-  private let uuid: UUID
+  private let mainWinUuid: UUID
 
   private var root: Node
   private var cwd: URL { self.root.url }
@@ -355,32 +363,38 @@ extension FileOutlineView {
     if node.isDir {
       self.toggle(item: clickedTreeNode)
     } else {
-      self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .default)))
+      self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(url: node.url, mode: .default)))
     }
   }
 
   @IBAction func openInNewTab(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab)))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(url: node.url, mode: .newTab)))
   }
 
   @IBAction func openInCurrentTab(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .currentTab)))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(url: node.url, mode: .currentTab)))
   }
 
   @IBAction func openInHorizontalSplit(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .horizontalSplit)))
+    self.emit(UuidAction(
+      uuid: self.mainWinUuid,
+      action: .open(url: node.url, mode: .horizontalSplit)
+    ))
   }
 
   @IBAction func openInVerticalSplit(_: Any?) {
     guard let node = self.node(from: self.clickedItem) else { return }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .verticalSplit)))
+    self.emit(UuidAction(
+      uuid: self.mainWinUuid,
+      action: .open(url: node.url, mode: .verticalSplit)
+    ))
   }
 
   @IBAction func newFile(_: Any?) {
@@ -415,7 +429,7 @@ extension FileOutlineView {
         return
       }
 
-      self.emit(UuidAction(uuid: self.uuid, action: .open(url: url, mode: .newTab)))
+      self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(url: url, mode: .newTab)))
     }
   }
 
@@ -440,7 +454,7 @@ extension FileOutlineView {
       return
     }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .refresh))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .refresh))
   }
 
   @IBAction func setAsWorkingDirectory(_: Any?) {
@@ -448,7 +462,7 @@ extension FileOutlineView {
 
     guard node.url.hasDirectoryPath else { return }
 
-    self.emit(UuidAction(uuid: self.uuid, action: .setAsWorkingDirectory(node.url)))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .setAsWorkingDirectory(node.url)))
   }
 }
 
@@ -553,7 +567,7 @@ extension FileOutlineView {
       if node.url.hasDirectoryPath || node.url.isPackage {
         self.toggle(item: node)
       } else {
-        self.emit(UuidAction(uuid: self.uuid, action: .open(url: node.url, mode: .newTab)))
+        self.emit(UuidAction(uuid: self.mainWinUuid, action: .open(url: node.url, mode: .newTab)))
       }
 
     default:

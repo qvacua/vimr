@@ -4,7 +4,6 @@
  */
 
 import Foundation
-import RxSwift
 
 final class OpenQuicklyReducer: ReducerType {
   typealias StateType = AppState
@@ -12,16 +11,18 @@ final class OpenQuicklyReducer: ReducerType {
 
   let mainWindow = MainWindowReducer()
 
-  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-    var appState = pair.state
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
+    var appState = tuple.state
 
-    switch pair.action {
+    switch tuple.action {
     case let .setUsesVcsIgnores(usesVcsIgnores):
-      guard let uuid = appState.currentMainWindowUuid else { return pair }
+      guard let uuid = appState.currentMainWindowUuid else { return tuple }
       appState.mainWindows[uuid]?.usesVcsIgnores = usesVcsIgnores
 
     case let .open(url):
-      guard let uuid = appState.currentMainWindowUuid else { return pair }
+      guard let uuid = appState.currentMainWindowUuid else { return tuple }
       appState.mainWindows[uuid]?.urlsToOpen[url] = .default
       appState.openQuickly.open = false
 
@@ -29,27 +30,29 @@ final class OpenQuicklyReducer: ReducerType {
       appState.openQuickly.open = false
     }
 
-    return (appState, pair.action, true)
+    return ReduceTuple(state: appState, action: tuple.action, modified: true)
   }
 
   class MainWindowReducer: ReducerType {
     typealias StateType = AppState
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-      switch pair.action.payload {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
+      switch tuple.action.payload {
       case .openQuickly:
-        var appState = pair.state
+        var appState = tuple.state
 
         guard let uuid = appState.currentMainWindowUuid,
-              appState.mainWindows[uuid]?.cwd != nil else { return pair }
+              appState.mainWindows[uuid]?.cwd != nil else { return tuple }
 
         appState.openQuickly.open = true
 
-        return (appState, pair.action, true)
+        return ReduceTuple(state: appState, action: tuple.action, modified: true)
 
       default:
-        return pair
+        return tuple
       }
     }
   }

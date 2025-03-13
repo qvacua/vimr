@@ -3,25 +3,30 @@
  * See LICENSE
  */
 
+import AsyncAlgorithms
+import Combine
 import Foundation
-import RxSwift
 
-final class Debouncer<T> {
-  let observable: Observable<T>
+final class Throttler<T> {
+  let publisher: AnyPublisher<T, Never>
 
-  init(interval: RxTimeInterval) {
-    self.observable = self.subject.throttle(interval, latest: true, scheduler: self.scheduler)
+  init(interval: DispatchQueue.SchedulerTimeType.Stride, latest: Bool = true) {
+    self.publisher = self.subject.throttle(
+      for: interval,
+      scheduler: DispatchQueue.global(qos: .userInteractive),
+      latest: latest
+    )
+    .eraseToAnyPublisher()
   }
 
   deinit {
-    self.subject.onCompleted()
+    subject.send(completion: .finished)
   }
 
   func call(_ element: T) {
-    self.subject.onNext(element)
+    self.subject.send(element)
   }
 
-  private let subject = PublishSubject<T>()
-  private let scheduler = SerialDispatchQueueScheduler(qos: .userInteractive)
-  private let disposeBag = DisposeBag()
+  private let subject = PassthroughSubject<T, Never>()
+  private var cancellables = Set<AnyCancellable>()
 }

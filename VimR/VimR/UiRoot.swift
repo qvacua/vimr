@@ -4,9 +4,7 @@
  */
 
 import Cocoa
-import RxSwift
 
-@MainActor
 final class UiRoot: UiComponent {
   typealias StateType = AppState
 
@@ -14,62 +12,56 @@ final class UiRoot: UiComponent {
     case quit
   }
 
-  required init(
-    source: Observable<StateType>,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
-    self.source = source
+  let uuid = UUID()
+
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+    self.context = context
     self.emitter = emitter
     self.emit = emitter.typedEmit()
 
-    self.openQuicklyWindow = OpenQuicklyWindow(source: source, emitter: emitter, state: state)
-    self.prefWindow = PrefWindow(source: source, emitter: emitter, state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(context: context, emitter: emitter, state: state)
+    self.prefWindow = PrefWindow(context: context, emitter: emitter, state: state)
     self.prefWindow.shortcutService = self.shortcutService
 
     self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        let uuidsInState = Set(state.mainWindows.keys)
+    context.subscribe(uuid: self.uuid) { state in
+      let uuidsInState = Set(state.mainWindows.keys)
 
-        uuidsInState
-          .subtracting(self.mainWindows.keys)
-          .compactMap { state.mainWindows[$0] }
-          .map(self.newMainWindow)
-          .forEach { mainWindow in
-            self.mainWindows[mainWindow.uuid] = mainWindow
-            mainWindow.show()
-          }
-
-        if self.mainWindows.isEmpty {
-          // We exit here if there are no main windows open.
-          // Otherwise, when hide/quit after last main window is active,
-          // you have to be really quick to open a new window
-          // when re-activating VimR w/o automatic new main window.
-          return
+      uuidsInState
+        .subtracting(self.mainWindows.keys)
+        .compactMap { state.mainWindows[$0] }
+        .map(self.newMainWindow)
+        .forEach { mainWindow in
+          mainWindow.show()
         }
 
-        self.mainWindows.keys
-          .filter { !uuidsInState.contains($0) }
-          .forEach(self.removeMainWindow)
+      if self.mainWindows.isEmpty {
+        // We exit here if there are no main windows open.
+        // Otherwise, when hide/quit after last main window is active,
+        // you have to be really quick to open a new window
+        // when re-activating VimR w/o automatic new main window.
+        return
+      }
 
-        if self.activateAsciiImInInsertMode != state.activateAsciiImInNormalMode {
-          self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
-          self.mainWindows.values
-            .forEach { $0.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode }
-        }
+      self.mainWindows.keys
+        .filter { !uuidsInState.contains($0) }
+        .forEach(self.removeMainWindow)
 
-        guard self.mainWindows.isEmpty else { return }
+      if self.activateAsciiImInInsertMode != state.activateAsciiImInNormalMode {
+        self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
+        self.mainWindows.values
+          .forEach { $0.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode }
+      }
 
-        switch state.afterLastWindowAction {
-        case .doNothing: return
-        case .hide: NSApp.hide(self)
-        case .quit: self.emit(.quit)
-        }
-      })
-      .disposed(by: self.disposeBag)
+      guard self.mainWindows.isEmpty else { return }
+
+      switch state.afterLastWindowAction {
+      case .doNothing: return
+      case .hide: NSApp.hide(self)
+      case .quit: self.emit(.quit)
+      }
+    }
   }
 
   // The following should only be used when Cmd-Q'ing
@@ -94,10 +86,9 @@ final class UiRoot: UiComponent {
     self.openQuicklyWindow.cleanUp()
   }
 
-  private let source: Observable<AppState>
+  private let context: ReduxContext
   private let emitter: ActionEmitter
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private let shortcutService = ShortcutService()
   private let openQuicklyWindow: OpenQuicklyWindow
@@ -106,31 +97,20 @@ final class UiRoot: UiComponent {
   private var activateAsciiImInInsertMode = true
 
   private var mainWindows = [UUID: MainWindow]()
-  private var subjectForMainWindows = [UUID: CompletableSubject<MainWindow.State>]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
-    let subject = self
-      .source
-      .compactMap { $0.mainWindows[state.uuid] }
-      .completableSubject()
-
-    self.subjectForMainWindows[state.uuid] = subject
-    let mainWin = MainWindow(
-      source: subject.asObservable(),
-      emitter: self.emitter,
-      state: state
-    )
+    let mainWin = MainWindow(context: self.context, emitter: self.emitter, state: state)
     // sync global self state to child window
     mainWin.shortcutService = self.shortcutService
     mainWin.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode
+
+    self.mainWindows[mainWin.uuid] = mainWin
 
     return mainWin
   }
 
   private func removeMainWindow(with uuid: UUID) {
-    self.subjectForMainWindows[uuid]?.onCompleted()
-
-    self.subjectForMainWindows.removeValue(forKey: uuid)
-    self.mainWindows.removeValue(forKey: uuid)
+    guard let mainWin = self.mainWindows.removeValue(forKey: uuid) else { return }
+    mainWin.cleanup()
   }
 }

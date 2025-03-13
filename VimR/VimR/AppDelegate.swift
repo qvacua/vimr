@@ -9,7 +9,6 @@ import CommonsObjC
 import DictionaryCoding
 import os
 import PureLayout
-import RxSwift
 import Sparkle
 import UserNotifications
 
@@ -47,6 +46,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     case preferences
   }
 
+  let uuid = UUID()
+
   override init() {
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
@@ -64,7 +65,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     initialAppState.mainWindowTemplate.htmlPreview.server = nil
 
-    self.context = Context(baseServerUrl: baseServerUrl, state: initialAppState)
+    self.context = ReduxContext(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.context.actionEmitter.typedEmit()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
@@ -88,38 +89,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     super.awakeFromNib()
 
     MainActor.assumeIsolated {
-      let source = self.context.stateSource
-
       // We want to build the menu items tree at some point, eg in the init() of
       // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
       // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
       self.uiRoot = UiRoot(
-        source: source,
+        context: self.context,
         emitter: self.context.actionEmitter,
         state: self.context.state
       )
 
-      source
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { appState in
-          self.hasMainWindows = !appState.mainWindows.isEmpty
-          self.hasDirtyWindows = appState.mainWindows.values
-            .reduce(false) { $1.isDirty ? true : $0 }
+      self.context.subscribe(uuid: self.uuid) { appState in
+        self.hasMainWindows = !appState.mainWindows.isEmpty
+        self.hasDirtyWindows = appState.mainWindows.values
+          .reduce(false) { $1.isDirty ? true : $0 }
 
-          self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
-          self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
+        self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
+        self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
 
-          if self.updaterDelegate.useSnapshotChannel != appState.useSnapshotUpdate {
-            self.updaterDelegate.useSnapshotChannel = appState.useSnapshotUpdate
-          }
+        if self.updaterDelegate.useSnapshotChannel != appState.useSnapshotUpdate {
+          self.updaterDelegate.useSnapshotChannel = appState.useSnapshotUpdate
+        }
 
-          if appState.quit { NSApp.terminate(self) }
-        })
-        .disposed(by: self.disposeBag)
+        if appState.quit { NSApp.terminate(self) }
+      }
     }
   }
 
-  private let context: Context
+  private let context: ReduxContext
   private let emit: (Action) -> Void
 
   private var uiRoot: UiRoot?
@@ -129,8 +125,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
   private var openNewMainWindowOnLaunch: Bool
   private var openNewMainWindowOnReactivation: Bool
-
-  private let disposeBag = DisposeBag()
 
   private var launching = true
 
@@ -253,9 +247,6 @@ extension AppDelegate {
   }
 
   private func updateMainWindowTemplateBeforeQuitting() {
-    guard let curMainWindow = self.context.state.currentMainWindow else { return }
-
-    self.context.state.mainWindowTemplate = curMainWindow
     self.context.savePrefs()
   }
 }

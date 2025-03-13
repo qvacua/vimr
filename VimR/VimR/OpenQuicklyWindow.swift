@@ -4,11 +4,10 @@
  */
 
 import Cocoa
+import Combine
 import Commons
 import os
 import PureLayout
-import RxCocoa
-import RxSwift
 
 final class OpenQuicklyWindow: NSObject,
   UiComponent,
@@ -17,12 +16,15 @@ final class OpenQuicklyWindow: NSObject,
   NSTableViewDelegate
 {
   typealias StateType = AppState
+  typealias ActionType = Action
 
   enum Action {
     case setUsesVcsIgnores(Bool)
     case open(URL)
     case close
   }
+
+  let uuid = UUID()
 
   @objc private(set) dynamic var unsortedScoredUrls = [ScoredUrl]()
 
@@ -41,32 +43,32 @@ final class OpenQuicklyWindow: NSObject,
     self.emit(.setUsesVcsIgnores(self.useVcsIgnoresCheckBox.boolState))
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
-    self.searchStream = self.searchField.rx
-      .text.orEmpty
-      .throttle(.milliseconds(1 * 500), latest: true, scheduler: MainScheduler.instance)
-      .distinctUntilChanged()
+
+    self.searchStream = NotificationCenter.default
+      .publisher(for: NSControl.textDidChangeNotification, object: self.searchField)
+      .map { ($0.object as? NSTextField)?.stringValue ?? "" }
+      .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+      .removeDuplicates()
 
     super.init()
 
     self.configureWindow()
     self.addViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] state in self?.subscription(state) })
-      .disposed(by: self.disposeBag)
+    context.subscribe(uuid: self.uuid) { state in
+      self.subscription(state)
+    }
   }
 
   // MARK: - Private
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
-  private let searchStream: Observable<String>
-  private var perSessionDisposeBag = DisposeBag()
+  private let searchStream: any Publisher<String, Never>
+  private var perSessionCancellables = Set<AnyCancellable>()
   private var cwdPathCompsCount = 0
   private var usesVcsIgnores = true
   private var scanToken = Token()
@@ -146,11 +148,10 @@ final class OpenQuicklyWindow: NSObject,
     self.cwdControl.url = cwd
 
     self.searchStream
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] pattern in
+      .sink { [weak self] pattern in
         self?.scanAndScore(pattern)
-      })
-      .disposed(by: self.perSessionDisposeBag)
+      }
+      .store(in: &self.perSessionCancellables)
   }
 
   private func reset() {
@@ -161,7 +162,7 @@ final class OpenQuicklyWindow: NSObject,
     self.endProgress()
     self.unsortedScoredUrls.removeAll()
     self.searchField.stringValue = ""
-    self.perSessionDisposeBag = DisposeBag()
+    self.perSessionCancellables.removeAll()
   }
 
   private func scanAndScore(_ pattern: String) {
@@ -233,9 +234,6 @@ final class OpenQuicklyWindow: NSObject,
     title.font = .boldSystemFont(ofSize: 11)
     title.stringValue = "Open Quickly"
 
-    let searchField = self.searchField
-    searchField.rx.delegate.setForwardToDelegate(self, retainDelegate: false)
-
     let progressIndicator = self.progressIndicator
     progressIndicator.isIndeterminate = true
     progressIndicator.isDisplayedWhenStopped = false
@@ -283,6 +281,7 @@ final class OpenQuicklyWindow: NSObject,
     useVcsIg.autoAlignAxis(.horizontal, toSameAxisOf: title)
     useVcsIg.autoPinEdge(toSuperviewEdge: .right, withInset: 8)
 
+    let searchField = self.searchField
     searchField.autoPinEdge(.top, to: .bottom, of: useVcsIg, withOffset: 8)
     searchField.autoPinEdge(.left, to: .left, of: title)
     searchField.autoPinEdge(.right, to: .right, of: useVcsIg)

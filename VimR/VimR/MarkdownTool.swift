@@ -4,13 +4,15 @@
  */
 
 import Cocoa
+import Combine
 import NvimView
 import os
 import PureLayout
-@preconcurrency import RxSwift
 import WebKit
 
 final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
+  typealias StateType = MainWindow.State
+
   enum Action {
     case refreshNow
     case reverseSearch(to: Position)
@@ -22,13 +24,14 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     case setRefreshOnWrite(to: Bool)
   }
 
-  typealias StateType = MainWindow.State
-
+  let uuid = UUID()
+  let mainWinUuid: UUID
   let menuItems: [NSMenuItem]
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+    self.context = context
     self.emit = emitter.typedEmit()
-    self.uuid = state.uuid
+    self.mainWinUuid = state.uuid
 
     let configuration = WKWebViewConfiguration()
     configuration.userContentController = self.userContentController
@@ -78,57 +81,60 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.navigationDelegate = self
     if let url = state.preview.server { self.webview.load(URLRequest(url: url)) }
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil,
-           case .markdownPreview = state.viewToBeFocused!
-        {
-          self.beFirstResponder()
-        }
+    context.subscribe(uuid: self.uuid) { appState in
+      guard let state = appState.mainWindows[self.mainWinUuid] else { return }
 
-        self.automaticForwardMenuItem.boolState = state.previewTool.isForwardSearchAutomatically
-        self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
-        self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
+      if state.viewToBeFocused != nil,
+         case .markdownPreview = state.viewToBeFocused!
+      {
+        self.beFirstResponder()
+      }
 
-        if state.preview.status == .markdown,
-           state.previewTool.isForwardSearchAutomatically,
-           state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
-        {
-          self.forwardSearch(position: state.preview.editorPosition.payload)
-        }
+      self.automaticForwardMenuItem.boolState = state.previewTool.isForwardSearchAutomatically
+      self.automaticReverseMenuItem.boolState = state.previewTool.isReverseSearchAutomatically
+      self.refreshOnWriteMenuItem.boolState = state.previewTool.isRefreshOnWrite
 
-        self.editorPosition = state.preview.editorPosition
+      if state.preview.status == .markdown,
+         state.previewTool.isForwardSearchAutomatically,
+         state.preview.editorPosition.hasDifferentMark(as: self.editorPosition)
+      {
+        self.forwardSearch(position: state.preview.editorPosition.payload)
+      }
 
-        guard state.preview.updateDate > self.lastUpdateDate else { return }
-        guard let serverUrl = state.preview.server else { return }
-        if serverUrl != self.url {
-          self.url = serverUrl
-          self.scrollTop = 0
-          self.previewPosition = Position.beginning
-        }
+      self.editorPosition = state.preview.editorPosition
 
-        self.lastUpdateDate = state.preview.updateDate
-        self.webview.load(URLRequest(url: serverUrl))
-      }, onCompleted: {
-        // We have to do the following to avoid a crash... Dunno why... -_-
-        self.webviewMessageHandler.subject.onCompleted()
-        self.webview.navigationDelegate = nil
-        self.webview.removeFromSuperview()
-      })
-      .disposed(by: self.disposeBag)
+      guard state.preview.updateDate > self.lastUpdateDate else { return }
+      guard let serverUrl = state.preview.server else { return }
+      if serverUrl != self.url {
+        self.url = serverUrl
+        self.scrollTop = 0
+        self.previewPosition = Position.beginning
+      }
+
+      self.lastUpdateDate = state.preview.updateDate
+      self.webview.load(URLRequest(url: serverUrl))
+    }
 
     self.webviewMessageHandler.source
-      .throttle(.milliseconds(750), latest: true, scheduler: self.scheduler)
-      .subscribe(onNext: { [weak self] position, scrollTop in
-        guard let uuid = self?.uuid,
+      .throttle(for: .milliseconds(750), scheduler: RunLoop.main, latest: true)
+      .sink(receiveValue: { [weak self] position, scrollTop in
+        guard let mainWinUuid = self?.mainWinUuid,
               let previewPosition = self?.previewPosition else { return }
 
         self?.previewPosition = position
         self?.scrollTop = scrollTop
-        self?.emit(UuidAction(uuid: uuid, action: .scroll(to: previewPosition)))
+        self?.emit(UuidAction(uuid: mainWinUuid, action: .scroll(to: previewPosition)))
       })
-      .disposed(by: self.disposeBag)
+      .store(in: &self.cancellables)
+  }
+
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
+
+    self.webviewMessageHandler.subject.send(completion: .finished)
+    self.cancellables.removeAll()
+    self.webview.navigationDelegate = nil
+    self.webview.removeFromSuperview()
   }
 
   private func addViews() {
@@ -155,12 +161,11 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.evaluateJavaScript("document.body.scrollTop = \(self.scrollTop)")
   }
 
+  private let context: ReduxContext
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: UUID
+  private var cancellables = Set<AnyCancellable>()
 
   private let webview: WKWebView
-  private let disposeBag = DisposeBag()
-  private let scheduler = ConcurrentDispatchQueueScheduler(qos: .userInitiated)
   private var isOpen = false
 
   private var url: URL?
@@ -212,7 +217,7 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
 
 extension MarkdownTool {
   @objc func refreshNowAction(_: Any?) {
-    self.emit(UuidAction(uuid: self.uuid, action: .refreshNow))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .refreshNow))
   }
 
   @objc func forwardSearchAction(_: Any?) {
@@ -220,31 +225,33 @@ extension MarkdownTool {
   }
 
   @objc func reverseSearchAction(_: Any?) {
-    self.emit(UuidAction(uuid: self.uuid, action: .reverseSearch(to: self.previewPosition)))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .reverseSearch(to: self.previewPosition)))
   }
 
   @objc func automaticForwardSearchAction(_ sender: NSMenuItem) {
     self
-      .emit(UuidAction(uuid: self.uuid, action: .setAutomaticForwardSearch(to: !sender.boolState)))
+      .emit(UuidAction(
+        uuid: self.mainWinUuid,
+        action: .setAutomaticForwardSearch(to: !sender.boolState)
+      ))
   }
 
   @objc func automaticReverseSearchAction(_ sender: NSMenuItem) {
     self
-      .emit(UuidAction(uuid: self.uuid, action: .setAutomaticReverseSearch(to: !sender.boolState)))
+      .emit(UuidAction(
+        uuid: self.mainWinUuid,
+        action: .setAutomaticReverseSearch(to: !sender.boolState)
+      ))
   }
 
   @objc func refreshOnWriteAction(_ sender: NSMenuItem) {
-    self.emit(UuidAction(uuid: self.uuid, action: .setRefreshOnWrite(to: !sender.boolState)))
+    self.emit(UuidAction(uuid: self.mainWinUuid, action: .setRefreshOnWrite(to: !sender.boolState)))
   }
 }
 
 private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
-  var source: Observable<(Position, Int)> {
-    self.subject.asObservable()
-  }
-
-  deinit {
-    self.subject.onCompleted()
+  var source: AnyPublisher<(Position, Int), Never> {
+    self.subject.eraseToAnyPublisher()
   }
 
   func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -259,8 +266,8 @@ private class WebviewMessageHandler: NSObject, WKScriptMessageHandler {
       return
     }
 
-    self.subject.onNext((Position(row: lineBegin, column: columnBegin), scrollTop))
+    self.subject.send((Position(row: lineBegin, column: columnBegin), scrollTop))
   }
 
-  fileprivate let subject = PublishSubject<(Position, Int)>()
+  fileprivate let subject = PassthroughSubject<(Position, Int), Never>()
 }

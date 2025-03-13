@@ -11,11 +11,14 @@ public extension NvimView {
     let modifierFlags = event.modifierFlags
 
     if (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-        || (self.isRightOptionMeta && modifierFlags.contains(.rightOption)) {
+      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+    {
       return true
     }
 
-    if modifierFlags.contains(.control) || modifierFlags.contains(.command) || event.specialKey != nil {
+    if modifierFlags.contains(.control) || modifierFlags.contains(.command) || event
+      .specialKey != nil
+    {
       return true
     }
     return false

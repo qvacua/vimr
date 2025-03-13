@@ -26,21 +26,23 @@ final class HtmlPreviewReducer {
 
     init(baseServerUrl: URL) { self.baseServerUrl = baseServerUrl }
 
-    func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-      var state = pair.state
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
+      var state = tuple.state
 
-      switch pair.action.payload {
+      switch tuple.action.payload {
       case .setTheme:
-        guard state.htmlPreview.htmlFile == nil else { return pair }
+        guard state.htmlPreview.htmlFile == nil else { return tuple }
         state.htmlPreview.server = Marked(
           HtmlPreviewReducer.serverUrl(baseUrl: self.baseServerUrl, uuid: state.uuid)
         )
 
       default:
-        return pair
+        return tuple
       }
 
-      return (state, pair.action, true)
+      return ReduceTuple(state: state, action: tuple.action, modified: true)
     }
 
     private let baseServerUrl: URL
@@ -52,9 +54,11 @@ final class HtmlPreviewReducer {
 
     init(baseServerUrl: URL) { self.baseServerUrl = baseServerUrl }
 
-    func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-      var state = pair.state
-      switch pair.action.payload {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
+      var state = tuple.state
+      switch tuple.action.payload {
       case let .selectHtmlFile(url):
         state.htmlPreview.htmlFile = url
         state.htmlPreview.server = Marked(
@@ -62,7 +66,7 @@ final class HtmlPreviewReducer {
         )
       }
 
-      return (state, pair.action, true)
+      return ReduceTuple(state: state, action: tuple.action, modified: true)
     }
 
     private let baseServerUrl: URL

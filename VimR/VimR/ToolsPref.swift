@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
 
 final class ToolsPref: PrefPane, UiComponent {
   typealias StateType = AppState
@@ -13,6 +12,8 @@ final class ToolsPref: PrefPane, UiComponent {
   enum Action {
     case setActiveTools([MainWindow.Tools: Bool])
   }
+
+  let uuid = UUID()
 
   override var displayName: String {
     "Tools"
@@ -22,7 +23,7 @@ final class ToolsPref: PrefPane, UiComponent {
     true
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
     self.emit = emitter.typedEmit()
 
     self.tools = state.mainWindowTemplate.activeTools
@@ -32,17 +33,12 @@ final class ToolsPref: PrefPane, UiComponent {
     self.addViews()
     self.updateViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { _ in
-
-        self.updateViews()
-      })
-      .disposed(by: self.disposeBag)
+    context.subscribe(uuid: self.uuid) { _ in
+      self.updateViews()
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var tools: [MainWindow.Tools: Bool]
 

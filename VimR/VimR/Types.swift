@@ -4,7 +4,6 @@
  */
 
 import Cocoa
-@preconcurrency import RxSwift
 import UserNotifications
 
 extension NSColor: @retroactive @unchecked Sendable {}
@@ -26,7 +25,7 @@ protocol UuidTagged {
   var uuid: UUID { get }
 }
 
-final class UuidAction<A>: UuidTagged, CustomStringConvertible {
+final class UuidAction<A: Sendable>: UuidTagged, CustomStringConvertible, Sendable {
   let uuid: UUID
   let payload: A
 
@@ -102,11 +101,15 @@ final class UiComponentTemplate: UiComponent {
     case doSth
   }
 
+  let uuid = UUID()
+
   required init(
-    source: Observable<StateType>,
+    context: ReduxContext,
     emitter: ActionEmitter,
     state: StateType
   ) {
+    self.context = context
+
     // set the typed action emit function
     self.emit = emitter.typedEmit()
 
@@ -114,14 +117,13 @@ final class UiComponentTemplate: UiComponent {
     self.someField = state.someField
 
     // react to the new state
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(
-        onNext: { _ in
-          Swift.print("Hello, \(self.someField)")
-        }
-      )
-      .disposed(by: self.disposeBag)
+    context.subscribe(uuid: self.uuid) { state in
+      Swift.print(state)
+    }
+  }
+
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
   }
 
   func someAction() {
@@ -129,8 +131,8 @@ final class UiComponentTemplate: UiComponent {
     self.emit(.doSth)
   }
 
+  private let context: ReduxContext
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private let someField: String
 }
