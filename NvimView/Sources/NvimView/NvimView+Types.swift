@@ -57,6 +57,7 @@ public extension NvimView {
   }
 
   enum Event {
+    case nvimReady
     case neoVimStopped
     case setTitle(String)
     case setDirtyStatus(Bool)

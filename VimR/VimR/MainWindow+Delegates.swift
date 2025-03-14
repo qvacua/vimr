@@ -80,12 +80,13 @@ extension MainWindow {
   }
 
   func colorschemeChanged(to nvimTheme: NvimView.Theme) {
+    self.log.debugAny("Theme changed delegate method: \(nvimTheme)")
     if let colors = self.updatedCssColors() {
       self.emit(
         self.uuidAction(for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
       )
     } else {
-      self.log.trace("oops couldn't set theme")
+      self.log.debug("oops couldn't set theme")
     }
   }
 
@@ -129,10 +130,13 @@ extension MainWindow {
     ]
 
     let map: [String: CellAttributes] = colorNames.reduce(into: [:]) { dict, colorName in
-      guard let name = try? self.neoVimView.apiSync.nvimGetHl(
+      let result = self.neoVimView.apiSync.nvimGetHl(
         ns_id: 0,
         opts: ["name": MessagePackValue(colorName)]
-      ).get() else { return }
+      )
+      Swift.print("############## \(result)")
+
+      guard let name = try? result.get() else { return }
 
       dict[colorName] = CellAttributes(withDict: name, with: self.neoVimView.defaultCellAttributes)
     }.compactMapValues { $0 }

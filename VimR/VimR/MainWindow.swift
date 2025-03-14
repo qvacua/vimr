@@ -258,10 +258,7 @@ final class MainWindow: NSObject,
   private var usesTheme = true
   private var lastThemeMark = Token()
 
-  let log = OSLog(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.ui
-  )
+  let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   private func setupScrollAndCursorDebouncers() {
     Task { @MainActor in
@@ -539,7 +536,15 @@ extension MainWindow {
   }
 
   func nextEvent(_ event: NvimView.Event) async {
+    self.log.debugAny("Event from NvimView: \(event)")
+
     switch event {
+    case .nvimReady:
+      // Now, sync API is also ready. Fire colorscheme changed again since it uses the sync API
+      // and when it first fires, sync API does not run yet.
+      // FIXME: There might be other events which need to be fired here.
+      self.colorschemeChanged(to: self.neoVimView.theme)
+
     case .neoVimStopped: self.neoVimStopped()
 
     case let .setTitle(title): self.set(title: title)

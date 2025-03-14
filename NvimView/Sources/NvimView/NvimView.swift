@@ -242,6 +242,8 @@ public final class NvimView: NSView,
             await self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
             return
           }
+          
+          await self.delegate?.nextEvent(.nvimReady)
 
           self.setFrameSize(self.bounds.size)
 
