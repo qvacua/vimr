@@ -19,8 +19,9 @@ final class Throttler<T> {
     .eraseToAnyPublisher()
   }
 
-  deinit {
-    subject.send(completion: .finished)
+  func finish() {
+    self.subject.send(completion: .finished)
+    self.cancellables.removeAll()
   }
 
   func call(_ element: T) {

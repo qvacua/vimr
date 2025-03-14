@@ -134,7 +134,6 @@ extension MainWindow {
         ns_id: 0,
         opts: ["name": MessagePackValue(colorName)]
       )
-      Swift.print("############## \(result)")
 
       guard let name = try? result.get() else { return }
 

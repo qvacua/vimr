@@ -213,6 +213,9 @@ final class MainWindow: NSObject,
   func cleanup() {
     self.context.unsubscribe(uuid: self.uuid)
 
+    self.scrollThrottler.finish()
+    self.cursorThrottler.finish()
+
     self.preview?.cleanup()
     self.htmlPreview?.cleanup()
     self.fileBrowser?.cleanup()

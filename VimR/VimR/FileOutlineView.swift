@@ -161,8 +161,8 @@ final class FileOutlineView: NSOutlineView,
   @available(*, unavailable)
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-  private func handleFileSystemChanges(_ changedUrl: URL) {
-    DispatchQueue.main.async {
+  private nonisolated func handleFileSystemChanges(_ changedUrl: URL) {
+    Task { @MainActor in
       guard let changeTreeNode = self.changedTreeNode(for: changedUrl) else { return }
 
       let newChildUrls = Set(self.childUrls(for: changedUrl))

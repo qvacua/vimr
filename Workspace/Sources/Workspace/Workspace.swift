@@ -13,6 +13,7 @@ public enum WorkspaceBarLocation: String, Codable, CaseIterable, Sendable {
   case left
 }
 
+@MainActor
 public protocol WorkspaceDelegate: AnyObject {
   func resizeWillStart(workspace: Workspace, tool: WorkspaceTool?)
   func resizeDidEnd(workspace: Workspace, tool: WorkspaceTool?)
