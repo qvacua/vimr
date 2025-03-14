@@ -91,19 +91,20 @@ final class ReduxContext {
     }
 
     self.actionEmitter.subscribe { action in
+      var modified = false
+
       let tuple = ReduceTuple(state: self.state, action: action, modified: false)
 
       self.logger.debugAny("AppState Redux tuple before reducing: \(tuple)")
-
       let result = appStateMiddlewareApply(tuple)
-      guard result.modified else {
-        self.logger.debugAny("AppState not mofified")
-        return
-      }
-
       self.logger.debugAny("AppState Redux tuple after AppState reduce: \(tuple)")
 
-      self.state = result.state
+      if result.modified {
+        self.state = result.state
+        modified = true
+      } else {
+        self.logger.debugAny("AppState not mofified")
+      }
 
       if let uuidAction = action as? UuidTagged,
          let mainWindowState = self.state.mainWindows[uuidAction.uuid]
@@ -111,16 +112,20 @@ final class ReduxContext {
         let tuple = ReduceTuple(state: mainWindowState, action: action, modified: false)
 
         self.logger.debugAny("MainWin \(uuidAction.uuid) Redux tuple before reducing: \(tuple)")
-
         let result = mainWinMiddlwareApply(tuple)
-        guard result.modified else {
-          self.logger.debugAny("MainWin \(uuidAction.uuid) state not mofified")
-          return
-        }
-
         self.logger.debugAny("MainWin \(uuidAction.uuid) Redux tuple after reduce: \(tuple)")
 
-        self.state.mainWindows[uuidAction.uuid] = result.state
+        if result.modified {
+          self.state.mainWindows[uuidAction.uuid] = result.state
+          modified = true
+        } else {
+          self.logger.debugAny("MainWin \(uuidAction.uuid) state not mofified")
+        }
+      }
+
+      guard modified else {
+        self.logger.debugAny("No need to notify subscribers")
+        return
       }
 
       for subscriber in self.subscribers.values {

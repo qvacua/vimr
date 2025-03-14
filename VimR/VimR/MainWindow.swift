@@ -3,7 +3,6 @@
  * See LICENSE
  */
 
-import AsyncAlgorithms
 import Cocoa
 @preconcurrency import Combine
 import NvimView
@@ -265,10 +264,10 @@ final class MainWindow: NSObject,
 
   private func setupScrollAndCursorDebouncers() {
     Task { @MainActor in
-      for await action in merge(
-        self.scrollThrottler.publisher.values,
-        self.cursorThrottler.publisher.values
-      ) {
+      for await action in self.scrollThrottler.publisher
+        .merge(with: self.cursorThrottler.publisher)
+        .values
+      {
         self.emit(self.uuidAction(for: action))
       }
     }

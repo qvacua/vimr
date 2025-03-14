@@ -56,6 +56,7 @@ extension MainWindow {
   }
 
   func cwdChanged() {
+    Swift.print("############# cwd changed to \(self.neoVimView.cwd)")
     self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 

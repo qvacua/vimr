@@ -152,7 +152,6 @@
 		4BA19817285B599400B49309 /* FuzzySearch.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1929B656C04BA6F950BFA2F5 /* FuzzySearch.xcdatamodel */; };
 		4BADD55B283A847100C6B16D /* Ignore in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55A283A847100C6B16D /* Ignore */; };
 		4BADD55E283ABD0200C6B16D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4BADD55D283ABD0200C6B16D /* OrderedCollections */; };
-		4BAE38982D7CF84F00CD56C7 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 4BAE38972D7CF84F00CD56C7 /* AsyncAlgorithms */; };
 		4BB409E51DD68CCC005F39A2 /* FileBrowserMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB409E71DD68CCC005F39A2 /* FileBrowserMenu.xib */; };
 		4BBE7F512D21C12B006090D9 /* EonilFSEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBE7F502D21C12B006090D9 /* EonilFSEvents */; };
 		4BDF50171D77540900D8FBC3 /* OpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDF50191D77540900D8FBC3 /* OpenQuicklyWindow.xib */; };
@@ -356,7 +355,6 @@
 				4B0B36212595236000B06899 /* PureLayout in Frameworks */,
 				4B0B362E2595236000B06899 /* Workspace in Frameworks */,
 				4B0B362C2595236000B06899 /* Commons in Frameworks */,
-				4BAE38982D7CF84F00CD56C7 /* AsyncAlgorithms in Frameworks */,
 				4B0B36202595236000B06899 /* Swifter in Frameworks */,
 				4B0B362F2595236000B06899 /* Sparkle in Frameworks */,
 				4BADD55B283A847100C6B16D /* Ignore in Frameworks */,
@@ -731,7 +729,6 @@
 				4BADD55D283ABD0200C6B16D /* OrderedCollections */,
 				4BA19811285B4BA600B49309 /* Misc */,
 				4BBE7F502D21C12B006090D9 /* EonilFSEvents */,
-				4BAE38972D7CF84F00CD56C7 /* AsyncAlgorithms */,
 			);
 			productName = VimR;
 			productReference = 4BEBA5051CFF374B00673FDF /* VimR-dev.app */;
@@ -807,7 +804,6 @@
 				4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */,
 				4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */,
 				4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */,
-				4BAE38962D7CF84F00CD56C7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1369,14 +1365,6 @@
 				minimumVersion = 1.1.2;
 			};
 		};
-		4BAE38962D7CF84F00CD56C7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
-			requirement = {
-				kind = exactVersion;
-				version = 1.0.3;
-			};
-		};
 		4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eonil/FSEvents/";
@@ -1466,11 +1454,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
-		};
-		4BAE38972D7CF84F00CD56C7 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4BAE38962D7CF84F00CD56C7 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
 		};
 		4BBE7F502D21C12B006090D9 /* EonilFSEvents */ = {
 			isa = XCSwiftPackageProductDependency;

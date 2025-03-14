@@ -24,26 +24,3 @@ extension URL {
     return Int16(DT_UNKNOWN)
   }
 }
-
-extension Sequence {
-  func asyncMap<T>(_ transform: @escaping (Element) async throws -> T) async rethrows -> [T] {
-    var results = [T]()
-    for element in self {
-      let result = try await transform(element)
-      results.append(result)
-    }
-    return results
-  }
-
-  func asyncCompactMap<T: Sendable>(
-    _ transform: @Sendable (Element) async throws -> T?
-  ) async rethrows -> [T] {
-    var values = [T]()
-
-    for element in self {
-      if let result = try await transform(element) { values.append(result) }
-    }
-
-    return values
-  }
-}
