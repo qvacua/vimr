@@ -143,7 +143,7 @@ public actor MsgpackRpc {
 
   // MARK: Private
 
-  private let log = Logger(subsystem: "com.qvacua.RxPack.MsgpackRpc", category: "rpc")
+  private let log = Logger(subsystem: "com.qvacua.NvimApi", category: "rpc")
 
   private var closed = false
 
