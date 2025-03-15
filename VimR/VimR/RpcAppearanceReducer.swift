@@ -1,10 +1,7 @@
-//
-//  RpcAppearanceReducer.swift
-//  VimR
-//
-//  Created by Tae Won Ha on 2025-03-10.
-//  Copyright © 2025 Tae Won Ha. All rights reserved.
-//
+/**
+ * Tae Won Ha - http://taewon.de - @hataewon
+ * See LICENSE
+ */
 
 import Cocoa
 
