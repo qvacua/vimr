@@ -43,8 +43,8 @@ final class OpenQuicklyWindow: NSObject,
     self.emit(.setUsesVcsIgnores(self.useVcsIgnoresCheckBox.boolState))
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
     self.windowController = NSWindowController(windowNibName: NSNib.Name("OpenQuicklyWindow"))
 
     self.searchStream = NotificationCenter.default
@@ -55,6 +55,7 @@ final class OpenQuicklyWindow: NSObject,
 
     super.init()
 
+    self.searchField.delegate = self
     self.configureWindow()
     self.addViews()
 
@@ -191,12 +192,16 @@ final class OpenQuicklyWindow: NSObject,
 
   // Since we use GCD's main queue, we can set it to nonisolated
   private nonisolated func startProgress() {
-    DispatchQueue.main.async { self.progressIndicator.startAnimation(self) }
+    Task { @MainActor in
+      self.progressIndicator.startAnimation(self)
+    }
   }
 
   // Since we use GCD's main queue, we can set it to nonisolated
   private nonisolated func endProgress() {
-    DispatchQueue.main.async { self.progressIndicator.stopAnimation(self) }
+    Task { @MainActor in
+      self.progressIndicator.stopAnimation(self)
+    }
   }
 
   private func updateRootUrls(state: AppState) {

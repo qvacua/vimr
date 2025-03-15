@@ -14,13 +14,13 @@ final class UiRoot: UiComponent {
 
   let uuid = UUID()
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emitter = emitter
-    self.emit = emitter.typedEmit()
+    self.emitter = context.actionEmitter
+    self.emit = context.actionEmitter.typedEmit()
 
-    self.openQuicklyWindow = OpenQuicklyWindow(context: context, emitter: emitter, state: state)
-    self.prefWindow = PrefWindow(context: context, emitter: emitter, state: state)
+    self.openQuicklyWindow = OpenQuicklyWindow(context: context, state: state)
+    self.prefWindow = PrefWindow(context: context, state: state)
     self.prefWindow.shortcutService = self.shortcutService
 
     self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
@@ -99,7 +99,7 @@ final class UiRoot: UiComponent {
   private var mainWindows = [UUID: MainWindow]()
 
   private func newMainWindow(with state: MainWindow.State) -> MainWindow {
-    let mainWin = MainWindow(context: self.context, emitter: self.emitter, state: state)
+    let mainWin = MainWindow(context: self.context, state: state)
     // sync global self state to child window
     mainWin.shortcutService = self.shortcutService
     mainWin.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode

@@ -28,9 +28,9 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
   let mainWinUuid: UUID
   let menuItems: [NSMenuItem]
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
     self.mainWinUuid = state.uuid
 
     let configuration = WKWebViewConfiguration()

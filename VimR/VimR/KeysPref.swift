@@ -24,8 +24,8 @@ final class KeysPref: PrefPane, UiComponent, NSTextFieldDelegate {
     true
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     self.isLeftOptionMeta = state.mainWindowTemplate.isLeftOptionMeta
     self.isRightOptionMeta = state.mainWindowTemplate.isRightOptionMeta

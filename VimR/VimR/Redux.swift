@@ -117,5 +117,5 @@ protocol UiComponent {
 
   var uuid: UUID { get }
 
-  init(context: ReduxContext, emitter: ActionEmitter, state: StateType)
+  init(context: ReduxContext, state: StateType)
 }

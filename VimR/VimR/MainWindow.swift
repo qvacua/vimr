@@ -58,9 +58,9 @@ final class MainWindow: NSObject,
   var isClosing = false
   let cliPipePath: String?
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
     self.uuid = state.uuid
 
     self.cliPipePath = state.cliPipePath
@@ -95,7 +95,7 @@ final class MainWindow: NSObject,
 
     var tools: [Tools: WorkspaceTool] = [:]
     if state.activeTools[.preview] == true {
-      self.preview = MarkdownTool(context: context, emitter: emitter, state: state)
+      self.preview = MarkdownTool(context: context, state: state)
       let previewConfig = WorkspaceTool.Config(
         title: "Markdown",
         view: self.preview!,
@@ -107,7 +107,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.htmlPreview] == true {
-      self.htmlPreview = HtmlPreviewTool(context: context, emitter: emitter, state: state)
+      self.htmlPreview = HtmlPreviewTool(context: context, state: state)
       let htmlPreviewConfig = WorkspaceTool.Config(
         title: "HTML",
         view: self.htmlPreview!,
@@ -120,7 +120,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.fileBrowser] == true {
-      self.fileBrowser = FileBrowser(context: context, emitter: emitter, state: state)
+      self.fileBrowser = FileBrowser(context: context, state: state)
       let fileBrowserConfig = WorkspaceTool.Config(
         title: "Files",
         view: self.fileBrowser!,
@@ -135,7 +135,7 @@ final class MainWindow: NSObject,
     }
 
     if state.activeTools[.buffersList] == true {
-      self.buffersList = BuffersList(context: context, emitter: emitter, state: state)
+      self.buffersList = BuffersList(context: context, state: state)
       let buffersListConfig = WorkspaceTool.Config(
         title: "Buffers",
         view: self.buffersList!
@@ -302,15 +302,22 @@ final class MainWindow: NSObject,
         Task {
           self.previewPosition = state.preview.previewPosition
           await self.neoVimView.cursorGo(to: state.preview.previewPosition.payload)
-          self.open(urls: state.urlsToOpen)
-          if let currentBuffer = state.currentBufferToSet {
-            await self.neoVimView.select(buffer: currentBuffer)
-          }
-          if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
-            self.goToLineFromCli = state.goToLineFromCli
-            if let goToLine = self.goToLineFromCli {
-              await self.neoVimView.goTo(line: goToLine.payload)
-            }
+        }
+      }
+
+      self.open(urls: state.urlsToOpen)
+
+      if let currentBuffer = state.currentBufferToSet {
+        Task {
+          await self.neoVimView.select(buffer: currentBuffer)
+        }
+      }
+
+      if self.goToLineFromCli?.mark != state.goToLineFromCli?.mark {
+        self.goToLineFromCli = state.goToLineFromCli
+        if let goToLine = self.goToLineFromCli {
+          Task {
+            await self.neoVimView.goTo(line: goToLine.payload)
           }
         }
       }

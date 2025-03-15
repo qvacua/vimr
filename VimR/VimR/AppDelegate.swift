@@ -92,11 +92,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
       // We want to build the menu items tree at some point, eg in the init() of
       // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
       // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
-      self.uiRoot = UiRoot(
-        context: self.context,
-        emitter: self.context.actionEmitter,
-        state: self.context.state
-      )
+      self.uiRoot = UiRoot(context: self.context, state: self.context.state)
 
       self.context.subscribe(uuid: self.uuid) { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty

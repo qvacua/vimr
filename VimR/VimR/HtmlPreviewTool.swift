@@ -23,9 +23,9 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   let uuid = UUID()
   let innerCustomToolbar = InnerCustomToolbar()
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
     self.mainWinUuid = state.uuid
 
     let configuration = WKWebViewConfiguration()

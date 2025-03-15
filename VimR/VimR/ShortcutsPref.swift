@@ -46,7 +46,7 @@ final class ShortcutsPref: PrefPane,
     didSet { self.updateShortcutService() }
   }
 
-  required init(context _: ReduxContext, emitter _: ActionEmitter, state _: StateType) {
+  required init(context _: ReduxContext, state _: StateType) {
     // We know that the identifier is not empty.
     let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
     self.shortcutsUserDefaults = UserDefaults(suiteName: shortcutSuiteName)

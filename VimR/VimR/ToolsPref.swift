@@ -23,8 +23,8 @@ final class ToolsPref: PrefPane, UiComponent {
     true
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     self.tools = state.mainWindowTemplate.activeTools
 

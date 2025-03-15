@@ -28,8 +28,8 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.customMarkdownProcessorAction()
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     super.init(frame: .zero)
 

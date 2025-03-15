@@ -38,8 +38,8 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
     self.previewArea.textColor = NSColor.textColor
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing

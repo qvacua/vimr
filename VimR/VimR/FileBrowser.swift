@@ -25,14 +25,14 @@ final class FileBrowser: NSView, UiComponent {
 
   override var isFirstResponder: Bool { self.fileView.isFirstResponder }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
     self.mainWinUuid = state.uuid
 
     self.cwd = state.cwd
 
-    self.fileView = FileOutlineView(context: context, emitter: emitter, state: state)
+    self.fileView = FileOutlineView(context: context, state: state)
 
     self.showHiddenMenuItem = NSMenuItem(
       title: "Show Hidden Files",

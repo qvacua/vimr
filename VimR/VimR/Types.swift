@@ -103,15 +103,11 @@ final class UiComponentTemplate: UiComponent {
 
   let uuid = UUID()
 
-  required init(
-    context: ReduxContext,
-    emitter: ActionEmitter,
-    state: StateType
-  ) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
 
     // set the typed action emit function
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
 
     // init the component with the initial state "state"
     self.someField = state.someField

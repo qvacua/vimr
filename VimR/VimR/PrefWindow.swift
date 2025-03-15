@@ -26,19 +26,19 @@ final class PrefWindow: NSObject,
     }
   }
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
 
     self.windowController = NSWindowController(windowNibName: NSNib.Name("PrefWindow"))
 
     self.panes = [
-      GeneralPref(context: context, emitter: emitter, state: state),
-      ToolsPref(context: context, emitter: emitter, state: state),
-      AppearancePref(context: context, emitter: emitter, state: state),
-      KeysPref(context: context, emitter: emitter, state: state),
-      ShortcutsPref(context: context, emitter: emitter, state: state),
-      AdvancedPref(context: context, emitter: emitter, state: state),
+      GeneralPref(context: context, state: state),
+      ToolsPref(context: context, state: state),
+      AppearancePref(context: context, state: state),
+      KeysPref(context: context, state: state),
+      ShortcutsPref(context: context, state: state),
+      AdvancedPref(context: context, state: state),
     ]
 
     super.init()

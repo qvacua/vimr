@@ -25,9 +25,9 @@ final class BuffersList: NSView,
   private(set) var lastThemeMark = Token()
   private(set) var theme = Theme.default
 
-  required init(context: ReduxContext, emitter: ActionEmitter, state: StateType) {
+  required init(context: ReduxContext, state: StateType) {
     self.context = context
-    self.emit = emitter.typedEmit()
+    self.emit = context.actionEmitter.typedEmit()
     self.mainWinUuid = state.uuid
 
     self.usesTheme = state.appearance.usesTheme
