@@ -17,11 +17,6 @@ class AsyncFutureTest {
 
     #expect(try await future.value().get() == 1)
   }
-
-  @Test func testAsyncFutureWithDefaultValue() async throws {
-    let future = AsyncFuture<Int>(.success(1))
-    #expect(try await future.value().get() == 1)
-  }
 }
 
 private let nanoSecondsPerSecond: UInt64 = 1_000_000_000
