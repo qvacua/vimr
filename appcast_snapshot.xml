@@ -6,22 +6,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.51.1-20250215.143933</title>
+      <title>SNAPSHOT-20250315.195840</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250215.143933</sparkle:version>
-      <sparkle:shortVersionString>v0.51.1</sparkle:shortVersionString>
+      <sparkle:version>20250315.195840</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20250315.195840</sparkle:shortVersionString>
       <description><![CDATA[
-    <ul>
-<li>GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!</li>
-</ul>
+    <p>⚠️ WIP for making VimR Swift 6 compatible. Probably instable! Use it at your own risk!</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.51.1-20250215.143933
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20250315.195840
       </releaseNotesLink>
-      <pubDate>2025-02-15T14:43:21.299652</pubDate>
-      <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.51.1-20250215.143933/VimR-v0.51.1.tar.bz2"
-                 sparkle:edSignature="kqUYl5IwOGbOfWnwlpN0tciIcpnX73ArCdVl8VcYbZ23fF18Gpp+ch+henRVYnkiEUhoocK80nnwlc2Rwm9YAw==" length="18732668"
+      <pubDate>2025-03-15T20:01:47.822612</pubDate>
+      <minimumSystemVersion>13.5</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20250315.195840/VimR-SNAPSHOT-20250315.195840.tar.bz2"
+                 sparkle:edSignature="z2dMdcm0S8kQfSd1Yi2KY2P8d5EtnEFm/QYeaq2wMkdyycLR6EtmzyWzwOOJw9zj8rIT4PDVcziz/Vzkb532Aw==" length="16577650"
                  type="application/octet-stream"/>
     </item>
   </channel>
