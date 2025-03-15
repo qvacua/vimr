@@ -8,24 +8,14 @@ public final class AsyncFuture<Element: Sendable>: Sendable {
 
   public init() {
     (self.stream, self.continuation) = AsyncStream.makeStream()
-    self.defaultValue = nil
-  }
-
-  public init(_ result: ResultType) {
-    (self.stream, self.continuation) = AsyncStream.makeStream()
-    self.defaultValue = result
   }
 
   public func yield(_ result: ResultType) {
-    guard self.defaultValue == nil else { fatalError("This should not happen!") }
-
     self.continuation.yield(result)
     self.continuation.finish()
   }
 
   public func value() async -> ResultType {
-    if let defaultValue = self.defaultValue { return defaultValue }
-
     for await result in self.stream {
       // Return the first (and only) value
       return result
@@ -38,6 +28,4 @@ public final class AsyncFuture<Element: Sendable>: Sendable {
 
   private let stream: AsyncStream<ResultType>
   private let continuation: AsyncStream<ResultType>.Continuation
-
-  private let defaultValue: ResultType?
 }
