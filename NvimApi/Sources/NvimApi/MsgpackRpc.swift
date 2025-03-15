@@ -159,7 +159,9 @@ public actor MsgpackRpc {
   private func startReading() async throws {
     Task.detached(priority: .high) {
       self.log.debug("Start reading")
-      guard let dataStream = await self.outPipe?.asyncData else { return }
+      guard let dataStream = await self.outPipe?.asyncData else {
+        throw Error(msg: "Could not get the async data stream")
+      }
 
       var remainderData = Data()
       var dataToUnmarshall = Data()
