@@ -6,7 +6,7 @@
 import Cocoa
 import MessagePack
 
-private p(_ str: String) {
+private func p(_ str: String) {
   #if DEBUG
   Swift.print("################# \(str)")
   #endif
