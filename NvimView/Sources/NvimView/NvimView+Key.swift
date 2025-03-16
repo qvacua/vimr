@@ -202,11 +202,13 @@ public extension NvimView {
     // the markedPosition is not needed since marked Text should always following cursor..
     // Do we need Task { @MainActor } here?
     Task {
-      ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
+      guard let mt = markedText else {
+        p("marked test is nil in setMarkedText(): \(object), \(selectedRange), \(replacementRange)")
+        return
+      }
+      ugrid.updateMark(markedText: mt, selectedRange: selectedRange)
       markForRender(region: regionForRow(at: ugrid.cursorPosition))
     }
-
-    self.keyDownDone = true
   }
 
   func unmarkText() {
