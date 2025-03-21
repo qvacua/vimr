@@ -8,7 +8,7 @@ import MessagePack
 
 private func p(_ str: String) {
   #if DEBUG
-  Swift.print("################# \(str)")
+    Swift.print("################# \(str)")
   #endif
 }
 
@@ -64,7 +64,7 @@ public extension NvimView {
       : self.vimPlainString(chars)
 
     self.apiSync.nvimInput(keys: finalInput, errWhenBlocked: false).cauterize()
-    
+
     self.keyDownDone = true
   }
 
@@ -142,9 +142,9 @@ public extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-        self.apiSync
-          .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-          .cauterize()
+      self.apiSync
+        .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
+        .cauterize()
       return true
     }
 
@@ -152,17 +152,17 @@ public extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if flags == .control, chars == "6" {
-        self.apiSync
-          .nvimInput(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
-          .cauterize()
+      self.apiSync
+        .nvimInput(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
+        .cauterize()
       return true
     }
 
     if flags == .control, chars == "2" {
       // <C-2> should generate \0, escaping as above
-        self.apiSync
-          .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-          .cauterize()
+      self.apiSync
+        .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
+        .cauterize()
       return true
     }
 

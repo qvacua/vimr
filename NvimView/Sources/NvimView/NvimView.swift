@@ -19,36 +19,6 @@ extension Result {
   var isFailure: Bool { !self.isSuccess }
 
   func cauterize() {}
-
-  func tryAsyncMap<NewSuccess>(
-    _ transform: @Sendable (Success) async throws(Failure) -> NewSuccess
-  ) async -> Result<NewSuccess, Failure> {
-    switch self {
-    case let .success(success):
-      do {
-        return try await .success(transform(success))
-      } catch {
-        return .failure(error)
-      }
-    case let .failure(failure):
-      return .failure(failure)
-    }
-  }
-
-  func tryFlatAsyncMap<NewSuccess>(
-    _ transform: @Sendable (Success) async throws(Failure) -> Result<NewSuccess, Failure>
-  ) async -> Result<NewSuccess, Failure> {
-    switch self {
-    case let .success(success):
-      do {
-        return try await transform(success)
-      } catch {
-        return .failure(error)
-      }
-    case let .failure(failure):
-      return .failure(failure)
-    }
-  }
 }
 
 public struct FontTrait: OptionSet, Sendable {
@@ -242,7 +212,7 @@ public final class NvimView: NSView,
             await self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
             return
           }
-          
+
           await self.delegate?.nextEvent(.nvimReady)
 
           self.setFrameSize(self.bounds.size)
