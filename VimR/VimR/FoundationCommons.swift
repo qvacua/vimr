@@ -11,7 +11,7 @@ extension Logger {
   // I'm too lazy to make all Action's (enum's) CustomStringConvertible.
   func debugAny(_ msg: String) {
     #if DEBUG
-      self.debug("\(msg)")
+//      self.debug("\(msg)")
     #endif
   }
 }

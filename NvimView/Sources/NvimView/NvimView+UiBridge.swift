@@ -183,7 +183,7 @@ extension NvimView {
     }
 
     guard array.count > 1, let bufferHandle = array[1].intValue else {
-      self.bridgeLogger.error("Could not convert \(array)")
+      self.bridgeLogger.error("Nothing we handle here: \(array)")
       return
     }
 

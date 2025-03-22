@@ -23,7 +23,7 @@ extension NSAttributedString {
 
 extension NSTableView {
   static func standardTableView() -> NSTableView {
-    let tableView = NSTableView(frame: CGRect.zero)
+    let tableView = NSTableView(frame: .zero)
 
     let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("name"))
     column.isEditable = false
@@ -49,7 +49,7 @@ extension NSTableView {
 
 extension NSOutlineView {
   static func standardOutlineView() -> NSOutlineView {
-    let outlineView = NSOutlineView(frame: CGRect.zero)
+    let outlineView = NSOutlineView(frame: .zero)
     NSOutlineView.configure(toStandard: outlineView)
     return outlineView
   }
@@ -104,9 +104,8 @@ extension NSTextField {
 
 extension NSScrollView {
   static func standardScrollView() -> NSScrollView {
-    let scrollView = NSScrollView(frame: CGRect.zero)
+    let scrollView = NSScrollView(forAutoLayout: ())
 
-    scrollView.translatesAutoresizingMaskIntoConstraints = false
     scrollView.hasVerticalScroller = true
     scrollView.hasHorizontalScroller = true
     scrollView.autohidesScrollers = true
