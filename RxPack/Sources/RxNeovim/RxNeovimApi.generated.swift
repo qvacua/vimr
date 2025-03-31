@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.10.4.
+// Auto generated for nvim version 0.11.0.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -1322,6 +1322,46 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimBufAddHighlight(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_buf_add_highlight", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_buf_add_highlight", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufSetVirtualText(
     buffer: RxNeovimApi.Buffer,
     src_id: Int,
@@ -2091,6 +2131,150 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimSubscribe(
+    event: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(event),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_subscribe", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_subscribe", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimUnsubscribe(
+    event: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(event),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_unsubscribe", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_unsubscribe", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimOutWrite(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_out_write", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_out_write", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimErrWrite(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_err_write", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_err_write", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimErrWriteln(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_err_writeln", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "nvim_err_writeln", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimNotify(
+    msg: String,
+    log_level: Int,
+    opts: [String: RxNeovimApi.Value],
+    errWhenBlocked: Bool = true
+  ) -> Single<RxNeovimApi.Value> {
+    let params: [RxNeovimApi.Value] = [
+      .string(msg),
+      .int(Int64(log_level)),
+      .map(opts.mapToDict { (Value.string($0), $1) }),
+    ]
+
+    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
+      guard let result = Optional(value) else {
+        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "nvim_notify", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "nvim_notify", params: params)
+      .map(transform)
+  }
+
   func nvimCreateNamespace(
     name: String,
     errWhenBlocked: Bool = true
@@ -2289,45 +2473,6 @@ public extension RxNeovimApi {
 
     return self
       .sendRequest(method: "nvim_buf_del_extmark", params: params)
-      .map(transform)
-  }
-
-  func nvimBufAddHighlight(
-    buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Single<Int> {
-    let params: [RxNeovimApi.Value] = [
-      .int(Int64(buffer.handle)),
-      .int(Int64(ns_id)),
-      .string(hl_group),
-      .int(Int64(line)),
-      .int(Int64(col_start)),
-      .int(Int64(col_end)),
-    ]
-
-    let transform = { (_ value: Value) throws -> Int in
-      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw RxNeovimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_buf_add_highlight", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_buf_add_highlight", params: params)
       .map(transform)
   }
 
@@ -3253,39 +3398,6 @@ public extension RxNeovimApi {
       .map(transform)
   }
 
-  func nvimNotify(
-    msg: String,
-    log_level: Int,
-    opts: [String: RxNeovimApi.Value],
-    errWhenBlocked: Bool = true
-  ) -> Single<RxNeovimApi.Value> {
-    let params: [RxNeovimApi.Value] = [
-      .string(msg),
-      .int(Int64(log_level)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
-    ]
-
-    let transform = { (_ value: Value) throws -> RxNeovimApi.Value in
-      guard let result = Optional(value) else {
-        throw RxNeovimApi.Error.conversion(type: RxNeovimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_notify", params: params)
-        )
-        .map(transform)
-    }
-
-    return self
-      .sendRequest(method: "nvim_notify", params: params)
-      .map(transform)
-  }
-
   func nvimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
@@ -3608,69 +3720,6 @@ public extension RxNeovimApi {
 
     return self
       .sendRequest(method: "nvim_echo", params: params)
-      .asCompletable()
-  }
-
-  func nvimOutWrite(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_out_write", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_out_write", params: params)
-      .asCompletable()
-  }
-
-  func nvimErrWrite(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_err_write", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_err_write", params: params)
-      .asCompletable()
-  }
-
-  func nvimErrWriteln(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_err_writeln", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_err_writeln", params: params)
       .asCompletable()
   }
 
@@ -4041,48 +4090,6 @@ public extension RxNeovimApi {
 
     return self
       .sendRequest(method: "nvim_put", params: params)
-      .asCompletable()
-  }
-
-  func nvimSubscribe(
-    event: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(event),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_subscribe", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_subscribe", params: params)
-      .asCompletable()
-  }
-
-  func nvimUnsubscribe(
-    event: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(event),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "nvim_unsubscribe", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "nvim_unsubscribe", params: params)
       .asCompletable()
   }
 
@@ -5746,6 +5753,46 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
+  func bufferAddHighlight(
+    buffer: RxNeovimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Single<Int> {
+    let params: [RxNeovimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: Value) throws -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw RxNeovimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "buffer_add_highlight", params: params)
+        )
+        .map(transform)
+    }
+
+    return self
+      .sendRequest(method: "buffer_add_highlight", params: params)
+      .map(transform)
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetOption(
     name: String,
     value: RxNeovimApi.Value,
@@ -5916,43 +5963,113 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufferAddHighlight(
-    buffer: RxNeovimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Single<Int> {
+  func vimSubscribe(
+    event: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
     let params: [RxNeovimApi.Value] = [
-      .int(Int64(buffer.handle)),
-      .int(Int64(ns_id)),
-      .string(hl_group),
-      .int(Int64(line)),
-      .int(Int64(col_start)),
-      .int(Int64(col_end)),
+      .string(event),
     ]
 
-    let transform = { (_ value: Value) throws -> Int in
-      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw RxNeovimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked {
+    if expectsReturnValue {
       return self
         .checkBlocked(
-          self.sendRequest(method: "buffer_add_highlight", params: params)
+          self.sendRequest(method: "vim_subscribe", params: params)
         )
-        .map(transform)
+        .asCompletable()
     }
 
     return self
-      .sendRequest(method: "buffer_add_highlight", params: params)
-      .map(transform)
+      .sendRequest(method: "vim_subscribe", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimUnsubscribe(
+    event: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(event),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "vim_unsubscribe", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "vim_unsubscribe", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimOutWrite(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "vim_out_write", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "vim_out_write", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimErrWrite(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "vim_err_write", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "vim_err_write", params: params)
+      .asCompletable()
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimReportError(
+    str: String,
+    expectsReturnValue: Bool = false
+  ) -> Completable {
+    let params: [RxNeovimApi.Value] = [
+      .string(str),
+    ]
+
+    if expectsReturnValue {
+      return self
+        .checkBlocked(
+          self.sendRequest(method: "vim_report_error", params: params)
+        )
+        .asCompletable()
+    }
+
+    return self
+      .sendRequest(method: "vim_report_error", params: params)
+      .asCompletable()
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
@@ -6432,72 +6549,6 @@ public extension RxNeovimApi {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func vimOutWrite(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "vim_out_write", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "vim_out_write", params: params)
-      .asCompletable()
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimErrWrite(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "vim_err_write", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "vim_err_write", params: params)
-      .asCompletable()
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimReportError(
-    str: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(str),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "vim_report_error", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "vim_report_error", params: params)
-      .asCompletable()
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetBuffers(
     errWhenBlocked: Bool = true
   ) -> Single<[RxNeovimApi.Buffer]> {
@@ -6728,50 +6779,6 @@ public extension RxNeovimApi {
 
     return self
       .sendRequest(method: "vim_set_current_tabpage", params: params)
-      .asCompletable()
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimSubscribe(
-    event: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(event),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "vim_subscribe", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "vim_subscribe", params: params)
-      .asCompletable()
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimUnsubscribe(
-    event: String,
-    expectsReturnValue: Bool = false
-  ) -> Completable {
-    let params: [RxNeovimApi.Value] = [
-      .string(event),
-    ]
-
-    if expectsReturnValue {
-      return self
-        .checkBlocked(
-          self.sendRequest(method: "vim_unsubscribe", params: params)
-        )
-        .asCompletable()
-    }
-
-    return self
-      .sendRequest(method: "vim_unsubscribe", params: params)
       .asCompletable()
   }
 
