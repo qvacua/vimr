@@ -8,7 +8,7 @@ import NvimView
 import Workspace
 
 extension MainWindow {
-  enum Action {
+  enum Action: Sendable {
     case cd(to: URL)
     case setBufferList([NvimView.Buffer])
 
@@ -28,8 +28,9 @@ extension MainWindow {
 
     case toggleAllTools(Bool)
     case toggleToolButtons(Bool)
-    case setState(for: Tools, with: WorkspaceTool)
-    case setToolsState([(Tools, WorkspaceTool)])
+    // FIXME: Do not use WorkspaceTool, but a struct which contains the state of the workspace tool!
+    case setState(for: Tools, with: WorkspaceToolState)
+    case setToolsState([(Tools, WorkspaceToolState)])
 
     case makeSessionTemporary
 

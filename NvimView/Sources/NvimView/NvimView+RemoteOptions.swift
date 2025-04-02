@@ -6,7 +6,7 @@
 
 import Cocoa
 import MessagePack
-import RxSwift
+import NvimApi
 
 extension NvimView {
   enum RemoteOption {
@@ -54,35 +54,28 @@ extension NvimView {
   }
 
   final func signalRemoteOptionChange(_ option: RemoteOption) {
-    let command: Completable = switch option {
-    case let .guifont(fontSpec):
-      self.api.nvimSetOptionValue(
-        name: "guifont",
-        value: .string(fontSpec),
-        opts: ["scope": .string("global")]
-      )
-
-    case let .guifontWide(fontSpec):
-      self.api.nvimSetOptionValue(
-        name: "guifontwide",
-        value: .string(fontSpec),
-        opts: ["scope": .string("global")]
-      )
+    Task {
+      switch option {
+      case let .guifont(fontSpec):
+        await self.api.nvimSetOptionValue(
+          name: "guifont",
+          value: .string(fontSpec),
+          opts: ["scope": .string("global")]
+        ).cauterize()
+      case let .guifontWide(fontSpec):
+        await self.api.nvimSetOptionValue(
+          name: "guifontwide",
+          value: .string(fontSpec),
+          opts: ["scope": .string("global")]
+        ).cauterize()
+      }
     }
-
-    command
-      .subscribe(onError: { [weak self] error in
-        // We're here probably because the font of NvimView is set before the API socket connection
-        // is established. Let's ignore the error.
-        self?.log.info("Setting \(option) did not go through: \(error).")
-      })
-      .disposed(by: self.disposeBag)
   }
 
   public final func signalError(code: Int, message: String) {
-    self.api.nvimErrWriteln(str: "E\(code): \(message)")
-      .subscribe()
-      .disposed(by: self.disposeBag)
+    Task {
+      await self.api.nvimErrWriteln(str: "E\(code): \(message)").cauterize()
+    }
   }
 
   private func handleGuifontSet(_ fontSpec: String, forWideFont wideFlag: Bool = false) {
@@ -106,12 +99,12 @@ extension NvimView {
       return
     }
 
-    gui.async {
+    Task(priority: .high) {
       self.font = newFont
       // Cell size likely changed, do a resize.
       self.resizeNeoVimUi(to: self.frame.size)
       self.markForRenderWholeView()
-      self.eventsSubject.onNext(.guifontChanged(newFont))
+      await self.delegate?.nextEvent(.guifontChanged(newFont))
     }
   }
 }

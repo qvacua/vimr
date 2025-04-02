@@ -9,7 +9,9 @@ final class BuffersListReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<BuffersList.Action>
 
-  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
     var state = tuple.state
 
     switch tuple.action.payload {
@@ -17,6 +19,6 @@ final class BuffersListReducer: ReducerType {
       state.currentBufferToSet = buffer
     }
 
-    return (state, tuple.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 }

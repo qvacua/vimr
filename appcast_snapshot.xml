@@ -12,6 +12,7 @@
       <sparkle:shortVersionString>v0.52.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
+<li>GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!</li>
 <li>Neovim 0.11.0 😀</li>
 <li>Dependencies updates:</li>
 <li>ReactiveX/RxSwift@6.9.0</li>

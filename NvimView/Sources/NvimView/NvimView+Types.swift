@@ -5,10 +5,13 @@
 
 import Cocoa
 import MessagePack
+import NvimApi
 import PureLayout
-import RxNeovim
-import RxPack
 import Tabs
+
+extension NSColor: @retroactive @unchecked Sendable {}
+// extension NSFont: @retroactive @unchecked Sendable {}
+extension NSImage: @retroactive @unchecked Sendable {}
 
 public extension NvimView {
   struct TabEntry: Hashable, TabRepresentative {
@@ -17,7 +20,7 @@ public extension NvimView {
     public var title: String
     public var isSelected = false
 
-    public var tabpage: RxNeovimApi.Tabpage
+    public var tabpage: NvimApi.Tabpage
   }
 
   struct Config {
@@ -54,6 +57,7 @@ public extension NvimView {
   }
 
   enum Event {
+    case nvimReady
     case neoVimStopped
     case setTitle(String)
     case setDirtyStatus(Bool)
@@ -88,7 +92,7 @@ public extension NvimView {
     case ipc(msg: String, cause: Swift.Error)
   }
 
-  struct Theme: CustomStringConvertible {
+  struct Theme: CustomStringConvertible, Sendable {
     public static let `default` = Theme()
 
     public var foreground = NSColor.textColor

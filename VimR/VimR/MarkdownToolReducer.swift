@@ -13,7 +13,9 @@ final class MarkdownToolReducer: ReducerType {
     self.baseServerUrl = baseServerUrl
   }
 
-  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
     var state = tuple.state
 
     switch tuple.action.payload {
@@ -30,7 +32,7 @@ final class MarkdownToolReducer: ReducerType {
       return tuple
     }
 
-    return (state, tuple.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 
   private let baseServerUrl: URL

@@ -7,11 +7,11 @@ import Foundation
 import os
 
 public extension OSLog {
-  func trace<T>(
+  func trace(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     #if TRACE
       self.log(
@@ -36,11 +36,11 @@ public extension OSLog {
     #endif
   }
 
-  func debug<T>(
+  func debug(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     #if DEBUG
       self.log(
@@ -51,11 +51,11 @@ public extension OSLog {
     #endif
   }
 
-  func info<T>(
+  func info(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     self.log(
       type: .info,
@@ -64,11 +64,11 @@ public extension OSLog {
     )
   }
 
-  func `default`<T>(
+  func `default`(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     self.log(
       type: .default,
@@ -77,11 +77,11 @@ public extension OSLog {
     )
   }
 
-  func error<T>(
+  func error(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     self.log(
       type: .error,
@@ -90,11 +90,11 @@ public extension OSLog {
     )
   }
 
-  func fault<T>(
+  func fault(
     file: String = #file,
     function: String = #function,
     line: Int = #line,
-    _ msg: T
+    _ msg: some Any
   ) {
     self.log(
       type: .fault,

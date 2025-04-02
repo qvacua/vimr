@@ -11,7 +11,9 @@ final class UiRootReducer: ReducerType {
 
   let mainWindow = MainWindowReducer()
 
-  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
     var appState = tuple.state
 
     switch tuple.action {
@@ -19,14 +21,16 @@ final class UiRootReducer: ReducerType {
       appState.quit = true
     }
 
-    return (appState, tuple.action, true)
+    return ReduceTuple(state: appState, action: tuple.action, modified: true)
   }
 
   class MainWindowReducer: ReducerType {
     typealias StateType = AppState
     typealias ActionType = UuidAction<MainWindow.Action>
 
-    func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+    func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+      -> ReduceTuple<StateType, ActionType>
+    {
       var appState = tuple.state
       let uuid = tuple.action.uuid
 
@@ -104,7 +108,7 @@ final class UiRootReducer: ReducerType {
         return tuple
       }
 
-      return (appState, tuple.action, true)
+      return ReduceTuple(state: appState, action: tuple.action, modified: true)
     }
 
     private func mainWindowTemplate(

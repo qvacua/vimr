@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
 
 final class PrefWindow: NSObject,
   UiComponent,
@@ -18,6 +17,8 @@ final class PrefWindow: NSObject,
     case close
   }
 
+  let uuid = UUID()
+
   weak var shortcutService: ShortcutService? {
     didSet {
       let shortcutsPref = self.panes.first { pane in pane is ShortcutsPref } as? ShortcutsPref
@@ -25,48 +26,42 @@ final class PrefWindow: NSObject,
     }
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
     self.openStatusMark = state.preferencesOpen.mark
 
     self.windowController = NSWindowController(windowNibName: NSNib.Name("PrefWindow"))
 
     self.panes = [
-      GeneralPref(source: source, emitter: emitter, state: state),
-      ToolsPref(source: source, emitter: emitter, state: state),
-      AppearancePref(source: source, emitter: emitter, state: state),
-      KeysPref(source: source, emitter: emitter, state: state),
-      ShortcutsPref(source: source, emitter: emitter, state: state),
-      AdvancedPref(source: source, emitter: emitter, state: state),
+      GeneralPref(context: context, state: state),
+      ToolsPref(context: context, state: state),
+      AppearancePref(context: context, state: state),
+      KeysPref(context: context, state: state),
+      ShortcutsPref(context: context, state: state),
+      AdvancedPref(context: context, state: state),
     ]
 
     super.init()
 
     self.window.delegate = self
-
     self.addViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if state.preferencesOpen.payload == false {
-          self.openStatusMark = state.preferencesOpen.mark
-          self.windowController.close()
-          return
-        }
+    context.subscribe(uuid: self.uuid) { state in
+      if state.preferencesOpen.mark == self.openStatusMark {
+        return
+      }
 
-        if state.preferencesOpen.mark == self.openStatusMark {
-          return
-        }
-
-        self.openStatusMark = state.preferencesOpen.mark
+      if state.preferencesOpen.payload == false {
+        self.windowController.close()
+        return
+      } else {
         self.windowController.showWindow(self)
-      })
-      .disposed(by: self.disposeBag)
+      }
+      self.openStatusMark = state.preferencesOpen.mark
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var openStatusMark: Token
 

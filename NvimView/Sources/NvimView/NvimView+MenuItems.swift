@@ -4,7 +4,7 @@
  */
 
 import Cocoa
-import RxSwift
+import NvimApi
 
 // MARK: - NSUserInterfaceValidationsProtocol
 
@@ -39,117 +39,80 @@ public extension NvimView {
 
 extension NvimView {
   @IBAction func undo(_: Any?) {
-    switch self.mode {
-    case .insert, .replace:
-      self.api
-        .nvimInput(keys: "<Esc>ui")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    case .normal, .visual:
-      self.api
-        .nvimInput(keys: "u")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not undo", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      return
+    Task {
+      switch self.mode {
+      case .insert, .replace:
+        await self.api.nvimInput(keys: "<Esc>ui").cauterize()
+      case .normal, .visual:
+        await self.api.nvimInput(keys: "u").cauterize()
+      default:
+        return
+      }
     }
   }
 
   @IBAction func redo(_: Any?) {
-    switch self.mode {
-    case .insert, .replace:
-      self.api
-        .nvimInput(keys: "<Esc><C-r>i")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    case .normal, .visual:
-      self.api
-        .nvimInput(keys: "<C-r>")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not redo", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      return
+    Task {
+      switch self.mode {
+      case .insert, .replace:
+        await self.api.nvimInput(keys: "<Esc><C-r>i").cauterize()
+      case .normal, .visual:
+        await self.api.nvimInput(keys: "<C-r>").cauterize()
+      default:
+        return
+      }
     }
   }
 
   @IBAction func cut(_: Any?) {
-    switch self.mode {
-    case .visual, .normal:
-      self.api
-        .nvimInput(keys: "\"+d")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not cut", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      return
+    Task {
+      switch self.mode {
+      case .visual, .normal:
+        await self.api.nvimInput(keys: "\"+d").cauterize()
+      default:
+        return
+      }
     }
   }
 
   @IBAction func copy(_: Any?) {
-    switch self.mode {
-    case .visual, .normal:
-      self.api
-        .nvimInput(keys: "\"+y")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not copy", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      return
+    Task {
+      switch self.mode {
+      case .visual, .normal:
+        await self.api.nvimInput(keys: "\"+y").cauterize()
+      default:
+        return
+      }
     }
   }
 
   @IBAction func paste(_: Any?) {
-    guard let content = NSPasteboard.general.string(forType: .string) else { return }
-
-    // phase == 1 means paste in a single call
-    self.api
-      .nvimPaste(data: content, crlf: false, phase: -1)
-      .subscribe(onFailure: { [weak self] error in
-        self?.eventsSubject.onNext(.apiError(msg: "Could not paste \(content)", cause: error))
-      })
-      .disposed(by: self.disposeBag)
+    Task {
+      guard let content = NSPasteboard.general.string(forType: .string) else { return }
+      // phase == 1 means paste in a single call
+      await self.api.nvimPaste(data: content, crlf: false, phase: -1).cauterize()
+    }
   }
 
   @IBAction func delete(_: Any?) {
-    switch self.mode {
-    case .normal, .visual:
-      self.api
-        .nvimInput(keys: "x")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not delete", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      return
+    Task {
+      switch self.mode {
+      case .normal, .visual:
+        await self.api.nvimInput(keys: "x").cauterize()
+      default:
+        return
+      }
     }
   }
 
   @IBAction override public func selectAll(_: Any?) {
-    switch self.mode {
-    case .insert, .visual:
-      self.api
-        .nvimInput(keys: "<Esc>ggVG")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
-        })
-        .disposed(by: self.disposeBag)
-    default:
-      self.api
-        .nvimInput(keys: "ggVG")
-        .subscribe(onFailure: { [weak self] error in
-          self?.eventsSubject.onNext(.apiError(msg: "Could not select all", cause: error))
-        })
-        .disposed(by: self.disposeBag)
+    Task {
+      switch self.mode {
+      case .insert, .visual:
+        await self.api.nvimInput(keys: "<Esc>ggVG").cauterize()
+      default:
+        await self.api.nvimInput(keys: "ggVG").cauterize()
+      }
     }
   }
 }

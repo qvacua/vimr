@@ -32,7 +32,7 @@ func changeTheme(
   return false
 }
 
-struct Theme: CustomStringConvertible {
+struct Theme: CustomStringConvertible, Sendable {
   static let `default` = Theme()
 
   var foreground = NSColor.textColor

@@ -115,6 +115,7 @@ final class DraggingSingleRowStackView: NSStackView {
     }
   }
 
+  @MainActor
   private class CachedViewLayer: CALayer {
     let view: NSView!
 

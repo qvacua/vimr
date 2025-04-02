@@ -5,20 +5,13 @@
 
 import Cocoa
 import MessagePack
+import NvimApi
 import NvimView
-import RxNeovim
-import RxPack
-import RxSwift
 import Workspace
 
 // MARK: - NvimViewDelegate
 
 extension MainWindow {
-  // Use only when Cmd-Q'ing
-  func waitTillNvimExits() {
-    self.neoVimView.waitTillNvimExits()
-  }
-
   func neoVimStopped() {
     if self.isClosing { return }
     self.prepareClosing()
@@ -66,16 +59,10 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
   }
 
-  func bufferListChanged() {
-    self.neoVimView
-      .allBuffers()
-      .subscribe(onSuccess: { [weak self] buffers in
-        guard let action = self?.uuidAction(for: .setBufferList(buffers.filter(\.isListed))) else {
-          return
-        }
-        self?.emit(action)
-      })
-      .disposed(by: self.disposeBag)
+  func bufferListChanged() async {
+    let bufs = await self.neoVimView.allBuffers() ?? []
+    let action = self.uuidAction(for: .setBufferList(bufs.filter(\.isListed)))
+    self.emit(action)
   }
 
   func bufferWritten(_ buffer: NvimView.Buffer) {
@@ -86,28 +73,21 @@ extension MainWindow {
     self.emit(self.uuidAction(for: .newCurrentBuffer(currentBuffer)))
   }
 
-  func tabChanged() {
-    self.neoVimView
-      .currentBuffer()
-      .subscribe(onSuccess: { [weak self] in
-        self?.newCurrentBuffer($0)
-      })
-      .disposed(by: self.disposeBag)
+  func tabChanged() async {
+    if let curBuf = await self.neoVimView.currentBuffer() {
+      self.newCurrentBuffer(curBuf)
+    }
   }
 
   func colorschemeChanged(to nvimTheme: NvimView.Theme) {
-    self
-      .updateCssColors()
-      .subscribe(onSuccess: { colors in
-        self.emit(
-          self.uuidAction(
-            for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors))
-          )
-        )
-      }, onFailure: {
-        _ in self.log.trace("oops couldn't set theme")
-      })
-      .disposed(by: self.disposeBag)
+    self.log.debugAny("Theme changed delegate method: \(nvimTheme)")
+    if let colors = self.updatedCssColors() {
+      self.emit(
+        self.uuidAction(for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
+      )
+    } else {
+      self.log.debug("oops couldn't set theme")
+    }
   }
 
   func guifontChanged(to font: NSFont) {
@@ -129,7 +109,7 @@ extension MainWindow {
   }
 
   func scroll() {
-    self.scrollDebouncer.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
+    self.scrollThrottler.call(.scroll(to: Marked(self.neoVimView.currentPosition)))
   }
 
   func cursor(to position: Position) {
@@ -138,10 +118,10 @@ extension MainWindow {
     }
 
     self.editorPosition = Marked(position)
-    self.cursorDebouncer.call(.setCursor(to: self.editorPosition))
+    self.cursorThrottler.call(.setCursor(to: self.editorPosition))
   }
 
-  private func updateCssColors() -> Single<[String: CellAttributes]> {
+  private func updatedCssColors() -> [String: CellAttributes]? {
     let colorNames = [
       "Normal", // color and background-color
       "Directory", // a
@@ -149,35 +129,19 @@ extension MainWindow {
       "CursorColumn", // code background and foreground
     ]
 
-    typealias HlResult = [String: RxNeovimApi.Value]
-    typealias ColorNameHlResultTuple = (colorName: String, hlResult: HlResult)
-    typealias ColorNameObservableTuple = (colorName: String, observable: Observable<HlResult>)
+    let map: [String: CellAttributes] = colorNames.reduce(into: [:]) { dict, colorName in
+      let result = self.neoVimView.apiSync.nvimGetHl(
+        ns_id: 0,
+        opts: ["name": MessagePackValue(colorName)]
+      )
 
-    return Observable
-      .from(colorNames.map { colorName -> ColorNameObservableTuple in
-        (
-          colorName: colorName,
-          observable: self.neoVimView.api
-            .nvimGetHl(
-              ns_id: 0,
-              opts: ["name": MessagePackValue(colorName)]
-            )
-            .asObservable()
-        )
-      })
-      .flatMap { tuple -> Observable<(String, HlResult)> in
-        Observable.zip(Observable.just(tuple.colorName), tuple.observable)
-      }
-      .reduce([ColorNameHlResultTuple]()) { (result, element: ColorNameHlResultTuple) in
-        result + [element]
-      }
-      .map { (array: [ColorNameHlResultTuple]) in
-        Dictionary(uniqueKeysWithValues: array)
-          .mapValues { value in
-            CellAttributes(withDict: value, with: self.neoVimView.defaultCellAttributes)
-          }
-      }
-      .asSingle()
+      guard let name = try? result.get() else { return }
+
+      dict[colorName] = CellAttributes(withDict: name, with: self.neoVimView.defaultCellAttributes)
+    }.compactMapValues { $0 }
+
+    if map.count == colorNames.count { return map }
+    else { return nil }
   }
 }
 
@@ -200,11 +164,16 @@ extension MainWindow {
         self
           .uuidAction(for: .becomeKey(isFullScreen: self.window.styleMask.contains(.fullScreen)))
       )
-    self.neoVimView.didBecomeMain().subscribe().disposed(by: self.disposeBag)
+
+    Task {
+      await self.neoVimView.didBecomeMain()
+    }
   }
 
   func windowDidResignMain(_: Notification) {
-    self.neoVimView.didResignMain().subscribe().disposed(by: self.disposeBag)
+    Task {
+      await self.neoVimView.didResignMain()
+    }
   }
 
   func windowDidMove(_: Notification) {
@@ -222,36 +191,42 @@ extension MainWindow {
   func windowShouldClose(_: NSWindow) -> Bool {
     defer { self.closeWindow = false }
 
-    if self.neoVimView.isBlocked().syncValue() ?? false {
-      let alert = NSAlert()
-      alert.messageText = "Nvim is waiting for your input."
-      alert.alertStyle = .informational
-      alert.runModal()
-      return false
-    }
-
-    if self.closeWindow {
-      if self.neoVimView.hasDirtyBuffers().syncValue() == true {
-        self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
-          if response == .alertSecondButtonReturn {
-            try? self.neoVimView.quitNeoVimWithoutSaving().wait()
-          }
-        }
-      } else {
-        try? self.neoVimView.quitNeoVimWithoutSaving().wait()
+    Task {
+      if await self.neoVimView.isBlocked() {
+        let alert = NSAlert()
+        alert.messageText = "Nvim is waiting for your input."
+        alert.alertStyle = .informational
+        alert.runModal()
+        return
       }
 
-      return false
-    }
+      if self.closeWindow {
+        if await self.neoVimView.hasDirtyBuffers() {
+          self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+            if response == .alertSecondButtonReturn {
+              Task {
+                await self.neoVimView.quitNeoVimWithoutSaving()
+              }
+            }
+          }
+        } else {
+          await self.neoVimView.quitNeoVimWithoutSaving()
+        }
 
-    guard self.neoVimView.isCurrentBufferDirty().syncValue() ?? false else {
-      try? self.neoVimView.closeCurrentTab().wait()
-      return false
-    }
+        return
+      }
 
-    self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
-      if response == .alertSecondButtonReturn {
-        try? self.neoVimView.closeCurrentTabWithoutSaving().wait()
+      guard await self.neoVimView.isCurrentBufferDirty() else {
+        await self.neoVimView.closeCurrentTab()
+        return
+      }
+
+      self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
+        if response == .alertSecondButtonReturn {
+          Task {
+            await self.neoVimView.closeCurrentTabWithoutSaving()
+          }
+        }
       }
     }
 
@@ -282,25 +257,34 @@ extension MainWindow {
   func resizeDidEnd(workspace _: Workspace, tool: WorkspaceTool?) {
     self.neoVimView.exitResizeMode()
 
-    if let workspaceTool = tool, let toolIdentifier = self.toolIdentifier(for: workspaceTool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: workspaceTool)))
+    if let tool, let toolIdentifier = self.toolIdentifier(for: tool) {
+      self.emit(self.uuidAction(for: .setState(
+        for: toolIdentifier,
+        with: .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+      )))
     }
   }
 
   func toggled(tool: WorkspaceTool) {
     if let toolIdentifier = self.toolIdentifier(for: tool) {
-      self.emit(self.uuidAction(for: .setState(for: toolIdentifier, with: tool)))
+      self.emit(self.uuidAction(for: .setState(
+        for: toolIdentifier,
+        with: .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+      )))
     }
   }
 
   func moved(tool: WorkspaceTool) {
     let tools = self.workspace.orderedTools
-      .compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceTool)? in
+      .compactMap { (tool: WorkspaceTool) -> (Tools, WorkspaceToolState)? in
         guard let toolId = self.toolIdentifier(for: tool) else {
           return nil
         }
 
-        return (toolId, tool)
+        return (
+          toolId,
+          .init(location: tool.location, dimension: tool.dimension, open: tool.isSelected)
+        )
       }
 
     self.emit(self.uuidAction(for: .setToolsState(tools)))
