@@ -183,7 +183,7 @@ extension NvimView {
     }
 
     guard array.count > 1, let bufferHandle = array[1].intValue else {
-      self.bridgeLogger.error("Could not convert \(array)")
+      self.bridgeLogger.error("Nothing we handle here: \(array)")
       return
     }
 
@@ -476,14 +476,14 @@ extension NvimView {
 
   private func colorSchemeChanged(_ value: MessagePackValue) async {
     self.bridgeLogger.debug("color scheme changed before: \(value)")
-    
+
     guard let values = MessagePackUtils.array(
       from: value, ofSize: 11, conversion: { $0.intValue }
     ) else {
       self.bridgeLogger.error("Could not convert theme from \(value)")
       return
     }
-    
+
     self.bridgeLogger.debug("color scheme changed: \(values)")
 
     let theme = Theme(values)

@@ -314,12 +314,10 @@ public extension NvimView {
   }
 
   func cursorGo(to position: Position) async {
-    await self.api
-      .nvimGetCurrentWin()
-      .tryFlatAsyncMap { curWin async throws(NvimApi.Error) -> Result<Void, NvimApi.Error> in
-        await self.api.nvimWinSetCursor(window: curWin, pos: [position.row, position.column])
-      }
-      .cauterize()
+    guard let curWin = try? await self.api.nvimGetCurrentWin().get() else { return }
+    await self.api.nvimWinSetCursor(
+      window: curWin, pos: [position.row, position.column], expectsReturnValue: false
+    ).cauterize()
   }
 
   func didBecomeMain() async {

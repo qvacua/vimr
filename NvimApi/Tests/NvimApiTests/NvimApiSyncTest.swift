@@ -13,7 +13,7 @@ class NvimApiSyncTest {
     self.proc = neovimProcess()
     try self.proc.run()
 
-    self.api = try NvimApiSync()
+    self.api = NvimApiSync()
     try self.api.run(socketPath: "/tmp/nvim-api-sync-test.socket")
   }
 

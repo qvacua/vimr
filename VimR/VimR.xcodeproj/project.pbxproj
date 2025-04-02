@@ -49,7 +49,7 @@
 		1929B990A143763A56CFCED0 /* PrefMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B364460D86F17E80943C /* PrefMiddleware.swift */; };
 		1929BA269EBD68251410A08E /* ShortcutsTableSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B07F0085B7AE10413346 /* ShortcutsTableSubviews.swift */; };
 		1929BA715337FE26155B2071 /* BufferList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BA43449BA41666CD55ED /* BufferList.swift */; };
-		1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Debouncer.swift */; };
+		1929BA76A1D97D8226F7CFB1 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929B6AD3396160AA2C46919 /* Throttler.swift */; };
 		1929BAE4900D72A7877741B1 /* PrefWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BE168F31344B69E61B62 /* PrefWindow.swift */; };
 		1929BAFF1E011321D3186EE6 /* UiRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD4149D5A25C82064DD8 /* UiRoot.swift */; };
 		1929BB4A9B2FA42A64CCCC76 /* MainWindowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1929BD83A13BF133741766CC /* MainWindowReducer.swift */; };
@@ -216,7 +216,7 @@
 		1929B66A5E2D00EA143AFD86 /* Redux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Redux.swift; sourceTree = "<group>"; };
 		1929B67A10E6BB2986B2416E /* BufferListReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferListReducer.swift; sourceTree = "<group>"; };
 		1929B694508FB5FDE607513A /* ToolsPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsPrefReducer.swift; sourceTree = "<group>"; };
-		1929B6AD3396160AA2C46919 /* Debouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
+		1929B6AD3396160AA2C46919 /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		1929B6C6C7792B05164B0216 /* MarkdownTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownTool.swift; sourceTree = "<group>"; };
 		1929B6E01216D49BB9F3B6A3 /* MainWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		1929B7039C5689CE45F53888 /* AdvancedPrefReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPrefReducer.swift; sourceTree = "<group>"; };
@@ -687,7 +687,7 @@
 		4BF8EED91D858C4400CAC08A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				1929B6AD3396160AA2C46919 /* Debouncer.swift */,
+				1929B6AD3396160AA2C46919 /* Throttler.swift */,
 				1929B8241CDE58F7AAF89AE4 /* PrefUtils.swift */,
 				1929B333D8752E2E68F35122 /* FileMonitor.swift */,
 				1929BC40B7B7708D8BE3A272 /* Resources.swift */,
@@ -962,7 +962,7 @@
 				1929B1837C750CADB3A5BCB9 /* OpenQuicklyFileViewRow.swift in Sources */,
 				4BF70EEA23D1B5FF009E51E9 /* CoreDataStack.swift in Sources */,
 				1929B990A143763A56CFCED0 /* PrefMiddleware.swift in Sources */,
-				1929BA76A1D97D8226F7CFB1 /* Debouncer.swift in Sources */,
+				1929BA76A1D97D8226F7CFB1 /* Throttler.swift in Sources */,
 				1929BFDE22D155F7C4B19E96 /* HtmlPreviewTool.swift in Sources */,
 				1929B4B00D7BB191A9A6532D /* HtmlPreviewToolReducer.swift in Sources */,
 				1929BCF7F7B9CC5499A3F506 /* AdvancedPrefReducer.swift in Sources */,
@@ -1101,7 +1101,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20250315.195840;
+				CURRENT_PROJECT_VERSION = 20250401.183326;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -1168,7 +1168,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20250315.195840;
+				CURRENT_PROJECT_VERSION = 20250401.183326;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_MODULE_VERIFIER = YES;
@@ -1202,7 +1202,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20250315.195840;
+				CURRENT_PROJECT_VERSION = 20250401.183326;
 				DEFINES_MODULE = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				IBC_MODULE = VimR;
@@ -1227,7 +1227,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 20250315.195840;
+				CURRENT_PROJECT_VERSION = 20250401.183326;
 				DEFINES_MODULE = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				IBC_MODULE = VimR;

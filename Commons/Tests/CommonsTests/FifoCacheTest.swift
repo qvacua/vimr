@@ -13,7 +13,7 @@ class FifoCacheTest: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    self.fifo = FifoCache(count: 10, queueQos: .default)
+    self.fifo = FifoCache(count: 10)
   }
 
   func testSimpleGet() {

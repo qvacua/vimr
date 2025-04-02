@@ -143,7 +143,7 @@ public actor MsgpackRpc {
 
   // MARK: Private
 
-  private let log = Logger(subsystem: "com.qvacua.RxPack.MsgpackRpc", category: "rpc")
+  private let log = Logger(subsystem: "com.qvacua.NvimApi", category: "rpc")
 
   private var closed = false
 
@@ -159,7 +159,9 @@ public actor MsgpackRpc {
   private func startReading() async throws {
     Task.detached(priority: .high) {
       self.log.debug("Start reading")
-      guard let dataStream = await self.outPipe?.asyncData else { return }
+      guard let dataStream = await self.outPipe?.asyncData else {
+        throw Error(msg: "Could not get the async data stream")
+      }
 
       var remainderData = Data()
       var dataToUnmarshall = Data()

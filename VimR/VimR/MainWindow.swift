@@ -261,16 +261,16 @@ final class MainWindow: NSObject,
   private var lastThemeMark = Token()
 
   let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private var cancellables = Set<AnyCancellable>()
 
   private func setupScrollAndCursorDebouncers() {
-    Task { @MainActor in
-      for await action in self.scrollThrottler.publisher
-        .merge(with: self.cursorThrottler.publisher)
-        .values
-      {
+    self.scrollThrottler.publisher
+      .merge(with: self.cursorThrottler.publisher)
+      .receive(on: RunLoop.main)
+      .sink { action in
         self.emit(self.uuidAction(for: action))
       }
-    }
+      .store(in: &self.cancellables)
   }
 
   private func subscribeToStateChange(_ context: ReduxContext) {

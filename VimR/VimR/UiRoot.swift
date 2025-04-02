@@ -44,7 +44,7 @@ final class UiRoot: UiComponent {
         return
       }
 
-      try? self.mainWindows.keys
+      self.mainWindows.keys
         .filter { !uuidsInState.contains($0) }
         .forEach(self.removeMainWindow)
 

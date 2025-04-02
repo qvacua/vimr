@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.10.4
+// Auto generated for nvim v0.11.0
 // See bin/generate_cursor_shape.py
 
 public enum CursorModeShape: String {
@@ -19,5 +19,6 @@ public enum CursorModeShape: String {
   case more
   case moreLastLine
   case showingMatchingParen
+  case terminalMode
   case count
 }

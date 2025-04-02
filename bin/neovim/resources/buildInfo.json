@@ -1,4 +1,4 @@
 {
-  "deploymentTarget": "13",
-  "neovimRelease": "neovim-v0.10.4-20250129.231311"
+  "deploymentTarget": "12",
+  "neovimRelease": "neovim-v0.11.0-20250331.165547"
 }
