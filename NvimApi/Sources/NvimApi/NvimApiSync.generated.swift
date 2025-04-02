@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.10.4.
+// Auto generated for nvim version 0.11.0.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -1199,6 +1199,46 @@ public extension NvimApiSync {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimBufAddHighlight(
+    buffer: NvimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw NvimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
+
+    let reqResult = self.sendRequest(method: "nvim_buf_add_highlight", params: params)
+    switch reqResult {
+    case let .success(value):
+      return Result { () throws(NvimApi.Error) -> Int in
+        try transform(value)
+      }
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
   func nvimBufSetVirtualText(
     buffer: NvimApi.Buffer,
     src_id: Int,
@@ -1933,6 +1973,125 @@ public extension NvimApiSync {
     }
   }
 
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimSubscribe(
+    event: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(event),
+    ]
+
+    let reqResult = self.sendRequest(method: "nvim_subscribe", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimUnsubscribe(
+    event: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(event),
+    ]
+
+    let reqResult = self.sendRequest(method: "nvim_unsubscribe", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimOutWrite(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "nvim_out_write", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimErrWrite(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "nvim_err_write", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimErrWriteln(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "nvim_err_writeln", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func nvimNotify(
+    msg: String,
+    log_level: Int,
+    opts: [String: NvimApi.Value],
+    errWhenBlocked: Bool = true
+  ) -> Result<NvimApi.Value, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(msg),
+      .int(Int64(log_level)),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
+    ]
+
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
+      guard let result = Optional(value) else {
+        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
+
+    let reqResult = self.sendRequest(method: "nvim_notify", params: params)
+    switch reqResult {
+    case let .success(value):
+      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
+        try transform(value)
+      }
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
   func nvimCreateNamespace(
     name: String,
     errWhenBlocked: Bool = true
@@ -2127,45 +2286,6 @@ public extension NvimApiSync {
     switch reqResult {
     case let .success(value):
       return Result { () throws(NvimApi.Error) -> Bool in
-        try transform(value)
-      }
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimBufAddHighlight(
-    buffer: NvimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Result<Int, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .int(Int64(buffer.handle)),
-      .int(Int64(ns_id)),
-      .string(hl_group),
-      .int(Int64(line)),
-      .int(Int64(col_start)),
-      .int(Int64(col_end)),
-    ]
-
-    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
-      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NvimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
-
-    let reqResult = self.sendRequest(method: "nvim_buf_add_highlight", params: params)
-    switch reqResult {
-    case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Int in
         try transform(value)
       }
     case let .failure(error):
@@ -2990,39 +3110,6 @@ public extension NvimApiSync {
     }
   }
 
-  func nvimNotify(
-    msg: String,
-    log_level: Int,
-    opts: [String: NvimApi.Value],
-    errWhenBlocked: Bool = true
-  ) -> Result<NvimApi.Value, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(msg),
-      .int(Int64(log_level)),
-      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
-    ]
-
-    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
-      guard let result = Optional(value) else {
-        throw NvimApi.Error.conversion(type: NvimApi.Value.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
-
-    let reqResult = self.sendRequest(method: "nvim_notify", params: params)
-    switch reqResult {
-    case let .success(value):
-      return Result { () throws(NvimApi.Error) -> NvimApi.Value in
-        try transform(value)
-      }
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
   func nvimStrwidth(
     text: String,
     errWhenBlocked: Bool = true
@@ -3305,54 +3392,6 @@ public extension NvimApiSync {
     ]
 
     let reqResult = self.sendRequest(method: "nvim_echo", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimOutWrite(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "nvim_out_write", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimErrWrite(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "nvim_err_write", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimErrWriteln(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "nvim_err_writeln", params: params)
     switch reqResult {
     case .success:
       return .success(())
@@ -3698,38 +3737,6 @@ public extension NvimApiSync {
     ]
 
     let reqResult = self.sendRequest(method: "nvim_put", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimSubscribe(
-    event: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(event),
-    ]
-
-    let reqResult = self.sendRequest(method: "nvim_subscribe", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  func nvimUnsubscribe(
-    event: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(event),
-    ]
-
-    let reqResult = self.sendRequest(method: "nvim_unsubscribe", params: params)
     switch reqResult {
     case .success:
       return .success(())
@@ -5311,6 +5318,46 @@ public extension NvimApiSync {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
+  func bufferAddHighlight(
+    buffer: NvimApi.Buffer,
+    ns_id: Int,
+    hl_group: String,
+    line: Int,
+    col_start: Int,
+    col_end: Int,
+    errWhenBlocked: Bool = true
+  ) -> Result<Int, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .int(Int64(buffer.handle)),
+      .int(Int64(ns_id)),
+      .string(hl_group),
+      .int(Int64(line)),
+      .int(Int64(col_start)),
+      .int(Int64(col_end)),
+    ]
+
+    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
+      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
+        throw NvimApi.Error.conversion(type: Int.self)
+      }
+
+      return result
+    }
+
+    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
+
+    let reqResult = self.sendRequest(method: "buffer_add_highlight", params: params)
+    switch reqResult {
+    case let .success(value):
+      return Result { () throws(NvimApi.Error) -> Int in
+        try transform(value)
+      }
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
   func vimSetOption(
     name: String,
     value: NvimApi.Value
@@ -5466,40 +5513,85 @@ public extension NvimApiSync {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func bufferAddHighlight(
-    buffer: NvimApi.Buffer,
-    ns_id: Int,
-    hl_group: String,
-    line: Int,
-    col_start: Int,
-    col_end: Int,
-    errWhenBlocked: Bool = true
-  ) -> Result<Int, NvimApi.Error> {
+  func vimSubscribe(
+    event: String
+  ) -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .int(Int64(buffer.handle)),
-      .int(Int64(ns_id)),
-      .string(hl_group),
-      .int(Int64(line)),
-      .int(Int64(col_start)),
-      .int(Int64(col_end)),
+      .string(event),
     ]
 
-    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
-      guard let result = (value.int64Value == nil ? nil : Int(value.int64Value!)) else {
-        throw NvimApi.Error.conversion(type: Int.self)
-      }
-
-      return result
-    }
-
-    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
-
-    let reqResult = self.sendRequest(method: "buffer_add_highlight", params: params)
+    let reqResult = self.sendRequest(method: "vim_subscribe", params: params)
     switch reqResult {
-    case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Int in
-        try transform(value)
-      }
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimUnsubscribe(
+    event: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(event),
+    ]
+
+    let reqResult = self.sendRequest(method: "vim_unsubscribe", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimOutWrite(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "vim_out_write", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimErrWrite(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "vim_err_write", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+
+  @available(*, deprecated, message: "This method has been deprecated.")
+  func vimReportError(
+    str: String
+  ) -> Result<Void, NvimApi.Error> {
+    let params: [NvimApi.Value] = [
+      .string(str),
+    ]
+
+    let reqResult = self.sendRequest(method: "vim_report_error", params: params)
+    switch reqResult {
+    case .success:
+      return .success(())
     case let .failure(error):
       return .failure(.other(cause: error))
     }
@@ -5957,57 +6049,6 @@ public extension NvimApiSync {
   }
 
   @available(*, deprecated, message: "This method has been deprecated.")
-  func vimOutWrite(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "vim_out_write", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimErrWrite(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "vim_err_write", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimReportError(
-    str: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(str),
-    ]
-
-    let reqResult = self.sendRequest(method: "vim_report_error", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetBuffers(
     errWhenBlocked: Bool = true
   ) -> Result<[NvimApi.Buffer], NvimApi.Error> {
@@ -6218,40 +6259,6 @@ public extension NvimApiSync {
     ]
 
     let reqResult = self.sendRequest(method: "vim_set_current_tabpage", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimSubscribe(
-    event: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(event),
-    ]
-
-    let reqResult = self.sendRequest(method: "vim_subscribe", params: params)
-    switch reqResult {
-    case .success:
-      return .success(())
-    case let .failure(error):
-      return .failure(.other(cause: error))
-    }
-  }
-
-  @available(*, deprecated, message: "This method has been deprecated.")
-  func vimUnsubscribe(
-    event: String
-  ) -> Result<Void, NvimApi.Error> {
-    let params: [NvimApi.Value] = [
-      .string(event),
-    ]
-
-    let reqResult = self.sendRequest(method: "vim_unsubscribe", params: params)
     switch reqResult {
     case .success:
       return .success(())

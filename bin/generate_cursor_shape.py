@@ -29,7 +29,8 @@ SHAPE_NAMES = {
     "SHAPE_IDX_MORE":   (14, "more"),
     "SHAPE_IDX_MOREL":  (15, "moreLastLine"),
     "SHAPE_IDX_SM":     (16, "showingMatchingParen"),
-    "SHAPE_IDX_COUNT":  (17, "count"),
+    "SHAPE_IDX_TERM":   (17, "terminalMode"),
+    "SHAPE_IDX_COUNT":  (18, "count"),
 }
 
 

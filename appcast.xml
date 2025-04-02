@@ -6,22 +6,25 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.51.1-20250215.143933</title>
+      <title>v0.52.0-20250401.183326</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250215.143933</sparkle:version>
-      <sparkle:shortVersionString>v0.51.1</sparkle:shortVersionString>
+      <sparkle:version>20250401.183326</sparkle:version>
+      <sparkle:shortVersionString>v0.52.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!</li>
+<li>Neovim 0.11.0 😀</li>
+<li>Dependencies updates:</li>
+<li>ReactiveX/RxSwift@6.9.0</li>
+<li>sparkle-project/Sparkle@2.7.0</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.51.1-20250215.143933
+        https://github.com/qvacua/vimr/releases/tag/v0.52.0-20250401.183326
       </releaseNotesLink>
-      <pubDate>2025-02-15T14:43:21.299652</pubDate>
+      <pubDate>2025-04-01T18:37:01.201137</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.51.1-20250215.143933/VimR-v0.51.1.tar.bz2"
-                 sparkle:edSignature="kqUYl5IwOGbOfWnwlpN0tciIcpnX73ArCdVl8VcYbZ23fF18Gpp+ch+henRVYnkiEUhoocK80nnwlc2Rwm9YAw==" length="18732668"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.52.0-20250401.183326/VimR-v0.52.0.tar.bz2"
+                 sparkle:edSignature="iW5erW6bD7IIqT9zDw1F0oT2QgruEbSwjg2PzNTuei2U7L1l7fXfOqgfWfOMaOOorWA5nTpscQC6Fg51Xe5lCw==" length="19017301"
                  type="application/octet-stream"/>
     </item>
   </channel>

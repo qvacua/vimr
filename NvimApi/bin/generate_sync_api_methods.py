@@ -120,7 +120,7 @@ def nvim_type_to_swift(nvim_type):
     if nvim_type == 'Array':
         return 'NvimApi.Value'
 
-    if nvim_type == 'Dictionary':
+    if nvim_type == 'Dict':
         return 'Dictionary<String, NvimApi.Value>'
 
     if nvim_type == 'Buffer':
@@ -139,6 +139,7 @@ def nvim_type_to_swift(nvim_type):
         match = re.match(r'ArrayOf\((.*?)(?:, \d+)*\)', nvim_type)
         return '[{}]'.format(nvim_type_to_swift(match.group(1)))
 
+    print(f"{nvim_type} not known; defaulting to MessagePackValue")
     return 'NvimApi.Value'
 
 

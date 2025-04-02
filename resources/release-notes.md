@@ -13,6 +13,7 @@
 
 # 0.50.0-20241224.155723
 
+* Neovim 0.11.0 😀
 * Dependencies updates:
   - ReactiveX/RxSwift@6.9.0
   - sparkle-project/Sparkle@2.7.0
