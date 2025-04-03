@@ -12,7 +12,7 @@ final class Throttler<T> {
   init(interval: DispatchQueue.SchedulerTimeType.Stride, latest: Bool = true) {
     self.publisher = self.subject.throttle(
       for: interval,
-      scheduler: DispatchQueue.global(qos: .userInteractive),
+      scheduler: DispatchQueue.main,
       latest: latest
     )
     .eraseToAnyPublisher()
