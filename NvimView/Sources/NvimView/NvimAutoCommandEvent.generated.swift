@@ -1,8 +1,9 @@
-// Auto generated for nvim v0.10.4
+// Auto generated for nvim v0.11.1
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: String {
   case bufadd
+  case bufcreate
   case bufdelete
   case bufenter
   case buffilepost
@@ -12,6 +13,7 @@ enum NvimAutoCommandEvent: String {
   case bufmodifiedset
   case bufnew
   case bufnewfile
+  case bufread
   case bufreadcmd
   case bufreadpost
   case bufreadpre
@@ -19,17 +21,18 @@ enum NvimAutoCommandEvent: String {
   case bufwinenter
   case bufwinleave
   case bufwipeout
+  case bufwrite
   case bufwritecmd
   case bufwritepost
   case bufwritepre
   case chaninfo
   case chanopen
-  case cmdundefined
-  case cmdwinenter
-  case cmdwinleave
   case cmdlinechanged
   case cmdlineenter
   case cmdlineleave
+  case cmdundefined
+  case cmdwinenter
+  case cmdwinleave
   case colorscheme
   case colorschemepre
   case completechanged
@@ -38,6 +41,7 @@ enum NvimAutoCommandEvent: String {
   case cursorhold
   case cursorholdi
   case cursormoved
+  case cursormovedc
   case cursormovedi
   case diagnosticchanged
   case diffupdated
@@ -51,6 +55,7 @@ enum NvimAutoCommandEvent: String {
   case filechangedro
   case filechangedshell
   case filechangedshellpost
+  case fileencoding
   case filereadcmd
   case filereadpost
   case filereadpre
