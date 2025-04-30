@@ -1,5 +1,9 @@
 # Next
 
+* Neovim 0.11.1 😀
+
+# 0.52.0-20250401.183326
+
 * Neovim 0.11.0 😀
 * Dependencies updates:
   - ReactiveX/RxSwift@6.9.0
