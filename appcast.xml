@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.53.0-20250430.152427</title>
+      <title>v0.54.0-20250531.222551</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250430.152427</sparkle:version>
-      <sparkle:shortVersionString>v0.53.0</sparkle:shortVersionString>
+      <sparkle:version>20250531.222551</sparkle:version>
+      <sparkle:shortVersionString>v0.54.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.11.1 😀</li>
+<li>Neovim 0.11.2 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.53.0-20250430.152427
+        https://github.com/qvacua/vimr/releases/tag/v0.54.0-20250531.222551
       </releaseNotesLink>
-      <pubDate>2025-04-30T15:28:15.887287</pubDate>
+      <pubDate>2025-05-31T22:29:12.149530</pubDate>
       <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.53.0-20250430.152427/VimR-v0.53.0.tar.bz2"
-                 sparkle:edSignature="tgYGYncYDsO05JLrTSk4SyS0ntHP+0Qf5sbUvBgYop7fxspyfjNDH0mKFaPfsQ6EPbdibYgvmK/vm5YjrwwVCw==" length="19026813"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.54.0-20250531.222551/VimR-v0.54.0.tar.bz2"
+                 sparkle:edSignature="g79gpjM68uegxBKaS445MUtx1th3XNFNk9/CFopEGlzQ6ZW3YV+dBI5Qn8FlGZKgp9BQUajwTx0lJGZ8ib1DAw==" length="18990998"
                  type="application/octet-stream"/>
     </item>
   </channel>
