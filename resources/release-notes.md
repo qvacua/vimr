@@ -1,5 +1,14 @@
 #Next
 
+* Neovim 0.11.2 😀
+
+# 0.53.0-20250430.152427
+
+* Neovim 0.11.1 😀
+
+# 0.52.0-20250401.183326
+
+* Neovim 0.11.0 😀
 * Dependencies updates:
   - sparkle-project/Sparkle@2.7.0
 
