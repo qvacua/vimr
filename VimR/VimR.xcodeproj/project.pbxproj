@@ -1369,8 +1369,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eonil/FSEvents/";
 			requirement = {
-				kind = revision;
-				revision = a54369c44ab9caabf611d01080e64fe30608d83f;
+				kind = exactVersion;
+				version = 0.1.8;
 			};
 		};
 		4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */ = {
