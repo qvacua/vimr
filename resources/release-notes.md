@@ -1,5 +1,9 @@
 #Next
 
+* Neovim 0.11.3 😀
+
+# 0.54.0-20250531.222551
+
 * Neovim 0.11.2 😀
 
 # 0.53.0-20250430.152427
@@ -7,20 +11,6 @@
 * Neovim 0.11.1 😀
 
 # 0.52.0-20250401.183326
-
-* Neovim 0.11.0 😀
-* Dependencies updates:
-  - sparkle-project/Sparkle@2.7.0
-
-# 0.51.1-20250215.143933 
-
-* GH-1095: Fix: option as meta when control and command are pressed; Thanks @gaelph for the PR!
-
-# 0.51.0-20250129.234141
-
-* Neovim 0.10.4 😀
-
-# 0.50.0-20241224.155723
 
 * Neovim 0.11.0 😀
 * Dependencies updates:
