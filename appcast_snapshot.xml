@@ -6,22 +6,20 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.55.0-20250713.101600</title>
+      <title>SNAPSHOT-20250715.204752</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250713.101600</sparkle:version>
-      <sparkle:shortVersionString>v0.55.0</sparkle:shortVersionString>
+      <sparkle:version>20250715.204752</sparkle:version>
+      <sparkle:shortVersionString>SNAPSHOT-20250715.204752</sparkle:shortVersionString>
       <description><![CDATA[
-    <ul>
-<li>Neovim 0.11.3 😀</li>
-</ul>
+    <p>⚠️ WIP for making VimR Swift 6 compatible. Probably instable! Use it at your own risk!</p>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.55.0-20250713.101600
+        https://github.com/qvacua/vimr/releases/tag/snapshot/20250715.204752
       </releaseNotesLink>
-      <pubDate>2025-07-13T10:19:11.822160</pubDate>
-      <minimumSystemVersion>12.0</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.55.0-20250713.101600/VimR-v0.55.0.tar.bz2"
-                 sparkle:edSignature="Hrs3/f5jK3JAQ9BP9WKGfBMmL5zCBwSZKZaXqRhikzKhbC95372sWHzUM8+ikCJvoKd51JvRL8THZ+8JJ3jlBA==" length="19052463"
+      <pubDate>2025-07-15T20:51:02.392993</pubDate>
+      <minimumSystemVersion>13.5</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20250715.204752/VimR-SNAPSHOT-20250715.204752.tar.bz2"
+                 sparkle:edSignature="RmOQdwf/81ksf84MLAakLtq/zlmtMu1BC32rF/OmOOtXoCZ09Mcl6jUi65a8dkBLC1TxQPbL/Y5+xs9Ko7wcBg==" length="16970438"
                  type="application/octet-stream"/>
     </item>
   </channel>
