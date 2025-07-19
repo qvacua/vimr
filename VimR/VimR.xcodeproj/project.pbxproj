@@ -1367,7 +1367,7 @@
 		};
 		4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eonil/FSEvents/";
+			repositoryURL = "https://github.com/qvacua/FSEvents/";
 			requirement = {
 				kind = exactVersion;
 				version = 0.1.8;
