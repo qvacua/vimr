@@ -58,34 +58,4 @@ enum PrefUtils {
   ) -> String {
     dict[key] as? String ?? defaultValue
   }
-
-  static func saneFont(_ fontName: String, fontSize: CGFloat) -> NSFont {
-    var editorFont = NSFont(name: fontName, size: fontSize) ?? NvimView.defaultFont
-    if !editorFont.isFixedPitch {
-      editorFont = NSFontManager.shared.convert(NvimView.defaultFont, toSize: editorFont.pointSize)
-    }
-    if editorFont.pointSize < NvimView.minFontSize || editorFont.pointSize > NvimView.maxFontSize {
-      editorFont = NSFontManager.shared.convert(editorFont, toSize: NvimView.defaultFont.pointSize)
-    }
-
-    return editorFont
-  }
-
-  static func saneLinespacing(_ fLinespacing: Double) -> Double {
-    let linespacing = fLinespacing
-    guard linespacing >= NvimView.minLinespacing, linespacing <= NvimView.maxLinespacing else {
-      return NvimView.defaultLinespacing
-    }
-
-    return linespacing
-  }
-
-  static func saneCharacterspacing(_ fCharacterspacing: Double) -> Double {
-    let characterspacing = fCharacterspacing
-    guard characterspacing >= 0.0 else {
-      return NvimView.defaultCharacterspacing
-    }
-
-    return characterspacing
-  }
 }

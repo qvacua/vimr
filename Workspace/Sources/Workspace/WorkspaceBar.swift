@@ -7,6 +7,7 @@ import Cocoa
 import os
 import PureLayout
 
+@MainActor
 protocol WorkspaceBarDelegate: AnyObject {
   func resizeWillStart(workspaceBar: WorkspaceBar, tool: WorkspaceTool?)
 
@@ -103,9 +104,9 @@ final class WorkspaceBar: NSView, WorkspaceToolDelegate {
   func dimensionWithoutTool() -> CGFloat {
     switch self.location {
     case .top, .bottom:
-      return WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
+      WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
     case .right, .left:
-      return WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
+      WorkspaceToolButton.dimension() + WorkspaceBar.separatorThickness
     }
   }
 
@@ -788,7 +789,7 @@ extension WorkspaceBar {
 
     self.tools
       .map(\.button)
-      .forEach(self.addSubview)
+      .forEach { self.addSubview($0) }
 
     let dimensionForDraggedButton = self.draggedButtonDimension()
 
@@ -858,9 +859,9 @@ extension WorkspaceBar {
   private func barDimensionWithButtonsWithoutTool() -> CGFloat {
     switch self.location {
     case .top, .bottom:
-      return self.buttonSize().height + WorkspaceBar.separatorThickness
+      self.buttonSize().height + WorkspaceBar.separatorThickness
     case .right, .left:
-      return self.buttonSize().width + WorkspaceBar.separatorThickness
+      self.buttonSize().width + WorkspaceBar.separatorThickness
     }
   }
 

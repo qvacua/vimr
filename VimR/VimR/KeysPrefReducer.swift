@@ -9,10 +9,12 @@ final class KeysPrefReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = KeysPref.Action
 
-  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-    var state = pair.state
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action {
     case let .isLeftOptionMeta(value):
       state.mainWindowTemplate.isLeftOptionMeta = value
       state.mainWindows.keys.forEach { state.mainWindows[$0]?.isLeftOptionMeta = value }
@@ -22,6 +24,6 @@ final class KeysPrefReducer: ReducerType {
       state.mainWindows.keys.forEach { state.mainWindows[$0]?.isRightOptionMeta = value }
     }
 
-    return (state, pair.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 }

@@ -5,6 +5,9 @@
 
 import Cocoa
 
+// Hack
+extension Document: @unchecked Sendable {}
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_: Notification) {}
@@ -18,13 +21,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
-    NSDocumentController.shared
-      .documents
-      .compactMap { $0 as? Document }
-      .forEach { $0.quitWithoutSaving() }
+    let docs = NSDocumentController.shared.documents.compactMap { $0 as? Document }
 
-    return .terminateNow
+    Task {
+      for d in docs {
+        await d.quitWithoutSaving()
+      }
+
+      // Quit the app for real
+      NSApplication.shared.reply(toApplicationShouldTerminate: true)
+    }
+
+    return .terminateLater
   }
 }
 
-private let openNewWindowWhenLaunching = false
+private let openNewWindowWhenLaunching = true

@@ -9,7 +9,9 @@ final class MainWindowReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<MainWindow.Action>
 
-  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
     var state = tuple.state
 
     switch tuple.action.payload {
@@ -38,15 +40,11 @@ final class MainWindowReducer: ReducerType {
     case let .focus(view):
       state.viewToBeFocused = view
 
-    case let .setState(for: tool, with: workspaceTool):
-      state.tools[tool] = WorkspaceToolState(
-        location: workspaceTool.location,
-        dimension: workspaceTool.dimension,
-        open: workspaceTool.isSelected
-      )
-      if workspaceTool.isSelected {
+    case let .setState(for: tool, with: workspaceToolState):
+      state.tools[tool] = workspaceToolState
+      if workspaceToolState.open {
         state.tools
-          .filter { $0 != tool && $1.location == workspaceTool.location }
+          .filter { $0 != tool && $1.location == workspaceToolState.location }
           .forEach { state.tools[$0.0]?.open = false }
       }
 
@@ -54,17 +52,12 @@ final class MainWindowReducer: ReducerType {
       state.orderedTools = []
       for toolPair in tools {
         let toolId = toolPair.0
-        let tool = toolPair.1
+        let toolState = toolPair.1
 
-        state.tools[toolId] = WorkspaceToolState(
-          location: tool.location,
-          dimension: tool.dimension,
-          open: tool.isSelected
-        )
-
-        if tool.isSelected {
+        state.tools[toolId] = toolState
+        if toolState.open {
           state.tools
-            .filter { $0 != toolId && $1.location == tool.location }
+            .filter { $0 != toolId && $1.location == toolState.location }
             .forEach { state.tools[$0.0]?.open = false }
         }
 
@@ -87,6 +80,6 @@ final class MainWindowReducer: ReducerType {
       return tuple
     }
 
-    return (state, tuple.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 }

@@ -4,7 +4,7 @@
  */
 
 import Foundation
-import ShortcutRecorder
+@preconcurrency import ShortcutRecorder
 
 let defaultShortcuts: [String: Shortcut?] = [
   "com.qvacua.vimr.menuitems.edit.copy": Shortcut(keyEquivalent: "⌘C"),

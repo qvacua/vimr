@@ -9,7 +9,9 @@ final class FileBrowserReducer: ReducerType {
   typealias StateType = MainWindow.State
   typealias ActionType = UuidAction<FileBrowser.Action>
 
-  func typedReduce(_ tuple: ReduceTuple) -> ReduceTuple {
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
     var state = tuple.state
 
     switch tuple.action.payload {
@@ -27,6 +29,6 @@ final class FileBrowserReducer: ReducerType {
       state.lastFileSystemUpdate = Marked(state.cwd)
     }
 
-    return (state, tuple.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 }

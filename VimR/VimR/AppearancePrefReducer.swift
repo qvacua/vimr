@@ -9,11 +9,13 @@ final class AppearancePrefReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = AppearancePref.Action
 
-  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-    var state = pair.state
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
+    var state = tuple.state
     var appearance = state.mainWindowTemplate.appearance
 
-    switch pair.action {
+    switch tuple.action {
     case let .setUsesCustomTab(value):
       appearance.usesCustomTab = value
 
@@ -41,7 +43,7 @@ final class AppearancePrefReducer: ReducerType {
 
     self.modify(state: &state, with: appearance)
 
-    return (state, pair.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 
   private func modify(state: inout AppState, with appearance: AppearanceState) {
