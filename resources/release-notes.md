@@ -1,4 +1,9 @@
-#Next
+# Next
+
+* Migration to Swift 6: Use Swift's `async/await` instead of RxSwift.
+* ⚠️ Complex input methods, e.g., CJK input, are not working correctly since some time.
+
+# v0.55.0-20250713.101600
 
 * Neovim 0.11.3 😀
 
