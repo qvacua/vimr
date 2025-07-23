@@ -9,7 +9,7 @@ import os
 extension Logger {
   // Logger's methods requires any object string-interpolated to be CustomStringConvertible.
   // I'm too lazy to make all Action's (enum's) CustomStringConvertible.
-  func debugAny(_ msg: String) {
+  func debugAny(_: String) {
     #if DEBUG
 //      self.debug("\(msg)")
     #endif

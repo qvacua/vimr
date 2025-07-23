@@ -170,6 +170,8 @@ extension MainWindow {
         self.savePanelSheet { url in
           Task { await self.neoVimView.saveCurrentTab(url: url) }
         }
+      } else {
+        await self.neoVimView.saveCurrentTab()
       }
     }
   }

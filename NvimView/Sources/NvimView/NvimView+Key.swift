@@ -6,12 +6,6 @@
 import Cocoa
 import MessagePack
 
-private func p(_ str: String) {
-  #if DEBUG
-    Swift.print("################# \(str)")
-  #endif
-}
-
 public extension NvimView {
   private func isMeta(_ event: NSEvent) -> Bool {
     let modifierFlags = event.modifierFlags
@@ -203,7 +197,6 @@ public extension NvimView {
     // Do we need Task { @MainActor } here?
     Task {
       guard let mt = markedText else {
-        p("marked test is nil in setMarkedText(): \(object), \(selectedRange), \(replacementRange)")
         return
       }
       ugrid.updateMark(markedText: mt, selectedRange: selectedRange)

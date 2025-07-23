@@ -67,7 +67,7 @@ struct Theme: CustomStringConvertible, Sendable {
   var cssCodeColor = NSColor(hex: "24292e")!
   var cssCodeBackgroundColor = NSColor(hex: "1b1f23")!
 
-  public var description: String {
+  var description: String {
     "Theme<" +
       "fg: \(self.foreground.hex), bg: \(self.background.hex), " +
       "hl-fg: \(self.highlightForeground.hex), hl-bg: \(self.highlightBackground.hex), " +

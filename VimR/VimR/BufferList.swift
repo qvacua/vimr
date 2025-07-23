@@ -138,7 +138,7 @@ extension BuffersList {
 // MARK: - NSTableViewDelegate
 
 extension BuffersList {
-  public func tableView(
+  func tableView(
     _ tableView: NSTableView,
     rowViewForRow _: Int
   ) -> NSTableRowView? {
