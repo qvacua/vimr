@@ -6,20 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>SNAPSHOT-20250715.204752</title>
+      <title>v0.56.0-20250723.181258</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250715.204752</sparkle:version>
-      <sparkle:shortVersionString>SNAPSHOT-20250715.204752</sparkle:shortVersionString>
+      <sparkle:version>20250723.181258</sparkle:version>
+      <sparkle:shortVersionString>v0.56.0</sparkle:shortVersionString>
       <description><![CDATA[
-    <p>⚠️ WIP for making VimR Swift 6 compatible. Probably instable! Use it at your own risk!</p>
+    <ul>
+<li>Migration to Swift 6: Use Swift's <code>async/await</code> instead of RxSwift.</li>
+<li>⚠️ Complex input methods, e.g., CJK input, are not working correctly since some time.</li>
+</ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/snapshot/20250715.204752
+        https://github.com/qvacua/vimr/releases/tag/v0.56.0-20250723.181258
       </releaseNotesLink>
-      <pubDate>2025-07-15T20:51:02.392993</pubDate>
+      <pubDate>2025-07-23T18:16:04.851690</pubDate>
       <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/snapshot/20250715.204752/VimR-SNAPSHOT-20250715.204752.tar.bz2"
-                 sparkle:edSignature="RmOQdwf/81ksf84MLAakLtq/zlmtMu1BC32rF/OmOOtXoCZ09Mcl6jUi65a8dkBLC1TxQPbL/Y5+xs9Ko7wcBg==" length="16970438"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.56.0-20250723.181258/VimR-v0.56.0.tar.bz2"
+                 sparkle:edSignature="2/1zyOeyZ+DvwBXwKqHifkwFrHJ1gs7T3NZo+oaj5fs+4txCHDKwP1hO8v1kdL88sXo3B+tQLm5V8wvm4QDUAg==" length="16968898"
                  type="application/octet-stream"/>
     </item>
   </channel>
