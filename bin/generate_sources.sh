@@ -32,7 +32,7 @@ main() {
       swiftformat "../NvimView/Sources/NvimView/NvimCursorModeShape.generated.swift"
     popd > /dev/null
 
-    clean=false ./RxPack/bin/generate_sources.sh
+    clean=false ./NvimApi/bin/generate_sources.sh
 
   popd > /dev/null
   echo "### Successfully generated autocmds."

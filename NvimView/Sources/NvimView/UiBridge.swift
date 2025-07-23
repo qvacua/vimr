@@ -6,14 +6,12 @@
 import Commons
 import Foundation
 import MessagePack
+import NvimApi
 import os
-import RxNeovim
-import RxPack
-import RxSwift
 
-let kMinAlphaVersion = 0
-let kMinMinorVersion = 9
-let kMinMajorVersion = 1
+let kMinMajorVersion = 0
+let kMinMinorVersion = 10
+let kMinPatchVersion = 0
 
 final class UiBridge {
   init(uuid: UUID, config: NvimView.Config) {
@@ -38,30 +36,19 @@ final class UiBridge {
     }
   }
 
-  func runLocalServerAndNvim(width: Int, height: Int) throws -> (Pipe, Pipe, Pipe) {
-    self.initialWidth = width
-    self.initialHeight = height
-
-    return try self.launchNvimUsingLoginShellEnv()
+  func runLocalServerAndNvim(width _: Int, height _: Int) throws -> (Pipe, Pipe, Pipe) {
+    try self.launchNvimUsingLoginShellEnv()
   }
 
-  func quit() -> Completable {
-    Completable.create { completable in
-      self.nvimServerProc?.waitUntilExit()
-      self.log.info("NvimServer \(self.uuid) exited successfully.")
-      completable(.completed)
-      return Disposables.create()
-    }
+  func quit() {
+    self.nvimServerProc?.waitUntilExit()
+    self.log.info("NvimServer \(self.uuid) exited successfully.")
   }
 
-  func forceQuit() -> Completable {
+  func forceQuit() {
     self.log.fault("Force-exiting NvimServer \(self.uuid).")
-
-    return Completable.create { _ in
-      self.forceExitNvimServer()
-      self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
-      return Disposables.create()
-    }
+    self.forceExitNvimServer()
+    self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
   }
 
   private func forceExitNvimServer() {
@@ -100,8 +87,7 @@ final class UiBridge {
     do {
       try process.run()
     } catch {
-      throw RxNeovimApi.Error
-        .exception(message: "Could not run neovim process.")
+      throw NvimApi.Error.exception(message: "Could not run neovim process.")
     }
 
     self.nvimServerProc = process
@@ -124,11 +110,6 @@ final class UiBridge {
   private let nvimBinary: String
 
   private var nvimServerProc: Process?
-
-  private var initialWidth = 40
-  private var initialHeight = 20
-
-  private let disposeBag = DisposeBag()
 }
 
 private let timeout = 5

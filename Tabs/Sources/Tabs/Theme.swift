@@ -6,7 +6,7 @@
 import Cocoa
 import MaterialIcons
 
-public struct Theme {
+public struct Theme: Sendable {
   public static let `default` = Self()
 
   public var separatorColor = NSColor.gridColor
@@ -19,7 +19,7 @@ public struct Theme {
       )
     }
   }
-	
+
   public var selectedBackgroundColor = NSColor.selectedTextBackgroundColor
   public var selectedForegroundColor = NSColor.selectedTextColor {
     didSet {
@@ -29,13 +29,15 @@ public struct Theme {
       )
     }
   }
+
   public var tabSelectedIndicatorColor = NSColor.selectedTextColor
 
   public var tabBarBackgroundColor = NSColor.windowBackgroundColor
   public var tabBarForegroundColor = NSColor.textColor
-	
-  public var titleFont = NSFont.systemFont(ofSize: 11)
-  public var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
+
+  // I guess NSFont should be safe to send around
+  public nonisolated(unsafe) var titleFont = NSFont.systemFont(ofSize: 11)
+  public nonisolated(unsafe) var selectedTitleFont = NSFont.boldSystemFont(ofSize: 11)
 
   public var tabHeight = CGFloat(28)
 
@@ -52,8 +54,9 @@ public struct Theme {
   public var tabBarHeight: CGFloat { self.tabHeight }
   public var tabSpacing = CGFloat(-1)
 
-  public var closeButtonImage: NSImage
-  public var selectedCloseButtonImage: NSImage
+  // I guess NSImage should be safe to send around
+  public nonisolated(unsafe) var closeButtonImage: NSImage
+  public nonisolated(unsafe) var selectedCloseButtonImage: NSImage
 
   public init() {
     self.closeButtonImage = Icon.close.asImage(

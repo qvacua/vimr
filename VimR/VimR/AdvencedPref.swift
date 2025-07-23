@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
 
 final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   typealias StateType = AppState
@@ -16,6 +15,8 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setNvimBinary(String)
   }
 
+  let uuid = UUID()
+
   override var displayName: String {
     "Advanced"
   }
@@ -24,8 +25,8 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     true
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
     self.useSnapshotUpdate = state.useSnapshotUpdate
@@ -36,25 +37,21 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addViews()
     self.updateViews()
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
-          || self.nvimBinary != state.mainWindowTemplate.nvimBinary
-          || self.useSnapshotUpdate != state.useSnapshotUpdate
-        {
-          self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
-          self.nvimBinary = state.mainWindowTemplate.nvimBinary
-          self.useSnapshotUpdate = state.useSnapshotUpdate
+    context.subscribe(uuid: self.uuid) { state in
+      if self.useInteractiveZsh != state.mainWindowTemplate.useInteractiveZsh
+        || self.nvimBinary != state.mainWindowTemplate.nvimBinary
+        || self.useSnapshotUpdate != state.useSnapshotUpdate
+      {
+        self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
+        self.nvimBinary = state.mainWindowTemplate.nvimBinary
+        self.useSnapshotUpdate = state.useSnapshotUpdate
 
-          self.updateViews()
-        }
-      })
-      .disposed(by: self.disposeBag)
+        self.updateViews()
+      }
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var useInteractiveZsh: Bool
   private var useSnapshotUpdate: Bool
@@ -148,7 +145,9 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
       forName: NSControl.textDidEndEditingNotification,
       object: nvimBinaryField,
       queue: nil
-    ) { [weak self] _ in self?.nvimBinaryFieldAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.nvimBinaryFieldAction() }
+    }
   }
 }
 

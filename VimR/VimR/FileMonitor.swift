@@ -8,12 +8,17 @@ import EonilFSEvents
 import Foundation
 import os
 
-final class FileMonitor {
+// TODO: Think about producing an AsyncStream of events
+// actors cannot have deinit where we want to stop the FSStream.
+final class FileMonitor: @unchecked Sendable {
   static let fileSystemEventsLatency = 1.0
 
   private(set) var urlToMonitor = FileUtils.userHomeUrl
 
-  func monitor(url: URL, eventHandler: @escaping (URL) -> Void) throws {
+  func monitor(url: URL, eventHandler: @Sendable @escaping (URL) -> Void) throws {
+    self.monitorLock.lock()
+    defer { self.monitorLock.unlock() }
+
     self.stopMonitor()
     self.urlToMonitor = url
     self.monitor = try EonilFSEventStream(
@@ -26,8 +31,9 @@ final class FileMonitor {
           self?.log.info("Not firing first event (.historyDone): \(event)")
           return
         }
+        let url = URL(fileURLWithPath: event.path)
 
-        eventHandler(URL(fileURLWithPath: event.path))
+        eventHandler(url)
       }
     )
     self.monitor?.setDispatchQueue(self.queue)
@@ -44,6 +50,7 @@ final class FileMonitor {
   }
 
   private var monitor: EonilFSEventStream?
+  private let monitorLock = OSAllocatedUnfairLock()
 
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
   private let queue = DispatchQueue(

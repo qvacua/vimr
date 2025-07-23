@@ -5,8 +5,7 @@
 
 import Cocoa
 import MessagePack
-import RxNeovim
-import RxSwift
+import NvimApi
 
 public extension NvimView {
   override func mouseDown(with event: NSEvent) {
@@ -60,30 +59,31 @@ public extension NvimView {
       mousescroll = ""
     }
 
-    return self.api.nvimExecLua(code: """
-    local arg = {...}
+    Task {
+      await self.api.nvimExecLua(
+        code: """
+        local arg = {...}
 
-    if vim.g.vimr_save_mousescroll == nil then
-        vim.g.vimr_save_mousescroll = vim.o.mousescroll
-    end
+        if vim.g.vimr_save_mousescroll == nil then
+            vim.g.vimr_save_mousescroll = vim.o.mousescroll
+        end
 
-    if arg[1] ~= "" then
-      vim.o.mousescroll = arg[1]
-    end
+        if arg[1] ~= "" then
+          vim.o.mousescroll = arg[1]
+        end
 
-    vim.api.nvim_input(arg[2])
+        vim.api.nvim_input(arg[2])
 
-    -- nvim_input() only queues input, schedule resetting
-    -- mousescroll to after the input hase been processed
-    vim.schedule(function()
-      vim.o.mousescroll = vim.g.vimr_save_mousescroll
-      vim.g.vimr_save_mousescroll = nil
-    end)
-    """, args: [MessagePackValue(mousescroll), MessagePackValue(vimInput)])
-      .subscribe(onFailure: { [weak self] error in
-        self?.log.error("Error in \(#function): \(error)")
-      })
-      .disposed(by: self.disposeBag)
+        -- nvim_input() only queues input, schedule resetting
+        -- mousescroll to after the input hase been processed
+        vim.schedule(function()
+          vim.o.mousescroll = vim.g.vimr_save_mousescroll
+          vim.g.vimr_save_mousescroll = nil
+        end)
+        """,
+        args: [NvimApi.Value(mousescroll), NvimApi.Value(vimInput)]
+      )
+    }
   }
 
   internal func scrollDelta(forEvent event: NSEvent) -> (Int, Int) {
@@ -174,12 +174,9 @@ public extension NvimView {
       self.wrapNamedKeys("\(vimClickCount)\(vimName)") + vimMouseLocation
     }
 
-    self.api
-      .nvimInput(keys: result)
-      .subscribe(onFailure: { [weak self] error in
-        self?.log.error("Error in \(#function): \(error)")
-      })
-      .disposed(by: self.disposeBag)
+    Task {
+      await self.api.nvimInput(keys: result).cauterize()
+    }
   }
 
   private func shouldFireVimInputFor(event: NSEvent, newCellPosition: Position) -> Bool {

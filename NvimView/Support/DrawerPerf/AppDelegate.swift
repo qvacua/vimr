@@ -24,7 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let indices = (0..<count).map { _ in rd.nextInt() % 3 }
 
       let time = self.measure {
-        for i in 0..<count { self.result[i] = self.perf.render(indices[i]) }
+        for i in 0..<count {
+          self.result[i] = self.perf.render(indices[i])
+        }
       }
       results.append(time)
     }

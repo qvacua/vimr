@@ -5,11 +5,11 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
-import ShortcutRecorder
+@preconcurrency import ShortcutRecorder
 
 final class ShortcutValueTransformer: ValueTransformer {
-  static let shared = ShortcutValueTransformer()
+  // Should be fine to be nonisolated
+  nonisolated(unsafe) static let shared = ShortcutValueTransformer()
 
   override class func allowsReverseTransformation() -> Bool { true }
 
@@ -29,9 +29,12 @@ final class ShortcutValueTransformer: ValueTransformer {
 final class ShortcutsPref: PrefPane,
   UiComponent,
   NSOutlineViewDelegate,
-  RecorderControlDelegate
+  @preconcurrency RecorderControlDelegate
 {
   typealias StateType = AppState
+  typealias ActionType = Sendable
+
+  let uuid = UUID()
 
   @objc dynamic var content = [ShortcutItem]()
 
@@ -43,7 +46,7 @@ final class ShortcutsPref: PrefPane,
     didSet { self.updateShortcutService() }
   }
 
-  required init(source _: Observable<StateType>, emitter _: ActionEmitter, state _: StateType) {
+  required init(context _: ReduxContext, state _: StateType) {
     // We know that the identifier is not empty.
     let shortcutSuiteName = Bundle.main.bundleIdentifier! + ".menuitems"
     self.shortcutsUserDefaults = UserDefaults(suiteName: shortcutSuiteName)

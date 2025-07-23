@@ -6,7 +6,6 @@
 import Cocoa
 import NvimView
 import PureLayout
-import RxSwift
 
 final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDelegate,
   NSFontChanging
@@ -24,6 +23,8 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
     case setFontSmoothing(FontSmoothing)
   }
 
+  let uuid = UUID()
+
   override var displayName: String { "Appearance" }
 
   override var pinToContainer: Bool { true }
@@ -37,8 +38,8 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
     self.previewArea.textColor = NSColor.textColor
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     self.font = state.mainWindowTemplate.appearance.font
     self.linespacing = state.mainWindowTemplate.appearance.linespacing
@@ -56,35 +57,31 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
 
     sharedFontManager.target = self
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        let appearance = state.mainWindowTemplate.appearance
+    context.subscribe(uuid: self.uuid) { state in
+      let appearance = state.mainWindowTemplate.appearance
 
-        guard self.font != appearance.font
-          || self.linespacing != appearance.linespacing
-          || self.characterspacing != appearance.characterspacing
-          || self.fontSmoothing != appearance.fontSmoothing
-          || self.usesLigatures != appearance.usesLigatures
-          || self.usesColorscheme != appearance.usesTheme
-          || self.showsFileIcon != appearance.showsFileIcon
-        else { return }
+      guard self.font != appearance.font
+        || self.linespacing != appearance.linespacing
+        || self.characterspacing != appearance.characterspacing
+        || self.fontSmoothing != appearance.fontSmoothing
+        || self.usesLigatures != appearance.usesLigatures
+        || self.usesColorscheme != appearance.usesTheme
+        || self.showsFileIcon != appearance.showsFileIcon
+      else { return }
 
-        self.font = appearance.font
-        self.linespacing = appearance.linespacing
-        self.characterspacing = appearance.characterspacing
-        self.fontSmoothing = appearance.fontSmoothing
-        self.usesLigatures = appearance.usesLigatures
-        self.usesColorscheme = appearance.usesTheme
-        self.showsFileIcon = appearance.showsFileIcon
+      self.font = appearance.font
+      self.linespacing = appearance.linespacing
+      self.characterspacing = appearance.characterspacing
+      self.fontSmoothing = appearance.fontSmoothing
+      self.usesLigatures = appearance.usesLigatures
+      self.usesColorscheme = appearance.usesTheme
+      self.showsFileIcon = appearance.showsFileIcon
 
-        self.updateViews()
-      })
-      .disposed(by: self.disposeBag)
+      self.updateViews()
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var font: NSFont
   private var linespacing: CGFloat
@@ -281,7 +278,9 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
       forName: NSControl.textDidEndEditingNotification,
       object: linespacingField,
       queue: nil
-    ) { [weak self] _ in self?.linespacingAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.linespacingAction() }
+    }
 
     characterspacingTitle.autoPinEdge(
       toSuperviewEdge: .left,
@@ -298,7 +297,9 @@ final class AppearancePref: PrefPane, NSComboBoxDelegate, NSControlTextEditingDe
       forName: NSControl.textDidEndEditingNotification,
       object: characterspacingField,
       queue: nil
-    ) { [weak self] _ in self?.characterspacingAction() }
+    ) { [weak self] _ in
+      Task { @MainActor in self?.characterspacingAction() }
+    }
 
     characterspacingInfo.autoPinEdge(.left, to: .left, of: characterspacingField)
     characterspacingInfo.autoPinEdge(.top, to: .bottom, of: characterspacingField, withOffset: 5)
@@ -447,5 +448,5 @@ extension AppearancePref {
   }
 }
 
-private let sharedFontManager = NSFontManager.shared
-private let sharedFontPanel = NSFontPanel.shared
+@MainActor private let sharedFontManager = NSFontManager.shared
+@MainActor private let sharedFontPanel = NSFontPanel.shared

@@ -666,14 +666,14 @@ class TypesetterWithLigaturesTest: XCTestCase {
   }
 }
 
-private let defaultFont = NSFont(name: "Menlo", size: 13)!
-private let fira = NSFont(name: "FiraCode-Regular", size: 13)!
-private let courierNew = NSFont(name: "Courier New", size: 13)!
-private let monaco = NSFont(name: "Monaco", size: 13)!
-private let emoji = NSFont(name: "AppleColorEmoji", size: 13)!
-private let gothic = NSFont(name: "Apple SD Gothic Neo", size: 13)!
-private let baskerville = NSFont(name: "Baskerville", size: 13)!
-private let kohinoorDevanagari = NSFont(name: "Kohinoor Devanagari", size: 13)!
+nonisolated(unsafe) private let defaultFont = NSFont(name: "Menlo", size: 13)!
+nonisolated(unsafe) private let fira = NSFont(name: "FiraCodeRoman-Regular", size: 13)!
+nonisolated(unsafe) private let courierNew = NSFont(name: "Courier New", size: 13)!
+nonisolated(unsafe) private let monaco = NSFont(name: "Monaco", size: 13)!
+nonisolated(unsafe) private let emoji = NSFont(name: "AppleColorEmoji", size: 13)!
+nonisolated(unsafe) private let gothic = NSFont(name: "Apple SD Gothic Neo", size: 13)!
+nonisolated(unsafe) private let baskerville = NSFont(name: "Baskerville", size: 13)!
+nonisolated(unsafe) private let kohinoorDevanagari = NSFont(name: "Kohinoor Devanagari", size: 13)!
 
 private let defaultWidth = FontUtils
   .cellSize(of: defaultFont, linespacing: 1, characterspacing: 1).width
@@ -681,7 +681,7 @@ private let firaWidth = FontUtils.cellSize(of: fira, linespacing: 1, charactersp
 
 private let offset = CGPoint(x: 7, y: 8)
 
-private let typesetter = Typesetter()
+nonisolated(unsafe) private let typesetter = Typesetter()
 
 private func asciiMarked(_ strings: [String]) -> [[Unicode.UTF16.CodeUnit]] {
   utf16Chars(strings + ["a"])

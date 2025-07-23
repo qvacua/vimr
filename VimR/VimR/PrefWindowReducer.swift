@@ -9,14 +9,16 @@ final class PrefWindowReducer: ReducerType {
   typealias StateType = AppState
   typealias ActionType = PrefWindow.Action
 
-  func typedReduce(_ pair: ReduceTuple) -> ReduceTuple {
-    var state = pair.state
+  func typedReduce(_ tuple: ReduceTuple<StateType, ActionType>)
+    -> ReduceTuple<StateType, ActionType>
+  {
+    var state = tuple.state
 
-    switch pair.action {
+    switch tuple.action {
     case .close:
       state.preferencesOpen = Marked(false)
     }
 
-    return (state, pair.action, true)
+    return ReduceTuple(state: state, action: tuple.action, modified: true)
   }
 }

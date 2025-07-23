@@ -41,7 +41,7 @@ private let ignoreSplittingTestSpecs = [
 
 final class IgnoreSplitTest: XCTestCase {
   func testIgnoreSplitting() {
-    ignoreSplittingTestSpecs.forEach { spec in
+    for spec in ignoreSplittingTestSpecs {
       let url = Bundle.module.url(
         forResource: "IgnoreCollectionTest",
         withExtension: nil,

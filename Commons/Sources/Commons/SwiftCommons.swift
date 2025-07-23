@@ -85,7 +85,9 @@ func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
 {
   var result = [K: V](minimumCapacity: sequence.underestimatedCount)
 
-  for (key, value) in sequence { result[key] = value }
+  for (key, value) in sequence {
+    result[key] = value
+  }
 
   return result
 }

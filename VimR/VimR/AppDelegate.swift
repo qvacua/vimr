@@ -9,7 +9,6 @@ import CommonsObjC
 import DictionaryCoding
 import os
 import PureLayout
-import RxSwift
 import Sparkle
 import UserNotifications
 
@@ -28,6 +27,7 @@ final class UpdaterDelegate: NSObject, SPUUpdaterDelegate {
 }
 
 @main
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
   struct OpenConfig {
     var urls: [URL]
@@ -46,6 +46,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     case preferences
   }
 
+  let uuid = UUID()
+
   override init() {
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
 
@@ -63,7 +65,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     initialAppState.mainWindowTemplate.htmlPreview.server = nil
 
-    self.context = Context(baseServerUrl: baseServerUrl, state: initialAppState)
+    self.context = ReduxContext(baseServerUrl: baseServerUrl, state: initialAppState)
     self.emit = self.context.actionEmitter.typedEmit()
 
     self.openNewMainWindowOnLaunch = initialAppState.openNewMainWindowOnLaunch
@@ -81,25 +83,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     UNUserNotificationCenter.current().delegate = self
   }
 
+  // awakeFromNib is not @MainActor isolated
+  // https://www.massicotte.org/awakefromnib
   override func awakeFromNib() {
     super.awakeFromNib()
 
-    let source = self.context.stateSource
+    MainActor.assumeIsolated {
+      // We want to build the menu items tree at some point, eg in the init() of
+      // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
+      // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
+      self.uiRoot = UiRoot(context: self.context, state: self.context.state)
 
-    // We want to build the menu items tree at some point, eg in the init() of
-    // ShortcutsPref. We have to do that *after* the MainMenu.xib is loaded.
-    // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
-    self.uiRoot = UiRoot(
-      source: source,
-      emitter: self.context.actionEmitter,
-      state: self.context.state
-    )
-
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { appState in
+      self.context.subscribe(uuid: self.uuid) { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
-        self.hasDirtyWindows = appState.mainWindows.values.reduce(false) { $1.isDirty ? true : $0 }
+        self.hasDirtyWindows = appState.mainWindows.values
+          .reduce(false) { $1.isDirty ? true : $0 }
 
         self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
         self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
@@ -109,11 +107,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         }
 
         if appState.quit { NSApp.terminate(self) }
-      })
-      .disposed(by: self.disposeBag)
+      }
+    }
   }
 
-  private let context: Context
+  private let context: ReduxContext
   private let emit: (Action) -> Void
 
   private var uiRoot: UiRoot?
@@ -123,8 +121,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
   private var openNewMainWindowOnLaunch: Bool
   private var openNewMainWindowOnReactivation: Bool
-
-  private let disposeBag = DisposeBag()
 
   private var launching = true
 
@@ -183,42 +179,50 @@ extension AppDelegate {
   func applicationShouldTerminate(_: NSApplication) -> NSApplication.TerminateReply {
     self.context.savePrefs()
 
-    guard self.hasMainWindows else {
-      self.uiRoot?.prepareQuit()
-      return .terminateNow
-    }
-
-    // check first whether there are blocked nvim instances, if so, abort and inform the user
-    if self.uiRoot?.hasBlockedWindows() == true {
-      let alert = NSAlert()
-      alert.messageText = "There are windows waiting for your input."
-      alert.alertStyle = .informational
-      alert.runModal()
-      return .terminateCancel
-    }
-
-    if self.hasDirtyWindows {
-      let alert = NSAlert()
-      let cancelButton = alert.addButton(withTitle: "Cancel")
-      let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
-      cancelButton.keyEquivalent = "\u{1b}"
-      alert.messageText = "There are windows with unsaved buffers!"
-      alert.alertStyle = .warning
-      discardAndQuitButton.keyEquivalentModifierMask = .command
-      discardAndQuitButton.keyEquivalent = "d"
-
-      if alert.runModal() == .alertSecondButtonReturn {
-        self.updateMainWindowTemplateBeforeQuitting()
-        self.uiRoot?.prepareQuit()
-        return .terminateNow
+    Task {
+      guard self.hasMainWindows else {
+        await self.uiRoot?.prepareQuit()
+        NSApplication.shared.reply(toApplicationShouldTerminate: true)
+        return
       }
 
-      return .terminateCancel
+      if await self.uiRoot?.hasBlockedWindows() == true {
+        let alert = NSAlert()
+        alert.messageText = "There are windows waiting for your input."
+        alert.alertStyle = .informational
+        alert.runModal()
+
+        return
+      }
+
+      if self.hasDirtyWindows {
+        let alert = NSAlert()
+        let cancelButton = alert.addButton(withTitle: "Cancel")
+        let discardAndQuitButton = alert.addButton(withTitle: "Discard and Quit")
+        cancelButton.keyEquivalent = "\u{1b}"
+        alert.messageText = "There are windows with unsaved buffers!"
+        alert.alertStyle = .warning
+        discardAndQuitButton.keyEquivalentModifierMask = .command
+        discardAndQuitButton.keyEquivalent = "d"
+
+        if alert.runModal() == .alertSecondButtonReturn {
+          self.updateMainWindowTemplateBeforeQuitting()
+          await self.uiRoot?.prepareQuit()
+
+          NSApplication.shared.reply(toApplicationShouldTerminate: true)
+          return
+        }
+
+        return
+      }
+
+      self.updateMainWindowTemplateBeforeQuitting()
+      await self.uiRoot?.prepareQuit()
+
+      NSApplication.shared.reply(toApplicationShouldTerminate: true)
     }
 
-    self.updateMainWindowTemplateBeforeQuitting()
-    self.uiRoot?.prepareQuit()
-    return .terminateNow
+    return .terminateLater
   }
 
   // For drag & dropping files on the App icon.
@@ -239,9 +243,6 @@ extension AppDelegate {
   }
 
   private func updateMainWindowTemplateBeforeQuitting() {
-    guard let curMainWindow = self.context.state.currentMainWindow else { return }
-
-    self.context.state.mainWindowTemplate = curMainWindow
     self.context.savePrefs()
   }
 }

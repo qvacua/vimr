@@ -4,35 +4,36 @@
  */
 
 import Cocoa
-import EonilFSEvents
+@preconcurrency import EonilFSEvents
 import MaterialIcons
 import os
 import PureLayout
-import RxSwift
 import WebKit
 import Workspace
 
 private let fileSystemEventsLatency = 1.0
 
 final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
+  typealias StateType = MainWindow.State
+
   enum Action {
     case selectHtmlFile(URL)
   }
 
-  typealias StateType = MainWindow.State
-
+  let uuid = UUID()
   let innerCustomToolbar = InnerCustomToolbar()
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
-    self.uuid = state.uuid
+  required init(context: ReduxContext, state: StateType) {
+    self.context = context
+    self.emit = context.actionEmitter.typedEmit()
+    self.mainWinUuid = state.uuid
 
     let configuration = WKWebViewConfiguration()
     configuration.processPool = Defs.webViewProcessPool
     self.webview = WKWebView(frame: CGRect.zero, configuration: configuration)
 
     self.queue = DispatchQueue(
-      label: String(reflecting: HtmlPreviewTool.self) + "-\(self.uuid)",
+      label: String(reflecting: HtmlPreviewTool.self) + "-\(self.mainWinUuid)",
       qos: .userInitiated,
       target: .global(qos: .userInitiated)
     )
@@ -49,47 +50,50 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
       self.webview.load(URLRequest(url: serverUrl))
     }
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if state.viewToBeFocused != nil,
-           case .htmlPreview = state.viewToBeFocused! { self.beFirstResponder() }
+    context.subscribe(uuid: self.uuid) { appState in
+      guard let state = appState.mainWindows[self.mainWinUuid] else { return }
 
-        guard let serverUrl = state.htmlPreview.server else {
-          self.monitor = nil
-          return
-        }
+      if state.viewToBeFocused != nil,
+         case .htmlPreview = state.viewToBeFocused! { self.beFirstResponder() }
 
-        if serverUrl.mark == self.mark { return }
+      guard let serverUrl = state.htmlPreview.server else {
+        self.monitor = nil
+        return
+      }
 
-        self.mark = serverUrl.mark
-        self.reloadWebview(with: serverUrl.payload)
+      if serverUrl.mark == self.mark { return }
 
-        guard let htmlFileUrl = state.htmlPreview.htmlFile else { return }
+      self.mark = serverUrl.mark
+      self.reloadWebview(with: serverUrl.payload)
 
-        do {
-          self.monitor = try EonilFSEventStream(
-            pathsToWatch: [htmlFileUrl.path],
-            sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
-            latency: fileSystemEventsLatency,
-            flags: [.fileEvents],
-            handler: { [weak self] _ in
+      guard let htmlFileUrl = state.htmlPreview.htmlFile else { return }
+
+      do {
+        self.monitor = try EonilFSEventStream(
+          pathsToWatch: [htmlFileUrl.path],
+          sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
+          latency: fileSystemEventsLatency,
+          flags: [.fileEvents],
+          handler: { [weak self] _ in
+            Task { @MainActor in
               self?.reloadWebview(with: serverUrl.payload)
             }
-          )
-          self.monitor?.setDispatchQueue(self.queue)
-          try self.monitor?.start()
-        } catch {
-          self.log.error("Could not start file monitor for \(htmlFileUrl): \(error)")
-        }
+          }
+        )
+        self.monitor?.setDispatchQueue(self.queue)
+        try self.monitor?.start()
+      } catch {
+        self.log.error("Could not start file monitor for \(htmlFileUrl): \(error)")
+      }
 
-        self.innerCustomToolbar
-          .selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
-      })
-      .disposed(by: self.disposeBag)
+      self.innerCustomToolbar
+        .selectHtmlFile.toolTip = (htmlFileUrl.path as NSString).abbreviatingWithTildeInPath
+    }
   }
 
-  deinit {
+  func cleanup() {
+    self.context.unsubscribe(uuid: self.uuid)
+
     self.monitor?.stop()
     self.monitor?.invalidate()
   }
@@ -111,8 +115,9 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.webview.autoPinEdgesToSuperviewEdges()
   }
 
+  private let context: ReduxContext
   private let emit: (UuidAction<Action>) -> Void
-  private let uuid: UUID
+  private let mainWinUuid: UUID
 
   private var mark = Token()
   private var scrollTop = 0
@@ -120,7 +125,6 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private let webview: WKWebView
   private var monitor: EonilFSEventStream?
 
-  private let disposeBag = DisposeBag()
   private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
   private let queue: DispatchQueue
 
@@ -137,7 +141,7 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
       let urls = panel.urls
       guard urls.count == 1 else { return }
 
-      self.emit(UuidAction(uuid: self.uuid, action: .selectHtmlFile(urls[0])))
+      self.emit(UuidAction(uuid: self.mainWinUuid, action: .selectHtmlFile(urls[0])))
     }
   }
 

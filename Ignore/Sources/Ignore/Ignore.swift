@@ -117,4 +117,6 @@ public final class Ignore {
   let remainingDisallowIgnores: ArraySlice<Filter>
 }
 
-private let fm = FileManager.default
+// FileManager is thread-safe:
+// https://developer.apple.com/documentation/foundation/filemanager#1651181
+private nonisolated(unsafe) let fm = FileManager.default

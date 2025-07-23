@@ -5,8 +5,8 @@
 
 import Foundation
 
-public final class ConditionVariable {
-  private(set) var posted: Bool
+public final class ConditionVariable: Sendable {
+  private(set) nonisolated(unsafe) var posted: Bool
 
   public init(posted: Bool = false) {
     self.posted = posted

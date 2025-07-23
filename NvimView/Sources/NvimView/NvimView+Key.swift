@@ -5,18 +5,20 @@
 
 import Cocoa
 import MessagePack
-import RxSwift
 
 public extension NvimView {
   private func isMeta(_ event: NSEvent) -> Bool {
     let modifierFlags = event.modifierFlags
 
     if (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-        || (self.isRightOptionMeta && modifierFlags.contains(.rightOption)) {
+      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+    {
       return true
     }
 
-    if modifierFlags.contains(.control) || modifierFlags.contains(.command) || event.specialKey != nil {
+    if modifierFlags.contains(.control) || modifierFlags.contains(.command) || event
+      .specialKey != nil
+    {
       return true
     }
     return false
@@ -29,7 +31,7 @@ public extension NvimView {
 
     let modifierFlags = event.modifierFlags
 
-    if !isMeta(event) {
+    if !self.isMeta(event) {
       let cocoaHandledEvent = NSTextInputContext.current?.handleEvent(event) ?? false
       if self.hasMarkedText() {
         // mark state ignore Down,Up,Left,Right,=,- etc keys
@@ -55,7 +57,7 @@ public extension NvimView {
     let finalInput = isWrapNeeded ? self.wrapNamedKeys(flags + namedChars)
       : self.vimPlainString(chars)
 
-    _ = self.api.nvimInput(keys: finalInput, errWhenBlocked: false).syncValue()
+    self.apiSync.nvimInput(keys: finalInput, errWhenBlocked: false).cauterize()
 
     self.keyDownDone = true
   }
@@ -70,9 +72,7 @@ public extension NvimView {
     default: return
     }
 
-    // try? self.api.feedkeys(keys: self.vimPlainString(text), mode:"m", escape_ks: false)
-    //  .wait()
-    _ = self.api.nvimInput(keys: self.vimPlainString(text), errWhenBlocked: false).syncValue()
+    self.apiSync.nvimInput(keys: self.vimPlainString(text), errWhenBlocked: false).cauterize()
 
     if self.hasMarkedText() { self._unmarkText() }
     self.keyDownDone = true
@@ -136,12 +136,9 @@ public extension NvimView {
     // Control code \0 causes rpc parsing problems.
     // So we escape as early as possible
     if chars == "\0" {
-      self.api
+      self.apiSync
         .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+        .cauterize()
       return true
     }
 
@@ -149,23 +146,17 @@ public extension NvimView {
     // See special cases in vim/os_win32.c from vim sources
     // Also mentioned in MacVim's KeyBindings.plist
     if flags == .control, chars == "6" {
-      self.api
+      self.apiSync
         .nvimInput(keys: "\u{1e}", errWhenBlocked: false) // AKA ^^
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+        .cauterize()
       return true
     }
 
     if flags == .control, chars == "2" {
       // <C-2> should generate \0, escaping as above
-      self.api
+      self.apiSync
         .nvimInput(keys: self.wrapNamedKeys("Nul"), errWhenBlocked: false)
-        .subscribe(onFailure: { [weak self] error in
-          self?.log.error("Error in \(#function): \(error)")
-        })
-        .disposed(by: self.disposeBag)
+        .cauterize()
       return true
     }
 
@@ -193,20 +184,24 @@ public extension NvimView {
       // FIXME: here not validate location, only delete by length.
       // after delete, cusor should be the location
     }
+
+    // FIXME: We should be careful here re. timing
     if replacementRange.length > 0 {
       let text = String(repeating: "<BS>", count: replacementRange.length)
-      try? self.api.nvimFeedkeys(keys: text, mode: "i", escape_ks: false)
-        .wait()
+      self.apiSync.nvimFeedkeys(keys: text, mode: "i", escape_ks: false).cauterize()
     }
 
     // delay to wait async gui update handled.
     // this avoid insert and then delete flicker
     // the markedPosition is not needed since marked Text should always following cursor..
-    DispatchQueue.main.async { [self, markedText] in
-      ugrid.updateMark(markedText: markedText!, selectedRange: selectedRange)
+    // Do we need Task { @MainActor } here?
+    Task {
+      guard let mt = markedText else {
+        return
+      }
+      ugrid.updateMark(markedText: mt, selectedRange: selectedRange)
       markForRender(region: regionForRow(at: ugrid.cursorPosition))
     }
-    self.keyDownDone = true
   }
 
   func unmarkText() {
@@ -218,7 +213,7 @@ public extension NvimView {
     guard self.hasMarkedText() else { return }
     // wait inserted text gui update event, so hanji in korean get right previous string and can
     // popup candidate window
-    DispatchQueue.main.async { [self] in
+    Task {
       if let markedInfo = self.ugrid.markedInfo {
         self.ugrid.markedInfo = nil
         self.markForRender(region: regionForRow(at: markedInfo.position))

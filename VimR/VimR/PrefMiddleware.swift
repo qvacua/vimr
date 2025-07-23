@@ -4,13 +4,13 @@
  */
 
 import Cocoa
-import DictionaryCoding
+@preconcurrency import DictionaryCoding
 import os
 import UserNotifications
 
 final class PrefMiddleware: MiddlewareType {
   typealias StateType = AppState
-  typealias ActionType = AnyAction
+  typealias ActionType = Sendable
 
   static let compatibleVersion = "168"
 
@@ -111,5 +111,7 @@ final class PrefMiddleware: MiddlewareType {
   }
 }
 
-private let defaults = UserDefaults.standard
+// UserDefaults is thread-safe
+// https://developer.apple.com/documentation/foundation/userdefaults#2926903
+private nonisolated(unsafe) let defaults = UserDefaults.standard
 private let dictEncoder = DictionaryEncoder()

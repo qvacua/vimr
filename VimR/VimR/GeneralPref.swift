@@ -5,7 +5,6 @@
 
 import Cocoa
 import PureLayout
-import RxSwift
 
 final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
   typealias StateType = AppState
@@ -20,6 +19,8 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setCustomMarkdownProcessor(String)
   }
 
+  let uuid = UUID()
+
   override var displayName: String { "General" }
   override var pinToContainer: Bool { true }
 
@@ -27,8 +28,8 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.customMarkdownProcessorAction()
   }
 
-  required init(source: Observable<StateType>, emitter: ActionEmitter, state: StateType) {
-    self.emit = emitter.typedEmit()
+  required init(context: ReduxContext, state: StateType) {
+    self.emit = context.actionEmitter.typedEmit()
 
     super.init(frame: .zero)
 
@@ -53,37 +54,33 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.customMarkdownProcessor = state.mainWindowTemplate.customMarkdownProcessor
     self.customMarkdownProcessorField.stringValue = state.mainWindowTemplate.customMarkdownProcessor
 
-    source
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { state in
-        if self.openWhenLaunchingCheckbox.boolState != state.openNewMainWindowOnLaunch {
-          self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
-        }
+    context.subscribe(uuid: self.uuid) { state in
+      if self.openWhenLaunchingCheckbox.boolState != state.openNewMainWindowOnLaunch {
+        self.openWhenLaunchingCheckbox.boolState = state.openNewMainWindowOnLaunch
+      }
 
-        if self.openOnReactivationCheckbox.boolState != state.openNewMainWindowOnReactivation {
-          self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
-        }
+      if self.openOnReactivationCheckbox.boolState != state.openNewMainWindowOnReactivation {
+        self.openOnReactivationCheckbox.boolState = state.openNewMainWindowOnReactivation
+      }
 
-        if self.openFilesFromApplicationsAction != state.openFilesFromApplicationsAction {
-          self.openFilesFromApplicationsPopup.selectItem(
-            at: AppState.OpenFilesFromApplicationsAction.allCases
-              .firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
-          )
-          self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
-        }
+      if self.openFilesFromApplicationsAction != state.openFilesFromApplicationsAction {
+        self.openFilesFromApplicationsPopup.selectItem(
+          at: AppState.OpenFilesFromApplicationsAction.allCases
+            .firstIndex(of: state.openFilesFromApplicationsAction) ?? 0
+        )
+        self.openFilesFromApplicationsAction = state.openFilesFromApplicationsAction
+      }
 
-        if self.lastWindowAction != state.afterLastWindowAction {
-          self.afterLastWindowPopup.selectItem(
-            at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0
-          )
-        }
-        self.lastWindowAction = state.afterLastWindowAction
-      })
-      .disposed(by: self.disposeBag)
+      if self.lastWindowAction != state.afterLastWindowAction {
+        self.afterLastWindowPopup.selectItem(
+          at: indexToAfterLastWindowAction.firstIndex(of: state.afterLastWindowAction) ?? 0
+        )
+      }
+      self.lastWindowAction = state.afterLastWindowAction
+    }
   }
 
   private let emit: (Action) -> Void
-  private let disposeBag = DisposeBag()
 
   private var openFilesFromApplicationsAction = AppState.OpenFilesFromApplicationsAction.inNewWindow
   private var lastWindowAction = AppState.AfterLastWindowAction.doNothing
@@ -178,8 +175,8 @@ final class GeneralPref: PrefPane, UiComponent, NSTextFieldDelegate {
       forName: NSControl.textDidEndEditingNotification,
       object: customMarkdownProcessorField,
       queue: nil
-    ) { [unowned self] _ in
-      self.customMarkdownProcessorAction()
+    ) { [weak self] _ in
+      Task { @MainActor in self?.customMarkdownProcessorAction() }
     }
 
     let cliToolTitle = self.titleTextField(title: "CLI Tool:")

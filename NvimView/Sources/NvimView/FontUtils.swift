@@ -43,7 +43,11 @@ enum FontUtils {
     return advancement.width
   }
 
-  static func cellSize(of font: NSFont, linespacing: CGFloat, characterspacing: CGFloat) -> CGSize {
+  static func cellSize(
+    of font: NSFont,
+    linespacing: CGFloat,
+    characterspacing: CGFloat
+  ) -> CGSize {
     if let cached = cellSizeWithDefaultLinespacingCache.valueForKey(font) {
       return CGSize(
         width: characterspacing * cached.width,
@@ -83,7 +87,13 @@ enum FontUtils {
     return ctFont
   }
 
-  static func font(fromVimFontSpec fontSpec: String) -> NSFont? {
+  /// We use @MainActor here because
+  /// - NvimView.defaultFont/minFontSize/maxFontSize cannot be accessed despite the fact that
+  ///   they are static sendable constants
+  /// - One could set those properties as nonisolated(unsafe), but then, the compiler warns that
+  ///   nonisolated is not necessary
+  /// - This function is only called from @MainActor
+  @MainActor static func font(fromVimFontSpec fontSpec: String) -> NSFont? {
     let fontParams = fontSpec.components(separatedBy: ":")
 
     guard fontParams.count == 2 else {
@@ -115,7 +125,7 @@ enum FontUtils {
   }
 }
 
-private let fontCache = FifoCache<SizedFontTrait, NSFont>(count: 50)
-private let nilFontCache = FifoCache<SizedFontTrait, Int>(count: 50)
-private let fontHeightCache = FifoCache<NSFont, CGFloat>(count: 100)
-private let cellSizeWithDefaultLinespacingCache = FifoCache<NSFont, CGSize>(count: 100)
+private let fontCache = ThreadSafeFifoCache<SizedFontTrait, NSFont>(count: 50)
+private let nilFontCache = ThreadSafeFifoCache<SizedFontTrait, Int>(count: 50)
+private let fontHeightCache = ThreadSafeFifoCache<NSFont, CGFloat>(count: 100)
+private let cellSizeWithDefaultLinespacingCache = ThreadSafeFifoCache<NSFont, CGSize>(count: 100)

@@ -4,11 +4,10 @@
  */
 
 import Foundation
-import RxNeovim
-import RxPack
+import NvimApi
 
 public extension NvimView {
-  struct Buffer: Equatable {
+  struct Buffer: Equatable, Sendable {
     public static func == (lhs: Buffer, rhs: Buffer) -> Bool {
       guard lhs.handle == rhs.handle else { return false }
 
@@ -17,7 +16,7 @@ public extension NvimView {
       return lhs.url == rhs.url
     }
 
-    public let apiBuffer: RxNeovimApi.Buffer
+    public let apiBuffer: NvimApi.Buffer
     public let url: URL?
     public let type: String
 
@@ -41,16 +40,16 @@ public extension NvimView {
     public var handle: Int { self.apiBuffer.handle }
   }
 
-  struct Window {
-    public let apiWindow: RxNeovimApi.Window
+  struct Window: Sendable {
+    public let apiWindow: NvimApi.Window
     public let buffer: Buffer
     public let isCurrentInTab: Bool
 
     public var handle: Int { self.apiWindow.handle }
   }
 
-  struct Tabpage {
-    public let apiTabpage: RxNeovimApi.Tabpage
+  struct Tabpage: Sendable {
+    public let apiTabpage: NvimApi.Tabpage
     public let windows: [Window]
     public let isCurrent: Bool
 

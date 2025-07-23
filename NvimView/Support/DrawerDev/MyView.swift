@@ -88,7 +88,7 @@ class MyView: NSView {
     )
 
     self.runDrawer.usesLigatures = true
-    runs.forEach { _ in
+    for _ in runs {
       self.runDrawer.draw(
         runs,
         defaultAttributes: defaultAttrs,
