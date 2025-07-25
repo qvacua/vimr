@@ -1,5 +1,10 @@
 # Next
 
+* Fix universal build issue
+* GH-1117: Bug fix re. IME; Thanks @wmil for the PR!
+
+# v0.56.0-20250723.181258
+
 * Migration to Swift 6: Use Swift's `async/await` instead of RxSwift.
 * ⚠️ Complex input methods, e.g., CJK input, are not working correctly since some time.
 
