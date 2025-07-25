@@ -1,5 +1,11 @@
 # Next
 
+* Dependencies updates:
+    - apple/swift-collections@1.2.1
+    - sparkle-project/Sparkle@2.7.1
+
+# 0.56.1-20250725.172504 
+
 * Fix universal build issue
 * GH-1117: Bug fix re. IME; Thanks @wmil for the PR!
 
