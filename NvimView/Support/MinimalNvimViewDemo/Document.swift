@@ -10,7 +10,7 @@ import Tabs
 
 @MainActor
 final class ViewDelegate: NvimViewDelegate, Sendable {
-  var doc: Document?
+  weak var doc: Document?
 
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool {
     false
