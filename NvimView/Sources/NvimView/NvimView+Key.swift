@@ -11,7 +11,8 @@ public extension NvimView {
     let modifierFlags = event.modifierFlags
 
     if (self.isLeftOptionMeta && modifierFlags.contains(.leftOption))
-      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption)) {
+      || (self.isRightOptionMeta && modifierFlags.contains(.rightOption))
+    {
       return true
     }
 
@@ -19,7 +20,7 @@ public extension NvimView {
       return true
     }
 
-    if event.specialKey != nil && !self.hasMarkedText() {
+    if event.specialKey != nil, !self.hasMarkedText() {
       return true
     }
 
