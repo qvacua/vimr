@@ -193,7 +193,7 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     keyEquivalent: ""
   )
 
-  private let log = OSLog(
+  private let log = Logger(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.ui
   )

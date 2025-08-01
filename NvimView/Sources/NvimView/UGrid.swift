@@ -388,7 +388,7 @@ final class UGrid: CustomStringConvertible, Codable {
     }
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 }
 
 extension UGrid {

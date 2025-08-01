@@ -62,7 +62,7 @@ final class HttpServerMiddleware {
     }
   }
 
-  private let log = OSLog(
+  private let log = Logger(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.middleware
   )
@@ -113,7 +113,7 @@ final class HttpServerMiddleware {
     private let baseUrl: URL
     private let cssUrl: URL
 
-    private let log = OSLog(
+    private let log = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )
@@ -163,7 +163,7 @@ final class HttpServerMiddleware {
     private let baseUrl: URL
     private let cssUrl: URL
 
-    private let log = OSLog(
+    private let log = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )
@@ -224,7 +224,7 @@ final class HttpServerMiddleware {
     private let cssUrl: URL
     private let baseCssUrl: URL
 
-    private let log = OSLog(
+    private let log = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )

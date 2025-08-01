@@ -125,7 +125,7 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private let webview: WKWebView
   private var monitor: EonilFSEventStream?
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
   private let queue: DispatchQueue
 
   @available(*, unavailable)

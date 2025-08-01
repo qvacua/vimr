@@ -109,4 +109,4 @@ public extension URL {
   var isPackage: Bool { (try? self.resourceValues(forKeys: [.isPackageKey]))?.isPackage ?? false }
 }
 
-private let log = OSLog(subsystem: "com.qvacua.vimr.commons", category: "general")
+private let log = Logger(subsystem: "com.qvacua.vimr.commons", category: "general")

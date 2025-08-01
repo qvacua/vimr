@@ -106,5 +106,5 @@ final class CoreDataStack {
     }
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }

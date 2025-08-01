@@ -416,7 +416,7 @@ final class FuzzySearchService: @unchecked Sendable {
 
   private var root: URL
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
 }
 
 private let fuzzyMatchChunkSize = 100

@@ -190,7 +190,7 @@ final class FileOutlineView: NSOutlineView,
   private var triangleClosed: NSImage
   private var triangleOpen: NSImage
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   private func initContextMenu() {
     // Loading the nib file will set self.menu.
@@ -278,7 +278,7 @@ final class FileOutlineView: NSOutlineView,
         guard let url = child.node?.url else { return true }
         return newChildUrls.contains(url) == false
       }
-      .forEach { treeNode in self.log.default(treeNode.node) }
+      .forEach { treeNode in self.log.info(treeNode.node) }
 
     self.treeController.removeObjects(atArrangedObjectIndexPaths: indexPathsToRemove)
   }

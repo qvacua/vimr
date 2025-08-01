@@ -333,8 +333,8 @@ public final class NvimView: NSView,
   var tabsCache = [NvimView.Tabpage]()
 
   var markedText: String?
-  let bridgeLogger = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
-  let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
+  let bridgeLogger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
+  let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   let sourceFileUrls: [URL]
 

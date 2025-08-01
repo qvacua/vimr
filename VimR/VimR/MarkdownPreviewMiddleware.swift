@@ -101,7 +101,7 @@ final class MarkdownPreviewMiddleware {
     private let template: String
     private var previewFiles = [UUID: URL]()
 
-    private let log = OSLog(
+    private let log = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )

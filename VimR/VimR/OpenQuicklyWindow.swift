@@ -86,7 +86,7 @@ final class OpenQuicklyWindow: NSObject,
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
-  private let log = OSLog(
+  private let log = Logger(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.ui
   )

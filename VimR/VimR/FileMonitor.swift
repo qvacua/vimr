@@ -52,7 +52,7 @@ final class FileMonitor: @unchecked Sendable {
   private var monitor: EonilFSEventStream?
   private let monitorLock = OSAllocatedUnfairLock()
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
   private let queue = DispatchQueue(
     label: String(reflecting: FileMonitor.self) + "-\(UUID())",
     qos: .userInitiated,

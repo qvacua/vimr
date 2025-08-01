@@ -109,7 +109,7 @@ public enum ProcessUtils {
       }
   }
 
-  private static let logger = OSLog(
+  private static let logger = Logger(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.general
   )

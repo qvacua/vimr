@@ -99,7 +99,7 @@ final class UiBridge {
     return true
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
 
   private let uuid: UUID
 

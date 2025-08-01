@@ -121,7 +121,7 @@ class PerfTester {
     highestValue: 10
   )
 
-  private let log = OSLog(
+  private let log = Logger(
     subsystem: "com.qvacua.DrawerPerf",
     category: "perf-tester"
   )

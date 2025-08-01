@@ -1,4 +1,5 @@
 {
+  "originHash" : "eb33555455a7a7a9bedb6a20a6b0319abe17c28ed9057fee5b2353497d23dfa3",
   "pins" : [
     {
       "identity" : "cwlcatchexception",
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/FSEvents",
       "state" : {
-        "branch" : "release-fseventstream",
-        "revision" : "90ed674df15b5e546a061052dad70228b3300fba"
+        "revision" : "60cc692dd81dab793638b2a7f12e01189646673f",
+        "version" : "0.1.8"
       }
     },
     {
@@ -50,17 +51,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/material-icons",
       "state" : {
-        "revision" : "c3db645060fd27df5f7e0a9873c2af22c280725e",
-        "version" : "0.1.0"
+        "revision" : "96647dc85442d7ccf114b442b6e4b76ab2bee176",
+        "version" : "0.2.0"
       }
     },
     {
       "identity" : "messagepack.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/a2/MessagePack.swift",
+      "location" : "https://github.com/qvacua/MessagePack.swift",
       "state" : {
-        "revision" : "27b35fd49e92fcae395bf8ccb233499d89cc7890",
-        "version" : "4.0.0"
+        "revision" : "e5e7708911a1032f0fa120c38292797734f4160c",
+        "version" : "4.1.0"
       }
     },
     {
@@ -68,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/misc.swift",
       "state" : {
-        "revision" : "7edc70087f16fdc411d24b0fe726e55f9d65d982",
-        "version" : "0.2.0"
+        "revision" : "f09093d8308750544d448f7b305ecf185293547c",
+        "version" : "0.4.0"
       }
     },
     {
@@ -77,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "revision" : "d616f15123bfb36db1b1075153f73cf40605b39d",
-        "version" : "13.0.0"
+        "revision" : "7795df4fff1a9cd231fe4867ae54f4dc5f5734f9",
+        "version" : "13.7.1"
       }
     },
     {
@@ -88,15 +89,6 @@
       "state" : {
         "revision" : "5561683c96dc49b023c1299bfe4f6fbeed5f8199",
         "version" : "3.1.9"
-      }
-    },
-    {
-      "identity" : "rxswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ReactiveX/RxSwift",
-      "state" : {
-        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
-        "version" : "6.6.0"
       }
     },
     {
@@ -113,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "f0ceaf5cc9f3f23daa0ccb6dcebd79fc96ccc7d9",
-        "version" : "2.5.0"
+        "revision" : "df074165274afaa39539c05d57b0832620775b11",
+        "version" : "2.7.1"
       }
     },
     {
@@ -122,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "a902f1823a7ff3c9ab2fba0f992396b948eda307",
-        "version" : "1.0.5"
+        "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
+        "version" : "1.2.1"
       }
     },
     {
@@ -136,5 +128,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

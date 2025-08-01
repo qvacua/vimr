@@ -76,7 +76,7 @@ final class PrefMiddleware: MiddlewareType {
     }
   }
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.middleware)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.middleware)
 
   private var currentFont = NSFont.userFixedPitchFont(ofSize: 13)!
 
@@ -104,7 +104,7 @@ final class PrefMiddleware: MiddlewareType {
       }
     }
 
-    private let log = OSLog(
+    private let log = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )

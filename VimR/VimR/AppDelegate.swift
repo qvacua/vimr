@@ -127,7 +127,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
   private let updaterController: SPUStandardUpdaterController
   private let updaterDelegate = UpdaterDelegate()
 
-  private let log = OSLog(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
+  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
 }
 
 // MARK: - NSApplicationDelegate
