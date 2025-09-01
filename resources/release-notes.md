@@ -1,5 +1,6 @@
 # Next
 
+* Neovim 0.11.4 😀
 * Dependencies updates:
     - apple/swift-collections@1.2.1
     - sparkle-project/Sparkle@2.7.1
