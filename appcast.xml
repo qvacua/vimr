@@ -6,23 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.56.1-20250725.172504</title>
+      <title>v0.57.0-20250901.212156</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250725.172504</sparkle:version>
-      <sparkle:shortVersionString>v0.56.1</sparkle:shortVersionString>
+      <sparkle:version>20250901.212156</sparkle:version>
+      <sparkle:shortVersionString>v0.57.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Fix universal build issue</li>
-<li>GH-1117: Bug fix re. IME; Thanks @wmil for the PR!</li>
+<li>Neovim 0.11.4 😀</li>
+<li>Dependencies updates:<ul>
+<li>apple/swift-collections@1.2.1</li>
+<li>sparkle-project/Sparkle@2.7.1</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.56.1-20250725.172504
+        https://github.com/qvacua/vimr/releases/tag/v0.57.0-20250901.212156
       </releaseNotesLink>
-      <pubDate>2025-07-25T17:28:29.890753</pubDate>
+      <pubDate>2025-09-01T21:25:34.763920</pubDate>
       <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.56.1-20250725.172504/VimR-v0.56.1.tar.bz2"
-                 sparkle:edSignature="4hB/E17UIWw3Qv7W9dEkGUvNIejoBZxtesq6QL2EqX86pWCqj/R5Bp3bNCi6wcfRJ2R5kLirML48Z7DjDlNUBQ==" length="18509506"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.57.0-20250901.212156/VimR-v0.57.0.tar.bz2"
+                 sparkle:edSignature="J4IF7lCYXGvnadptSC0r+WtBN33BVqW4hUspH7XWdHEJKASNgXFhxrDOajuF+siC276/5av3DN2kYUF7c0/hBQ==" length="18531430"
                  type="application/octet-stream"/>
     </item>
   </channel>
