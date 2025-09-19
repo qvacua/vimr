@@ -28,9 +28,7 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
     self.emit = context.actionEmitter.typedEmit()
     self.mainWinUuid = state.uuid
 
-    let configuration = WKWebViewConfiguration()
-    configuration.processPool = Defs.webViewProcessPool
-    self.webview = WKWebView(frame: CGRect.zero, configuration: configuration)
+    self.webview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
 
     self.queue = DispatchQueue(
       label: String(reflecting: HtmlPreviewTool.self) + "-\(self.mainWinUuid)",

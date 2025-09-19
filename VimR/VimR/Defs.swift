@@ -17,6 +17,4 @@ enum Defs {
     static let middleware = "middleware"
     static let service = "service"
   }
-
-  @MainActor static let webViewProcessPool = WKProcessPool()
 }

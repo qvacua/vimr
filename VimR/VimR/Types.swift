@@ -6,9 +6,7 @@
 import Cocoa
 import UserNotifications
 
-extension NSColor: @retroactive @unchecked Sendable {}
 extension NSFont: @retroactive @unchecked Sendable {}
-extension NSImage: @retroactive @unchecked Sendable {}
 extension UNNotification: @retroactive @unchecked Sendable {}
 
 // UNUserNotificationCenter is thread-safe

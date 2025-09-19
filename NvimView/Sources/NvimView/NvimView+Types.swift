@@ -9,10 +9,6 @@ import NvimApi
 import PureLayout
 import Tabs
 
-extension NSColor: @retroactive @unchecked Sendable {}
-// extension NSFont: @retroactive @unchecked Sendable {}
-extension NSImage: @retroactive @unchecked Sendable {}
-
 public extension NvimView {
   struct TabEntry: Hashable, TabRepresentative {
     public static func == (lhs: TabEntry, rhs: TabEntry) -> Bool { lhs.tabpage == rhs.tabpage }
