@@ -12,7 +12,7 @@ jobs:
       matrix:
         runner: [ macos-15-intel, macos-15 ]
         include:
-          - runner: macos-15
+          - runner: macos-15-intel
             arch: x86_64
           - runner: macos-15
             arch: arm64
