@@ -10,9 +10,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        runner: [ macos-13, macos-14 ]
+        runner: [ macos-14-large, macos-14 ]
         include:
-          - runner: macos-13
+          - runner: macos-14-large
             arch: x86_64
           - runner: macos-14
             arch: arm64
