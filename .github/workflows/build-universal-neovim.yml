@@ -10,11 +10,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        runner: [ macos-14-large, macos-14 ]
+        runner: [ macos-15 ]
         include:
-          - runner: macos-14-large
+          - runner: macos-15
             arch: x86_64
-          - runner: macos-14
+          - runner: macos-15
             arch: arm64
     runs-on: ${{ matrix.runner }}
     steps:
@@ -37,7 +37,7 @@ jobs:
 
   publish:
     needs: [macos]
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
