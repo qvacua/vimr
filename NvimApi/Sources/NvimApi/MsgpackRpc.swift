@@ -129,16 +129,15 @@ public actor MsgpackRpc {
       ]
     )
 
-    let future = AsyncFuture<Response>()
-    if expectsReturnValue { self.futures[msgid] = future }
-
     try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
 
     if !expectsReturnValue {
       return .nilResponse(msgid)
     }
 
-    return try await future.value().get()
+    return await withCheckedContinuation { continuation in
+      self.pendingRequests[msgid] = continuation
+    }
   }
 
   // MARK: Private
@@ -154,7 +153,7 @@ public actor MsgpackRpc {
   private var errorPipe: Pipe?
 
   private var nextMsgid: UInt32 = 1
-  private var futures = [UInt32: AsyncFuture<Response>]()
+  private var pendingRequests = [UInt32: CheckedContinuation<Response, Never>]()
 
   private func startReading() async throws {
     Task.detached(priority: .high) {
@@ -202,10 +201,10 @@ public actor MsgpackRpc {
     self.errorPipe = nil
 
     self.streamContinuation.finish()
-    for (msgid, future) in self.futures {
-      future.yield(.success(.nilResponse(msgid)))
+    for (msgid, continuation) in self.pendingRequests {
+      continuation.resume(returning: .nilResponse(msgid))
     }
-    self.futures.removeAll()
+    self.pendingRequests.removeAll()
 
     self.log.info("MsgpackRpc closed")
   }
@@ -280,9 +279,9 @@ public actor MsgpackRpc {
   }
 
   private func processResponse(msgid: UInt32, error: Value, result: Value) {
-    guard let future = self.futures.removeValue(forKey: msgid) else { return }
+    guard let continuation = self.pendingRequests.removeValue(forKey: msgid) else { return }
 
-    future.yield(.success(Response(msgid: msgid, error: error, result: result)))
+    continuation.resume(returning: Response(msgid: msgid, error: error, result: result))
   }
 
   private nonisolated func unpackAllWithRemainder(_ data: Data) throws
