@@ -6,27 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.57.0-20250901.212156</title>
+      <title>v0.57.1-20250921.204618</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20250901.212156</sparkle:version>
-      <sparkle:shortVersionString>v0.57.0</sparkle:shortVersionString>
+      <sparkle:version>20250921.204618</sparkle:version>
+      <sparkle:shortVersionString>v0.57.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.11.4 😀</li>
-<li>Dependencies updates:<ul>
-<li>apple/swift-collections@1.2.1</li>
-<li>sparkle-project/Sparkle@2.7.1</li>
-</ul>
-</li>
+<li>Slight performance improvement.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.57.0-20250901.212156
+        https://github.com/qvacua/vimr/releases/tag/v0.57.1-20250921.204618
       </releaseNotesLink>
-      <pubDate>2025-09-01T21:25:34.763920</pubDate>
+      <pubDate>2025-09-21T20:50:11.633712</pubDate>
       <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.57.0-20250901.212156/VimR-v0.57.0.tar.bz2"
-                 sparkle:edSignature="J4IF7lCYXGvnadptSC0r+WtBN33BVqW4hUspH7XWdHEJKASNgXFhxrDOajuF+siC276/5av3DN2kYUF7c0/hBQ==" length="18531430"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.57.1-20250921.204618/VimR-v0.57.1.tar.bz2"
+                 sparkle:edSignature="bTSHVoeGX+lXN69T5fjBRy80cJSLcz/HlkSL9jTNcBBpStpQiqntzfoZiDqoASLCHcMpEOnduwY8M/BeaEuJBg==" length="18780918"
                  type="application/octet-stream"/>
     </item>
   </channel>
