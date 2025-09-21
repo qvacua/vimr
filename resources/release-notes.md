@@ -1,5 +1,9 @@
 # Next
 
+* Slight performance improvement.
+
+# 0.57.0-20250901.212156
+
 * Neovim 0.11.4 😀
 * Dependencies updates:
     - apple/swift-collections@1.2.1
