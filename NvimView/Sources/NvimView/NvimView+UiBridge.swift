@@ -341,9 +341,12 @@ extension NvimView {
             guard let argArray = arg.arrayValue else { return nil }
             var uupdate = UUpdate(string: "", attrId: nil, repeats: nil)
 
-            if argArray.count > 0, let str = arg[0]?.stringValue { uupdate.string = str }
-            if argArray.count > 1, let attrId = arg[1]?.intValue { uupdate.attrId = attrId }
-            if argArray.count > 2, let repeats = arg[2]?.intValue { uupdate.repeats = repeats }
+            if argArray.count > 0, let str = argArray[0].stringValue {
+              uupdate.string = str
+              uupdate.utf16chars = Array(str.utf16)
+            }
+            if argArray.count > 1, let attrId = argArray[1].intValue { uupdate.attrId = attrId }
+            if argArray.count > 2, let repeats = argArray[2].intValue { uupdate.repeats = repeats }
 
             return uupdate
           }),

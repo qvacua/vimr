@@ -11,10 +11,14 @@ struct UUpdate: Codable {
   var attrId: Int?
   var repeats: Int?
 
+  var utf16chars: [Unicode.UTF16.CodeUnit]
+
   init(string: String, attrId: Int? = nil, repeats: Int? = nil) {
     self.string = string
     self.attrId = attrId
     self.repeats = repeats
+
+    self.utf16chars = Array(string.utf16)
   }
 }
 
@@ -22,11 +26,19 @@ struct UCell: Codable {
   var string: String
   var attrId: Int
 
+  // When computing FontGlueRun, we have to convert the UCell.string to array of UTF16 chars.
+  // The conversion takes almost half of AttributesRunDrawer.fontGlyphRuns().
+  // So, we cache it in the cell to compute it only once when scrolling.
+  var utf16chars: [Unicode.UTF16.CodeUnit]
+
   var flatCharIndex: Int
 
   init(string: String, attrId: Int, flatCharIndex: Int = 0) {
     self.string = string
     self.attrId = attrId
+
+    self.utf16chars = Array(string.utf16)
+
     self.flatCharIndex = flatCharIndex
   }
 }
@@ -247,6 +259,7 @@ final class UGrid: CustomStringConvertible, Codable {
     }
     for column in startCol..<endCol {
       self.cells[row][column].string = chunk[column - startCol]
+      self.cells[row][column].utf16chars = Array(chunk[column - startCol].utf16)
       self.cells[row][column].attrId = attrIds[column - startCol]
     }
 
@@ -284,6 +297,7 @@ final class UGrid: CustomStringConvertible, Codable {
       let reps = chunk[cindex].repeats ?? 1
       for _ in 0..<reps {
         self.cells[row][column].string = chunk[cindex].string
+        self.cells[row][column].utf16chars = chunk[cindex].utf16chars
         let attrId = chunk[cindex].attrId
         if attrId != nil {
           lastAttrId = attrId!
