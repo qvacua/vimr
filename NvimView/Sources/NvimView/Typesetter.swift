@@ -145,17 +145,18 @@ final class Typesetter {
   }
 
   private func ctRuns(from utf16Chars: [Unicode.UTF16.CodeUnit], font: NSFont) -> [CTRun] {
-    if let ctRunsAndFont = self.ctRunsCache.valueForKey(utf16Chars) { return ctRunsAndFont }
+    let str = String(utf16CodeUnits: utf16Chars, count: utf16Chars.count)
+    if let ctRunsAndFont = self.ctRunsCache.valueForKey(str) { return ctRunsAndFont }
 
     let attrStr = NSAttributedString(
-      string: String(utf16CodeUnits: utf16Chars, count: utf16Chars.count),
+      string: str,
       attributes: [.font: font, .ligature: ligatureOption]
     )
 
     let ctLine = CTLineCreateWithAttributedString(attrStr)
     guard let ctRuns = CTLineGetGlyphRuns(ctLine) as? [CTRun] else { return [] }
 
-    self.ctRunsCache.set(ctRuns, forKey: utf16Chars)
+    self.ctRunsCache.set(ctRuns, forKey: str)
 
     return ctRuns
   }
@@ -275,7 +276,7 @@ final class Typesetter {
     }
   }
 
-  private let ctRunsCache = FifoCache<[Unicode.UTF16.CodeUnit], [CTRun]>(count: 5000)
+  private let ctRunsCache = FifoCache<String, [CTRun]>(count: 5000)
 
   private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
