@@ -258,9 +258,10 @@ final class UGrid: CustomStringConvertible, Codable {
       }
     }
     for column in startCol..<endCol {
-      self.cells[row][column].string = chunk[column - startCol]
-      self.cells[row][column].utf16chars = Array(chunk[column - startCol].utf16)
-      self.cells[row][column].attrId = attrIds[column - startCol]
+      let idx = column - startCol
+      self.cells[row][column].string = chunk[idx]
+      self.cells[row][column].utf16chars = Array(chunk[idx].utf16)
+      self.cells[row][column].attrId = attrIds[idx]
     }
 
     if clearCol > endCol {
