@@ -17,7 +17,6 @@ final class ViewDelegate: NvimViewDelegate, Sendable {
   }
 
   func nextEvent(_ event: NvimView.Event) {
-    Swift.print("EVENT: ", event)
     switch event {
     case .neoVimStopped:
       self.doc?.close()
