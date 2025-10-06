@@ -1,6 +1,8 @@
 # Next
 
 * ...
+* Dependencies updates:
+  - Quick/Nimble@13.8.0
 
 # 0.57.2-20251005.154642 
 
