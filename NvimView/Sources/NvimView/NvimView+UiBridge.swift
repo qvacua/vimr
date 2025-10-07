@@ -345,8 +345,8 @@ extension NvimView {
               uupdate.string = str
               uupdate.utf16chars = Array(str.utf16)
             }
-            if argArray.count > 1, let attrId = argArray[1].intValue { uupdate.attrId = attrId }
-            if argArray.count > 2, let repeats = argArray[2].intValue { uupdate.repeats = repeats }
+            if argArray.count > 1 { uupdate.attrId = argArray[1].intValue }
+            if argArray.count > 2 { uupdate.repeats = argArray[2].intValue }
 
             return uupdate
           }),
