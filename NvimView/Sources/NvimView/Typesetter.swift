@@ -256,6 +256,9 @@ final class Typesetter {
   }
 
   private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> [UInt16] {
+    // nvimUtf16Cells.flatMap { $0 } gets the job done, but is slower according to Instruments:
+    // 4% vs. 1.5% when scrolling 10K lines
+    
     nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
       let count = pointer.reduce(0) { acc, elem in acc + elem.count }
 
