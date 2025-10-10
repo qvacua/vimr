@@ -159,37 +159,25 @@ extension NvimView {
   }
 
   private func runs(intersecting rects: [CGRect]) -> [AttributesRun] {
-    rects
-      .map { rect in
-        // Get all Regions that intersects with the given rects.
-        // There can be overlaps between the Regions,
-        // but for the time being we ignore them;
-        // probably not necessary to optimize them away.
-        let region = self.region(for: rect)
-        return (region.rowRange, region.columnRange)
-      }
-      // All RowRuns for all Regions grouped by their row range.
-      .map { self.runs(forRowRange: $0, columnRange: $1) }
-      // Flattened RowRuns for all Regions.
-      .flatMap { $0 }
+    rects.flatMap { rect in
+      let region = self.region(for: rect)
+      return self.runs(forRowRange: region.rowRange, columnRange: region.columnRange)
+    }
   }
 
   private func runs(
     forRowRange rowRange: ClosedRange<Int>,
     columnRange: ClosedRange<Int>
   ) -> [AttributesRun] {
-    rowRange.map { row in
+    rowRange.flatMap { row in
       groupedRanges(of: self.ugrid.cells[row][columnRange])
         .compactMap { range in
-          let cells = self.ugrid.cells[row][range]
-
-          guard let firstCell = cells.first,
-                let attrs = self.cellAttributesCollection.attributes(of: firstCell.attrId)
-          else {
-            // GH-666: FIXME: correct error handling
+          guard let attrs = self.cellAttributesCollection.attributes(
+            of: self.ugrid.cells[row][range.lowerBound].attrId
+          ) else {
             self.log.error(
               "row: \(row), range: \(range): Could not get CellAttributes with ID " +
-                "\(String(describing: cells.first?.attrId))"
+                "\(self.ugrid.cells[row][range.lowerBound].attrId)"
             )
             return nil
           }
@@ -201,7 +189,6 @@ extension NvimView {
           )
         }
     }
-    .flatMap { $0 }
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
