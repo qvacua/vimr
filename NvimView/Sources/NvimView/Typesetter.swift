@@ -233,26 +233,15 @@ final class Typesetter {
     from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     utf16CharsCount: Int
   ) -> [Int] {
-    nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [Int] in
-      var cellIndices = Array(repeating: 0, count: utf16CharsCount)
-      var cellIndex = 0
-      var i = 0
-
-      repeat {
-        if pointer[cellIndex].isEmpty {
-          cellIndex = cellIndex &+ 1
-          continue
-        }
-
-        for _ in 0..<pointer[cellIndex].count {
-          cellIndices[i] = cellIndex
-          i = i + 1
-        }
-        cellIndex = cellIndex &+ 1
-      } while cellIndex < pointer.count
-
-      return cellIndices
+    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
+    var i = 0
+    for (cellIndex, element) in nvimUtf16Cells.enumerated() where !element.isEmpty {
+      for _ in 0..<element.count {
+        cellIndices[i] = cellIndex
+        i += 1
+      }
     }
+    return cellIndices
   }
 
   private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> [UInt16] {
