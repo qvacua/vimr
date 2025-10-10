@@ -225,30 +225,22 @@ private let colorSpace = NSColorSpace.sRGB
 /// present in Commons lib.
 private func groupedRanges(of cells: ArraySlice<UCell>) -> [ClosedRange<Int>] {
   if cells.isEmpty { return [] }
-  if cells.count == 1 { return [cells.startIndex...cells.startIndex] }
 
   var result = [ClosedRange<Int>]()
   result.reserveCapacity(cells.count / 2)
 
-  let inclusiveEndIndex = cells.endIndex - 1
-  var lastStartIndex = cells.startIndex
-  var lastEndIndex = cells.startIndex
-  var lastMarker = cells.first!.attrId // cells is not empty!
-  for i in cells.startIndex..<cells.endIndex {
+  var startIndex = cells.startIndex
+  var lastMarker = cells[startIndex].attrId
+
+  for i in cells.indices.dropFirst() {
     let currentMarker = cells[i].attrId
-
-    if lastMarker == currentMarker {
-      if i == inclusiveEndIndex { result.append(lastStartIndex...i) }
-    } else {
-      result.append(lastStartIndex...lastEndIndex)
+    if currentMarker != lastMarker {
+      result.append(startIndex...(i - 1))
+      startIndex = i
       lastMarker = currentMarker
-      lastStartIndex = i
-
-      if i == inclusiveEndIndex { result.append(i...i) }
     }
-
-    lastEndIndex = i
   }
+  result.append(startIndex...(cells.endIndex - 1))
 
   return result
 }
