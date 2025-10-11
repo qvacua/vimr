@@ -18,7 +18,8 @@ source "${release_spec_file}"
 
 readonly build_folder_path="./build/Build/Products/Release"
 readonly vimr_artifact_path="${build_folder_path}/VimR-${marketing_version}.tar.bz2"
-declare -r -x GH_REPO="qvacua/vimr"
+readonly GH_REPO="qvacua/vimr"
+export GH_REPO
 
 prepare_bin() {
   pushd ./bin >/dev/null
