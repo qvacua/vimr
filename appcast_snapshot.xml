@@ -6,22 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.57.2-20251005.154642</title>
+      <title>v0.57.3-20251011.181129</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20251005.154642</sparkle:version>
-      <sparkle:shortVersionString>v0.57.2</sparkle:shortVersionString>
+      <sparkle:version>20251011.181129</sparkle:version>
+      <sparkle:shortVersionString>v0.57.3</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
 <li>Slight performance improvement.</li>
+<li>Dependencies updates:<ul>
+<li>Quick/Nimble@13.8.0</li>
+<li>sparkle-project/Sparkle@2.8.0</li>
+</ul>
+</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.57.2-20251005.154642
+        https://github.com/qvacua/vimr/releases/tag/v0.57.3-20251011.181129
       </releaseNotesLink>
-      <pubDate>2025-10-05T15:57:50.939083</pubDate>
+      <pubDate>2025-10-11T18:17:52.297064</pubDate>
       <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.57.2-20251005.154642/VimR-v0.57.2.tar.bz2"
-                 sparkle:edSignature="FF3lOyiCxq1hamHky6Z+unVQyzQYXxUmpReCZP7PIXWiEj95C8Lgn0ma1Ll8Jp2IXSoFMJ0MqWr/0uDlHkLsBg==" length="18778991"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.57.3-20251011.181129/VimR-v0.57.3.tar.bz2"
+                 sparkle:edSignature="x/Gq4o/3k/HzYhCHEXmPo9DgN/tI1+mRg0Q73Ag1CN0mO8E696drZkG4/HO8X3lqtJMTmEOw3mpnmUhpwJBEAw==" length="18770437"
                  type="application/octet-stream"/>
     </item>
   </channel>
