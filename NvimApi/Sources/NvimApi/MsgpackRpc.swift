@@ -152,11 +152,13 @@ public actor MsgpackRpc {
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
 
+  private var readingTask: Task<Void, any Swift.Error>?
+
   private var nextMsgid: UInt32 = 1
   private var pendingRequests = [UInt32: CheckedContinuation<Response, Never>]()
 
   private func startReading() async throws {
-    Task.detached(priority: .high) {
+    self.readingTask = Task.detached(priority: .high) {
       self.log.debug("Start reading")
       guard let dataStream = await self.outPipe?.asyncData else {
         throw Error(msg: "Could not get the async data stream")
@@ -195,6 +197,14 @@ public actor MsgpackRpc {
 
     self.log.debug("Cleaning up")
     self.closed = true
+
+    self.readingTask?.cancel()
+    self.readingTask = nil
+
+    self.inPipe?.fileHandleForReading.readabilityHandler = nil
+    self.inPipe?.fileHandleForWriting.closeFile()
+    self.outPipe?.fileHandleForReading.closeFile()
+    self.errorPipe?.fileHandleForReading.closeFile()
 
     self.inPipe = nil
     self.outPipe = nil
