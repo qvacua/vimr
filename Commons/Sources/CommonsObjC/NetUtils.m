@@ -39,7 +39,6 @@ static os_log_t logger;
   if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
     if (errno == EADDRINUSE) {
       os_log_error(logger, "the port is not available.");
-      return 0;
     } else {
       os_log_error(
           logger,
@@ -47,13 +46,15 @@ static os_log_t logger;
           errno,
           strerror(errno)
       );
-      return 0;
     }
+    close(sock);
+    return 0;
   }
 
   socklen_t len = sizeof(sin);
   if (getsockname(sock, (struct sockaddr *) &sin, &len) == -1) {
     os_log_error(logger, "getsockname failed.");
+    close(sock);
     return 0;
   }
 
