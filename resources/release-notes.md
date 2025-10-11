@@ -1,8 +1,10 @@
 # Next
 
 * ...
+* Slight performance improvement.
 * Dependencies updates:
-  - Quick/Nimble@13.8.0
+    - Quick/Nimble@13.8.0
+    - sparkle-project/Sparkle@2.8.0
 
 # 0.57.2-20251005.154642 
 
