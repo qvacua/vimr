@@ -9,19 +9,20 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 
-static os_log_t logger;
+static os_log_t logger = NULL;
 
 @implementation NetUtils
+
++ (void)initialize {
+  if (self == [NetUtils class]) {
+    logger = os_log_create("com.qvacua.VimR", "general");
+  }
+}
 
 // from https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/NetworkingTopics/Articles/UsingSocketsandSocketStreams.html#//apple_ref/doc/uid/CH73-SW9
 // and http://stackoverflow.com/a/20850182/6939513
 // slightly modified
 + (in_port_t)openPort {
-  static dispatch_once_t token;
-  dispatch_once(&token, ^{
-    // See Defs.swift
-    logger = os_log_create("com.qvacua.VimR", "general");
-  });
 
   const int sock = socket(AF_INET, SOCK_STREAM, 0);
   if (sock < 0) {
