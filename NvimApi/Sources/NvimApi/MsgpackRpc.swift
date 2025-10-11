@@ -12,6 +12,8 @@ extension Pipe {
 
     init(pipe: Pipe) {
       self.dataStream = AsyncStream { continuation in
+        continuation.onTermination = { _ in pipe.fileHandleForReading.readabilityHandler = nil }
+
         pipe.fileHandleForReading.readabilityHandler = { handle in
           let data = handle.availableData
 
@@ -21,8 +23,6 @@ extension Pipe {
           } else {
             continuation.yield(data)
           }
-
-          continuation.onTermination = { _ in pipe.fileHandleForReading.readabilityHandler = nil }
         }
       }
     }
