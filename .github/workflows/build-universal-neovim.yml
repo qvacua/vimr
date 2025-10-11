@@ -6,75 +6,57 @@ on:
       - neovim-v[0-9]+.[0-9]+.[0-9]+-*
 
 jobs:
-  macos:
-    strategy:
-      fail-fast: true
-      matrix:
-        runner: [ macos-15-intel, macos-15 ]
-        include:
-          - runner: macos-15-intel
-            arch: x86_64
-          - runner: macos-15
-            arch: arm64
-    runs-on: ${{ matrix.runner }}
+  build-x86:
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
         with:
-          # Perform a full checkout #13471
           fetch-depth: 0
           submodules: true
-      - name: Install dependencies
-        run: brew bundle
-
-      - name: Build neovim
-        run: clean=true ./bin/neovim/bin/build_neovim.sh
-
+      - run: brew bundle
+      - run: clean=true ./bin/neovim/bin/build_neovim.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: nvim-macos-${{ matrix.arch }}
-          path: Neovim/build/nvim-macos-${{ matrix.arch }}.tar.gz
+          name: nvim-macos-x86_64
+          path: Neovim/build/nvim-macos-x86_64.tar.gz
+          retention-days: 1
+
+  build-arm:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - run: brew bundle
+      - run: clean=true ./bin/neovim/bin/build_neovim.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nvim-macos-arm64
+          path: Neovim/build/nvim-macos-arm64.tar.gz
           retention-days: 1
 
   publish:
-    needs: [macos]
+    needs: [build-x86, build-arm]
     runs-on: macos-15
-    env:
-      GH_REPO: ${{ github.repository }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
     steps:
-      # Must perform checkout first, since it deletes the target directory
-      # before running, and would therefore delete the downloaded artifacts
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - uses: actions/download-artifact@v4
-
-      - name: Install dependencies
-        run: brew bundle
-
-      - name: Set tag name env
-        run: |
-          TAG_NAME=${{ github.ref }}
-          echo "TAG_NAME=${TAG_NAME#refs/tags/}" >> $GITHUB_ENV
-
-      - name: Move downloaded artifacts
-        run: |
-          mv nvim-macos-x86_64/* .
-          mv nvim-macos-arm64/* .
-          rm -r nvim-macos-x86_64
-          rm -r nvim-macos-arm64
-
-      - name: Create universal Neovim
-        run: ./bin/neovim/bin/build_universal_neovim.sh
-
-      # Set as prerelease such that the latest VimR release is marked as the latest stable release
-      - name: Publish release
-        run: |
-          gh release create $TAG_NAME \
-             --prerelease \
-             --title "Universal ${TAG_NAME}" \
-             --notes "Neovim universal build with `libintl`, not signed." \
-             --target $GITHUB_SHA nvim-macos-x86_64.tar.gz nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
+      - run: brew bundle
+      - run: |
+          mv nvim-macos-*/* .
+          rm -r nvim-macos-x86_64 nvim-macos-arm64
+      - run: ./bin/neovim/bin/build_universal_neovim.sh
+      - run: |
+          gh release create ${{ github.ref_name }} \
+            --prerelease \
+            --title "Universal ${{ github.ref_name }}" \
+            --notes "Neovim universal build with libintl, not signed." \
+            --target ${{ github.sha }} \
+            nvim-macos-x86_64.tar.gz nvim-macos-arm64.tar.gz nvim-macos-universal.tar.bz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
