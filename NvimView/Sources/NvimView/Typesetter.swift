@@ -228,20 +228,27 @@ final class Typesetter {
 
     return result
   }
-
+  
+  // We could combine cellIndices and utf16Chars into one function such that
+  // we have only one pass through nvimUtf16Cells.
+  // According to Instruments, no real benefit, it seems to take even more time: 3% vs. 5%
   private func cellIndices(
     from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]],
     utf16CharsCount: Int
   ) -> [Int] {
-    var cellIndices = Array(repeating: 0, count: utf16CharsCount)
-    var i = 0
-    for (cellIndex, element) in nvimUtf16Cells.enumerated() where !element.isEmpty {
-      for _ in 0..<element.count {
-        cellIndices[i] = cellIndex
-        i += 1
+    nvimUtf16Cells.withUnsafeBufferPointer { pointer in
+      Array(unsafeUninitializedCapacity: utf16CharsCount) { buffer, count in
+        var i = 0
+        for cellIndex in 0..<pointer.count {
+          let element = pointer[cellIndex]
+          for _ in 0..<element.count {
+            buffer[i] = cellIndex
+            i += 1
+          }
+        }
+        count = utf16CharsCount
       }
     }
-    return cellIndices
   }
 
   private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> [UInt16] {
@@ -267,6 +274,7 @@ final class Typesetter {
       }
     }
   }
+
 
   private let ctRunsCache = FifoCache<String, [CTRun]>(count: 5000)
 
