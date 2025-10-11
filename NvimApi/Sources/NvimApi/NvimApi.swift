@@ -118,30 +118,28 @@ func msgPackArrayDictToSwift(_ array: [NvimApi.Value]?) -> [[String: NvimApi.Val
     .compactMap { d in msgPackDictToSwift(d) }
 }
 
+typealias Transform<Key, Value, K, V> = ((key: Key, value: Value)) throws -> (K, V)
+typealias TransformOptional<Key, Value, K, V> = ((key: Key, value: Value)) throws -> (K, V)?
+
 extension Dictionary {
-  func mapToDict<
-    K,
-    V
-  >(_ transform: ((key: Key, value: Value)) throws -> (K, V)) rethrows -> [K: V] {
-    let array = try self.map(transform)
-    return self.tuplesToDict(array)
+  func mapToDict<K, V>(_ transform: Transform<Key, Value, K, V>) rethrows -> [K: V] {
+    var result = [K: V](minimumCapacity: self.count)
+
+    for (key, value) in self {
+      let (nk, nv) = try transform((key: key, value: value))
+      result[nk] = nv
+    }
+
+    return result
   }
 
-  func compactMapToDict<
-    K,
-    V
-  >(_ transform: ((key: Key, value: Value)) throws -> (K, V)?) rethrows -> [K: V] {
-    let array = try self.compactMap(transform)
-    return self.tuplesToDict(array)
-  }
+  func compactMapToDict<K, V>(_ transform: TransformOptional<Key, Value, K, V>) rethrows -> [K: V] {
+    var result = [K: V](minimumCapacity: self.count)
 
-  func tuplesToDict<K: Hashable, V, S: Sequence>(_ sequence: S)
-    -> [K: V] where S.Iterator.Element == (K, V)
-  {
-    var result = [K: V](minimumCapacity: sequence.underestimatedCount)
-
-    for (key, value) in sequence {
-      result[key] = value
+    for (key, value) in self {
+      if let (nk, nv) = try transform((key: key, value: value)) {
+        result[nk] = nv
+      }
     }
 
     return result
