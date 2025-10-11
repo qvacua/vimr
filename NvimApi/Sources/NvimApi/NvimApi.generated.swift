@@ -44,7 +44,7 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<NvimApi.Value, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -75,7 +75,7 @@ public extension NvimApi {
   ) async -> Result<Int, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       event,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -123,7 +123,7 @@ public extension NvimApi {
     expectsReturnValue: Bool = false
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -144,7 +144,7 @@ public extension NvimApi {
   ) async -> Result<Int, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(name),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -213,7 +213,7 @@ public extension NvimApi {
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       event,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -265,7 +265,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .bool(send_buffer),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
@@ -424,7 +424,7 @@ public extension NvimApi {
       .int(Int64(start_col)),
       .int(Int64(end_row)),
       .int(Int64(end_col)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String] in
@@ -583,7 +583,7 @@ public extension NvimApi {
       .string(mode),
       .string(lhs),
       .string(rhs),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -750,7 +750,7 @@ public extension NvimApi {
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -837,7 +837,7 @@ public extension NvimApi {
       .string(name),
       .int(Int64(line)),
       .int(Int64(col)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Bool in
@@ -933,7 +933,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(str),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -963,8 +963,8 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<String, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(cmd.mapToDict { (Value.string($0), $1) }),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(cmd.mapToDict { (NvimApi.Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> String in
@@ -997,7 +997,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .string(name),
       command,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -1041,7 +1041,7 @@ public extension NvimApi {
       .int(Int64(buffer.handle)),
       .string(name),
       command,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -1081,7 +1081,7 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -1112,7 +1112,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -1340,7 +1340,7 @@ public extension NvimApi {
       .int(Int64(src_id)),
       .int(Int64(line)),
       chunks,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -2192,7 +2192,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .string(msg),
       .int(Int64(log_level)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -2283,7 +2283,7 @@ public extension NvimApi {
       .int(Int64(buffer.handle)),
       .int(Int64(ns_id)),
       .int(Int64(id)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [Int] in
@@ -2323,7 +2323,7 @@ public extension NvimApi {
       .int(Int64(ns_id)),
       start,
       end,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -2360,7 +2360,7 @@ public extension NvimApi {
       .int(Int64(ns_id)),
       .int(Int64(line)),
       .int(Int64(col)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -2449,7 +2449,7 @@ public extension NvimApi {
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -2470,7 +2470,7 @@ public extension NvimApi {
   ) async -> Result<NvimApi.Value, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(name),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -2503,7 +2503,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .string(name),
       value,
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -2551,7 +2551,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(name),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -2796,7 +2796,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .int(Int64(width)),
       .int(Int64(height)),
-      .map(options.mapToDict { (Value.string($0), $1) }),
+      .map(options.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -3036,7 +3036,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -3069,7 +3069,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
       .string(name),
-      .map(val.mapToDict { (Value.string($0), $1) }),
+      .map(val.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -3088,7 +3088,7 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<Int, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -3594,7 +3594,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       chunks,
       .bool(history),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -3792,7 +3792,7 @@ public extension NvimApi {
   ) async -> Result<Int, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> Int in
@@ -4029,7 +4029,7 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -4058,7 +4058,7 @@ public extension NvimApi {
     errWhenBlocked: Bool = true
   ) async -> Result<NvimApi.Value, NvimApi.Error> {
     let params: [NvimApi.Value] = [
-      .map(dict.mapToDict { (Value.string($0), $1) }),
+      .map(dict.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -4140,7 +4140,7 @@ public extension NvimApi {
       .string(mode),
       .string(lhs),
       .string(rhs),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -4212,10 +4212,10 @@ public extension NvimApi {
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(name),
-      .map(version.mapToDict { (Value.string($0), $1) }),
+      .map(version.mapToDict { (NvimApi.Value.string($0), $1) }),
       .string(type),
-      .map(methods.mapToDict { (Value.string($0), $1) }),
-      .map(attributes.mapToDict { (Value.string($0), $1) }),
+      .map(methods.mapToDict { (NvimApi.Value.string($0), $1) }),
+      .map(attributes.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -4381,7 +4381,7 @@ public extension NvimApi {
       .int(Int64(item)),
       .bool(insert),
       .bool(finish),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -4431,7 +4431,7 @@ public extension NvimApi {
   ) async -> Result<NvimApi.Value, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(name),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Value in
@@ -4462,7 +4462,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(str),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -4493,7 +4493,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .string(src),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
@@ -4671,7 +4671,7 @@ public extension NvimApi {
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .bool(enter),
-      .map(config.mapToDict { (Value.string($0), $1) }),
+      .map(config.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> NvimApi.Window in
@@ -4702,7 +4702,7 @@ public extension NvimApi {
   ) async -> Result<Void, NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
-      .map(config.mapToDict { (Value.string($0), $1) }),
+      .map(config.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     if expectsReturnValue, let error = await self.blockedError() { return .failure(error) }
@@ -5241,7 +5241,7 @@ public extension NvimApi {
   ) async -> Result<[String: NvimApi.Value], NvimApi.Error> {
     let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
-      .map(opts.mapToDict { (Value.string($0), $1) }),
+      .map(opts.mapToDict { (NvimApi.Value.string($0), $1) }),
     ]
 
     let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] in
