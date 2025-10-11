@@ -138,10 +138,10 @@ final class Typesetter {
         }
       }
 
-      return groupRuns.flatMap { $0 }
+      return groupRuns.flatMap(\.self)
     }
 
-    return runs.flatMap { $0 }
+    return runs.flatMap(\.self)
   }
 
   private func ctRuns(from utf16Chars: [Unicode.UTF16.CodeUnit], font: NSFont) -> [CTRun] {
@@ -228,7 +228,7 @@ final class Typesetter {
 
     return result
   }
-  
+
   // We could combine cellIndices and utf16Chars into one function such that
   // we have only one pass through nvimUtf16Cells.
   // According to Instruments, no real benefit, it seems to take even more time: 3% vs. 5%
@@ -254,7 +254,7 @@ final class Typesetter {
   private func utf16Chars(from nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]) -> [UInt16] {
     // nvimUtf16Cells.flatMap { $0 } gets the job done, but is slower according to Instruments:
     // 4% vs. 1.5% when scrolling 10K lines
-    
+
     nvimUtf16Cells.withUnsafeBufferPointer { pointer -> [UInt16] in
       let count = pointer.reduce(0) { acc, elem in acc + elem.count }
 
@@ -274,7 +274,6 @@ final class Typesetter {
       }
     }
   }
-
 
   private let ctRunsCache = FifoCache<String, [CTRun]>(count: 5000)
 

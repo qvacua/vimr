@@ -137,7 +137,7 @@ private struct ParagraphStyles: ParagraphStyleCollection {
   let body: NSParagraphStyle
   let code: NSParagraphStyle
 
-  public init() {
+  init() {
     let headingStyle = NSParagraphStyle()
 
     let bodyStyle = NSMutableParagraphStyle()

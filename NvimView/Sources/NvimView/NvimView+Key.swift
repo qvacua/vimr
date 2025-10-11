@@ -289,7 +289,7 @@ public extension NvimView {
           aRange.location <= cell.flatCharIndex && cell.flatCharIndex <= aRange.inclusiveEndIndex
         }
       }
-      .flatMap { $0 }
+      .flatMap(\.self)
       .map(\.string)
       .joined()
 

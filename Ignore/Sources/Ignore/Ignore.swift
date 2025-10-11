@@ -12,7 +12,7 @@ public final class Ignore {
     let urls = [
       GitUtils.gitDirInfoExcludeUrl(base: base, gitRoot: gitRoot),
       GitUtils.globalGitignoreFileUrl(),
-    ].compactMap { $0 }
+    ].compactMap(\.self)
 
     if urls.isEmpty { return nil }
 

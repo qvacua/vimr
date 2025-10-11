@@ -17,7 +17,7 @@ final class HorizontalOnlyScrollView: NSScrollView {
     self.verticalScrollElasticity = .none
   }
 
-  override public func scrollWheel(with event: NSEvent) {
+  override func scrollWheel(with event: NSEvent) {
     guard let cgEvent = event.cgEvent?.copy() else {
       super.scrollWheel(with: event)
       return

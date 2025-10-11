@@ -231,12 +231,12 @@ public extension NvimView {
   func open(urls: [URL]) async {
     guard let tabs = await self.allTabs() else { return }
 
-    let buffers = tabs.map(\.windows).flatMap { $0 }.map(\.buffer)
+    let buffers = tabs.map(\.windows).flatMap(\.self).map(\.buffer)
     let currentBufferIsTransient = buffers.first { $0.isCurrent }?.isTransient ?? false
 
     for url in urls {
       let bufExists = buffers.contains { $0.url == url }
-      let wins = tabs.map(\.windows).flatMap { $0 }
+      let wins = tabs.map(\.windows).flatMap(\.self)
 
       if let win = bufExists ? wins.first(where: { win in win.buffer.url == url }) : nil {
         await self.api.nvimSetCurrentWin(window: .init(win.handle)).cauterize()
@@ -270,7 +270,7 @@ public extension NvimView {
 
   func select(buffer: NvimView.Buffer) async {
     guard let tabs = await self.allTabs() else { return }
-    let allWins = tabs.map(\.windows).flatMap { $0 }
+    let allWins = tabs.map(\.windows).flatMap(\.self)
 
     if let win = allWins.first(where: { $0.buffer == buffer }) {
       return await self.api.nvimSetCurrentWin(window: .init(win.handle)).cauterize()

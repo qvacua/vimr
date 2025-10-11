@@ -305,7 +305,7 @@ extension AppDelegate {
     }
 
     let line = self.queryParam(linePrefix, from: rawParams, transforming: { Int($0) })
-      .compactMap { $0 }.first
+      .compactMap(\.self).first
     let urls = self.queryParam(
       filePrefix,
       from: rawParams,

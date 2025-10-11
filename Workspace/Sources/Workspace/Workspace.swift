@@ -60,7 +60,7 @@ public final class Workspace: NSView, WorkspaceBarDelegate {
   }
 
   public var orderedTools: [WorkspaceTool] {
-    self.bars.values.reduce([]) { [$0, $1.tools].flatMap { $0 } }
+    self.bars.values.reduce([]) { [$0, $1.tools].flatMap(\.self) }
   }
 
   public let mainView: NSView
