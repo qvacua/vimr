@@ -1,6 +1,9 @@
 # Next
 
 * ...
+
+# 0.57.3-20251011.181129
+
 * Slight performance improvement.
 * Dependencies updates:
     - Quick/Nimble@13.8.0
