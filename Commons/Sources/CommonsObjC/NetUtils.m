@@ -30,12 +30,12 @@ static os_log_t logger = NULL;
     return 0;
   }
 
-  struct sockaddr_in sin;
-  memset(&sin, 0, sizeof(sin));
-
-  sin.sin_len = sizeof(sin);
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons(0);
+  struct sockaddr_in sin = {
+    .sin_len = sizeof(sin),
+    .sin_family = AF_INET,
+    .sin_port = htons(0),
+    .sin_addr.s_addr = INADDR_ANY
+  };
 
   if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
     if (errno == EADDRINUSE) {
