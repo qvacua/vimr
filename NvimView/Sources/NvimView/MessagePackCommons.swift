@@ -15,17 +15,6 @@ extension MessagePackValue {
 }
 
 enum MessagePackUtils {
-  static func value<T>(from data: Data?, conversion: (MessagePackValue) -> T?) -> T? {
-    guard let d = data else { return nil }
-
-    do { return try conversion(unpack(d).value) }
-    catch { return nil }
-  }
-
-  static func value<T>(from v: MessagePackValue, conversion: (MessagePackValue) -> T?) -> T? {
-    conversion(v)
-  }
-
   static func array<T>(
     from value: MessagePackValue, ofSize size: Int,
     conversion: (MessagePackValue) -> T?
@@ -34,12 +23,5 @@ enum MessagePackUtils {
     guard array.count == size else { return nil }
 
     return array.compactMap(conversion)
-  }
-
-  static func value(from data: Data?) -> MessagePackValue? {
-    guard let d = data else { return nil }
-
-    do { return try unpack(d).value }
-    catch { return nil }
   }
 }
