@@ -3,8 +3,8 @@
  * See LICENSE
  */
 
+import Commons
 import Foundation
-import WebKit
 
 enum Defs {
   static let loggerSubsystem = Bundle.main.bundleIdentifier!
@@ -18,3 +18,5 @@ enum Defs {
     static let service = "service"
   }
 }
+
+let dlog = DevLogger.shared

@@ -11,10 +11,6 @@ final class ReduxContext {
 
   private(set) var state: ReduxTypes.StateType
   private var subscribers: [UUID: (ReduxTypes.StateType) -> Void] = [:]
-  private let logger = Logger(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.redux
-  )
 
   init(baseServerUrl url: URL, state: AppState) {
     self.state = state
@@ -95,15 +91,15 @@ final class ReduxContext {
 
       let tuple = ReduceTuple(state: self.state, action: action, modified: false)
 
-      self.logger.debugAny("AppState Redux tuple before reducing: \(tuple)")
+      dlog.trace("AppState Redux tuple before reducing: \(tuple)")
       let result = appStateMiddlewareApply(tuple)
-      self.logger.debugAny("AppState Redux tuple after AppState reduce: \(tuple)")
+      dlog.trace("AppState Redux tuple after AppState reduce: \(tuple)")
 
       if result.modified {
         self.state = result.state
         modified = true
       } else {
-        self.logger.debugAny("AppState not mofified")
+        dlog.debug("AppState not mofified")
       }
 
       if let uuidAction = action as? UuidTagged,
@@ -111,20 +107,20 @@ final class ReduxContext {
       {
         let tuple = ReduceTuple(state: mainWindowState, action: action, modified: false)
 
-        self.logger.debugAny("MainWin \(uuidAction.uuid) Redux tuple before reducing: \(tuple)")
+        dlog.trace("MainWin \(uuidAction.uuid) Redux tuple before reducing: \(tuple)")
         let result = mainWinMiddlwareApply(tuple)
-        self.logger.debugAny("MainWin \(uuidAction.uuid) Redux tuple after reduce: \(tuple)")
+        dlog.trace("MainWin \(uuidAction.uuid) Redux tuple after reduce: \(tuple)")
 
         if result.modified {
           self.state.mainWindows[uuidAction.uuid] = result.state
           modified = true
         } else {
-          self.logger.debugAny("MainWin \(uuidAction.uuid) state not mofified")
+          dlog.debug("MainWin \(uuidAction.uuid) state not mofified")
         }
       }
 
       guard modified else {
-        self.logger.debugAny("No need to notify subscribers")
+        dlog.debug("No need to notify subscribers")
         return
       }
 

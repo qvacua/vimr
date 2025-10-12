@@ -153,7 +153,7 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     didFailProvisionalNavigation _: WKNavigation!,
     withError error: Error
   ) {
-    self.log.error("ERROR preview component's webview: \(error)")
+    self.logger.error("ERROR preview component's webview: \(error)")
   }
 
   func webView(_: WKWebView, didFinish _: WKNavigation!) {
@@ -192,10 +192,7 @@ final class MarkdownTool: NSView, UiComponent, WKNavigationDelegate {
     keyEquivalent: ""
   )
 
-  private let log = Logger(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.ui
-  )
+  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {

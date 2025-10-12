@@ -26,9 +26,9 @@ final class FileMonitor: @unchecked Sendable {
       sinceWhen: EonilFSEventsEventID.getCurrentEventId(),
       latency: FileMonitor.fileSystemEventsLatency,
       flags: [],
-      handler: { [weak self] event in
+      handler: { event in
         if event.flag == .historyDone {
-          self?.log.info("Not firing first event (.historyDone): \(event)")
+          dlog.debug("Not firing first event (.historyDone): \(event)")
           return
         }
         let url = URL(fileURLWithPath: event.path)
@@ -39,7 +39,7 @@ final class FileMonitor: @unchecked Sendable {
     self.monitor?.setDispatchQueue(self.queue)
 
     try self.monitor?.start()
-    self.log.info("Started monitoring \(self.urlToMonitor)")
+    dlog.debug("Started monitoring \(self.urlToMonitor)")
   }
 
   deinit { stopMonitor() }
@@ -52,7 +52,6 @@ final class FileMonitor: @unchecked Sendable {
   private var monitor: EonilFSEventStream?
   private let monitorLock = OSAllocatedUnfairLock()
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.service)
   private let queue = DispatchQueue(
     label: String(reflecting: FileMonitor.self) + "-\(UUID())",
     qos: .userInitiated,

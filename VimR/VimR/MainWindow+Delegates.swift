@@ -80,13 +80,13 @@ extension MainWindow {
   }
 
   func colorschemeChanged(to nvimTheme: NvimView.Theme) {
-    self.log.debugAny("Theme changed delegate method: \(nvimTheme)")
+    dlog.debug("Theme changed delegate method: \(nvimTheme)")
     if let colors = self.updatedCssColors() {
       self.emit(
         self.uuidAction(for: .setTheme(Theme(from: nvimTheme, additionalColorDict: colors)))
       )
     } else {
-      self.log.debug("oops couldn't set theme")
+      self.logger.error("oops couldn't set theme")
     }
   }
 

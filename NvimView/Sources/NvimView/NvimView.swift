@@ -124,9 +124,10 @@ public final class NvimView: NSView,
     get { self._font }
 
     set {
-      if !newValue.fontDescriptor.symbolicTraits.contains(.monoSpace) {
-        self.log.info("\(newValue) is not monospaced.")
-      }
+      // FIXME:
+//      if !newValue.fontDescriptor.symbolicTraits.contains(.monoSpace) {
+//        self.log.info("\(newValue) is not monospaced.")
+//      }
 
       let size = newValue.pointSize
       guard size >= NvimView.minFontSize, size <= NvimView.maxFontSize else { return }
@@ -197,7 +198,7 @@ public final class NvimView: NSView,
           // NvimView+Resize.swift
           // This is the only request sent from Neovim to the UI, afaics.
           guard method == NvimAutoCommandEvent.vimenter.rawValue else { break }
-          self.log.debug("Processing blocking vimenter request")
+          dlog.debug("Processing blocking vimenter request")
           await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
           do {
@@ -207,7 +208,7 @@ public final class NvimView: NSView,
               throw NvimApi.Error.other(description: "v:servername value is nil")
             }
             try self.apiSync.run(socketPath: serverName)
-            self.log.debug("Sync API running on \(serverName)")
+            dlog.debug("Sync API running on \(serverName)")
           } catch {
             await self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
             return
@@ -227,11 +228,11 @@ public final class NvimView: NSView,
           } else if method == "autocommand" {
             await self.autoCommandEvent(params)
           } else {
-            self.log.debug("MSG ERROR: \(msg)")
+            self.logger.error("MSG ERROR: \(msg)")
           }
 
         case let .error(_, msg):
-          self.log.debug("MSG ERROR: \(msg)")
+          self.logger.error("MSG ERROR: \(msg)")
 
         case let .response(_, error, _):
           guard let array = error.arrayValue,
@@ -288,6 +289,8 @@ public final class NvimView: NSView,
 
   // MARK: - Internal
 
+  let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
+
   let queue = DispatchQueue(
     label: String(reflecting: NvimView.self),
     qos: .userInteractive,
@@ -333,8 +336,6 @@ public final class NvimView: NSView,
   var tabsCache = [NvimView.Tabpage]()
 
   var markedText: String?
-  let bridgeLogger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
-  let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 
   let sourceFileUrls: [URL]
 
@@ -352,7 +353,7 @@ public final class NvimView: NSView,
   var stopped = false
 
   func dieWithFatalError(description: String) async {
-    self.log.fault("Fatal error occurred: \(description)")
+    self.logger.fault("Fatal error occurred: \(description)")
     self.fatalErrorOccurred = true
     await self.delegate?.nextEvent(.ipcBecameInvalid(description))
   }
@@ -401,7 +402,7 @@ public final class NvimView: NSView,
         .homeDirectoryForCurrentUser
         .appendingPathComponent(".config/nvim/ginit.vim").path
       if FileManager.default.fileExists(atPath: ginitPath) {
-        self.bridgeLogger.debug("Source'ing ginit.vim")
+        dlog.debug("Source'ing ginit.vim")
         _ = try await self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)").get()
       }
     } catch {
@@ -410,7 +411,7 @@ public final class NvimView: NSView,
   }
 
   private func launchNvim(_ size: Size) async {
-    self.log.info("=== Starting Nvim...")
+    dlog.debug("Starting Nvim")
 
     let inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe
     do {
@@ -442,7 +443,7 @@ public final class NvimView: NSView,
         throw NvimApi.Error.exception(message: "Error matching API version")
       }
 
-      self.log.debug("Version fine")
+      dlog.debug("Version fine")
 
       // swiftformat:disable all
       let vimscript = """
@@ -463,7 +464,7 @@ public final class NvimView: NSView,
       // swiftformat:enable all
 
       _ = try await self.api.nvimExec2(src: vimscript, opts: [:], errWhenBlocked: false).get()
-      self.log.debug("Initial script exec'ed")
+      dlog.debug("Initial script exec'ed")
 
       _ = try await self.api
         .nvimUiAttach(width: size.width, height: size.height, options: [
@@ -472,7 +473,7 @@ public final class NvimView: NSView,
           "ext_tabline": MessagePackValue(self.usesCustomTabBar),
           "rgb": true,
         ]).get()
-      self.log.debug("UI attached")
+      dlog.debug("UI attached")
     } catch {
       await self.dieWithFatalError(
         description: "Could not attach UI and exec initial setup script: \(error)"
@@ -480,6 +481,6 @@ public final class NvimView: NSView,
       return
     }
 
-    self.log.debug("Launched Nvim")
+    dlog.debug("Launched Nvim")
   }
 }

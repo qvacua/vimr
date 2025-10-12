@@ -3,6 +3,7 @@
  * See LICENSE
  */
 
+import Commons
 import Foundation
 
 enum Defs {
@@ -13,3 +14,5 @@ enum Defs {
     static let view = "view"
   }
 }
+
+let dlog = DevLogger.shared

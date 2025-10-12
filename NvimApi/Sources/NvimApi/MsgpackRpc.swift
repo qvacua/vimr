@@ -85,13 +85,13 @@ public actor MsgpackRpc {
   }
 
   public func stop() {
-    self.log.debug("Stopping")
+    dlog.debug("Stopping")
     self.cleanUp()
   }
 
   public func response(msgid: UInt32, error: Value, result: Value) throws {
     if self.closed {
-      self.log.warning("Not sending response because closed")
+      dlog.debug("Not sending response because closed")
       return
     }
 
@@ -113,7 +113,7 @@ public actor MsgpackRpc {
     expectsReturnValue: Bool
   ) async throws -> Response {
     if self.closed {
-      self.log.warning("Not sending request because closed")
+      dlog.debug("Not sending request because closed")
       return .nilResponse(0)
     }
 
@@ -142,7 +142,7 @@ public actor MsgpackRpc {
 
   // MARK: Private
 
-  private let log = Logger(subsystem: "com.qvacua.NvimApi", category: "rpc")
+  private let logger = Logger(subsystem: "com.qvacua.NvimApi", category: "rpc")
 
   private var closed = false
 
@@ -159,7 +159,7 @@ public actor MsgpackRpc {
 
   private func startReading() async throws {
     self.readingTask = Task.detached(priority: .high) {
-      self.log.debug("Start reading")
+      dlog.debug("Start reading")
       guard let dataStream = await self.outPipe?.asyncData else {
         throw Error(msg: "Could not get the async data stream")
       }
@@ -184,18 +184,18 @@ public actor MsgpackRpc {
         }
       }
 
-      self.log.debug("End reading")
+      dlog.debug("End reading")
       await self.cleanUp()
     }
   }
 
   private func cleanUp() {
     if self.closed {
-      self.log.info("MsgpackRpc already closed")
+      dlog.debug("MsgpackRpc already closed")
       return
     }
 
-    self.log.debug("Cleaning up")
+    dlog.debug("Cleaning up")
     self.closed = true
 
     self.readingTask?.cancel()
@@ -216,7 +216,7 @@ public actor MsgpackRpc {
     }
     self.pendingRequests.removeAll()
 
-    self.log.info("MsgpackRpc closed")
+    dlog.debug("MsgpackRpc closed")
   }
 
   private func processMessage(_ unpacked: Value) {

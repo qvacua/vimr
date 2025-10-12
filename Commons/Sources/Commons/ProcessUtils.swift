@@ -24,7 +24,7 @@ public enum ProcessUtils {
     if shellName != "tcsh" { shellArgs.append("-l") }
     if interactive { shellArgs.append("-i") }
 
-    Self.logger.debug("Using \(shellUrl) with \(shellArgs)")
+    dlog.debug("Using \(shellUrl) with \(shellArgs)")
 
     let stdin = Pipe()
     let process = Process()
@@ -37,11 +37,11 @@ public enum ProcessUtils {
     process.arguments = shellArgs
     process.qualityOfService = qos
 
-    Self.logger.debug("Launched shell")
+    dlog.debug("Launched shell")
     do { try process.run() }
     catch { return nil }
 
-    Self.logger.debug("exec \(cmd)")
+    dlog.debug("exec \(cmd)")
     let cmd = "exec \(cmd)"
     guard let cmdData = cmd.data(using: .utf8) else { return nil }
     let writeHandle = stdin.fileHandleForWriting
@@ -84,7 +84,7 @@ public enum ProcessUtils {
     guard let output = String(
       data: readHandle.readDataToEndOfFile(), encoding: .utf8
     ) else {
-      ProcessUtils.logger.error("No output; returning empty ENVs.")
+      Self.logger.error("No output; returning empty ENVs.")
       return [:]
     }
     readHandle.closeFile()
@@ -93,7 +93,7 @@ public enum ProcessUtils {
     process.waitUntilExit()
 
     guard let range = output.range(of: marker) else {
-      ProcessUtils.logger.error("Marker not found; returning empty ENVs.")
+      Self.logger.error("Marker not found; returning empty ENVs.")
       return [:]
     }
 

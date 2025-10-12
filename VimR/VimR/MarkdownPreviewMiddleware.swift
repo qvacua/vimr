@@ -61,7 +61,7 @@ final class MarkdownPreviewMiddleware {
           self.previewFiles[uuid] = htmlUrl
         } catch let error as NSError {
           // FIXME: error handling!
-          self.log.error("error while rendering \(buffer) to \(htmlUrl): \(error)")
+          self.logger.error("error while rendering \(buffer) to \(htmlUrl): \(error)")
           return
         }
       }
@@ -101,7 +101,7 @@ final class MarkdownPreviewMiddleware {
     private let template: String
     private var previewFiles = [UUID: URL]()
 
-    private let log = Logger(
+    private let logger = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )

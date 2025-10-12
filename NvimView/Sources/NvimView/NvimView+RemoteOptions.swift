@@ -41,7 +41,7 @@ extension NvimView {
   final func handleRemoteOptions(_ options: [MessagePackValue: MessagePackValue]) {
     for kvPair in options {
       guard let option = RemoteOption.fromValuePair(kvPair) else {
-        self.bridgeLogger.debug("Could not handle RemoteOption \(kvPair)")
+        self.logger.error("Could not handle RemoteOption \(kvPair)")
         continue
       }
 
@@ -92,7 +92,7 @@ extension NvimView {
     }
 
     guard let newFont = FontUtils.font(fromVimFontSpec: fontSpec) else {
-      self.bridgeLogger.debug("Invalid specification for guifont '\(fontSpec)'")
+      self.logger.error("Invalid specification for guifont '\(fontSpec)'")
 
       self.signalError(code: 596, message: "Invalid font(s): guifont=\(fontSpec)")
       self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag))

@@ -26,12 +26,11 @@ final class ActionEmitter {
   typealias ActionSubscription = (ReduxTypes.ActionType) -> Void
 
   private var subscribers = [ActionSubscription]()
-  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.redux)
 
   @MainActor
   func typedEmit<T: ReduxTypes.ActionType>() -> (T) -> Void {
     { [weak self] action in
-      self?.logger.debugAny("Action emitted: \(action)")
+      dlog.debug("Action emitted: \(action)")
       Task { @MainActor in
         self?.subscribers.forEach { $0(action) }
       }
@@ -43,7 +42,7 @@ final class ActionEmitter {
     Task {
       self.subscribers.forEach { $0(action) }
     }
-    self.logger.debugAny("Action emitted: \(action)")
+    dlog.debug("Action emitted: \(action)")
   }
 
   func subscribe(_ subscription: @escaping ActionSubscription) {

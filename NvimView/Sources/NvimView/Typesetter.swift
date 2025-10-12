@@ -277,8 +277,6 @@ final class Typesetter {
 
   private let ctRunsCache = FifoCache<String, [CTRun]>(count: 5000)
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
-
   private struct NvimUtf16CellsRun {
     var startColumn: Int
     var nvimUtf16Cells: [[Unicode.UTF16.CodeUnit]]

@@ -24,15 +24,15 @@ final class UiBridge {
 
     if let envDict = config.envDict {
       self.envDict = envDict
-      self.log.debug("Using ENVs from vimr: \(envDict)")
+      dlog.debug("Using ENVs from vimr: \(envDict)")
     } else {
       let selfEnv = ProcessInfo.processInfo.environment
       let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
-      self.log.debug("Using SHELL: \(shellUrl)")
+      dlog.debug("Using SHELL: \(shellUrl)")
       let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config
         .useInteractiveZsh ? false : true
       self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-      self.log.debug("Using ENVs from login shell: \(self.envDict)")
+      dlog.debug("Using ENVs from login shell: \(self.envDict)")
     }
   }
 
@@ -42,13 +42,13 @@ final class UiBridge {
 
   func quit() {
     self.nvimServerProc?.waitUntilExit()
-    self.log.info("NvimServer \(self.uuid) exited successfully.")
+    dlog.debug("NvimServer \(self.uuid) exited successfully.")
   }
 
   func forceQuit() {
-    self.log.fault("Force-exiting NvimServer \(self.uuid).")
+    self.logger.fault("Force-exiting NvimServer \(self.uuid).")
     self.forceExitNvimServer()
-    self.log.fault("NvimServer \(self.uuid) was forcefully exited.")
+    self.logger.fault("NvimServer \(self.uuid) was forcefully exited.")
   }
 
   private func forceExitNvimServer() {
@@ -81,7 +81,7 @@ final class UiBridge {
 
     process.arguments = ["--embed"] + self.nvimArgs
 
-    self.log.debug(
+    dlog.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
     )
     do {
@@ -99,7 +99,7 @@ final class UiBridge {
     return true
   }
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
+  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.bridge)
 
   private let uuid: UUID
 

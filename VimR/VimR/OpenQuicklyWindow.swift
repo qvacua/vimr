@@ -86,10 +86,7 @@ final class OpenQuicklyWindow: NSObject,
   private let cwdControl = NSPathControl(forAutoLayout: ())
   private let fileView = NSTableView.standardTableView()
 
-  private let log = Logger(
-    subsystem: Defs.loggerSubsystem,
-    category: Defs.LoggerCategory.ui
-  )
+  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   private var window: NSWindow { self.windowController.window! }
 
@@ -212,9 +209,9 @@ final class OpenQuicklyWindow: NSObject,
     let obsoleteUrls = currentUrls.subtracting(urlsToMonitor)
 
     for url in newUrls {
-      self.log.info("Adding \(url) and its service.")
+      dlog.debug("Adding \(url) and its service.")
       guard let service = try? FuzzySearchService(root: url) else {
-        self.log.error("Could not create FileService for \(url)")
+        self.logger.error("Could not create FileService for \(url)")
         continue
       }
 
@@ -222,7 +219,7 @@ final class OpenQuicklyWindow: NSObject,
     }
 
     for url in obsoleteUrls {
-      self.log.info("Removing \(url) and its service.")
+      dlog.debug("Removing \(url) and its service.")
       self.searchServicePerRootUrl.removeValue(forKey: url)
     }
   }
@@ -323,7 +320,7 @@ extension OpenQuicklyWindow {
     let cell = cachedCell ?? ImageAndTextTableCell(withIdentifier: "file-view-row")
 
     guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? [ScoredUrl] else {
-      self.log.error("Could not convert arranged objects to [ScoredUrl].")
+      self.logger.error("Could not convert arranged objects to [ScoredUrl].")
       return nil
     }
 
@@ -374,7 +371,7 @@ extension OpenQuicklyWindow {
 
     case NSSelectorFromString("insertNewline:"):
       guard let sortedUrls = self.scoredUrlsController.arrangedObjects as? [ScoredUrl] else {
-        self.log.error("Could not convert arranged objects to [ScoredUrl].")
+        self.logger.error("Could not convert arranged objects to [ScoredUrl].")
         return true
       }
 

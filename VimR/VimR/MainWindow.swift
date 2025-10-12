@@ -260,7 +260,7 @@ final class MainWindow: NSObject,
   private var usesTheme = true
   private var lastThemeMark = Token()
 
-  let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
   private var cancellables = Set<AnyCancellable>()
 
   private func setupScrollAndCursorDebouncers() {
@@ -467,7 +467,7 @@ final class MainWindow: NSObject,
 
   private func addViewsWithTabBar(withTopInset topInset: CGFloat) {
     guard let tabBar = self.neoVimView.tabBar else {
-      self.log.error("Could not get the TabBar from NvimView!")
+      self.logger.error("Could not get the TabBar from NvimView!")
       self.addViewsWithoutTabBar(withTopInset: 0)
       return
     }
@@ -545,7 +545,7 @@ extension MainWindow {
   }
 
   func nextEvent(_ event: NvimView.Event) async {
-    self.log.debugAny("Event from NvimView: \(event)")
+    dlog.debug("Event from NvimView: \(event)")
 
     switch event {
     case .nvimReady:
@@ -584,7 +584,7 @@ extension MainWindow {
     case .initVimError: self.showInitError()
 
     case let .apiError(error, msg):
-      self.log.error("Got api error with msg '\(msg)' and error: \(error)")
+      self.logger.error("Got api error with msg '\(msg)' and error: \(error)")
 
     case let .rpcEvent(params): self.rpcEventAction(params: params)
 

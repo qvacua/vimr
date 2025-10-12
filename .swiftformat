@@ -8,3 +8,6 @@
 --self insert
 --wraparguments before-first
 --ranges no-space
+
+--strip-unused-args unnamed-only
+

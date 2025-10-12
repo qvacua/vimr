@@ -81,7 +81,7 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
         self.monitor?.setDispatchQueue(self.queue)
         try self.monitor?.start()
       } catch {
-        self.log.error("Could not start file monitor for \(htmlFileUrl): \(error)")
+        self.logger.error("Could not start file monitor for \(htmlFileUrl): \(error)")
       }
 
       self.innerCustomToolbar
@@ -123,7 +123,7 @@ final class HtmlPreviewTool: NSView, UiComponent, WKNavigationDelegate {
   private let webview: WKWebView
   private var monitor: EonilFSEventStream?
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
   private let queue: DispatchQueue
 
   @available(*, unavailable)

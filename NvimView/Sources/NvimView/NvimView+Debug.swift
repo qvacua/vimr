@@ -7,11 +7,16 @@ import Cocoa
 
 public extension NvimView {
   @IBAction func debug1(_: Any?) {
-    do { try self.ugrid.dump() } catch { self.log.error("Could not dump UGrid: \(error)") }
+    do {
+      try self.ugrid.dump()
+      self.logger.debug("dumped ugrid")
+    } catch {
+      self.logger.error("Could not dump UGrid: \(error)")
+    }
   }
 
   @IBAction func debug2(_: Any?) {
-    self.log.debug("Nothing yet")
+    self.logger.error("nothing yet")
   }
 
   internal func draw(cellGridIn context: CGContext) {

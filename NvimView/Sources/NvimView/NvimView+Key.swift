@@ -66,7 +66,7 @@ public extension NvimView {
   }
 
   func insertText(_ object: Any, replacementRange: NSRange) {
-    self.log.debug("\(object) with \(replacementRange)")
+    dlog.debug("\(object) with \(replacementRange)")
 
     let text: String
     switch object {
@@ -83,14 +83,14 @@ public extension NvimView {
 
   override func doCommand(by aSelector: Selector) {
     if self.responds(to: aSelector) {
-      self.log.debug("calling \(aSelector)")
+      dlog.debug("calling \(aSelector)")
       self.perform(aSelector, with: self)
 
       self.keyDownDone = true
       return
     }
 
-    self.log.debug("\(aSelector) not implemented, forwarding input to neovim")
+    dlog.debug("\(aSelector) not implemented, forwarding input to neovim")
     self.keyDownDone = false
   }
 
@@ -169,7 +169,7 @@ public extension NvimView {
   }
 
   func setMarkedText(_ object: Any, selectedRange: NSRange, replacementRange: NSRange) {
-    self.log.debug(
+    dlog.debug(
       "object: \(object), selectedRange: \(selectedRange), replacementRange: \(replacementRange)"
     )
 
@@ -235,7 +235,7 @@ public extension NvimView {
     // When the app starts and the Hangul input method is selected,
     // this method gets called very early...
     guard self.ugrid.hasData else {
-      self.log.debug("No data in UGrid!")
+      dlog.debug("No data in UGrid!")
       return .notFound
     }
 
@@ -247,13 +247,13 @@ public extension NvimView {
       length: 0
     )
 
-    self.log.debug("Returning \(result)")
+    dlog.debug("Returning \(result)")
     return result
   }
 
   func markedRange() -> NSRange {
     guard let marked = self.markedText else {
-      self.log.debug("No marked text, returning not found")
+      dlog.debug("No marked text, returning not found")
       return .notFound
     }
 
@@ -262,7 +262,7 @@ public extension NvimView {
       length: marked.count
     )
 
-    self.log.debug("Returning \(result)")
+    dlog.debug("Returning \(result)")
     return result
   }
 
@@ -272,7 +272,7 @@ public extension NvimView {
     forProposedRange aRange: NSRange,
     actualRange _: NSRangePointer?
   ) -> NSAttributedString? {
-    self.log.debug("\(aRange)")
+    dlog.debug("\(aRange)")
     if aRange.location == NSNotFound { return nil }
 
     guard
@@ -282,7 +282,7 @@ public extension NvimView {
       )
     else { return nil }
 
-    self.log.debug("\(position) ... \(inclusiveEndPosition)")
+    dlog.debug("\(position) ... \(inclusiveEndPosition)")
     let string = self.ugrid.cells[position.row...inclusiveEndPosition.row]
       .map { row in
         row.filter { cell in
@@ -294,9 +294,9 @@ public extension NvimView {
       .joined()
 
     let delta = aRange.length - string.utf16.count
-    if delta != 0 { self.log.debug("delta = \(delta)!") }
+    if delta != 0 { dlog.debug("delta = \(delta)!") }
 
-    self.log.debug("returning '\(string)'")
+    dlog.debug("returning '\(string)'")
     return NSAttributedString(string: string)
   }
 
@@ -307,7 +307,7 @@ public extension NvimView {
       return CGRect.zero
     }
 
-    self.log.debug("\(aRange)-> \(position.row):\(position.column)")
+    dlog.debug("\(aRange)-> \(position.row):\(position.column)")
 
     let resultInSelf = self.rect(forRow: position.row, column: position.column)
     let result = self.window?.convertToScreen(self.convert(resultInSelf, to: nil))
@@ -319,7 +319,7 @@ public extension NvimView {
     let position = self.position(at: aPoint)
     let result = self.ugrid.flatCharIndex(forPosition: position)
 
-    self.log.debug("\(aPoint) -> \(position) -> \(result)")
+    dlog.debug("\(aPoint) -> \(position) -> \(result)")
 
     return result
   }

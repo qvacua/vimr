@@ -227,7 +227,7 @@ final class UGrid: CustomStringConvertible, Codable {
   }
 
   func resize(_ size: Size) {
-    self.log.debug(size)
+    dlog.debug(size)
 
     self.size = size
     self.cursorPosition = .zero
@@ -385,7 +385,7 @@ final class UGrid: CustomStringConvertible, Codable {
   }
 
   func recomputeFlatIndices(rowStart: Int) {
-    self.log.debug("Recomputing flat indices from row \(rowStart)")
+    dlog.debug("Recomputing flat indices from row \(rowStart)")
 
     var counter = 0
     if rowStart > 0 {
@@ -402,8 +402,6 @@ final class UGrid: CustomStringConvertible, Codable {
       }
     }
   }
-
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.view)
 }
 
 extension UGrid {

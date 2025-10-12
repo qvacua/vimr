@@ -77,18 +77,18 @@ extension NvimView {
       || cursorRegion.left < 0
       || cursorRegion.right > self.ugrid.size.width - 1
     {
-      self.log.error("\(cursorRegion) vs. \(self.ugrid.size)")
+      self.logger.error("\(cursorRegion) vs. \(self.ugrid.size)")
       return
     }
     guard let cellAtCursorAttrs = self.cellAttributesCollection.attributes(
       of: self.ugrid.cells[cursorPosition.row][cursorPosition.column].attrId
     ) else {
-      self.log.error("Could not get the attributes at cursor: \(cursorPosition)")
+      self.logger.error("Could not get the attributes at cursor: \(cursorPosition)")
       return
     }
 
     guard let modeInfo = modeInfos[self.mode.rawValue] else {
-      self.log.error("Could not get modeInfo for mode index \(self.mode.rawValue)")
+      self.logger.error("Could not get modeInfo for mode index \(self.mode.rawValue)")
       return
     }
 
@@ -98,7 +98,7 @@ extension NvimView {
             withDefaults: cellAtCursorAttrs
           )
     else {
-      self.log.error("Could not get the attributes for cursor in mode: \(mode) \(modeInfo)")
+      self.logger.error("Could not get the attributes for cursor in mode: \(mode) \(modeInfo)")
       return
     }
 
@@ -175,7 +175,7 @@ extension NvimView {
           guard let attrs = self.cellAttributesCollection.attributes(
             of: self.ugrid.cells[row][range.lowerBound].attrId
           ) else {
-            self.log.error(
+            self.logger.error(
               "row: \(row), range: \(range): Could not get CellAttributes with ID " +
                 "\(self.ugrid.cells[row][range.lowerBound].attrId)"
             )

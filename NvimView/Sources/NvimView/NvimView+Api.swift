@@ -27,19 +27,18 @@ extension Collection where Element: Sendable {
 public extension NvimView {
   func stop() async {
     if self.stopped {
-      self.bridgeLogger.info("Bridge already stopped.")
+      dlog.debug("Bridge already stopped.")
       return
     }
 
     self.stopped = true
-    self.bridgeLogger.debug()
     self.bridge.quit()
 
     self.apiSync.stop()
     await self.api.stop()
 
     await self.delegate?.nextEvent(.neoVimStopped)
-    self.bridgeLogger.info("Successfully stopped the bridge.")
+    dlog.debug("Successfully stopped the bridge.")
   }
 
   func toggleFramerateView() {

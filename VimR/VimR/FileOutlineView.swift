@@ -190,7 +190,7 @@ final class FileOutlineView: NSOutlineView,
   private var triangleClosed: NSImage
   private var triangleOpen: NSImage
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
+  private let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
 
   private func initContextMenu() {
     // Loading the nib file will set self.menu.
@@ -199,7 +199,7 @@ final class FileOutlineView: NSOutlineView,
       owner: self,
       topLevelObjects: nil
     ) else {
-      self.log.error("FileBrowserMenu.xib could not be loaded")
+      self.logger.error("FileBrowserMenu.xib could not be loaded")
       return
     }
     self.menu?.items.forEach { $0.target = self }
@@ -272,13 +272,15 @@ final class FileOutlineView: NSOutlineView,
       }
       .map(\.indexPath) ?? []
 
-    changeTreeNode
-      .children?
-      .filter { child in
-        guard let url = child.node?.url else { return true }
-        return newChildUrls.contains(url) == false
-      }
-      .forEach { treeNode in self.log.info(treeNode.node) }
+    #if DEBUG
+      changeTreeNode
+        .children?
+        .filter { child in
+          guard let url = child.node?.url else { return true }
+          return newChildUrls.contains(url) == false
+        }
+        .forEach { treeNode in dlog.debug(treeNode.node) }
+    #endif
 
     self.treeController.removeObjects(atArrangedObjectIndexPaths: indexPathsToRemove)
   }

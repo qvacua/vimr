@@ -23,7 +23,7 @@ final class PrefMiddleware: MiddlewareType {
       defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
       defaults.synchronize()
     } catch {
-      self.log.error("AppState could not converted to Dictionary: \(error)")
+      self.logger.error("AppState could not converted to Dictionary: \(error)")
     }
   }
 
@@ -69,14 +69,14 @@ final class PrefMiddleware: MiddlewareType {
         defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
         defaults.synchronize()
       } catch {
-        self.log.error("AppState could not converted to Dictionary: \(error)")
+        self.logger.error("AppState could not converted to Dictionary: \(error)")
       }
 
       return result
     }
   }
 
-  private let log = Logger(
+  private let logger = Logger(
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.middleware
   )
@@ -100,14 +100,14 @@ final class PrefMiddleware: MiddlewareType {
           defaults.set(dictionary, forKey: PrefMiddleware.compatibleVersion)
           defaults.synchronize()
         } catch {
-          self.log.error("AppState could not converted to Dictionary: \(error)")
+          self.logger.error("AppState could not converted to Dictionary: \(error)")
         }
 
         return result
       }
     }
 
-    private let log = Logger(
+    private let logger = Logger(
       subsystem: Defs.loggerSubsystem,
       category: Defs.LoggerCategory.middleware
     )

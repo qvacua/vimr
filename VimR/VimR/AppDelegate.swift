@@ -127,7 +127,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
   private let updaterController: SPUStandardUpdaterController
   private let updaterDelegate = UpdaterDelegate()
 
-  private let log = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.general)
+  private let logger = Logger(
+    subsystem: Defs.loggerSubsystem,
+    category: Defs.LoggerCategory.general
+  )
 }
 
 // MARK: - NSApplicationDelegate
@@ -297,7 +300,7 @@ extension AppDelegate {
         do {
           try FileManager.default.removeItem(atPath: envPath)
         } catch {
-          self.log.error(error.localizedDescription)
+          self.logger.error(error.localizedDescription)
         }
       }
     } else {
@@ -388,7 +391,7 @@ extension AppDelegate {
     do {
       return try JSONSerialization.jsonObject(with: data) as? [String: String]
     } catch {
-      self.log.error(error.localizedDescription)
+      self.logger.error(error.localizedDescription)
     }
 
     return nil

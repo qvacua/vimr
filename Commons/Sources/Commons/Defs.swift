@@ -12,3 +12,5 @@ enum Defs {
     static let general = "general"
   }
 }
+
+let dlog = DevLogger.shared
