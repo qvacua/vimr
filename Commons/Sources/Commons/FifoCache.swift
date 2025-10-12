@@ -16,14 +16,13 @@ public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendabl
 
   public func set(_ value: Value, forKey key: Key) {
     self.lock.lock()
-    defer { self.lock.unlock() }
-
     if let keyToDel = self.keys[self.keyWriteIndex] { self.storage.removeValue(forKey: keyToDel) }
 
     self.keys[self.keyWriteIndex] = key
     self.storage[key] = value
 
     self.keyWriteIndex = (self.keyWriteIndex + 1) % self.count
+    self.lock.unlock()
   }
 
   public func valueForKey(_ key: Key) -> Value? {
@@ -35,8 +34,10 @@ public final class ThreadSafeFifoCache<Key: Hashable, Value>: @unchecked Sendabl
   }
 
   public func clear() {
+    self.lock.lock()
     self.keys = Array(repeating: nil, count: self.count)
     self.storage.removeAll(keepingCapacity: true)
+    self.lock.unlock()
   }
 
   private let count: Int
