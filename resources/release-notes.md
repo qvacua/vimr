@@ -1,6 +1,6 @@
 # Next
 
-* ...
+* Consolidated logging
 
 # 0.57.3-20251011.181129
 
