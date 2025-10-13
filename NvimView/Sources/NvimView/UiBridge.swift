@@ -21,19 +21,15 @@ final class UiBridge {
     self.nvimBinary = config.nvimBinary
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
-
-    if let envDict = config.envDict {
-      self.envDict = envDict
-      dlog.debug("Using ENVs from vimr: \(envDict)")
-    } else {
-      let selfEnv = ProcessInfo.processInfo.environment
-      let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
-      dlog.debug("Using SHELL: \(shellUrl)")
-      let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config
-        .useInteractiveZsh ? false : true
-      self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-      dlog.debug("Using ENVs from login shell: \(self.envDict)")
-    }
+    
+    let selfEnv = ProcessInfo.processInfo.environment
+    let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
+    dlog.debug("Using SHELL: \(shellUrl)")
+    let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config
+      .useInteractiveZsh ? false : true
+    self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
+    .merging(config.additionalEnvs)  { (_, new) in new }
+    dlog.debug("Using ENVs from login shell: \(self.envDict)")
   }
 
   func runLocalServerAndNvim(width _: Int, height _: Int) throws -> (Pipe, Pipe, Pipe) {

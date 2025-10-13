@@ -35,7 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     var cliPipePath: String?
     var nvimArgs: [String]?
-    var envDict: [String: String]?
+    var additionalEnvs: [String: String]
     var line: Int?
   }
 
@@ -47,6 +47,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
   }
 
   let uuid = UUID()
+
+  @IBOutlet var customConfigWindow: NSWindow!
 
   override init() {
     let baseServerUrl = URL(string: "http://localhost:\(NetUtils.openPort())")!
@@ -94,6 +96,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
       // Therefore, we use optional var for the self.uiRoot. Ugly, but, well...
       self.uiRoot = UiRoot(context: self.context, state: self.context.state)
 
+      self.setupCustomConfigWindow()
+
       self.context.subscribe(uuid: self.uuid) { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
         self.hasDirtyWindows = appState.mainWindows.values
@@ -131,6 +135,84 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     subsystem: Defs.loggerSubsystem,
     category: Defs.LoggerCategory.general
   )
+
+  private var customConfigTextField = NSTextField(forAutoLayout: ())
+
+  private func setupCustomConfigWindow() {
+    // We know that the window and its contentView exist
+    let win = self.customConfigWindow!
+    let view = win.contentView!
+
+    let title = self.titleTextField(title: "NVIM_APPNAME:")
+    let location = self.customConfigTextField
+    let info = self.infoTextField(markdown: """
+    Nvim will be started with the config directory `$HOME/.config/<NVIM_APPNAME>`.
+    See [Nvim's documentation](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME)
+    for more details.
+    """)
+
+    let okButton = NSButton(forAutoLayout: ())
+    okButton.title = "OK"
+    okButton.keyEquivalent = "\r"
+    okButton.bezelStyle = .rounded
+    okButton.target = self
+    okButton.action = #selector(customConfigOkAction(_:))
+
+    let cancelButton = NSButton(forAutoLayout: ())
+    cancelButton.title = "Cancel"
+    cancelButton.keyEquivalent = "\u{1b}" // ESC
+    cancelButton.bezelStyle = .rounded
+    cancelButton.target = self
+    cancelButton.action = #selector(customConfigCancelAction(_:))
+
+    view.addSubview(title)
+    view.addSubview(location)
+    view.addSubview(info)
+    view.addSubview(okButton)
+    view.addSubview(cancelButton)
+
+    title.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
+    title.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+
+    location.autoPinEdge(.left, to: .right, of: title, withOffset: 5)
+    location.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+    location.autoSetDimension(.width, toSize: 300)
+    location.autoAlignAxis(.baseline, toSameAxisOf: title)
+
+    info.autoPinEdge(.left, to: .left, of: location)
+    info.autoPinEdge(.top, to: .bottom, of: location, withOffset: 5)
+    info.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+
+    okButton.autoPinEdge(.top, to: .bottom, of: info, withOffset: 18)
+    okButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+    okButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+
+    cancelButton.autoPinEdge(.top, to: .top, of: okButton)
+    cancelButton.autoPinEdge(.right, to: .left, of: okButton, withOffset: -8)
+  }
+
+  private func titleTextField(title: String) -> NSTextField {
+    let field = NSTextField.defaultTitleTextField()
+    field.alignment = .right
+    field.stringValue = title
+    return field
+  }
+
+  func infoTextField(markdown: String) -> NSTextField {
+    let field = NSTextField(forAutoLayout: ())
+    field.backgroundColor = NSColor.clear
+    field.isEditable = false
+    field.isBordered = false
+    field.usesSingleLineMode = false
+
+    // both are needed, otherwise hyperlink won't accept mousedown
+    field.isSelectable = true
+    field.allowsEditingTextAttributes = true
+
+    field.attributedStringValue = NSAttributedString.infoLabel(markdown: markdown)
+
+    return field
+  }
 }
 
 // MARK: - NSApplicationDelegate
@@ -232,7 +314,7 @@ extension AppDelegate {
   func application(_ sender: NSApplication, openFiles filenames: [String]) {
     let urls = filenames.map { URL(fileURLWithPath: $0) }
     let config = OpenConfig(
-      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil,
+      urls: urls, cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, additionalEnvs: [:],
       line: nil
     )
     switch self.context.state.openFilesFromApplicationsAction {
@@ -293,9 +375,9 @@ extension AppDelegate {
       return
     }
 
-    let envDict: [String: String]?
+    let additionalEnvs: [String: String]
     if let envPath = queryParam(envPathPrefix, from: rawParams, transforming: identity).first {
-      envDict = self.stringDict(from: URL(fileURLWithPath: envPath))
+      additionalEnvs = self.stringDict(from: URL(fileURLWithPath: envPath)) ?? [:]
       if FileManager.default.fileExists(atPath: envPath) {
         do {
           try FileManager.default.removeItem(atPath: envPath)
@@ -304,7 +386,7 @@ extension AppDelegate {
         }
       }
     } else {
-      envDict = nil
+      additionalEnvs = [:]
     }
 
     let line = self.queryParam(linePrefix, from: rawParams, transforming: { Int($0) })
@@ -337,7 +419,7 @@ extension AppDelegate {
         cwd: cwd,
         cliPipePath: pipePath,
         nvimArgs: nil,
-        envDict: envDict,
+        additionalEnvs: additionalEnvs,
         line: line
       )
       self.emit(.newMainWindow(config: config))
@@ -348,7 +430,7 @@ extension AppDelegate {
         cwd: cwd,
         cliPipePath: pipePath,
         nvimArgs: nil,
-        envDict: envDict,
+        additionalEnvs: additionalEnvs,
         line: line
       )
       self.emit(.openInKeyWindow(config: config))
@@ -360,7 +442,7 @@ extension AppDelegate {
           cwd: cwd,
           cliPipePath: pipePath,
           nvimArgs: nil,
-          envDict: nil,
+          additionalEnvs: [:],
           line: line
         )
         self.emit(.newMainWindow(config: config))
@@ -376,7 +458,7 @@ extension AppDelegate {
           from: rawParams,
           transforming: identity
         ),
-        envDict: envDict,
+        additionalEnvs: additionalEnvs,
         line: line
       )
       self.emit(.newMainWindow(config: config))
@@ -418,9 +500,43 @@ extension AppDelegate {
 
   @IBAction func newDocument(_: Any?) {
     let config = OpenConfig(
-      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil, additionalEnvs: [:],
+      line: nil
     )
     self.emit(.newMainWindow(config: config))
+  }
+
+  @IBAction func newDocumentWithCustomConfigLocation(_: Any?) {
+    NSApp.runModal(for: self.customConfigWindow)
+  }
+
+  @objc private func customConfigOkAction(_: Any?) {
+    let appName = self.customConfigTextField.stringValue.trimmingCharacters(in: .whitespaces)
+    guard !appName.isEmpty else {
+      self.customConfigTextField.layer?.borderColor = NSColor.systemRed.cgColor
+      self.customConfigTextField.layer?.borderWidth = 3.0
+      return
+    }
+
+    self.stopCustomConfigWindow()
+
+    self.emit(.newMainWindow(config: OpenConfig(
+      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil,
+      additionalEnvs: ["NVIM_APPNAME": appName],
+      line: nil
+    )))
+  }
+  
+  private func stopCustomConfigWindow() {
+    NSApp.stopModal()
+    self.customConfigWindow.orderOut(nil)
+    self.customConfigTextField.stringValue = ""
+    self.customConfigTextField.layer?.borderWidth = 0
+
+  }
+
+  @objc private func customConfigCancelAction(_: Any?) {
+    self.stopCustomConfigWindow()
   }
 
   @IBAction func openInNewWindow(_ sender: Any?) { self.openDocument(sender) }
@@ -439,7 +555,8 @@ extension AppDelegate {
       let commonParentUrl = FileUtils.commonParent(of: urls)
 
       let config = OpenConfig(
-        urls: urls, cwd: commonParentUrl, cliPipePath: nil, nvimArgs: nil, envDict: nil, line: nil
+        urls: urls, cwd: commonParentUrl, cliPipePath: nil, nvimArgs: nil, additionalEnvs: [:],
+        line: nil
       )
       self.emit(.newMainWindow(config: config))
     }

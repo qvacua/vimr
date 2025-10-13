@@ -25,7 +25,7 @@ public extension NvimView {
     var cwd: URL
     var nvimBinary: String
     var nvimArgs: [String]?
-    var envDict: [String: String]?
+    var additionalEnvs: [String: String]
     var sourceFiles: [URL]
 
     public init(
@@ -34,7 +34,7 @@ public extension NvimView {
       cwd: URL,
       nvimBinary: String,
       nvimArgs: [String]?,
-      envDict: [String: String]?,
+      additionalEnvs: [String: String],
       sourceFiles: [URL]
     ) {
       self.usesCustomTabBar = usesCustomTabBar
@@ -42,7 +42,7 @@ public extension NvimView {
       self.cwd = cwd
       self.nvimBinary = nvimBinary
       self.nvimArgs = nvimArgs
-      self.envDict = envDict
+      self.additionalEnvs = additionalEnvs
       self.sourceFiles = sourceFiles
     }
   }

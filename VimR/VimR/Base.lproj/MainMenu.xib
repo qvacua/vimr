@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="Application" customModule="VimR" customModuleProvider="target">
@@ -12,7 +13,11 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="VimR" customModuleProvider="target"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="VimR" customModuleProvider="target">
+            <connections>
+                <outlet property="customConfigWindow" destination="wea-nT-RP4" id="FT1-WE-EtZ"/>
+            </connections>
+        </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="VimR" id="1Xt-HY-uBw">
@@ -76,6 +81,11 @@
                             <menuItem title="New" keyEquivalent="n" identifier="com.qvacua.vimr.menuitems.file.new" id="Was-JA-tGl">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="4Si-XN-c54"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="New with Custom Config Location" keyEquivalent="N" identifier="com.qvacua.vimr.menuitems.file.new-custom-config-location" id="8Bt-GF-qHz">
+                                <connections>
+                                    <action selector="newDocumentWithCustomConfigLocation:" target="-1" id="oc8-B8-2EZ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="New Tab" keyEquivalent="t" identifier="com.qvacua.vimr.menuitems.file.new-tab" id="TX9-92-Oe2">
@@ -314,5 +324,16 @@
             </items>
             <point key="canvasLocation" x="140" y="154"/>
         </menu>
+        <window title="Enter Custom Config Location" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="wea-nT-RP4">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="180" y="226" width="197" height="109"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <view key="contentView" id="pce-0h-iyi">
+                <rect key="frame" x="0.0" y="0.0" width="197" height="109"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+            <point key="canvasLocation" x="19.5" y="643.5"/>
+        </window>
     </objects>
 </document>

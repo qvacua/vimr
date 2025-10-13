@@ -278,7 +278,7 @@ public final class NvimView: NSView,
         cwd: URL(fileURLWithPath: NSHomeDirectory()),
         nvimBinary: "",
         nvimArgs: nil,
-        envDict: nil,
+        additionalEnvs: [:],
         sourceFiles: []
       )
     )

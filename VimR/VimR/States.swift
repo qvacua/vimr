@@ -29,6 +29,7 @@ struct AppState: Codable, Sendable {
     case afterLastWindowAction = "after-last-window-action"
     case activateAsciiImInNormalMode = "activate-ascii-im-in-normal-mode"
     case useSnapshotUpdate = "use-snapshot-update-channel"
+    case nvimAppName = "nvim-appname"
 
     case openQuickly = "open-quickly"
     case mainWindowTemplate = "main-window"
@@ -43,6 +44,7 @@ struct AppState: Codable, Sendable {
   var activateAsciiImInNormalMode = true
 
   var useSnapshotUpdate = false
+  var nvimAppName = ""
 
   var preferencesOpen = Marked(false)
 
@@ -85,6 +87,10 @@ struct AppState: Codable, Sendable {
     self.useSnapshotUpdate = try container.decode(
       forKey: .useSnapshotUpdate,
       default: AppState.default.useSnapshotUpdate
+    )
+    self.nvimAppName = try container.decode(
+      forKey: .nvimAppName,
+      default: AppState.default.nvimAppName
     )
 
     self.openQuickly = try container.decode(
@@ -320,7 +326,7 @@ extension MainWindow {
     var nvimBinary: String = ""
     var nvimArgs: [String]?
     var cliPipePath: String?
-    var envDict: [String: String]?
+    var additionalEnvs: [String: String] = [:]
 
     var usesVcsIgnores = true
 

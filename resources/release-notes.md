@@ -1,6 +1,6 @@
 # Next
 
-* Consolidated logging
+* Add option to set the default `NVIM_APPNAME` and to open new window with custom `NVIM_APPNAME` (⌘⇧N)
 
 # 0.57.3-20251011.181129
 

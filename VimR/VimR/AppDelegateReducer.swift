@@ -45,9 +45,10 @@ final class AppDelegateReducer: ReducerType {
 
   private let baseServerUrl: URL
 
-  private func newMainWindow(with state: AppState, config: AppDelegate.OpenConfig) -> MainWindow
-    .State
-  {
+  private func newMainWindow(
+    with state: AppState,
+    config: AppDelegate.OpenConfig
+  ) -> MainWindow.State {
     var mainWindow = state.mainWindowTemplate
 
     mainWindow.uuid = UUID()
@@ -65,7 +66,10 @@ final class AppDelegateReducer: ReducerType {
     mainWindow.usesVcsIgnores = state.openQuickly.defaultUsesVcsIgnores
     mainWindow.nvimArgs = config.nvimArgs
     mainWindow.cliPipePath = config.cliPipePath
-    mainWindow.envDict = config.envDict
+    mainWindow.additionalEnvs = config.additionalEnvs
+    if !state.nvimAppName.isEmpty {
+      mainWindow.additionalEnvs["NVIM_APPNAME"] = state.nvimAppName
+    }
     mainWindow.urlsToOpen = config.urls.toDict { _ in MainWindow.OpenMode.default }
     mainWindow.frame = state.mainWindows.isEmpty ? state.mainWindowTemplate.frame
       : self.frame(relativeTo: state.mainWindowTemplate.frame)

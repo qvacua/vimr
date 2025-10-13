@@ -17,6 +17,7 @@ let defaultShortcuts: [String: Shortcut?] = [
   "com.qvacua.vimr.menuitems.file.close": Shortcut(keyEquivalent: "⌘W"),
   "com.qvacua.vimr.menuitems.file.close-window": Shortcut(keyEquivalent: "⇧⌘W"),
   "com.qvacua.vimr.menuitems.file.new": Shortcut(keyEquivalent: "⌘N"),
+  "com.qvacua.vimr.menuitems.file.new-custom-config-location": Shortcut(keyEquivalent: "⇧⌘N"),
   "com.qvacua.vimr.menuitems.file.new-tab": Shortcut(keyEquivalent: "⌘T"),
   "com.qvacua.vimr.menuitems.file.open-in-new-window": Shortcut(keyEquivalent: "⌥⌘O"),
   "com.qvacua.vimr.menuitems.file.open-quickly": Shortcut(keyEquivalent: "⇧⌘O"),

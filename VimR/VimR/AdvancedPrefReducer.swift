@@ -23,6 +23,9 @@ final class AdvancedPrefReducer: ReducerType {
 
     case let .setNvimBinary(value):
       state.mainWindowTemplate.nvimBinary = value
+
+    case let .setNvimAppName(value):
+      state.nvimAppName = value
     }
 
     return ReduceTuple(state: state, action: tuple.action, modified: true)
