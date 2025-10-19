@@ -134,7 +134,7 @@ final class MarkdownPreviewMiddleware {
 
         try sh.run()
 
-        body = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+        body = String(data: output.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
       } else {
         let md = try String(contentsOf: bufferUrl)
         let down = Down(markdownString: md)

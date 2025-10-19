@@ -178,13 +178,14 @@ final class OpenQuicklyWindow: NSObject,
     self.currentSearchService?.scanScore(
       for: pattern,
       beginCallback: { self.startProgress() },
-      endCallback: { self.endProgress() }
-    ) { scoredUrls in
-      DispatchQueue.main.async {
-        guard localToken == self.scanToken else { return }
-        self.unsortedScoredUrls.append(contentsOf: scoredUrls)
+      endCallback: { self.endProgress() },
+      callback: { scoredUrls in
+        DispatchQueue.main.async {
+          guard localToken == self.scanToken else { return }
+          self.unsortedScoredUrls.append(contentsOf: scoredUrls)
+        }
       }
-    }
+    )
   }
 
   // Since we use GCD's main queue, we can set it to nonisolated

@@ -23,6 +23,7 @@ def lint(changed_files: List[str]) -> None:
 def format(changed_files: List[str]) -> None:
     for file in [f for f in changed_files if f.endswith(".swift")]:
         subprocess.run(["swiftformat", file], check=True)
+        subprocess.run(["git", "add", file], check=True)
 
 
 if __name__ == "__main__":
