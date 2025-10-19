@@ -13,6 +13,7 @@ RELEVANT_PATHS = [
     "Workspace/Sources/Workspace",
 ]
 
+
 def lint(changed_files: List[str]) -> None:
     for path in RELEVANT_PATHS:
         if any(file.startswith(path) for file in changed_files):
