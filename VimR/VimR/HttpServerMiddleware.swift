@@ -180,9 +180,7 @@ final class HttpServerMiddleware {
 
         let uuidAction = tuple.action
         switch uuidAction.payload {
-        case .newCurrentBuffer: fallthrough
-        case .bufferWritten: fallthrough
-        case .setTheme:
+        case .newCurrentBuffer, .bufferWritten, .setTheme:
           break
         default:
           return result

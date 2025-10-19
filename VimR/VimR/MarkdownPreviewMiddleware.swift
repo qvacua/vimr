@@ -192,9 +192,7 @@ final class MarkdownPreviewMiddleware {
 
         let uuidAction = tuple.action
         switch uuidAction.payload {
-        case .newCurrentBuffer: fallthrough
-        case .bufferWritten: fallthrough
-        case .setTheme:
+        case .newCurrentBuffer, .bufferWritten, .setTheme:
           self.generator.apply(result.state, uuid: uuidAction.uuid)
         default: return result
         }
