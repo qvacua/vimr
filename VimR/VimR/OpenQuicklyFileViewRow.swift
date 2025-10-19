@@ -13,6 +13,8 @@ final class OpenQuicklyFileViewRow: NSTableRowView {
       NSColor.clear.set()
     }
 
-    self.rectsBeingDrawn().forEach { NSIntersectionRect($0, dirtyRect).fill(using: .sourceOver) }
+    self.rectsBeingDrawn().forEach {
+      $0.intersection(dirtyRect).fill(using: .sourceOver)
+    }
   }
 }

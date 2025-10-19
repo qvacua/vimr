@@ -11,6 +11,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/qvacua/MessagePack.swift", from: "4.1.0"),
     .package(url: "https://github.com/Quick/Nimble", from: "13.8.0"),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.1"),
     .package(name: "Commons", path: "../Commons"),
     .package(name: "Tabs", path: "../Tabs"),
     .package(name: "NvimApi", path: "../NvimApi"),
@@ -29,7 +30,8 @@ let package = Package(
       resources: [
         .copy("Resources/runtime"),
         .copy("Resources/NvimServer"),
-      ]
+      ],
+      plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
     ),
     .testTarget(
       name: "NvimViewTests",

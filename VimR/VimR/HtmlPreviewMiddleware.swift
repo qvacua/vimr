@@ -15,6 +15,7 @@ final class HtmlPreviewMiddleware: MiddlewareType {
   typealias ActionType = UuidAction<MainWindow.Action>
 
   init() {
+    // swiftlint:disable:next force_try
     self.selectFirstHtmlTemplate = try! String(contentsOf: Resources.selectFirstHtmlTemplateUrl)
   }
 

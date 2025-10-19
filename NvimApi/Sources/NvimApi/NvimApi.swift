@@ -145,3 +145,9 @@ extension Dictionary {
     return result
   }
 }
+
+extension MessagePackValue {
+  var intValue: Int? {
+    if let i64 = int64Value { Int(i64) } else { nil }
+  }
+}

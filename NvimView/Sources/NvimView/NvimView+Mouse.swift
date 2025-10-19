@@ -63,17 +63,17 @@ public extension NvimView {
       await self.api.nvimExecLua(
         code: """
         local arg = {...}
-
+        
         if vim.g.vimr_save_mousescroll == nil then
             vim.g.vimr_save_mousescroll = vim.o.mousescroll
         end
-
+        
         if arg[1] ~= "" then
           vim.o.mousescroll = arg[1]
         end
-
+        
         vim.api.nvim_input(arg[2])
-
+        
         -- nvim_input() only queues input, schedule resetting
         -- mousescroll to after the input hase been processed
         vim.schedule(function()

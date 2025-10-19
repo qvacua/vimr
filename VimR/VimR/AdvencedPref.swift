@@ -157,7 +157,11 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     nvimBinaryField.autoPinEdge(.left, to: .right, of: nvimBinaryTitle, withOffset: 5)
     nvimBinaryField.autoSetDimension(.width, toSize: 180, relation: .greaterThanOrEqual)
     nvimBinaryField.autoSetDimension(.width, toSize: 400, relation: .lessThanOrEqual)
-    nvimBinaryField.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
+    nvimBinaryField.autoPinEdge(
+      toSuperviewEdge: .right,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
     NotificationCenter.default.addObserver(
       forName: NSControl.textDidEndEditingNotification,
       object: nvimBinaryField,
@@ -167,7 +171,11 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     }
 
     nvimAppNameTitle.autoPinEdge(.top, to: .bottom, of: nvimBinaryField, withOffset: 18)
-    nvimAppNameTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18, relation: .greaterThanOrEqual)
+    nvimAppNameTitle.autoPinEdge(
+      toSuperviewEdge: .left,
+      withInset: 18,
+      relation: .greaterThanOrEqual
+    )
 
     nvimAppNameField.autoAlignAxis(.baseline, toSameAxisOf: nvimAppNameTitle)
     nvimAppNameField.autoPinEdge(.left, to: .right, of: nvimAppNameTitle, withOffset: 5)

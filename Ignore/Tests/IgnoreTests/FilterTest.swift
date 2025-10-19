@@ -1,9 +1,9 @@
 /// Tae Won Ha - http://taewon.de - @hataewon
 /// See LICENSE
 
-@testable import Ignore
 import Nimble
 import XCTest
+@testable import Ignore
 
 final class FilterTest: XCTestCase {
   let root = Bundle.module.url(forResource: "Resources", withExtension: nil)!

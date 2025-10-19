@@ -11,7 +11,7 @@ final class ShortcutValueTransformer: ValueTransformer {
   // Should be fine to be nonisolated
   nonisolated(unsafe) static let shared = ShortcutValueTransformer()
 
-  override class func allowsReverseTransformation() -> Bool { true }
+  override static func allowsReverseTransformation() -> Bool { true }
 
   /// Data to Shortcut
   override func transformedValue(_ value: Any?) -> Any? {

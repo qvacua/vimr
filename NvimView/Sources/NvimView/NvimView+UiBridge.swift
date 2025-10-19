@@ -105,7 +105,7 @@ extension NvimView {
           break
 
         case "grid_cursor_goto":
-          guard let _ /* grid */ = innerArray[0].uintValue,
+          guard innerArray[0].uintValue != nil, // grid
                 let row = innerArray[1].uintValue,
                 let col = innerArray[2].uintValue
           else { continue }
@@ -226,7 +226,7 @@ extension NvimView {
       return
     }
 
-    guard let _ /* grid */ = array[0].intValue,
+    guard array[0].intValue != nil, // grid
           let width = array[1].intValue,
           let height = array[2].intValue
     else {
@@ -262,7 +262,7 @@ extension NvimView {
     guard let mainTuple = value.arrayValue,
           mainTuple.count == 2,
           let modeName = mainTuple[0].stringValue,
-          let _ /* modeIndex */ = mainTuple[1].uintValue
+          mainTuple[1].uintValue != nil // modeIndex
     else {
       self.logger.error("Could not convert \(value)")
       return
@@ -334,7 +334,7 @@ extension NvimView {
       return Int.max
     }
 
-    guard let _ /* grid */ = data[0].intValue,
+    guard data[0].intValue != nil, // grid
           let row = data[1].intValue,
           let startCol = data[2].intValue,
           let chunk = data[3].arrayValue?.compactMap({ arg -> UUpdate? in
@@ -351,7 +351,7 @@ extension NvimView {
             return uupdate
           }),
           // wrap is informational, not required for correct functionality
-          let _ /* wrap */ = data[4].boolValue
+          data[4].boolValue != nil // wrap
     else {
       self.logger.error("Could not convert \(data)")
       return Int.max
@@ -513,8 +513,8 @@ extension NvimView {
 
     guard let id = array[0].intValue,
           let rgb_dict = array[1].dictionaryValue,
-          let _ /* cterm_dict */ = array[2].dictionaryValue,
-          let _ /* info */ = array[3].arrayValue
+          array[2].dictionaryValue != nil, // cterm_dict
+          array[3].arrayValue != nil // info
     else {
       self.logger.error("Could not get highlight attributes from \(value)")
       return
@@ -558,8 +558,8 @@ extension NvimView {
     guard let rgb_fg = array[0].intValue,
           let rgb_bg = array[1].intValue,
           let rgb_sp = array[2].intValue,
-          let _ /* cterm_fg */ = array[3].intValue,
-          let _ /* cterm_bg */ = array[4].intValue
+          array[3].intValue != nil, // cterm_fg
+          array[4].intValue != nil // cterm_bg
     else {
       self.logger.error("Could not get default colors from \(value)")
       return
@@ -689,11 +689,13 @@ extension TISInputSource {
     }
   }
 
+  // swiftlint:disable force_cast
   var id: String { self.getProperty(kTISPropertyInputSourceID) as! String }
   var name: String { self.getProperty(kTISPropertyLocalizedName) as! String }
   var category: String { self.getProperty(kTISPropertyInputSourceCategory) as! String }
   var isSelectable: Bool { self.getProperty(kTISPropertyInputSourceIsSelectCapable) as! Bool }
   var sourceLanguages: [String] { self.getProperty(kTISPropertyInputSourceLanguages) as! [String] }
+  // swiftlint:enable force_cast
 }
 
 private let gui = DispatchQueue.main

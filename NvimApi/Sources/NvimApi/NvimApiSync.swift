@@ -7,6 +7,7 @@ import Socket
 public class NvimApiSync: @unchecked Sendable {
   public init() {
     // We know it will succeed
+    // swiftlint:disable:next force_try
     self.socket = try! Socket.create(family: .unix, proto: .unix)
   }
 
@@ -42,7 +43,7 @@ public class NvimApiSync: @unchecked Sendable {
       try self.socket.write(from: data)
 
       var response = Data()
-      let _ = try socket.read(into: &response)
+      _ = try self.socket.read(into: &response)
 
       let decoded = try MessagePack.unpack(response)
       guard case let .array(unpacked) = decoded.value,

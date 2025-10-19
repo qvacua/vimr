@@ -65,6 +65,7 @@ extension NvimView: NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate
     guard let tabsControl = self.getTabsControl() else { return }
     tabsControl.reloadData()
 
+    // swiftlint:disable:next force_cast
     let scrubberProportionalLayout = tabsControl.scrubberLayout as! NSScrubberProportionalLayout
     scrubberProportionalLayout.numberOfVisibleItems = tabsControl
       .numberOfItems > 0 ? tabsControl.numberOfItems : 1

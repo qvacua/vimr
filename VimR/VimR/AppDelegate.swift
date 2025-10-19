@@ -100,8 +100,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
       self.context.subscribe(uuid: self.uuid) { appState in
         self.hasMainWindows = !appState.mainWindows.isEmpty
-        self.hasDirtyWindows = appState.mainWindows.values
-          .reduce(false) { $1.isDirty ? true : $0 }
+        self.hasDirtyWindows = appState.mainWindows.values.contains(where: { $0.isDirty })
 
         self.openNewMainWindowOnLaunch = appState.openNewMainWindowOnLaunch
         self.openNewMainWindowOnReactivation = appState.openNewMainWindowOnReactivation
@@ -236,12 +235,12 @@ extension AppDelegate {
     self.updaterController.startUpdater()
 
     #if DEBUG
-      NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
+    NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
     #else
-      // defaults write com.qvacua.VimR enable-debug-menu 1
-      if UserDefaults.standard.bool(forKey: "enable-debug-menu") {
-        NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
-      }
+    // defaults write com.qvacua.VimR enable-debug-menu 1
+    if UserDefaults.standard.bool(forKey: "enable-debug-menu") {
+      NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
+    }
     #endif
   }
 

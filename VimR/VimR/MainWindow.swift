@@ -523,9 +523,7 @@ final class MainWindow: NSObject,
     case .noWriteSinceLastChange: alert.messageText = "There are changes since the last write."
     }
     alert.alertStyle = .informational
-    alert.beginSheetModal(for: self.window) { _ in
-      Swift.print("fdsfd")
-    }
+    alert.beginSheetModal(for: self.window) { _ in }
   }
 
   func revealCurrentBufferInFileBrowser() {

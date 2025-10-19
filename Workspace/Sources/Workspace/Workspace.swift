@@ -214,13 +214,7 @@ public extension Workspace {
   }
 
   private func barLocation(inPoint loc: CGPoint) -> WorkspaceBarLocation? {
-    for barLoc in WorkspaceBarLocation.allCases {
-      if self.rect(forBar: barLoc).contains(loc) {
-        return barLoc
-      }
-    }
-
-    return nil
+    return WorkspaceBarLocation.allCases.first(where: { self.rect(forBar: $0).contains(loc) })
   }
 
   // We copy and pasted WorkspaceBar.barFrame() since we need the rect for the proxy bars.

@@ -123,7 +123,9 @@ final class DraggingSingleRowStackView: NSStackView {
       case bitmapCreationFailed
     }
 
+    // FIXME: Check whether forced cast is appropriate here
     override init(layer: Any) {
+      // swiftlint:disable:next force_cast
       self.view = (layer as! CachedViewLayer).view
       super.init(layer: layer)
     }

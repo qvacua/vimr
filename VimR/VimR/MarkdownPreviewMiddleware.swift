@@ -20,10 +20,12 @@ final class MarkdownPreviewMiddleware {
   class PreviewGenerator {
     init() {
       // We know that the files are there!
+      // swiftlint:disable force_try
       self.template = try! String(contentsOf: Resources.markdownTemplateUrl)
       self.emptyHtmlTemplate = try! String(contentsOf: Resources.emptyHtmlTemplateUrl)
       self.errorHtmlTemplate = try! String(contentsOf: Resources.errorHtmlTemplateUrl)
       self.saveFirstHtmlTemplate = try! String(contentsOf: Resources.saveFirstHtmlTemplateUrl)
+      // swiftlint:enable force_try
 
       self.updateCssOverrides(with: Theme.default)
     }

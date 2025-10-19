@@ -11,9 +11,14 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/qvacua/misc.swift", exact: "0.4.0"),
     .package(url: "https://github.com/Quick/Nimble", from: "13.8.0"),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.1"),
   ],
   targets: [
-    .target(name: "Ignore", dependencies: [.product(name: "WildmatchC", package: "misc.swift")]),
+    .target(
+      name: "Ignore",
+      dependencies: [.product(name: "WildmatchC", package: "misc.swift")],
+      plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
+    ),
     .testTarget(
       name: "IgnoreTests",
       dependencies: ["Ignore", "Nimble"],

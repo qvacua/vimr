@@ -77,6 +77,7 @@ final class PrefWindow: NSObject,
   private let panes: [PrefPane]
   private var currentPane: PrefPane {
     get {
+      // swiftlint:disable:next force_cast
       self.paneContainer.documentView as! PrefPane
     }
 

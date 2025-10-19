@@ -44,19 +44,19 @@ public struct DevLogger: Sendable {
     let category = "development"
 
     #if DEBUG || TRACE
-      switch mode {
-      case .os:
-        self.appender = OsAppender(subsystem: subsystem, category: category)
-      case .file:
-        self.appender = FileAppender(subsystem: subsystem, category: category) ?? OsAppender(
-          subsystem: subsystem,
-          category: category
-        )
-      case .noop:
-        self.appender = NoopAppender()
-      }
-    #else
+    switch mode {
+    case .os:
+      self.appender = OsAppender(subsystem: subsystem, category: category)
+    case .file:
+      self.appender = FileAppender(subsystem: subsystem, category: category) ?? OsAppender(
+        subsystem: subsystem,
+        category: category
+      )
+    case .noop:
       self.appender = NoopAppender()
+    }
+    #else
+    self.appender = NoopAppender()
     #endif
   }
 
@@ -66,7 +66,7 @@ public struct DevLogger: Sendable {
     line: Int = #line
   ) {
     #if DEBUG
-      self.appender.debug(file: file, function: function, line: line, "MARK")
+    self.appender.debug(file: file, function: function, line: line, "MARK")
     #endif
   }
 
@@ -77,7 +77,7 @@ public struct DevLogger: Sendable {
     _ msg: @autoclosure () -> some Any
   ) {
     #if DEBUG
-      self.appender.debug(file: file, function: function, line: line, "\(msg())")
+    self.appender.debug(file: file, function: function, line: line, "\(msg())")
     #endif
   }
 
@@ -88,7 +88,7 @@ public struct DevLogger: Sendable {
     _ msg: @autoclosure () -> some Any
   ) {
     #if TRACE
-      self.appender.trace(file: file, function: function, line: line, "\(msg())")
+    self.appender.trace(file: file, function: function, line: line, "\(msg())")
     #endif
   }
 

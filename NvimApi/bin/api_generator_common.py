@@ -56,7 +56,7 @@ def msgpack_to_swift(msgpack_value_name, type):
         return f"{msgpack_value_name}.boolValue"
 
     if type == "Int":
-        return f"({msgpack_value_name}.int64Value == nil ? nil : Int({msgpack_value_name}.int64Value!))"
+        return f"{msgpack_value_name}.intValue"
 
     if type == "Float":
         return f"{msgpack_value_name}.floatValue"

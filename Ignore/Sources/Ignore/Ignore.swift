@@ -106,8 +106,8 @@ public final class Ignore {
 
     if isExcluded { return true }
 
-    for ignore in self.remainingDisallowIgnores {
-      if ignore.matches(url) { return true }
+    if self.remainingDisallowIgnores.contains(where: { $0.matches(url) }) {
+      return true
     }
 
     return false

@@ -201,7 +201,10 @@ final class FuzzySearchService: @unchecked Sendable {
           let ids = stack.map(\.1.objectID)
           stack = Array(zip(
             stack.map(\.0),
-            ids.map { context.object(with: $0) as! FileItem }
+            ids.map {
+              // swiftlint:disable:next force_cast
+              context.object(with: $0) as! FileItem
+            }
           ))
         }
       }
@@ -377,6 +380,8 @@ final class FuzzySearchService: @unchecked Sendable {
     return file
   }
 
+  #if DEBUG
+  // swiftlint:disable no_direct_standard_out_logs
   func debug() {
     let req = self.fileFetchRequest("needsScanChildren == TRUE AND direntType == %d", [DT_DIR])
 
@@ -394,6 +399,8 @@ final class FuzzySearchService: @unchecked Sendable {
       }
     }
   }
+  // swiftlint:enable no_direct_standard_out_logs
+  #endif
 
   private var stop = false
   private let stopLock = NSLock()

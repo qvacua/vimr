@@ -113,7 +113,7 @@ final class UiComponentTemplate: UiComponent {
 
     // react to the new state
     context.subscribe(uuid: self.uuid) { state in
-      Swift.print(state)
+      dlog.debug(state)
     }
   }
 

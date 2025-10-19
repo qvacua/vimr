@@ -118,7 +118,6 @@ final class UGrid: CustomStringConvertible, Codable {
     for i in (0..<column).reversed() {
       if row[i].string == wordSeparator { return min(i + 1, self.size.width - 1) }
     }
-
     return 0
   }
 
@@ -405,13 +404,13 @@ final class UGrid: CustomStringConvertible, Codable {
 }
 
 extension UGrid {
-  func dump() throws {
+  func dumpToJson() throws {
     #if DEBUG
-      let encoder = JSONEncoder()
-      encoder.outputFormatting = .prettyPrinted
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .prettyPrinted
 
-      let data = try encoder.encode(self)
-      try data.write(to: URL(fileURLWithPath: "/tmp/ugrid.dump.json"))
+    let data = try encoder.encode(self)
+    try data.write(to: URL(fileURLWithPath: "/tmp/ugrid.dump.json"))
     #endif
   }
 }

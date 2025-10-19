@@ -6,6 +6,7 @@
 import Cocoa
 
 final class CssUtils {
+  // swiftlint:disable:next force_try
   static let cssOverridesTemplate: String = try! String(
     contentsOf: Resources.cssOverridesTemplateUrl
   )

@@ -273,13 +273,13 @@ final class FileOutlineView: NSOutlineView,
       .map(\.indexPath) ?? []
 
     #if DEBUG
-      changeTreeNode
-        .children?
-        .filter { child in
-          guard let url = child.node?.url else { return true }
-          return newChildUrls.contains(url) == false
-        }
-        .forEach { treeNode in dlog.debug(treeNode.node) }
+    changeTreeNode
+      .children?
+      .filter { child in
+        guard let url = child.node?.url else { return true }
+        return newChildUrls.contains(url) == false
+      }
+      .forEach { treeNode in dlog.debug(treeNode.node) }
     #endif
 
     self.treeController.removeObjects(atArrangedObjectIndexPaths: indexPathsToRemove)

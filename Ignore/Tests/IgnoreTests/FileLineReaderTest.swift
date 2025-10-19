@@ -1,9 +1,9 @@
 /// Tae Won Ha - http://taewon.de - @hataewon
 /// See LICENSE
 
-@testable import Ignore
 import Nimble
 import XCTest
+@testable import Ignore
 
 private struct TestSpec {
   var fileName: String

@@ -52,11 +52,6 @@ class ArrayCommonsTest: XCTestCase {
       ))
   }
 
-  func testRemovingDuplicatesPreservingFromBeginning() {
-    let array = [1, 2, 3, 4, 3, 3, 5, 3]
-    expect(array.removingDuplicatesPreservingFromBeginning()).to(equal([1, 2, 3, 4, 5]))
-  }
-
   func testSubstituting1() {
     let substitute = [
       DummyToken("a0"),

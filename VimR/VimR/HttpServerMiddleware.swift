@@ -18,8 +18,10 @@ final class HttpServerMiddleware {
     // We know that the URL is valid!
     let baseUrl = URL(string: "http://\(localhost):\(port)")!
 
+    // swiftlint:disable force_try
     let cssOverridesTemplate = try! String(contentsOf: Resources.cssOverridesTemplateUrl)
     let selectFirstHtmlTemplate = try! String(contentsOf: Resources.selectFirstHtmlTemplateUrl)
+    // swiftlint:enable force_try
 
     let server = HttpServer()
     server.listenAddressIPv4 = localhost

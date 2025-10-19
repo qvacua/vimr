@@ -75,7 +75,7 @@ func_template = Template(
         ${params}
     ]
 
-    let transform = { (_ value: NvimApi.Value) throws(NvimApi.Error) -> ${result_type} in
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> ${result_type} {
       guard let result = (${return_value}) else {
         throw NvimApi.Error.conversion(type: ${result_type}.self)
       }

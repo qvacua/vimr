@@ -275,7 +275,7 @@ final class Typesetter {
             resultPtr[i + j] = element[j]
           }
 
-          i = i + element.count
+          i += element.count
         }
         initCount = count
       }
@@ -291,4 +291,4 @@ final class Typesetter {
   }
 }
 
-private let ligatureOption = NSNumber(integerLiteral: 1)
+private let ligatureOption: NSNumber = 1

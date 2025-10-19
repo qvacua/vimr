@@ -711,6 +711,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4B582FBB2EA525600016D7AF /* PBXTargetDependency */,
 			);
 			name = VimR;
 			packageProductDependencies = (
@@ -804,6 +805,7 @@
 				4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */,
 				4BA19810285B4BA600B49309 /* XCRemoteSwiftPackageReference "misc" */,
 				4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */,
+				4B582FB92EA525580016D7AF /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			productRefGroup = 4BEBA5061CFF374B00673FDF /* Products */;
 			projectDirPath = "";
@@ -1009,6 +1011,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4B582FBB2EA525600016D7AF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 4B582FBA2EA525600016D7AF /* SwiftLintBuildToolPlugin */;
+		};
 		4BE73F9F285C9C4500B63585 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4BEBA5041CFF374B00673FDF /* VimR */;
@@ -1311,6 +1317,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4B582FB92EA525580016D7AF /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.62.1;
+			};
+		};
 		4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/qvacua/material-icons";
@@ -1410,6 +1424,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B582FBA2EA525600016D7AF /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B582FB92EA525580016D7AF /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
 		4B69B31A24EDBAF000B1E5EB /* MaterialIcons */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */;
