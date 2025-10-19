@@ -51,20 +51,27 @@ final class Typesetter {
         }
         // swiftlint:enable force_unwrapping
 
-        var column = -1
-        var columnPosition = 0.0
-        var deltaX = 0.0
+        let offsetX = offset.x
+        let offsetY = offset.y
 
         positions.withUnsafeMutableBufferPointer { positionsPtr in
-          for i in 0..<positionsPtr.count {
-            let newColumn = cellIndices[indices[i]] + startColumn
-            if newColumn != column {
-              columnPosition = offset.x + newColumn.cgf * cellWidth
-              deltaX = columnPosition - positionsPtr[i].x
-              column = newColumn
+          indices.withUnsafeBufferPointer { indicesPtr in
+            cellIndices.withUnsafeBufferPointer { cellIndicesPtr in
+              var column = -1
+              var columnPosition = 0.0
+              var deltaX = 0.0
+
+              for i in 0..<positionsPtr.count {
+                let newColumn = cellIndicesPtr[indicesPtr[i]] + startColumn
+                if newColumn != column {
+                  columnPosition = offsetX + newColumn.cgf * cellWidth
+                  deltaX = columnPosition - positionsPtr[i].x
+                  column = newColumn
+                }
+                positionsPtr[i].x += deltaX
+                positionsPtr[i].y += offsetY
+              }
             }
-            positionsPtr[i].x += deltaX
-            positionsPtr[i].y += offset.y
           }
         }
 

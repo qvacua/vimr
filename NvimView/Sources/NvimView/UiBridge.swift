@@ -21,14 +21,14 @@ final class UiBridge {
     self.nvimBinary = config.nvimBinary
     self.nvimArgs = config.nvimArgs ?? []
     self.cwd = config.cwd
-    
+
     let selfEnv = ProcessInfo.processInfo.environment
     let shellUrl = URL(fileURLWithPath: selfEnv["SHELL"] ?? "/bin/bash")
     dlog.debug("Using SHELL: \(shellUrl)")
     let interactiveMode = shellUrl.lastPathComponent == "zsh" && !config
       .useInteractiveZsh ? false : true
     self.envDict = ProcessUtils.envVars(of: shellUrl, usingInteractiveMode: interactiveMode)
-    .merging(config.additionalEnvs)  { (_, new) in new }
+      .merging(config.additionalEnvs) { _, new in new }
     dlog.debug("Using ENVs from login shell: \(self.envDict)")
   }
 

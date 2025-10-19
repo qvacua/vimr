@@ -88,6 +88,7 @@ final class Marked<T: Sendable>: CustomStringConvertible, Sendable {
   }
 }
 
+#if DEBUG
 final class UiComponentTemplate: UiComponent {
   typealias StateType = State
 
@@ -130,3 +131,4 @@ final class UiComponentTemplate: UiComponent {
 
   private let someField: String
 }
+#endif
