@@ -66,8 +66,8 @@ final class UiRoot: UiComponent {
 
   // The following should only be used when Cmd-Q'ing
   func hasBlockedWindows() async -> Bool {
-    for mainWin in self.mainWindows.values {
-      if await mainWin.neoVimView.isBlocked() { return true }
+    for mainWin in self.mainWindows.values where await mainWin.neoVimView.isBlocked() {
+      return true
     }
 
     return false
