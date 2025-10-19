@@ -124,11 +124,9 @@ final class ShortcutsPref: PrefPane,
 
   private func initShortcutUserDefaults() {
     let transformer = ShortcutValueTransformer.shared
-    for (id, shortcut) in defaultShortcuts {
-      if self.shortcutsUserDefaults?.value(forKey: id) == nil {
-        let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
-        self.shortcutsUserDefaults?.set(shortcutData, forKey: id)
-      }
+    for (id, shortcut) in defaultShortcuts where self.shortcutsUserDefaults?.value(forKey: id) == nil {
+      let shortcutData = transformer.reverseTransformedValue(shortcut) as? NSData
+      self.shortcutsUserDefaults?.set(shortcutData, forKey: id)
     }
     self.shortcutsUserDefaults?.set(defaultsVersion, forKey: defaultsVersionKey)
   }
