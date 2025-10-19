@@ -174,10 +174,8 @@ final class MainWindow: NSObject,
       )
     }
 
-    for (toolId, toolContainer) in self.tools {
-      if state.tools[toolId]?.open == true {
-        toolContainer.toggle()
-      }
+    for (toolId, toolContainer) in self.tools where state.tools[toolId]?.open == true {
+      toolContainer.toggle()
     }
 
     if !state.isToolButtonsVisible {
