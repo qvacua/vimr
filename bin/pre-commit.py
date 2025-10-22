@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import subprocess
 from typing import List
+
+from shelly import sh, shout
 
 RELEVANT_PATHS = [
     "Commons/Sources/Commons",
@@ -17,22 +18,17 @@ RELEVANT_PATHS = [
 def lint(changed_files: List[str]) -> None:
     for path in RELEVANT_PATHS:
         if any(file.startswith(path) for file in changed_files):
-            subprocess.run(["swiftlint", path], check=True)
+            sh(["swiftlint", path])
 
 
 def format(changed_files: List[str]) -> None:
     for file in [f for f in changed_files if f.endswith(".swift")]:
-        subprocess.run(["swiftformat", file], check=True)
-        subprocess.run(["git", "add", file], check=True)
+        sh(["swiftformat", file])
+        sh(["git", "add", file])
 
 
 if __name__ == "__main__":
-    changed_files = subprocess.run(
-        "git diff --cached --name-only --diff-filter=ACMR".split(" "),
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout.splitlines()
+    changed_files = shout("git diff --cached --name-only --diff-filter=ACMR").splitlines()
 
     lint(changed_files)
     format(changed_files)
