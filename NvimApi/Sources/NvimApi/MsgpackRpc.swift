@@ -11,18 +11,18 @@ extension Pipe {
     fileprivate let dataStream: AsyncStream<Data>
 
     init(pipe: Pipe) {
-      self.dataStream = AsyncStream { continuation in
-        continuation.onTermination = { _ in pipe.fileHandleForReading.readabilityHandler = nil }
+      let (stream, cont) = AsyncStream<Data>.makeStream()
+      self.dataStream = stream
+      cont.onTermination = { [weak pipe] _ in pipe?.fileHandleForReading.readabilityHandler = nil }
+      
+      pipe.fileHandleForReading.readabilityHandler = { handle in
+        let data = handle.availableData
 
-        pipe.fileHandleForReading.readabilityHandler = { handle in
-          let data = handle.availableData
-
-          if data.isEmpty {
-            continuation.finish()
-            return
-          } else {
-            continuation.yield(data)
-          }
+        if data.isEmpty {
+          cont.finish()
+          return
+        } else {
+          cont.yield(data)
         }
       }
     }
