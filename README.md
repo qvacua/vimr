@@ -32,7 +32,7 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 * [NvimView](https://github.com/qvacua/vimr/tree/master/NvimView): SwiftPM module containing
   an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to 
   embed Neovim in a Cocoa App.
-* [NeovimApi](https://github.com/qvacua/vimr/tree/master/NvimApi): API for Neovim; sync and async.
+* [NvimApi](https://github.com/qvacua/vimr/tree/master/NvimApi): API for Neovim; sync and async.
 
 ## Some Features
 
