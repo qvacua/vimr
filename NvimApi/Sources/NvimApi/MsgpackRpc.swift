@@ -164,18 +164,18 @@ public actor MsgpackRpc {
         throw Error(msg: "Could not get the async data stream")
       }
 
-      var remainderData = Data()
-      var dataToUnmarshall = Data()
+      var buffer = Data()
       for await data in dataStream {
         do {
-          if remainderData.count > 0 { dataToUnmarshall.append(remainderData) }
-          dataToUnmarshall.append(data)
+          buffer.append(data)
 
-          let (values, remainder) = try self.unpackAllWithRemainder(dataToUnmarshall)
+          let (values, remainder) = try self.unpackAllWithRemainder(buffer)
 
-          dataToUnmarshall.removeAll(keepingCapacity: true)
-          if let remainder { remainderData = remainder }
-          else { remainderData.removeAll(keepingCapacity: true) }
+          if let remainder {
+            buffer = remainder
+          } else {
+            buffer.removeAll(keepingCapacity: true)
+          }
 
           // Do we have to check closed here before processing the msgs?
           for value in values {
