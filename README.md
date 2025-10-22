@@ -13,7 +13,7 @@ The goal is to build an editor that uses Neovim inside with some of the convenie
 GUI features similar to those present in other editors.
 
 There are other Neovim GUIs for macOS,
-see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
+see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why VimR?
 
 - Play around with [Neovim](https://github.com/qvacua/neovim),
 - Play around with the main idea of Redux architecture, and
@@ -27,14 +27,23 @@ If you want to support VimR financially, use [Github's Sponsor](https://github.c
 
 Pre-built Universal signed and notarized binaries can be found under [Releases](https://github.com/qvacua/vimr/releases).
 
+## Requirements
+
+- macOS 13.0 or later
+- Development: Xcode 26
+
 ## Reusable Components
 
-* [NvimView](https://github.com/qvacua/vimr/tree/master/NvimView): SwiftPM module containing
-  an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to 
-  embed Neovim in a Cocoa App.
-* [NvimApi](https://github.com/qvacua/vimr/tree/master/NvimApi): API for Neovim; sync and async.
+VimR is built with a modular architecture. The following Swift packages can be used independently:
 
-## Some Features
+* [NvimView](https://github.com/qvacua/vimr/tree/master/NvimView): SwiftPM module containing an NSView which bundles everything needed to embed Neovim in a Cocoa app, including the Neovim binary and runtime files.
+* [NvimApi](https://github.com/qvacua/vimr/tree/master/NvimApi): Synchronous and asynchronous API for Neovim.
+* [Commons](https://github.com/qvacua/vimr/tree/master/Commons): Common utilities and helpers used across the project.
+* [Tabs](https://github.com/qvacua/vimr/tree/master/Tabs): Tab bar component.
+* [Workspace](https://github.com/qvacua/vimr/tree/master/Workspace): Workspace management component.
+* [Ignore](https://github.com/qvacua/vimr/tree/master/Ignore): Gitignore-style pattern matching using [wildmatch](https://github.com/davvid/wildmatch).
+
+## Features
 
 * Markdown preview
 * Generic HTML preview (retains the scroll position when reloading)
@@ -55,8 +64,9 @@ git submodule update --init
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle # install dependencies, e.g., build tools for Neovim
 clean=true notarize=false ./bin/build_vimr.sh
-# VimR.app will be placed in ./build/Build/Products/Release/
 ```
+
+The built application will be located at `./build/Build/Products/Release/VimR.app`.
 
 ## Development
 
