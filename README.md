@@ -10,12 +10,12 @@
 VimR is a Neovim GUI for macOS written in Swift.
 
 The goal is to build an editor that uses Neovim inside with some of the convenient
-GUI features similar to those present in modern editors.
+GUI features similar to those present in other editors.
 
-There are other Neovim GUIs for macOS, see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
+There are other Neovim GUIs for macOS,
+see the [list](https://github.com/neovim/neovim/wiki/Related-projects#gui), so why?
 
 - Play around with [Neovim](https://github.com/qvacua/neovim),
-- play around with Swift (and especially with [RxSwift](https://github.com/ReactiveX/RxSwift)),
 - Play around with the main idea of Redux architecture, and
 - (most importantly) have fun!
 
@@ -32,8 +32,7 @@ Pre-built Universal signed and notarized binaries can be found under [Releases](
 * [NvimView](https://github.com/qvacua/vimr/tree/master/NvimView): SwiftPM module containing
   an NSView which bundles everything, e.g., Neovim binary and its `runtime`-files, needed to 
   embed Neovim in a Cocoa App.
-* [RxMsgpackRpc](https://github.com/qvacua/vimr/tree/master/RxPack/Sources/RxPack/RxMsgpackRpc.swift): Implementation of MsgpackRpc using RxSwift.
-* [RxNeovimApi](https://github.com/qvacua/vimr/tree/master/RxPack/Sources/RxNeovim): RxSwift wrapper of Neovim API.
+* [NeovimApi](https://github.com/qvacua/vimr/tree/master/NvimApi): API for Neovim; sync and async.
 
 ## Some Features
 
@@ -66,4 +65,3 @@ See [DEVELOP.md](DEVELOP.md).
 ## License
 
 [MIT](https://github.com/qvacua/vimr/blob/master/LICENSE)
-
