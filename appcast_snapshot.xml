@@ -6,22 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.58.0-20251013.211150</title>
+      <title>v0.59.0-20251103.194245</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20251013.211150</sparkle:version>
-      <sparkle:shortVersionString>v0.58.0</sparkle:shortVersionString>
+      <sparkle:version>20251103.194245</sparkle:version>
+      <sparkle:shortVersionString>v0.59.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Add option to set the default <code>NVIM_APPNAME</code> and to open new window with custom <code>NVIM_APPNAME</code> (⌘⇧N)</li>
+<li>Neovim 0.11.5 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.58.0-20251013.211150
+        https://github.com/qvacua/vimr/releases/tag/v0.59.0-20251103.194245
       </releaseNotesLink>
-      <pubDate>2025-10-13T21:15:51.049403</pubDate>
+      <pubDate>2025-11-03T19:47:07.618552</pubDate>
       <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.58.0-20251013.211150/VimR-v0.58.0.tar.bz2"
-                 sparkle:edSignature="z50PnonVsBGy8QjHH+zG8FVJ9F7R8j+JcyRLqQ6jWEeUBxyCbPsYdaR0EITILsCdSQh369bcoGV1xVaGhfX9AA==" length="18768833"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.0-20251103.194245/VimR-v0.59.0.tar.bz2"
+                 sparkle:edSignature="xsj+foiL5CqAIq4whfKS0UuAcz39c7AS3J+R/OG4kXzTG92cUm7l9w4oJiDMqh/ej5ObmJooHsHdPBUIUc0/AA==" length="18758657"
                  type="application/octet-stream"/>
     </item>
   </channel>
