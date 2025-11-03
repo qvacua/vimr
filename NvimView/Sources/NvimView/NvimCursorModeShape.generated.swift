@@ -1,7 +1,8 @@
-// Auto generated for nvim v0.11.4
+// Auto generated for nvim v0.11.5
 // See bin/generate_cursor_shape.py
 
 public enum CursorModeShape: String {
+
   case normal
   case visual
   case insert
@@ -22,3 +23,4 @@ public enum CursorModeShape: String {
   case terminalMode
   case count
 }
+

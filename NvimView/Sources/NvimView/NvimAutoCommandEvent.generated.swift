@@ -1,7 +1,8 @@
-// Auto generated for nvim v0.11.4
+// Auto generated for nvim v0.11.5
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: String {
+
   case bufadd
   case bufcreate
   case bufdelete
@@ -140,3 +141,4 @@ enum NvimAutoCommandEvent: String {
   case winresized
   case winscrolled
 }
+
