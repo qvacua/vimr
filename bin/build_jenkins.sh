@@ -55,7 +55,7 @@ main() {
 
   echo "### Build VimR"
 
-  release_spec_file=release.spec.sh ./bin/build_release.sh
+  is_jenkins=true release_spec_file=release.spec.sh ./bin/build_release.sh
 
   if [[ "${create_gh_release}" == false ]]; then
     echo "### No github release, so exiting after building"

@@ -4,9 +4,16 @@ set -Eeuo pipefail
 readonly strip_symbols=${strip_symbols:-true}
 readonly notarize=${notarize:?"true or false"}
 readonly clean=${clean:?"true or false"}
+readonly is_jenkins=${is_jenkins:-false}
 
 build_vimr() {
   local -r build_path=$1
+  local plugin_flag=""
+  
+  if [[ "${is_jenkins}" == true ]]; then
+    plugin_flag="-skipPackagePluginValidation"
+  fi
+
 
   echo "### Xcodebuilding"
   rm -rf "${build_path}"
@@ -14,11 +21,13 @@ build_vimr() {
       xcodebuild \
         -configuration Release -derivedDataPath "${build_path}" \
         -workspace VimR.xcworkspace -scheme VimR \
+        ${plugin_flag} \
         clean build
   else
       xcodebuild \
         -configuration Release -derivedDataPath "${build_path}" \
         -workspace VimR.xcworkspace -scheme VimR \
+        ${plugin_flag} \
         build
   fi
 }
