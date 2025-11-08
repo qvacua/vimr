@@ -8,13 +8,13 @@ import Nimble
 
 // I don't know why the font returned by Typesetter is not equal to the font
 // it should be equal to. This is a workaround.
-func equalFont(_ expectedValue: NSFont?) -> Nimble.Predicate<NSFont> {
-  Predicate { actualExpression in
+func equalFont(_ expectedValue: NSFont?) -> Nimble.Matcher<NSFont> {
+  Matcher { actualExpression in
     let msg = ExpectationMessage.expectedActualValueTo(
       "equal <\(String(describing: expectedValue))>"
     )
     if let actualValue = try actualExpression.evaluate() {
-      return PredicateResult(
+      return MatcherResult(
         bool: NSFont(
           name: actualValue.fontName,
           size: actualValue.pointSize
@@ -22,7 +22,7 @@ func equalFont(_ expectedValue: NSFont?) -> Nimble.Predicate<NSFont> {
         message: msg
       )
     } else {
-      return PredicateResult(
+      return MatcherResult(
         status: .fail,
         message: msg.appendedBeNilHint()
       )
