@@ -59,10 +59,15 @@ defaults write com.qvacua.VimR enable-debug-menu 1
     - Release: `vX.Y.Z-yyyymmdd.HHMMSS`
 * Push
 * Add release notes to `release-notes.temp.md`.
-* Build, package and upload via
+* Build the release via
+    ```bash
+    release_spec_file=....sh \
+    ./bin/build_release.sh
+    ```
+* Publish to GitHub and update appcast via
     ```bash
     create_gh_release=true upload=true update_appcast=true \
     release_spec_file=....sh \
-    ./bin/build_release.sh
+    ./bin/publish_release.sh
     ```
 * The `appcast{-snapshot}.xml` file is modified. Check and push.
