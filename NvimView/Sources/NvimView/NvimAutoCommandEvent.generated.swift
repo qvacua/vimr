@@ -141,4 +141,3 @@ enum NvimAutoCommandEvent: String {
   case winresized
   case winscrolled
 }
-

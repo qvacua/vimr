@@ -23,4 +23,3 @@ public enum CursorModeShape: String {
   case terminalMode
   case count
 }
-
