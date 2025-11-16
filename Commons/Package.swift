@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "Commons",
-  platforms: [.macOS(.v13)],
+  platforms: [.macOS(.v14)],
   products: [
     .library(name: "Commons", targets: ["Commons", "CommonsObjC"]),
   ],

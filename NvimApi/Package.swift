@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "NvimApi",
-  platforms: [.macOS(.v13)],
+  platforms: [.macOS(.v14)],
   products: [
     .library(name: "NvimApi", targets: ["NvimApi"]),
   ],

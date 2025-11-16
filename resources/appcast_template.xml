@@ -17,7 +17,7 @@
         ${release_notes_link}
       </releaseNotesLink>
       <pubDate>${publication_date}</pubDate>
-      <minimumSystemVersion>13.5</minimumSystemVersion>
+      <minimumSystemVersion>14.8</minimumSystemVersion>
       <enclosure url="${file_url}"
                  ${signature_output}
                  type="application/octet-stream"/>
