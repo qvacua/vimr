@@ -201,7 +201,6 @@ extension NvimApi.Tabpage {
     self.handle = Int(handle)
   }
 }
-
 """
 )
 

@@ -20,4 +20,4 @@
 --rules indent
 --rules wraparguments
 --rules trailingCommas
-
+--rules typeSugar

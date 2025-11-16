@@ -105,7 +105,6 @@ public extension NvimApiSync {
 
 $body
 }
-
 """
 )
 

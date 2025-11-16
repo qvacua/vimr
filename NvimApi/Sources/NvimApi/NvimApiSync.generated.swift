@@ -1,4 +1,4 @@
-// Auto generated for nvim version 0.11.4.
+// Auto generated for nvim version 0.11.5.
 // See bin/generate_api_methods.py
 
 import Foundation
@@ -7,7 +7,7 @@ import MessagePack
 public extension NvimApiSync {
 
   func nvimGetAutocmds(
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -38,7 +38,7 @@ public extension NvimApiSync {
 
   func nvimCreateAutocmd(
     event: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -86,7 +86,7 @@ public extension NvimApiSync {
   }
 
   func nvimClearAutocmds(
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -104,7 +104,7 @@ public extension NvimApiSync {
 
   func nvimCreateAugroup(
     name: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -170,7 +170,7 @@ public extension NvimApiSync {
 
   func nvimExecAutocmds(
     event: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -220,7 +220,7 @@ public extension NvimApiSync {
   func nvimBufAttach(
     buffer: NvimApi.Buffer,
     send_buffer: Bool,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Bool, NvimApi.Error> {
 
@@ -375,7 +375,7 @@ public extension NvimApiSync {
     start_col: Int,
     end_row: Int,
     end_col: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<[String], NvimApi.Error> {
 
@@ -507,19 +507,16 @@ public extension NvimApiSync {
     buffer: NvimApi.Buffer,
     mode: String,
     errWhenBlocked: Bool = true
-  ) -> Result<[Dictionary<String, NvimApi.Value>], NvimApi.Error> {
+  ) -> Result<[[String: NvimApi.Value]], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .string(mode),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [Dictionary<
-      String,
-      NvimApi.Value
-    >] {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [[String: NvimApi.Value]] {
       guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-        throw NvimApi.Error.conversion(type: [Dictionary<String, NvimApi.Value>].self)
+        throw NvimApi.Error.conversion(type: [[String: NvimApi.Value]].self)
       }
 
       return result
@@ -530,7 +527,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_buf_get_keymap", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> [Dictionary<String, NvimApi.Value>] in
+      return Result { () throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
         try transform(value)
       }
     case let .failure(error):
@@ -543,7 +540,7 @@ public extension NvimApiSync {
     mode: String,
     lhs: String,
     rhs: String,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -705,7 +702,7 @@ public extension NvimApiSync {
 
   func nvimBufDelete(
     buffer: NvimApi.Buffer,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -789,7 +786,7 @@ public extension NvimApiSync {
     name: String,
     line: Int,
     col: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Bool, NvimApi.Error> {
 
@@ -888,18 +885,18 @@ public extension NvimApiSync {
 
   func nvimParseCmd(
     str: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(str),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -910,7 +907,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_parse_cmd", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -919,8 +916,8 @@ public extension NvimApiSync {
   }
 
   func nvimCmd(
-    cmd: Dictionary<String, NvimApi.Value>,
-    opts: Dictionary<String, NvimApi.Value>,
+    cmd: [String: NvimApi.Value],
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<String, NvimApi.Error> {
 
@@ -953,7 +950,7 @@ public extension NvimApiSync {
   func nvimCreateUserCommand(
     name: String,
     command: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -992,7 +989,7 @@ public extension NvimApiSync {
     buffer: NvimApi.Buffer,
     name: String,
     command: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -1031,17 +1028,17 @@ public extension NvimApiSync {
   }
 
   func nvimGetCommands(
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -1052,7 +1049,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_commands", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1062,18 +1059,18 @@ public extension NvimApiSync {
 
   func nvimBufGetCommands(
     buffer: NvimApi.Buffer,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(buffer.handle)),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -1084,7 +1081,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_buf_get_commands", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1291,7 +1288,7 @@ public extension NvimApiSync {
     src_id: Int,
     line: Int,
     chunks: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -1329,16 +1326,16 @@ public extension NvimApiSync {
     hl_id: Int,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(hl_id)),
       .bool(rgb),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -1349,7 +1346,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_hl_by_id", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1362,16 +1359,16 @@ public extension NvimApiSync {
     name: String,
     rgb: Bool,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(name),
       .bool(rgb),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -1382,7 +1379,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_hl_by_name", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -1826,15 +1823,15 @@ public extension NvimApiSync {
   func nvimGetOptionInfo(
     name: String,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(name),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -1845,7 +1842,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_option_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2139,7 +2136,7 @@ public extension NvimApiSync {
   func nvimNotify(
     msg: String,
     log_level: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -2202,15 +2199,15 @@ public extension NvimApiSync {
 
   func nvimGetNamespaces(
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -2221,7 +2218,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_namespaces", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2233,7 +2230,7 @@ public extension NvimApiSync {
     buffer: NvimApi.Buffer,
     ns_id: Int,
     id: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<[Int], NvimApi.Error> {
 
@@ -2270,7 +2267,7 @@ public extension NvimApiSync {
     ns_id: Int,
     start: NvimApi.Value,
     end: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -2308,7 +2305,7 @@ public extension NvimApiSync {
     ns_id: Int,
     line: Int,
     col: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -2400,7 +2397,7 @@ public extension NvimApiSync {
 
   func nvimSetDecorationProvider(
     ns_id: Int,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -2419,7 +2416,7 @@ public extension NvimApiSync {
 
   func nvimGetOptionValue(
     name: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -2452,7 +2449,7 @@ public extension NvimApiSync {
   func nvimSetOptionValue(
     name: String,
     value: NvimApi.Value,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -2472,15 +2469,15 @@ public extension NvimApiSync {
 
   func nvimGetAllOptionsInfo(
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -2491,7 +2488,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_all_options_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2501,18 +2498,18 @@ public extension NvimApiSync {
 
   func nvimGetOptionInfo2(
     name: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(name),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -2523,7 +2520,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_option_info2", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -2745,7 +2742,7 @@ public extension NvimApiSync {
   func nvimUiAttach(
     width: Int,
     height: Int,
-    options: Dictionary<String, NvimApi.Value>
+    options: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -2968,18 +2965,18 @@ public extension NvimApiSync {
 
   func nvimGetHl(
     ns_id: Int,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(ns_id)),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -2990,7 +2987,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_hl", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3001,7 +2998,7 @@ public extension NvimApiSync {
   func nvimSetHl(
     ns_id: Int,
     name: String,
-    val: Dictionary<String, NvimApi.Value>
+    val: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -3020,7 +3017,7 @@ public extension NvimApiSync {
   }
 
   func nvimGetHlNs(
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -3517,7 +3514,7 @@ public extension NvimApiSync {
   func nvimEcho(
     chunks: NvimApi.Value,
     history: Bool,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -3719,7 +3716,7 @@ public extension NvimApiSync {
 
   func nvimOpenTerm(
     buffer: NvimApi.Buffer,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<Int, NvimApi.Error> {
 
@@ -3932,15 +3929,15 @@ public extension NvimApiSync {
 
   func nvimGetColorMap(
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -3951,7 +3948,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_color_map", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3960,17 +3957,17 @@ public extension NvimApiSync {
   }
 
   func nvimGetContext(
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -3981,7 +3978,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_context", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -3990,7 +3987,7 @@ public extension NvimApiSync {
   }
 
   func nvimLoadContext(
-    dict: Dictionary<String, NvimApi.Value>,
+    dict: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -4020,7 +4017,7 @@ public extension NvimApiSync {
   }
 
   func nvimGetMode(
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         
@@ -4030,7 +4027,7 @@ public extension NvimApiSync {
     switch reqResult {
     case let .success(value):
       guard let result =  (msgPackDictToSwift(value.dictionaryValue)) else {
-        return .failure(NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self))
+        return .failure(NvimApi.Error.conversion(type: [String: NvimApi.Value].self))
       }
       return .success(result)
 
@@ -4042,18 +4039,15 @@ public extension NvimApiSync {
   func nvimGetKeymap(
     mode: String,
     errWhenBlocked: Bool = true
-  ) -> Result<[Dictionary<String, NvimApi.Value>], NvimApi.Error> {
+  ) -> Result<[[String: NvimApi.Value]], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(mode),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [Dictionary<
-      String,
-      NvimApi.Value
-    >] {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [[String: NvimApi.Value]] {
       guard let result = (msgPackArrayDictToSwift(value.arrayValue)) else {
-        throw NvimApi.Error.conversion(type: [Dictionary<String, NvimApi.Value>].self)
+        throw NvimApi.Error.conversion(type: [[String: NvimApi.Value]].self)
       }
 
       return result
@@ -4064,7 +4058,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_keymap", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> [Dictionary<String, NvimApi.Value>] in
+      return Result { () throws(NvimApi.Error) -> [[String: NvimApi.Value]] in
         try transform(value)
       }
     case let .failure(error):
@@ -4076,7 +4070,7 @@ public extension NvimApiSync {
     mode: String,
     lhs: String,
     rhs: String,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -4145,10 +4139,10 @@ public extension NvimApiSync {
 
   func nvimSetClientInfo(
     name: String,
-    version: Dictionary<String, NvimApi.Value>,
+    version: [String: NvimApi.Value],
     type: String,
-    methods: Dictionary<String, NvimApi.Value>,
-    attributes: Dictionary<String, NvimApi.Value>
+    methods: [String: NvimApi.Value],
+    attributes: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -4171,15 +4165,15 @@ public extension NvimApiSync {
   func nvimGetChanInfo(
     chan: Int,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(chan)),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -4190,7 +4184,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_get_chan_info", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -4320,7 +4314,7 @@ public extension NvimApiSync {
     item: Int,
     insert: Bool,
     finish: Bool,
-    opts: Dictionary<String, NvimApi.Value>
+    opts: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -4371,7 +4365,7 @@ public extension NvimApiSync {
 
   func nvimGetMark(
     name: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Value, NvimApi.Error> {
 
@@ -4403,18 +4397,18 @@ public extension NvimApiSync {
 
   func nvimEvalStatusline(
     str: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(str),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -4425,7 +4419,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_eval_statusline", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -4435,18 +4429,18 @@ public extension NvimApiSync {
 
   func nvimExec2(
     src: String,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(src),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -4457,7 +4451,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_exec2", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -4583,7 +4577,7 @@ public extension NvimApiSync {
     flags: String,
     highlight: Bool,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .string(expr),
@@ -4591,9 +4585,9 @@ public extension NvimApiSync {
       .bool(highlight),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -4604,7 +4598,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_parse_expression", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -4615,7 +4609,7 @@ public extension NvimApiSync {
   func nvimOpenWin(
     buffer: NvimApi.Buffer,
     enter: Bool,
-    config: Dictionary<String, NvimApi.Value>,
+    config: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
   ) -> Result<NvimApi.Window, NvimApi.Error> {
 
@@ -4648,7 +4642,7 @@ public extension NvimApiSync {
 
   func nvimWinSetConfig(
     window: NvimApi.Window,
-    config: Dictionary<String, NvimApi.Value>
+    config: [String: NvimApi.Value]
   ) -> Result<Void, NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
@@ -4668,15 +4662,15 @@ public extension NvimApiSync {
   func nvimWinGetConfig(
     window: NvimApi.Window,
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -4687,7 +4681,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_win_get_config", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -5172,18 +5166,18 @@ public extension NvimApiSync {
 
   func nvimWinTextHeight(
     window: NvimApi.Window,
-    opts: Dictionary<String, NvimApi.Value>,
+    opts: [String: NvimApi.Value],
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
       .int(Int64(window.handle)),
       .map(opts.mapToDict({ (NvimApi.Value.string($0), $1) })),
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -5194,7 +5188,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "nvim_win_text_height", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -6562,15 +6556,15 @@ public extension NvimApiSync {
   @available(*, deprecated, message: "This method has been deprecated.")
   func vimGetColorMap(
     errWhenBlocked: Bool = true
-  ) -> Result<Dictionary<String, NvimApi.Value>, NvimApi.Error> {
+  ) -> Result<[String: NvimApi.Value], NvimApi.Error> {
 
     let params: [NvimApi.Value] = [
         
     ]
 
-    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> {
+    func transform(_ value: NvimApi.Value) throws(NvimApi.Error) -> [String: NvimApi.Value] {
       guard let result = (msgPackDictToSwift(value.dictionaryValue)) else {
-        throw NvimApi.Error.conversion(type: Dictionary<String, NvimApi.Value>.self)
+        throw NvimApi.Error.conversion(type: [String: NvimApi.Value].self)
       }
 
       return result
@@ -6581,7 +6575,7 @@ public extension NvimApiSync {
     let reqResult = self.sendRequest(method: "vim_get_color_map", params: params)
     switch reqResult {
     case let .success(value):
-      return Result { () throws(NvimApi.Error) -> Dictionary<String, NvimApi.Value> in
+      return Result { () throws(NvimApi.Error) -> [String: NvimApi.Value] in
         try transform(value)
       }
     case let .failure(error):
@@ -7012,4 +7006,3 @@ public extension NvimApiSync {
   }
 
 }
-
