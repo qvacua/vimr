@@ -115,8 +115,8 @@ final class UGrid: CustomStringConvertible, Codable {
 
     if row[column].string == wordSeparator { return column }
 
-    for i in (0..<column).reversed() {
-      if row[i].string == wordSeparator { return min(i + 1, self.size.width - 1) }
+    if let i = (0..<column).reversed().first(where: { row[$0].string == wordSeparator }) {
+      return min(i + 1, self.size.width - 1)
     }
     return 0
   }
@@ -129,8 +129,8 @@ final class UGrid: CustomStringConvertible, Codable {
 
     if column + 1 == self.size.width { return column }
 
-    for i in (column + 1)..<self.size.width {
-      if row[i].string == wordSeparator { return max(i - 1, 0) }
+    if let i = ((column + 1)..<self.size.width).first(where: { row[$0].string == wordSeparator }) {
+      return max(i - 1, 0)
     }
 
     return self.size.width - 1
