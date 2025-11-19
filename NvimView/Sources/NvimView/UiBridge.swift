@@ -14,6 +14,11 @@ let kMinMinorVersion = 10
 let kMinPatchVersion = 0
 
 final class UiBridge {
+  var pipeUrl: URL {
+    let temp = FileManager.default.temporaryDirectory
+    return temp.appending(path: "\(self.uuid).pipe")
+  }
+  
   init(uuid: UUID, config: NvimView.Config) {
     self.uuid = uuid
 
@@ -74,9 +79,9 @@ final class UiBridge {
       process.launchPath = launchPath
     }
     process.environment = env
+    process.arguments = ["--embed", "--listen", self.pipeUrl.path] + self.nvimArgs
 
-    process.arguments = ["--embed"] + self.nvimArgs
-
+    dlog.debug("Servername: \(self.pipeUrl.path)")
     dlog.debug(
       "Launching NvimServer \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
     )

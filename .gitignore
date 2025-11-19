@@ -17,3 +17,4 @@ Package.resolved
 
 build/
 .build/
+.DerivedData/

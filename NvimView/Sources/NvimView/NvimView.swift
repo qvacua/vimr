@@ -201,12 +201,8 @@ public final class NvimView: NSView,
           dlog.debug("Processing blocking vimenter request")
           await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
+          let serverName = self.bridge.pipeUrl.path
           do {
-            guard let serverName = try await self.api.nvimGetVvar(name: "servername").get()
-              .stringValue
-            else {
-              throw NvimApi.Error.other(description: "v:servername value is nil")
-            }
             try self.apiSync.run(socketPath: serverName)
             dlog.debug("Sync API running on \(serverName)")
           } catch {
