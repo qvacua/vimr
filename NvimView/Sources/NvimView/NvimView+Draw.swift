@@ -169,26 +169,35 @@ extension NvimView {
     forRowRange rowRange: ClosedRange<Int>,
     columnRange: ClosedRange<Int>
   ) -> [AttributesRun] {
-    rowRange.flatMap { row in
-      groupedRanges(of: self.ugrid.cells[row][columnRange])
-        .compactMap { range in
-          guard let attrs = self.cellAttributesCollection.attributes(
-            of: self.ugrid.cells[row][range.lowerBound].attrId
-          ) else {
-            self.logger.error(
-              "row: \(row), range: \(range): Could not get CellAttributes with ID " +
-                "\(self.ugrid.cells[row][range.lowerBound].attrId)"
-            )
-            return nil
-          }
+    var result = [AttributesRun]()
+    // Estimate the capacity, median value from scrolling through a big Swift file
+    result.reserveCapacity(rowRange.count * 3)
 
-          return AttributesRun(
-            location: self.pointInView(forRow: row, column: range.lowerBound),
-            cells: self.ugrid.cells[row][range],
-            attrs: attrs
+    // We use for-loops instead of flatMap and compactMap because, normal for-loops seem to be
+    // faster. Average duration of the function using signpost in Instruments indicates 45% win.
+    for row in rowRange {
+      let ranges = groupedRanges(of: self.ugrid.cells[row][columnRange])
+      
+      for range in ranges {
+        guard let attrs = self.cellAttributesCollection.attributes(
+          of: self.ugrid.cells[row][range.lowerBound].attrId
+        ) else {
+          self.logger.error(
+            "row: \(row), range: \(range): Could not get CellAttributes with ID " +
+              "\(self.ugrid.cells[row][range.lowerBound].attrId)"
           )
+          continue
         }
+
+        result.append(AttributesRun(
+          location: self.pointInView(forRow: row, column: range.lowerBound),
+          cells: self.ugrid.cells[row][range],
+          attrs: attrs
+        ))
+      }
     }
+
+    return result
   }
 
   func updateFontMetaData(_ newFont: NSFont) {
@@ -204,6 +213,12 @@ extension NvimView {
 }
 
 private let colorSpace = NSColorSpace.sRGB
+
+// OSLog for performance measurements
+private let performanceLog = OSLog(
+  subsystem: "com.qvacua.VimR.NvimView",
+  category: "Performance"
+)
 
 /// When we use the following private function instead of the public extension function in
 /// Commons.FoundationCommons.swift.groupedRanges(with:), then, according to Instruments
