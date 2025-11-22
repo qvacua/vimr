@@ -57,9 +57,7 @@ extension NvimView {
     #endif
   }
 
-  private func draw(
-    cellsIntersectingRects dirtyRects: [CGRect], in context: CGContext
-  ) {
+  private func draw(cellsIntersectingRects dirtyRects: [CGRect], in context: CGContext) {
     self.drawer.draw(
       self.runs(intersecting: dirtyRects),
       defaultAttributes: self.cellAttributesCollection.defaultAttributes,
