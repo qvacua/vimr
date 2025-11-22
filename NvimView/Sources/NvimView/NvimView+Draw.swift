@@ -4,11 +4,16 @@
  */
 
 import Cocoa
+import os
 
 extension NvimView {
   override public func viewDidMoveToWindow() { self.window?.colorSpace = colorSpace }
 
   override public func draw(_: NSRect) {
+    let signpostID = signposter.makeSignpostID()
+    let state = signposter.beginInterval("draw", id: signpostID)
+    defer { signposter.endInterval("draw", state) }
+
     guard self.ugrid.hasData else { return }
 
     guard let context = NSGraphicsContext.current?.cgContext else { return }
@@ -16,6 +21,7 @@ extension NvimView {
     defer { context.restoreGState() }
 
     if self.isCurrentlyPinching {
+      signposter.emitEvent("drawPinchImage", id: signpostID)
       self.drawPinchImage(in: context)
       return
     }
@@ -38,9 +44,17 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
+    let backgroundState = signposter.beginInterval("drawBackground", id: signpostID)
     self.draw(defaultBackgroundIn: dirtyRects, in: context)
+    signposter.endInterval("drawBackground", backgroundState)
+
+    let cellsState = signposter.beginInterval("drawCells", id: signpostID)
     self.draw(cellsIntersectingRects: dirtyRects, in: context)
+    signposter.endInterval("drawCells", cellsState)
+
+    let cursorState = signposter.beginInterval("drawCursor", id: signpostID)
     self.draw(cursorIn: context)
+    signposter.endInterval("drawCursor", cursorState)
 
     #if DEBUG
 //    self.draw(cellGridIn: context)
@@ -214,11 +228,12 @@ extension NvimView {
 
 private let colorSpace = NSColorSpace.sRGB
 
-// OSLog for performance measurements
-private let performanceLog = OSLog(
+// Signpost for performance measurements
+private let signpostLog = OSLog(
   subsystem: "com.qvacua.VimR.NvimView",
-  category: "Performance"
+  category: .pointsOfInterest
 )
+private let signposter = OSSignposter(logHandle: signpostLog)
 
 /// When we use the following private function instead of the public extension function in
 /// Commons.FoundationCommons.swift.groupedRanges(with:), then, according to Instruments
