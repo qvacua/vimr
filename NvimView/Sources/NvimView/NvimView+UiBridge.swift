@@ -317,7 +317,7 @@ extension NvimView {
 
     self.logger.fault("Force-closing due to IPC error.")
     await self.api.stop()
-    self.bridge.forceQuit()
+    self.nvimProc.forceQuit()
     self.logger.fault("Successfully force-closed the bridge.")
   }
 

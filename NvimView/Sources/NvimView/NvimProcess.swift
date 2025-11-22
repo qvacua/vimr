@@ -13,7 +13,7 @@ let kMinMajorVersion = 0
 let kMinMinorVersion = 10
 let kMinPatchVersion = 0
 
-final class UiBridge {
+final class NvimProcess {
   var pipeUrl: URL {
     let temp = FileManager.default.temporaryDirectory
     return temp.appending(path: "\(self.uuid).pipe")

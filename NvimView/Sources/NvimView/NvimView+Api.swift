@@ -32,7 +32,7 @@ public extension NvimView {
     }
 
     self.stopped = true
-    self.bridge.quit()
+    self.nvimProc.quit()
 
     self.apiSync.stop()
     await self.api.stop()

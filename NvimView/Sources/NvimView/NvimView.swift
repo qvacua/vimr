@@ -164,7 +164,7 @@ public final class NvimView: NSView,
       characterspacing: self._characterspacing,
       usesLigatures: self.usesLigatures
     )
-    self.bridge = UiBridge(uuid: self.uuid, config: config)
+    self.nvimProc = NvimProcess(uuid: self.uuid, config: config)
 
     self.sourceFileUrls = config.sourceFiles
 
@@ -201,7 +201,7 @@ public final class NvimView: NSView,
           dlog.debug("Processing blocking vimenter request")
           await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
 
-          let serverName = self.bridge.pipeUrl.path
+          let serverName = self.nvimProc.pipeUrl.path
           do {
             try self.apiSync.run(socketPath: serverName)
             dlog.debug("Sync API running on \(serverName)")
@@ -293,7 +293,7 @@ public final class NvimView: NSView,
     target: .global(qos: .userInteractive)
   )
 
-  let bridge: UiBridge
+  let nvimProc: NvimProcess
 
   let ugrid = UGrid()
   let cellAttributesCollection = CellAttributesCollection()
@@ -417,7 +417,7 @@ public final class NvimView: NSView,
 
     let inPipe: Pipe, outPipe: Pipe, errorPipe: Pipe
     do {
-      (inPipe, outPipe, errorPipe) = try self.bridge.runLocalServerAndNvim(
+      (inPipe, outPipe, errorPipe) = try self.nvimProc.runLocalServerAndNvim(
         width: size.width, height: size.height
       )
     } catch {
