@@ -574,9 +574,7 @@ extension NvimView {
       attributes: attrs,
       for: CellAttributesCollection.defaultAttributesId
     )
-    self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
-      attrs.background
-    )
+    self.updateLayerBackgroundColor()
   }
 
   private func updateMenu() {

@@ -354,6 +354,12 @@ public final class NvimView: NSView,
     await self.delegate?.nextEvent(.ipcBecameInvalid(description))
   }
 
+  func updateLayerBackgroundColor() {
+    self.layer?.backgroundColor = ColorUtils.cgColorIgnoringAlpha(
+      self.cellAttributesCollection.defaultAttributes.background
+    )
+  }
+
   // MARK: - Private
 
   private var _linespacing = NvimView.defaultLinespacing

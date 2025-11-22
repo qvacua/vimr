@@ -44,10 +44,6 @@ extension NvimView {
 
     let dirtyRects = self.rectsBeingDrawn()
 
-    let backgroundState = signposter.beginInterval("drawBackground", id: signpostID)
-    self.draw(defaultBackgroundIn: dirtyRects, in: context)
-    signposter.endInterval("drawBackground", backgroundState)
-
     let cellsState = signposter.beginInterval("drawCells", id: signpostID)
     self.draw(cellsIntersectingRects: dirtyRects, in: context)
     signposter.endInterval("drawCells", cellsState)
@@ -70,15 +66,6 @@ extension NvimView {
       offset: self.offset,
       in: context
     )
-  }
-
-  private func draw(
-    defaultBackgroundIn dirtyRects: [CGRect], in context: CGContext
-  ) {
-    context.setFillColor(
-      ColorUtils.cgColorIgnoringAlpha(self.cellAttributesCollection.defaultAttributes.background)
-    )
-    context.fill(dirtyRects)
   }
 
   private func draw(cursorIn context: CGContext) {
