@@ -6,22 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.59.0-20251103.194245</title>
+      <title>v0.59.1-20251127.190300</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20251103.194245</sparkle:version>
-      <sparkle:shortVersionString>v0.59.0</sparkle:shortVersionString>
+      <sparkle:version>20251127.190300</sparkle:version>
+      <sparkle:shortVersionString>v0.59.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.11.5 😀</li>
+<li>Slight performance improvement.</li>
+<li>Minimum macOS bumped to macOS 14.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.59.0-20251103.194245
+        https://github.com/qvacua/vimr/releases/tag/v0.59.1-20251127.190300
       </releaseNotesLink>
-      <pubDate>2025-11-03T19:47:07.618552</pubDate>
-      <minimumSystemVersion>13.5</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.0-20251103.194245/VimR-v0.59.0.tar.bz2"
-                 sparkle:edSignature="xsj+foiL5CqAIq4whfKS0UuAcz39c7AS3J+R/OG4kXzTG92cUm7l9w4oJiDMqh/ej5ObmJooHsHdPBUIUc0/AA==" length="18758657"
+      <pubDate>2025-11-27T19:07:37.004223</pubDate>
+      <minimumSystemVersion>14.8</minimumSystemVersion>
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.1-20251127.190300/VimR-v0.59.1.tar.bz2"
+                 sparkle:edSignature="XQ/xrNQQjdzgdI8/jxfo9PmGO6ELXv14GzPngktGn6+83KZPU8QIYydELBC7UGlWCvsK/ZKu/ayJcmEGrS2tAQ==" length="18645590"
                  type="application/octet-stream"/>
     </item>
   </channel>
