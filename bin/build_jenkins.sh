@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 readonly branch=${branch:?"which branch to use"}
-readonly create_gh_release=${create_gh_release:?"create Github release?"}
-readonly upload=${upload:?"upload artifact to github release?"}
-readonly update_appcast=${update_appcast:?"update and push appcast?"}
+declare -r -x create_gh_release=${create_gh_release:?"create Github release?"}
+declare -r -x upload=${upload:?"upload artifact to github release?"}
+declare -r -x update_appcast=${update_appcast:?"update and push appcast?"}
 
 # release.spec.sh will declare these two variables
 release_notes=${release_notes:?"release notes"}
@@ -65,9 +65,6 @@ main() {
 
   echo "### Publish VimR to GitHub"
 
-  create_gh_release="${create_gh_release}" \
-  upload="${upload}" \
-  update_appcast="${update_appcast}" \
   release_spec_file=release.spec.sh \
   ./bin/publish_release.sh
 
