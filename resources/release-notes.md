@@ -1,5 +1,9 @@
 # Next
 
+* Slight performance improvement.
+
+# 0.59.0-20251103.194245
+
 * Neovim 0.11.5 😀
 
 # 0.58.0-20251013.211150
