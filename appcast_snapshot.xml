@@ -6,23 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.59.1-20251127.190300</title>
+      <title>v0.59.2-20251201.200738</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20251127.190300</sparkle:version>
-      <sparkle:shortVersionString>v0.59.1</sparkle:shortVersionString>
+      <sparkle:version>20251201.200738</sparkle:version>
+      <sparkle:shortVersionString>v0.59.2</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
 <li>Slight performance improvement.</li>
-<li>Minimum macOS bumped to macOS 14.</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.59.1-20251127.190300
+        https://github.com/qvacua/vimr/releases/tag/v0.59.2-20251201.200738
       </releaseNotesLink>
-      <pubDate>2025-11-27T19:07:37.004223</pubDate>
+      <pubDate>2025-12-01T20:12:31.035648</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.1-20251127.190300/VimR-v0.59.1.tar.bz2"
-                 sparkle:edSignature="XQ/xrNQQjdzgdI8/jxfo9PmGO6ELXv14GzPngktGn6+83KZPU8QIYydELBC7UGlWCvsK/ZKu/ayJcmEGrS2tAQ==" length="18645590"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.2-20251201.200738/VimR-v0.59.2.tar.bz2"
+                 sparkle:edSignature="Yo2Gxk0HWkQdN4TsOXzHHzZc8OAdcjnlCgSlkx9N9bGnVwpSj/o+fPNYxFaEs0F/T51Q+3fg+33J8lZRXc+GAQ==" length="18642774"
                  type="application/octet-stream"/>
     </item>
   </channel>
