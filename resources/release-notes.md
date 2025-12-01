@@ -1,6 +1,10 @@
 # Next
 
 * Slight performance improvement.
+
+# 0.59.1-20251127.190300 
+
+* Slight performance improvement.
 * Minimum macOS bumped to macOS 14.
 
 # 0.59.0-20251103.194245
