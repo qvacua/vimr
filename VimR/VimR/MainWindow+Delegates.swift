@@ -190,6 +190,7 @@ extension MainWindow {
 
   func windowShouldClose(_: NSWindow) -> Bool {
     defer { self.closeWindow = false }
+    let closeWindow = self.closeWindow
 
     Task {
       if await self.neoVimView.isBlocked() {
@@ -200,7 +201,7 @@ extension MainWindow {
         return
       }
 
-      if self.closeWindow {
+      if closeWindow {
         if await self.neoVimView.hasDirtyBuffers() {
           self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
             if response == .alertSecondButtonReturn {
