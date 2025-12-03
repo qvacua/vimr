@@ -39,6 +39,8 @@ final class MainWindow: NSObject,
 
   let scrollThrottler = Throttler<Action>(interval: .milliseconds(750))
   let cursorThrottler = Throttler<Action>(interval: .milliseconds(750))
+  let uiSyncSubject = PassthroughSubject<Void, Never>()
+
   var editorPosition = Marked(Position.beginning)
 
   let tools: [Tools: WorkspaceTool]
@@ -195,7 +197,7 @@ final class MainWindow: NSObject,
     self.neoVimView.delegate = self
     self.updateNeoVimAppearance()
 
-    self.setupScrollAndCursorDebouncers()
+    self.setupDebouncers()
     self.subscribeToStateChange(context)
 
     self.window.setFrame(state.frame, display: true)
@@ -260,7 +262,7 @@ final class MainWindow: NSObject,
   let logger = Logger(subsystem: Defs.loggerSubsystem, category: Defs.LoggerCategory.ui)
   private var cancellables = Set<AnyCancellable>()
 
-  private func setupScrollAndCursorDebouncers() {
+  private func setupDebouncers() {
     self.scrollThrottler.publisher
       .merge(with: self.cursorThrottler.publisher)
       .receive(on: RunLoop.main)
@@ -268,6 +270,26 @@ final class MainWindow: NSObject,
         self.emit(self.uuidAction(for: action))
       }
       .store(in: &self.cancellables)
+
+    self.uiSyncSubject
+      .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
+      .sink { [weak self] _ in
+        self?.syncUiWithNvim()
+      }
+      .store(in: &self.cancellables)
+  }
+
+  private func syncUiWithNvim() {
+    Task {
+      let cwd = self.neoVimView.cwd
+      let bufs = await self.neoVimView.allBuffers() ?? []
+
+      self.emit(self.uuidAction(for: .cd(to: cwd)))
+      self.emit(self.uuidAction(for: .setBufferList(bufs.filter(\.isListed))))
+
+      self.fileBrowser?.refreshAction(nil)
+      self.fileBrowser?.scrollToSourceAction(nil)
+    }
   }
 
   private func subscribeToStateChange(_ context: ReduxContext) {
@@ -525,11 +547,11 @@ final class MainWindow: NSObject,
   }
 
   func revealCurrentBufferInFileBrowser() {
-    self.fileBrowser?.scrollToSourceAction(nil)
+    self.uiSyncSubject.send()
   }
 
   func refreshFileBrowser() {
-    self.fileBrowser?.refreshAction(nil)
+    self.uiSyncSubject.send()
   }
 }
 
