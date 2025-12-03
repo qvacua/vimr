@@ -5,34 +5,34 @@ readonly strip_symbols=${strip_symbols:-true}
 readonly notarize=${notarize:?"true or false"}
 readonly clean=${clean:?"true or false"}
 readonly is_jenkins=${is_jenkins:-false}
+readonly trust_plugins=${trust_plugins:-false}
 
 build_vimr() {
   local -r build_path=$1
   local plugin_flag=""
-  
-  if [[ "${is_jenkins}" == true ]]; then
+
+  if [[ "${is_jenkins}" == true ]] || [[ "${trust_plugins}" == true ]]; then
     plugin_flag="-skipPackagePluginValidation"
   fi
 
-
   echo "### Xcodebuilding"
-  rm -rf "${build_path}"
-  if [[ "${clean}" == true ]]; then  
-      xcodebuild \
-        -configuration Release -derivedDataPath "${build_path}" \
-        -workspace VimR.xcworkspace -scheme VimR \
-        ${plugin_flag} \
-        clean build
+  if [[ "${clean}" == true ]]; then
+    rm -rf "${build_path}"
+    xcodebuild \
+      -configuration Release -derivedDataPath "${build_path}" \
+      -workspace VimR.xcworkspace -scheme VimR \
+      ${plugin_flag} \
+      clean build
   else
-      xcodebuild \
-        -configuration Release -derivedDataPath "${build_path}" \
-        -workspace VimR.xcworkspace -scheme VimR \
-        ${plugin_flag} \
-        build
+    xcodebuild \
+      -configuration Release -derivedDataPath "${build_path}" \
+      -workspace VimR.xcworkspace -scheme VimR \
+      ${plugin_flag} \
+      build
   fi
 }
 
-main () {
+main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null
   echo "### Building VimR"
 
@@ -51,6 +51,9 @@ main () {
   if [[ "${notarize}" == true ]]; then
     ./bin/sign_vimr.sh
     ./bin/notarize_vimr.sh
+  else
+    echo "### Ad-hoc signing VimR"
+    codesign --force --deep --sign - "${vimr_app_path}"
   fi
 
   echo "### VimR built in ${build_path}/Build/Products/Release/VimR.app"
