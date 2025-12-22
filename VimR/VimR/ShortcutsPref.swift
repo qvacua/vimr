@@ -21,7 +21,10 @@ final class ShortcutValueTransformer: ValueTransformer {
 
   /// Shortcut to Data
   override func reverseTransformedValue(_ value: Any?) -> Any? {
-    guard let value, let shortcut = value as? Shortcut else { return nil }
+    // When the user clears a shortcut, the value is nil.
+    // We want to store an empty shortcut instead of removing the key from UserDefaults
+    // so that the default value is not restored on the next launch.
+    let shortcut = (value as? Shortcut) ?? Shortcut(keyEquivalent: "")
     return try? NSKeyedArchiver.archivedData(withRootObject: shortcut, requiringSecureCoding: true)
   }
 }
