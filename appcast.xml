@@ -6,22 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.59.2-20251201.200738</title>
+      <title>v0.59.3-20251222.155246</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20251201.200738</sparkle:version>
-      <sparkle:shortVersionString>v0.59.2</sparkle:shortVersionString>
+      <sparkle:version>20251222.155246</sparkle:version>
+      <sparkle:shortVersionString>v0.59.3</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Slight performance improvement.</li>
+<li>GH-1141: Fix Cmd+Shift+W closing only the current tab instead of the window. Thanks @rainux for the PR!</li>
+<li>GH-1144: Persist cleared shortcuts instead of restoring defaults. Thanks @rainux for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.59.2-20251201.200738
+        https://github.com/qvacua/vimr/releases/tag/v0.59.3-20251222.155246
       </releaseNotesLink>
-      <pubDate>2025-12-01T20:12:31.035648</pubDate>
+      <pubDate>2025-12-22T15:57:15.681721</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.2-20251201.200738/VimR-v0.59.2.tar.bz2"
-                 sparkle:edSignature="Yo2Gxk0HWkQdN4TsOXzHHzZc8OAdcjnlCgSlkx9N9bGnVwpSj/o+fPNYxFaEs0F/T51Q+3fg+33J8lZRXc+GAQ==" length="18642774"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.59.3-20251222.155246/VimR-v0.59.3.tar.bz2"
+                 sparkle:edSignature="SirqG96ozaP4MgRyKs93A80TM+c1zr3lSW5LEnLTq8CY42kx6sHrhYJ6HUB3JPmz6lDxAusxpN7O6Oy8xB6ZDA==" length="18635973"
                  type="application/octet-stream"/>
     </item>
   </channel>
