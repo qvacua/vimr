@@ -2,6 +2,9 @@
 
 * GH-1141: Fix Cmd+Shift+W closing only the current tab instead of the window. Thanks @rainux for the PR!
 * GH-1144: Persist cleared shortcuts instead of restoring defaults. Thanks @rainux for the PR!
+
+# 0.59.2-20251201.200738
+
 * Slight performance improvement.
 
 # 0.59.1-20251127.190300 
