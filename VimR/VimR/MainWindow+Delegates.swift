@@ -56,17 +56,15 @@ extension MainWindow {
   }
 
   func cwdChanged() {
-    self.emit(self.uuidAction(for: .cd(to: self.neoVimView.cwd)))
+    self.uiSyncSubject.send()
   }
 
   func bufferListChanged() async {
-    let bufs = await self.neoVimView.allBuffers() ?? []
-    let action = self.uuidAction(for: .setBufferList(bufs.filter(\.isListed)))
-    self.emit(action)
+    self.uiSyncSubject.send()
   }
 
-  func bufferWritten(_ buffer: NvimView.Buffer) {
-    self.emit(self.uuidAction(for: .bufferWritten(buffer)))
+  func bufferWritten(_: NvimView.Buffer) {
+    self.uiSyncSubject.send()
   }
 
   func newCurrentBuffer(_ currentBuffer: NvimView.Buffer) {
