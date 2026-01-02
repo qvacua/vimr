@@ -9,8 +9,8 @@ let package = Package(
     .library(name: "Commons", targets: ["Commons", "CommonsObjC"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/Quick/Nimble", from: "13.8.0"),
-    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.1"),
+    .package(url: "https://github.com/Quick/Nimble", from: "14.0.0"),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.2"),
   ],
   targets: [
     .target(

@@ -1,5 +1,13 @@
 # Next
 
+* Dependencides updates:
+    - sparkle-project/Sparkle@2.8.1
+    - Quick/Nimble@14.0.0
+    - SimplyDanny/SwiftLintPlugins@0.62.2
+    - apple/swift-collections@1.3.0
+
+# 0.59.3-20251222.155246
+
 * GH-1141: Fix Cmd+Shift+W closing only the current tab instead of the window. Thanks @rainux for the PR!
 * GH-1144: Persist cleared shortcuts instead of restoring defaults. Thanks @rainux for the PR!
 

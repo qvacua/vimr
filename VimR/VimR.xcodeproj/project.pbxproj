@@ -1322,7 +1322,7 @@
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.62.1;
+				minimumVersion = 0.62.2;
 			};
 		};
 		4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */ = {
@@ -1370,7 +1370,7 @@
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
 			requirement = {
 				kind = exactVersion;
-				version = 2.8.0;
+				version = 2.8.1;
 			};
 		};
 		4BADD55C283ABD0200C6B16D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -1378,7 +1378,7 @@
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.1;
+				minimumVersion = 1.3.0;
 			};
 		};
 		4BBE7F4F2D21C12B006090D9 /* XCRemoteSwiftPackageReference "FSEvents" */ = {
@@ -1418,7 +1418,7 @@
 			repositoryURL = "https://github.com/Quick/Nimble";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 13.8.0;
+				minimumVersion = 14.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

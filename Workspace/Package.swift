@@ -11,7 +11,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/PureLayout/PureLayout", from: "3.1.9"),
     .package(url: "https://github.com/qvacua/material-icons", from: "0.2.0"),
-    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.1"),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.2"),
     .package(path: "../Commons"),
   ],
   targets: [

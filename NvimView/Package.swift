@@ -10,8 +10,8 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/qvacua/MessagePack.swift", from: "4.1.0"),
-    .package(url: "https://github.com/Quick/Nimble", from: "13.8.0"),
-    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.1"),
+    .package(url: "https://github.com/Quick/Nimble", from: "14.0.0"),
+    .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.62.2"),
     .package(name: "Commons", path: "../Commons"),
     .package(name: "Tabs", path: "../Tabs"),
     .package(name: "NvimApi", path: "../NvimApi"),

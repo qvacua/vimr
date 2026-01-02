@@ -304,7 +304,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = "Tae Won Ha";
 				TargetAttributes = {
 					4B0225EF224AAE260052362B = {
@@ -566,6 +566,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -627,6 +628,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DISABLE_SAFETY_CHECKS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -769,7 +771,7 @@
 			repositoryURL = "https://github.com/PureLayout/PureLayout";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.6;
+				minimumVersion = 3.1.9;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
