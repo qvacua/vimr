@@ -99,13 +99,11 @@ extension NvimView {
       return
     }
 
-    Task(priority: .high) {
-      self.font = newFont
-      // Cell size likely changed, do a resize.
-      self.resizeNeoVimUi(to: self.frame.size)
-      self.markForRenderWholeView()
-      await self.delegate?.nextEvent(.guifontChanged(newFont))
-    }
+    self.font = newFont
+    // Cell size likely changed, do a resize.
+    self.resizeNeoVimUi(to: self.frame.size)
+    self.markForRenderWholeView()
+    self.delegate?.nextEvent(.guifontChanged(newFont))
   }
 }
 

@@ -539,7 +539,7 @@ extension MainWindow {
     self.shortcutService?.isMenuItemShortcut(event) == true
   }
 
-  func nextEvent(_ event: NvimView.Event) async {
+  func nextEvent(_ event: NvimView.Event) {
     dlog.debug("Event from NvimView: \(event)")
 
     switch event {
@@ -557,9 +557,15 @@ extension MainWindow {
 
     case .cwdChanged: self.cwdChanged()
 
-    case .bufferListChanged: await self.bufferListChanged()
+    case .bufferListChanged:
+      Task {
+        await self.bufferListChanged()
+      }
 
-    case .tabChanged: await self.tabChanged()
+    case .tabChanged:
+      Task {
+        await self.tabChanged()
+      }
 
     case let .newCurrentBuffer(curBuf): self.newCurrentBuffer(curBuf)
 

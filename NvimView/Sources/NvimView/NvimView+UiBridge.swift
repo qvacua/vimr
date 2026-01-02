@@ -24,129 +24,126 @@ extension NvimView {
   final func renderData(_ renderData: [MessagePackValue]) {
     dlog.trace("# of render data: \(renderData.count)")
 
-    Task(priority: .high) {
-      var (recompute, rowStart) = (false, Int.max)
-      for value in renderData {
-        guard let renderEntry = value.arrayValue else { continue }
-        guard renderEntry.count >= 2 else { continue }
+    var (recompute, rowStart) = (false, Int.max)
+    for value in renderData {
+      guard let renderEntry = value.arrayValue else { continue }
+      guard renderEntry.count >= 2 else { continue }
 
-        guard let rawType = renderEntry[0].stringValue,
-              let innerArray = renderEntry[1].arrayValue
-        else {
-          self.logger.error("Could not convert \(value)")
+      guard let rawType = renderEntry[0].stringValue,
+            let innerArray = renderEntry[1].arrayValue
+      else {
+        self.logger.error("Could not convert \(value)")
+        continue
+      }
+
+      switch rawType {
+      case "mode_change":
+        self.modeChange(renderEntry[1])
+
+      case "grid_line":
+        for index in 1..<renderEntry.count {
+          guard let grid_line = renderEntry[index].arrayValue else {
+            self.logger.error("Could not convert \(value)")
+            continue
+          }
+          let possibleNewRowStart = self.doRawLineNu(data: grid_line)
+          rowStart = min(rowStart, possibleNewRowStart)
+        }
+        recompute = true
+
+      case "grid_resize":
+        self.resize(renderEntry[1])
+        rowStart = 0 // Do not persist prior rowStart as it may be OOB
+        recompute = true
+
+      case "hl_attr_define":
+        for index in 1..<renderEntry.count {
+          self.setAttr(with: renderEntry[index])
+        }
+
+      case "default_colors_set":
+        self.defaultColors(with: renderEntry[1])
+
+      case "grid_clear":
+        self.clear()
+        recompute = true
+
+      case "win_viewport":
+        // FIXME: implement
+        self.winViewportUpdate(innerArray)
+
+      case "mouse_on":
+        self.mouseOn()
+
+      case "mouse_off":
+        self.mouseOff()
+
+      case "busy_start":
+        self.busyStart()
+
+      case "busy_stop":
+        self.busyStop()
+
+      case "option_set":
+        self.optionSet(renderEntry)
+
+      case "set_title": self.setTitle(with: innerArray[0])
+
+      case "update_menu":
+        self.updateMenu()
+
+      case "bell":
+        self.bell()
+
+      case "visual_bell":
+        self.visualBell()
+
+      case "set_icon":
+        // FIXME:
+        break
+
+      case "grid_cursor_goto":
+        guard innerArray[0].uintValue != nil, // grid
+              let row = innerArray[1].uintValue,
+              let col = innerArray[2].uintValue
+        else { continue }
+
+        if let possibleNewRowStart = self.doGoto(
+          position: Position(row: Int(row), column: Int(col)),
+          textPosition: Position(row: Int(row), column: Int(col))
+        ) {
+          rowStart = min(rowStart, possibleNewRowStart)
+          recompute = true
+        }
+          
+      case "mode_info_set":
+        self.modeInfoSet(renderEntry[1])
+
+      case "grid_scroll":
+        let values = innerArray.compactMap(\.intValue)
+        guard values.count == 7 else {
+          self.logger.error("Could not convert \(values)")
           continue
         }
 
-        switch rawType {
-        case "mode_change":
-          self.modeChange(renderEntry[1])
+        let possibleNewRowStart = self.doScrollNu(values)
+        rowStart = min(possibleNewRowStart, rowStart)
+        recompute = true
 
-        case "grid_line":
-          for index in 1..<renderEntry.count {
-            guard let grid_line = renderEntry[index].arrayValue else {
-              self.logger.error("Could not convert \(value)")
-              continue
-            }
-            let possibleNewRowStart = self.doRawLineNu(data: grid_line)
-            rowStart = min(rowStart, possibleNewRowStart)
-          }
-          recompute = true
+      case "flush":
+        self.flush()
 
-        case "grid_resize":
-          self.resize(renderEntry[1])
-          rowStart = 0 // Do not persist prior rowStart as it may be OOB
-          recompute = true
+      case "tabline_update":
+        self.tablineUpdate(innerArray)
 
-        case "hl_attr_define":
-          for index in 1..<renderEntry.count {
-            self.setAttr(with: renderEntry[index])
-          }
-
-        case "default_colors_set":
-          self.defaultColors(with: renderEntry[1])
-
-        case "grid_clear":
-          self.clear()
-          recompute = true
-
-        case "win_viewport":
-          // FIXME: implement
-          self.winViewportUpdate(innerArray)
-
-        case "mouse_on":
-          self.mouseOn()
-
-        case "mouse_off":
-          self.mouseOff()
-
-        case "busy_start":
-          self.busyStart()
-
-        case "busy_stop":
-          self.busyStop()
-
-        case "option_set":
-          self.optionSet(renderEntry)
-
-        case "set_title":
-          await self.setTitle(with: innerArray[0])
-
-        case "update_menu":
-          self.updateMenu()
-
-        case "bell":
-          self.bell()
-
-        case "visual_bell":
-          self.visualBell()
-
-        case "set_icon":
-          // FIXME:
-          break
-
-        case "grid_cursor_goto":
-          guard innerArray[0].uintValue != nil, // grid
-                let row = innerArray[1].uintValue,
-                let col = innerArray[2].uintValue
-          else { continue }
-
-          if let possibleNewRowStart = await self.doGoto(
-            position: Position(row: Int(row), column: Int(col)),
-            textPosition: Position(row: Int(row), column: Int(col))
-          ) {
-            rowStart = min(rowStart, possibleNewRowStart)
-            recompute = true
-          }
-
-        case "mode_info_set":
-          self.modeInfoSet(renderEntry[1])
-
-        case "grid_scroll":
-          let values = innerArray.compactMap(\.intValue)
-          guard values.count == 7 else {
-            self.logger.error("Could not convert \(values)")
-            continue
-          }
-
-          let possibleNewRowStart = await self.doScrollNu(values)
-          rowStart = min(possibleNewRowStart, rowStart)
-          recompute = true
-
-        case "flush":
-          self.flush()
-
-        case "tabline_update":
-          self.tablineUpdate(innerArray)
-
-        default:
-          self.logger.error("Unknown flush data type \(rawType)")
-        }
+      default:
+        self.logger.error("Unknown flush data type \(rawType)")
       }
+    }
 
-      guard recompute else { return }
-      if rowStart < Int.max {
-        self.ugrid.recomputeFlatIndices(rowStart: rowStart)
-      }
+    guard recompute else { return }
+    if rowStart < Int.max {
+      self.ugrid.recomputeFlatIndices(rowStart: rowStart)
     }
   }
 
@@ -173,12 +170,12 @@ extension NvimView {
         self.logger.error("Could not convert \(array)")
         return
       }
-      await self.cwdChanged(array[1])
+      self.cwdChanged(array[1])
       return
     }
 
     if event == .colorscheme {
-      await self.colorSchemeChanged(MessagePackValue(Array(array[1..<array.count])))
+      self.colorSchemeChanged(MessagePackValue(Array(array[1..<array.count])))
       return
     }
 
@@ -192,7 +189,7 @@ extension NvimView {
         self.logger.error("Could not convert \(array)")
         return
       }
-      await self.setDirty(with: array[2])
+      self.setDirty(with: array[2])
     }
 
     if event == .bufwinenter || event == .bufwinleave {
@@ -200,7 +197,7 @@ extension NvimView {
     }
 
     if event == .tabenter {
-      await self.delegate?.nextEvent(.tabChanged)
+      self.delegate?.nextEvent(.tabChanged)
     }
 
     if event == .bufwritepost {
@@ -300,20 +297,20 @@ extension NvimView {
     }
   }
 
-  private func setTitle(with value: MessagePackValue) async {
+  private func setTitle(with value: MessagePackValue) {
     guard let title = value.stringValue else {
       self.logger.error("Could not convert \(value)")
       return
     }
 
     dlog.debug(title)
-    await self.delegate?.nextEvent(.setTitle(title))
+    self.delegate?.nextEvent(.setTitle(title))
   }
 
   private func ipcBecameInvalid(_ error: Swift.Error) async {
     self.logger.fault("Bridge became invalid: \(error)")
 
-    await self.delegate?.nextEvent(.ipcBecameInvalid(error.localizedDescription))
+    self.delegate?.nextEvent(.ipcBecameInvalid(error.localizedDescription))
 
     self.logger.fault("Force-closing due to IPC error.")
     await self.api.stop()
@@ -386,7 +383,7 @@ extension NvimView {
     return row
   }
 
-  private func doGoto(position: Position, textPosition: Position) async -> Int? {
+  private func doGoto(position: Position, textPosition: Position) -> Int? {
     dlog.debug(position)
 
     var rowStart: Int?
@@ -413,11 +410,11 @@ extension NvimView {
       )
     }
 
-    await self.delegate?.nextEvent(.cursor(textPosition))
+    self.delegate?.nextEvent(.cursor(textPosition))
     return rowStart
   }
 
-  private func doScrollNu(_ array: [Int]) async -> Int {
+  private func doScrollNu(_ array: [Int]) -> Int {
     dlog.trace("[grid, top, bot, left, right, rows, cols] = \(array)")
 
     let (_ /* grid */, top, bottom, left, right, rows, cols)
@@ -430,7 +427,7 @@ extension NvimView {
 
     self.ugrid.scroll(region: scrollRegion, rows: rows, cols: cols)
     self.regionsToFlush.append(scrollRegion)
-    await self.delegate?.nextEvent(.scroll)
+    self.delegate?.nextEvent(.scroll)
 
     return min(0, top)
   }
@@ -460,7 +457,7 @@ extension NvimView {
     NSSound.beep()
   }
 
-  private func cwdChanged(_ value: MessagePackValue) async {
+  private func cwdChanged(_ value: MessagePackValue) {
     guard let cwd = value.stringValue else {
       self.logger.error("Could not convert \(value)")
       return
@@ -469,10 +466,10 @@ extension NvimView {
     dlog.debug(cwd)
     self._cwd = URL(fileURLWithPath: cwd)
     Task { self.tabBar?.cwd = cwd }
-    await self.delegate?.nextEvent(.cwdChanged)
+    self.delegate?.nextEvent(.cwdChanged)
   }
 
-  private func colorSchemeChanged(_ value: MessagePackValue) async {
+  private func colorSchemeChanged(_ value: MessagePackValue) {
     dlog.debug("color scheme changed before: \(value)")
 
     guard let values = MessagePackUtils.array(
@@ -488,17 +485,17 @@ extension NvimView {
     dlog.debug(theme)
 
     self.theme = theme
-    await self.delegate?.nextEvent(.colorschemeChanged(theme))
+    self.delegate?.nextEvent(.colorschemeChanged(theme))
   }
 
-  private func setDirty(with value: MessagePackValue) async {
+  private func setDirty(with value: MessagePackValue) {
     guard let dirty = value.intValue else {
       self.logger.error("Could not convert \(value)")
       return
     }
 
     dlog.debug(dirty)
-    await self.delegate?.nextEvent(.setDirtyStatus(dirty == 1))
+    self.delegate?.nextEvent(.setDirtyStatus(dirty == 1))
   }
 
   private func setAttr(with value: MessagePackValue) {
@@ -651,7 +648,7 @@ extension NvimView {
     let curBuf = await self.currentBuffer()
     guard let buf = await self.neoVimBuffer(for: .init(handle), currentBuffer: curBuf?.apiBuffer)
     else { return }
-    await self.delegate?.nextEvent(.bufferWritten(buf))
+    self.delegate?.nextEvent(.bufferWritten(buf))
     await self.updateTouchBarTab()
   }
 
@@ -660,11 +657,11 @@ extension NvimView {
           curBuf.apiBuffer.handle == handle else { return }
 
     await self.updateTouchBarTab()
-    await self.delegate?.nextEvent(.newCurrentBuffer(curBuf))
+    self.delegate?.nextEvent(.newCurrentBuffer(curBuf))
   }
 
   private func bufferListChanged() async {
-    await self.delegate?.nextEvent(.bufferListChanged)
+    self.delegate?.nextEvent(.bufferListChanged)
     await self.updateTouchBarCurrentBuffer()
   }
 

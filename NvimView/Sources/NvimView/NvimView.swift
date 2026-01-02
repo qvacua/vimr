@@ -42,7 +42,7 @@ public enum FontSmoothing: String, Codable, CaseIterable, Sendable {
 @MainActor
 public protocol NvimViewDelegate: AnyObject, Sendable {
   func isMenuItemKeyEquivalent(_: NSEvent) -> Bool
-  func nextEvent(_: NvimView.Event) async
+  func nextEvent(_: NvimView.Event)
 }
 
 @MainActor
@@ -206,17 +206,17 @@ public final class NvimView: NSView,
             try self.apiSync.run(socketPath: serverName)
             dlog.debug("Sync API running on \(serverName)")
           } catch {
-            await self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
+            self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
             return
           }
 
-          await self.delegate?.nextEvent(.nvimReady)
+          self.delegate?.nextEvent(.nvimReady)
 
           self.setFrameSize(self.bounds.size)
 
         case let .notification(method, params):
           if method == NvimView.rpcEventName {
-            await self.delegate?.nextEvent(.rpcEvent(params))
+            self.delegate?.nextEvent(.rpcEvent(params))
           }
 
           if method == "redraw" {
@@ -238,10 +238,10 @@ public final class NvimView: NSView,
 
           // FIXME:
           if errorMsg.contains("Vim(tabclose):E784") {
-            await self.delegate?.nextEvent(.warning(.cannotCloseLastTab))
+            self.delegate?.nextEvent(.warning(.cannotCloseLastTab))
           }
           if errorMsg.starts(with: "Vim(tabclose):E37") {
-            await self.delegate?.nextEvent(.warning(.noWriteSinceLastChange))
+            self.delegate?.nextEvent(.warning(.noWriteSinceLastChange))
           }
         }
       }
@@ -348,10 +348,10 @@ public final class NvimView: NSView,
 
   var stopped = false
 
-  func dieWithFatalError(description: String) async {
+  func dieWithFatalError(description: String) {
     self.logger.fault("Fatal error occurred: \(description)")
     self.fatalErrorOccurred = true
-    await self.delegate?.nextEvent(.ipcBecameInvalid(description))
+    self.delegate?.nextEvent(.ipcBecameInvalid(description))
   }
 
   func updateLayerBackgroundColor() {
@@ -408,7 +408,7 @@ public final class NvimView: NSView,
         _ = try await self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)").get()
       }
     } catch {
-      await self.dieWithFatalError(description: "Could not set up vimenter event: \(error)")
+      self.dieWithFatalError(description: "Could not set up vimenter event: \(error)")
     }
   }
 
@@ -421,7 +421,7 @@ public final class NvimView: NSView,
         width: size.width, height: size.height
       )
     } catch {
-      await self.dieWithFatalError(description: "Could not launch Nvim: \(error)")
+      self.dieWithFatalError(description: "Could not launch Nvim: \(error)")
       return
     }
 
@@ -477,7 +477,7 @@ public final class NvimView: NSView,
         ]).get()
       dlog.debug("UI attached")
     } catch {
-      await self.dieWithFatalError(
+      self.dieWithFatalError(
         description: "Could not attach UI and exec initial setup script: \(error)"
       )
       return
