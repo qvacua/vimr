@@ -36,7 +36,7 @@ class Document: NSDocument, NSWindowDelegate {
 
     self.viewDelegate.doc = self
     self.nvimView.delegate = self.viewDelegate
-    self.nvimView.font = NSFont(name: "Iosevka", size: 13)
+    self.nvimView.font = NSFont(name: "FiraCode Nerd Font Mono", size: 13)
       ?? NSFont.userFixedPitchFont(ofSize: 13)!
     self.nvimView.usesLigatures = true
   }
