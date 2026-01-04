@@ -692,5 +692,3 @@ extension TISInputSource {
   var sourceLanguages: [String] { self.getProperty(kTISPropertyInputSourceLanguages) as! [String] }
   // swiftlint:enable force_cast
 }
-
-private let gui = DispatchQueue.main

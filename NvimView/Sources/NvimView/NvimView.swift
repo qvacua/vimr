@@ -95,7 +95,9 @@ public final class NvimView: NSView,
   }
 
   public var fontSmoothing = FontSmoothing.systemSetting {
-    didSet { self.markForRenderWholeView() }
+    didSet {
+      self.markForRenderWholeView()
+    }
   }
 
   public var linespacing: CGFloat {
@@ -142,10 +144,7 @@ public final class NvimView: NSView,
   public var cwd: URL {
     get { self._cwd }
     set {
-      Task {
-        // FIXME: Error handling?
-        await self.api.nvimSetCurrentDir(dir: newValue.path).cauterize()
-      }
+      self.apiSync.nvimSetCurrentDir(dir: newValue.path).cauterize()
     }
   }
 
@@ -169,8 +168,11 @@ public final class NvimView: NSView,
     self.sourceFileUrls = config.sourceFiles
 
     self.usesCustomTabBar = config.usesCustomTabBar
-    if self.usesCustomTabBar { self.tabBar = TabBar<TabEntry>(withTheme: .default) }
-    else { self.tabBar = nil }
+    if self.usesCustomTabBar {
+      self.tabBar = TabBar<TabEntry>(withTheme: .default)
+    } else {
+      self.tabBar = nil
+    }
 
     self.asciiImSource = TISCopyCurrentASCIICapableKeyboardInputSource().takeRetainedValue()
     self.lastImSource = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
@@ -184,84 +186,18 @@ public final class NvimView: NSView,
       of: self.font, linespacing: self.linespacing, characterspacing: self.characterspacing
     )
 
-    Task(priority: .high) {
-      await self.launchNvim(self.discreteSize(size: frame.size))
+    self.runBridge()
 
-      let stream = await self.api.msgpackRawStream
-      for await msg in stream {
-        switch msg {
-        case let .request(msgid, method, _):
-          // See https://neovim.io/doc/user/ui.html#ui-startup
-          // "vimenter" RPC request will be sent to us
-          // which is the result of
-          // nvim_command("autocmd VimEnter * call rpcrequest(1, 'vimenter')") in
-          // NvimView+Resize.swift
-          // This is the only request sent from Neovim to the UI, afaics.
-          guard method == NvimAutoCommandEvent.vimenter.rawValue else { break }
-          dlog.debug("Processing blocking vimenter request")
-          await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
-
-          let serverName = self.nvimProc.pipeUrl.path
-          do {
-            try self.apiSync.run(socketPath: serverName)
-            dlog.debug("Sync API running on \(serverName)")
-          } catch {
-            self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
-            return
-          }
-
-          self.delegate?.nextEvent(.nvimReady)
-
-          self.setFrameSize(self.bounds.size)
-
-        case let .notification(method, params):
-          if method == NvimView.rpcEventName {
-            self.delegate?.nextEvent(.rpcEvent(params))
-          }
-
-          if method == "redraw" {
-            self.renderData(params)
-          } else if method == "autocommand" {
-            await self.autoCommandEvent(params)
-          } else {
-            self.logger.error("MSG ERROR: \(msg)")
-          }
-
-        case let .error(_, msg):
-          self.logger.error("MSG ERROR: \(msg)")
-
-        case let .response(_, error, _):
-          guard let array = error.arrayValue,
-                array.count >= 2,
-                array[0].uint64Value == NvimApi.Error.exceptionRawValue,
-                let errorMsg = array[1].stringValue else { return }
-
-          // FIXME:
-          if errorMsg.contains("Vim(tabclose):E784") {
-            self.delegate?.nextEvent(.warning(.cannotCloseLastTab))
-          }
-          if errorMsg.starts(with: "Vim(tabclose):E37") {
-            self.delegate?.nextEvent(.warning(.noWriteSinceLastChange))
-          }
-        }
-      }
-
-      await self.stop()
-    }
-
-    // FIXME: Make callbacks async
     self.tabBar?.closeHandler = { [weak self] index, _, _ in
-      Task { await self?.api.nvimCommand(command: "tabclose \(index + 1)") }
+      self?.apiSync.nvimCommand(command: "tabclose \(index + 1)").cauterize()
     }
     self.tabBar?.selectHandler = { [weak self] _, tabEntry, _ in
-      Task { await self?.api.nvimSetCurrentTabpage(tabpage: tabEntry.tabpage) }
+      self?.apiSync.nvimSetCurrentTabpage(tabpage: tabEntry.tabpage).cauterize()
     }
     self.tabBar?.reorderHandler = { [weak self] index, _, entries in
-      Task {
-        // I don't know why, but `tabm ${last_index}` does not always work.
-        let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
-        return await self?.api.nvimCommand(command: command)
-      }
+      // I don't know why, but `tabm ${last_index}` does not always work.
+      let command = (index == entries.count - 1) ? "tabm" : "tabm \(index)"
+      self?.apiSync.nvimCommand(command: command).cauterize()
     }
   }
 
@@ -364,6 +300,73 @@ public final class NvimView: NSView,
 
   private var _linespacing = NvimView.defaultLinespacing
   private var _characterspacing = NvimView.defaultCharacterspacing
+  
+  private func runBridge() {
+    Task(priority: .high) {
+      await self.launchNvim(self.discreteSize(size: frame.size))
+
+      let stream = await self.api.msgpackRawStream
+      for await msg in stream {
+        switch msg {
+        case let .request(msgid, method, _):
+          // See https://neovim.io/doc/user/ui.html#ui-startup
+          // "vimenter" RPC request will be sent to us
+          // which is the result of
+          // nvim_command("autocmd VimEnter * call rpcrequest(1, 'vimenter')") in
+          // NvimView+Resize.swift
+          // This is the only request sent from Neovim to the UI, afaics.
+          guard method == NvimAutoCommandEvent.vimenter.rawValue else { break }
+          dlog.debug("Processing blocking vimenter request")
+          await self.doSetupForVimenterAndSendResponse(forMsgid: msgid)
+
+          let serverName = self.nvimProc.pipeUrl.path
+          do {
+            try self.apiSync.run(socketPath: serverName)
+            dlog.debug("Sync API running on \(serverName)")
+          } catch {
+            self.dieWithFatalError(description: "Could not run sync Nvim API: \(error)")
+            return
+          }
+
+          self.delegate?.nextEvent(.nvimReady)
+
+          self.setFrameSize(self.bounds.size)
+
+        case let .notification(method, params):
+          if method == NvimView.rpcEventName {
+            self.delegate?.nextEvent(.rpcEvent(params))
+          }
+
+          if method == "redraw" {
+            self.renderData(params)
+          } else if method == "autocommand" {
+            await self.autoCommandEvent(params)
+          } else {
+            self.logger.error("MSG ERROR: \(msg)")
+          }
+
+        case let .error(_, msg):
+          self.logger.error("MSG ERROR: \(msg)")
+
+        case let .response(_, error, _):
+          guard let array = error.arrayValue,
+                array.count >= 2,
+                array[0].uint64Value == NvimApi.Error.exceptionRawValue,
+                let errorMsg = array[1].stringValue else { return }
+
+          // FIXME:
+          if errorMsg.contains("Vim(tabclose):E784") {
+            self.delegate?.nextEvent(.warning(.cannotCloseLastTab))
+          }
+          if errorMsg.starts(with: "Vim(tabclose):E37") {
+            self.delegate?.nextEvent(.warning(.noWriteSinceLastChange))
+          }
+        }
+      }
+
+      await self.stop()
+    }
+  }
 
   private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
     do {
