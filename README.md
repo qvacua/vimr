@@ -63,10 +63,19 @@ git submodule update --init
 
 xcode-select --install # install the Xcode command line tools, if you haven't already
 brew bundle # install dependencies, e.g., build tools for Neovim
-clean=true notarize=false ./bin/build_vimr.sh
+clean=true notarize=false trust_plugins=true ./bin/build_vimr.sh
 ```
 
+*   `trust_plugins=true`: Skips the interactive package plugin validation (SwiftLint), allowing the build to proceed in a non-interactive shell.
+*   `notarize=false`: Skips the Apple notarization process and performs an ad-hoc signature instead.
+
 The built application will be located at `./build/Build/Products/Release/VimR.app`.
+
+For convenience, you can use the helper script to build and overwrite the application in `/Applications`:
+
+```bash
+./bin/build_and_install_local_release.sh
+```
 
 ## Development
 
