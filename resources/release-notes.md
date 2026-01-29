@@ -1,5 +1,6 @@
 # Next
 
+* Neovim 0.11.6 😀
 * Dependencides updates:
     - sparkle-project/Sparkle@2.8.1
     - Quick/Nimble@14.0.0
