@@ -138,8 +138,12 @@ extension Tab {
       + self.titleView.intrinsicContentSize.width
     let targetWidth = min(max(self.theme.tabMinWidth, idealWidth), self.theme.tabMaxWidth)
 
-    if let c = self.widthConstraint { self.removeConstraint(c) }
-    self.widthConstraint = self.autoSetDimension(.width, toSize: targetWidth)
+    // Reuse the existing constraint to avoid churning the layout engine.
+    if let c = self.widthConstraint {
+      c.constant = targetWidth
+    } else {
+      self.widthConstraint = self.autoSetDimension(.width, toSize: targetWidth)
+    }
   }
 
   private func addViews() {
