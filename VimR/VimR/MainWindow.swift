@@ -354,6 +354,10 @@ final class MainWindow: NSObject,
 
       if self.currentBuffer == nil || self.currentBuffer != state.currentBuffer {
         self.currentBuffer = state.currentBuffer
+
+        let title = self.currentBuffer?.name ?? "VimR"
+        self.set(title: title)
+
         if state.appearance.showsFileIcon {
           self.set(repUrl: self.currentBuffer?.url, themed: self.titlebarThemed)
         } else {

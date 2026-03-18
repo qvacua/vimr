@@ -49,6 +49,7 @@ extension MainWindow {
 
   func set(title: String) {
     self.window.title = title
+    self.titleView?.stringValue = title
   }
 
   func set(dirtyStatus: Bool) {
