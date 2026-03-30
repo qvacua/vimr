@@ -20,12 +20,14 @@ build_vimr() {
   if [[ "${clean}" == true ]]; then  
       xcodebuild \
         -configuration Release -derivedDataPath "${build_path}" \
+        -IDECustomBuildProductsPath="" -IDECustomBuildIntermediatesPath="" \
         -workspace VimR.xcworkspace -scheme VimR \
         ${plugin_flag} \
         clean build
   else
       xcodebuild \
         -configuration Release -derivedDataPath "${build_path}" \
+        -IDECustomBuildProductsPath="" -IDECustomBuildIntermediatesPath="" \
         -workspace VimR.xcworkspace -scheme VimR \
         ${plugin_flag} \
         build
