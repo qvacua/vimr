@@ -1,4 +1,4 @@
-// Auto generated for nvim v0.11.6
+// Auto generated for nvim v0.12.0
 // See bin/generate_autocmds.py
 
 enum NvimAutoCommandEvent: String {
@@ -31,6 +31,7 @@ enum NvimAutoCommandEvent: String {
   case cmdlinechanged
   case cmdlineenter
   case cmdlineleave
+  case cmdlineleavepre
   case cmdundefined
   case cmdwinenter
   case cmdwinleave
@@ -84,9 +85,13 @@ enum NvimAutoCommandEvent: String {
   case lspprogress
   case lsprequest
   case lsptokenupdate
+  case markset
   case menupopup
   case modechanged
   case optionset
+  case packchanged
+  case packchangedpre
+  case progress
   case quickfixcmdpost
   case quickfixcmdpre
   case quitpre
@@ -96,6 +101,7 @@ enum NvimAutoCommandEvent: String {
   case safestate
   case searchwrapped
   case sessionloadpost
+  case sessionloadpre
   case sessionwritepost
   case shellcmdpost
   case shellfilterpost
@@ -109,6 +115,7 @@ enum NvimAutoCommandEvent: String {
   case swapexists
   case syntax
   case tabclosed
+  case tabclosedpre
   case tabenter
   case tableave
   case tabnew
@@ -138,6 +145,7 @@ enum NvimAutoCommandEvent: String {
   case winenter
   case winleave
   case winnew
+  case winnewpre
   case winresized
   case winscrolled
 }
