@@ -23,7 +23,7 @@ export GH_REPO
 
 prepare_bin() {
   pushd ./bin >/dev/null
-    python3 -m venv .venv
+    python3 -m venv --clear .venv
     source .venv/bin/activate
 
     pip install -r requirements.txt
@@ -63,12 +63,14 @@ upload_artifact() {
 }
 
 update_appcast_file() {
-  ./bin/set_appcast.py \
-      "${vimr_artifact_path}" \
-      "${bundle_version}" \
-      "${marketing_version}" \
-      "${tag}" \
-      "${is_snapshot}"
+  source bin/.venv/bin/activate
+    ./bin/set_appcast.py \
+        "${vimr_artifact_path}" \
+        "${bundle_version}" \
+        "${marketing_version}" \
+        "${tag}" \
+        "${is_snapshot}"
+  deactivate
 
   local app_cast_file_name="appcast.xml"
   if [[ "${is_snapshot}" == true ]]; then
