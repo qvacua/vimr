@@ -23,7 +23,7 @@ marketing_version = sys.argv[3]
 tag_name = sys.argv[4]
 is_snapshot = True if len(sys.argv) > 5 and sys.argv[5] == "true" else False
 
-file_signature = subprocess.check_output([SIGN_UPDATE, file_path]).decode("utf-8").strip()
+file_signature = subprocess.check_output([SIGN_UPDATE, "--ed-key-file", "~/.local/secrets/sparkle.private.edkey", file_path]).decode("utf-8").strip()
 
 appcast_template_file = open("resources/appcast_template.xml", "r")
 appcast_template = Template(appcast_template_file.read())
