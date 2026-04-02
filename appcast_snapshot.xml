@@ -6,23 +6,24 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.61.0-20260401.174810</title>
+      <title>v0.61.1-20260402.202245</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20260401.174810</sparkle:version>
-      <sparkle:shortVersionString>v0.61.0</sparkle:shortVersionString>
+      <sparkle:version>20260402.202245</sparkle:version>
+      <sparkle:shortVersionString>v0.61.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.12.0 😀</li>
-<li>Bugfix: Ensure window title stays in sync with current buffer: <a href="https://github.com/qvacua/vimr/pull/1154">#1154</a>. Thanks <a href="https://github.com/rainux">@rainux</a> for the PR!</li>
+<li>Improve tab rendering performance, #1152. Thanks @lukeasrodgers for the PR!</li>
+<li>Optimize session loading performance by debouncing heavy UI updates, #1142. Thanks @rainux for the PR!</li>
+<li>Inherit base colors from the active Neovim theme, #1150. Thanks @oddish3 for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.61.0-20260401.174810
+        https://github.com/qvacua/vimr/releases/tag/v0.61.1-20260402.202245
       </releaseNotesLink>
-      <pubDate>2026-04-01T17:52:50.885259</pubDate>
+      <pubDate>2026-04-02T20:27:30.071243</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.61.0-20260401.174810/VimR-v0.61.0.tar.bz2"
-                 sparkle:edSignature="0RX4YBlayyjr7yRLIHFuhJBpijozkQObmV5D7A0wftO1GwWq/zxIRssAgXr80bZ/XtQs96QO1CSz3PF6ulcNDA==" length="19018503"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.61.1-20260402.202245/VimR-v0.61.1.tar.bz2"
+                 sparkle:edSignature="/IU3/O+MuTAb5CAULQ0tahQdcJOjABEy0lbwN5wz9CRi6d4DtRuewLI7dgutjT60tI5uQxr5fh4aUE4m9JpJAw==" length="19029018"
                  type="application/octet-stream"/>
     </item>
   </channel>
