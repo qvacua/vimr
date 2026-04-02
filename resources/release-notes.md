@@ -1,6 +1,13 @@
 # Next
 
+* Improve tab rendering performance, #1152. Thanks @lukeasrodgers for the PR!
+* Optimize session loading performance by debouncing heavy UI updates, #1142. Thanks @rainux for the PR!
+* Inherit base colors from the active Neovim theme, #1150. Thanks @oddish3 for the PR!
+
+# 0.61.0-20260401.174810
+
 * Neovim 0.12.0 😀
+* Bugfix: Ensure window title stays in sync with current buffer: #1154. Thanks @rainux for the PR!
 
 # 0.60.0-20260129.185351
 

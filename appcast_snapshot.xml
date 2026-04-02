@@ -13,6 +13,7 @@
       <description><![CDATA[
     <ul>
 <li>Neovim 0.12.0 😀</li>
+<li>Bugfix: Ensure window title stays in sync with current buffer: <a href="https://github.com/qvacua/vimr/pull/1154">#1154</a>. Thanks <a href="https://github.com/rainux">@rainux</a> for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
