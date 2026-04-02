@@ -128,6 +128,14 @@ extension MainWindow {
       "Directory", // a
       "Question", // blockquote foreground
       "CursorColumn", // code background and foreground
+      "Comment", // general comment style
+      "String", // string literals
+      "Boolean", // boolean literals
+      "Number", // number literals
+      "Statement", // control flow statements
+      "Type", // type names
+      "Constant", // constants
+      "Special" // special characters/keywords
     ]
 
     let map: [String: CellAttributes] = colorNames.reduce(into: [:]) { dict, colorName in
@@ -141,8 +149,12 @@ extension MainWindow {
       dict[colorName] = CellAttributes(withDict: name, with: self.neoVimView.defaultCellAttributes)
     }.compactMapValues { $0 }
 
-    if map.count == colorNames.count { return map }
-    else { return nil }
+    if map.count == colorNames.count {
+      return map
+    } else {
+      self.logger.warning("Could not get all theme colors, will use defaults for some.")
+      return map
+    }
   }
 }
 

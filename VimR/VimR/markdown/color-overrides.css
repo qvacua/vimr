@@ -1,15 +1,23 @@
 :root {
   --nvim-color: {{ nvim-color }};
   --nvim-background-color: {{ nvim-background-color }};
-  --nvim-a: {{ nvim-a }};
-  --nvim-hr-background-color: {{ nvim-hr-background-color }};
-  --nvim-hr-border-bottom-color: {{ nvim-hr-border-bottom-color }};
-  --nvim-blockquote-border-left-color: {{ nvim-blockquote-border-left-color }};
+  --nvim-link-color: {{ nvim-link-color }};
+  --nvim-hr-color: {{ nvim-hr-color }};
+  --nvim-blockquote-border-color: {{ nvim-blockquote-border-color }};
   --nvim-blockquote-color: {{ nvim-blockquote-color }};
-  --nvim-h2-border-bottom-color: {{ nvim-h2-border-bottom-color }};
+  --nvim-h2-border-color: {{ nvim-h2-border-color }};
   --nvim-h6-color: {{ nvim-h6-color }};
   --nvim-code-background-color: {{ nvim-code-background-color }};
   --nvim-code-color: {{ nvim-code-color }};
+
+  --nvim-comment-color: {{ nvim-comment-color }};
+  --nvim-string-color: {{ nvim-string-color }};
+  --nvim-boolean-color: {{ nvim-boolean-color }};
+  --nvim-number-color: {{ nvim-number-color }};
+  --nvim-statement-color: {{ nvim-statement-color }};
+  --nvim-type-color: {{ nvim-type-color }};
+  --nvim-constant-color: {{ nvim-constant-color }};
+  --nvim-special-color: {{ nvim-special-color }};
 }
 
 .markdown-body {
@@ -18,21 +26,21 @@
 }
 
 .markdown-body a {
-  color: var(--nvim-a);
+  color: var(--nvim-link-color);
 }
 
 .markdown-body hr {
-  background-color: var(--nvim-hr-background-color);
-  border-bottom-color: var(--nvim-hr-border-bottom-color);
+  background-color: var(--nvim-hr-color);
+  border-bottom-color: var(--nvim-hr-color);
 }
 
 .markdown-body blockquote {
-  border-left-color: var(--nvim-blockquote-border-left-color);
-  color: var(--nvim-blockquote-foreground);
+  border-left-color: var(--nvim-blockquote-border-color);
+  color: var(--nvim-blockquote-color);
 }
 
 .markdown-body h2 {
-  border-bottom-color: var(--nvim-border-bottom-color);
+  border-bottom-color: var(--nvim-h2-border-color);
 }
 
 .markdown-body h6 {
@@ -42,4 +50,43 @@
 .markdown-body pre {
   color: var(--nvim-code-color);
   background-color: var(--nvim-code-background-color);
+}
+
+/* New styles for additional highlight groups */
+code[class*="language-"] .token.comment,
+code[class*="language-"] .token.prolog,
+code[class*="language-"] .token.doctype,
+code[class*="language-"] .token.cdata {
+  color: var(--nvim-comment-color);
+}
+
+code[class*="language-"] .token.string {
+  color: var(--nvim-string-color);
+}
+
+code[class*="language-"] .token.boolean {
+  color: var(--nvim-boolean-color);
+}
+
+code[class*="language-"] .token.number {
+  color: var(--nvim-number-color);
+}
+
+code[class*="language-"] .token.keyword {
+  color: var(--nvim-statement-color);
+}
+
+code[class*="language-"] .token.function,
+code[class*="language-"] .token.class-name,
+code[class*="language-"] .token.tag {
+  color: var(--nvim-type-color);
+}
+
+code[class*="language-"] .token.constant {
+  color: var(--nvim-constant-color);
+}
+
+code[class*="language-"] .token.punctuation,
+code[class*="language-"] .token.operator {
+  color: var(--nvim-special-color);
 }
