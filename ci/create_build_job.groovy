@@ -3,7 +3,6 @@
 // - AnsiColor
 
 def releaseVimRJob = freeStyleJob('vimr_release')
-def nightlyVimRJob = freeStyleJob('vimr_nightly')
 
 releaseVimRJob.with {
   description 'Release a new version'
@@ -42,41 +41,6 @@ releaseVimRJob.with {
   publishers {
     archiveArtifacts {
       pattern('build/Build/Products/Release/**, release.spec.sh, release-notes.temp.md, appcast*, build_release.temp.sh')
-    }
-  }
-}
-
-nightlyVimRJob.with {
-  description 'Release nightly'
-
-  logRotator {
-    numToKeep(10)
-  }
-
-  parameters {
-    stringParam('branch', 'update-neovim', 'Branch to build; defaults to update-neovim')
-  }
-
-  scm {
-    git {
-      remote {
-        url('git@github.com:qvacua/vimr.git')
-      }
-      branch('*/${branch}')
-    }
-  }
-
-  wrappers {
-    colorizeOutput()
-  }
-
-  steps {
-    shell('./bin/build_nightly_jenkins.sh')
-  }
-
-  publishers {
-    archiveArtifacts {
-      pattern('build/Build/Products/Release/**')
     }
   }
 }
