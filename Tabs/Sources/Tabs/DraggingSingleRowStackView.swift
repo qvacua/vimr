@@ -22,9 +22,37 @@ final class DraggingSingleRowStackView: NSStackView {
     }
   }
 
-  func update(views: [NSView]) {
-    self.views.forEach { self.removeView($0) }
-    views.forEach { self.addView($0, in: .leading) }
+  func update(views newViews: [NSView]) {
+    let oldViews = self.views
+
+    // Fast path: identical views in identical order, nothing to do
+    if oldViews.count == newViews.count, zip(oldViews, newViews).allSatisfy({ $0 === $1 }) {
+      return
+    }
+
+    let newSet = Set(newViews.map { ObjectIdentifier($0) })
+    let oldSet = Set(oldViews.map { ObjectIdentifier($0) })
+
+    // Did any retained views change order?
+    let keptOld = oldViews.filter { newSet.contains(ObjectIdentifier($0)) }
+    let keptNew = newViews.filter { oldSet.contains(ObjectIdentifier($0)) }
+    let orderChanged = keptOld.count != keptNew.count || !zip(keptOld, keptNew).allSatisfy({ $0 === $1 })
+
+    // If so, fall back to full rebuild
+    if orderChanged {
+      oldViews.forEach { self.removeView($0) }
+      newViews.forEach { self.addView($0, in: .leading) }
+      return
+    }
+
+    // Otherwise, remove and add views as necessary
+    for view in oldViews where !newSet.contains(ObjectIdentifier(view)) {
+      self.removeView(view)
+    }
+
+    for (index, view) in newViews.enumerated() where !oldSet.contains(ObjectIdentifier(view)) {
+      self.insertView(view, at: index, in: .leading)
+    }
   }
 
   private func reorder(view: NSView, event: NSEvent) {
