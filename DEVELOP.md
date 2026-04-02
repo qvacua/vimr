@@ -47,6 +47,28 @@ defaults write com.qvacua.VimR enable-debug-menu 1
 
 ### VimR
 
+#### Prerequisites
+
+Make sure the following
+
+* `brew install gh jq`
+* Set up Apple Developer signing certificate in Xcode.
+* Set up the `apple-dev-notar` keychain item for `notarytool`:
+  ```bash
+  xcrun notarytool store-credentials "apple-dev-notar" \
+    --apple-id <your-apple-id> \
+    --team-id <your-team-id> \
+    --password <app-specific-password>
+  ```
+  Check the signing identity with `security find-identity -v -p codesigning`.
+* You have stored the ed25519 private key for Sparkle under `~/.local/secrets/sparkle.private.edkey`.
+* You have stored the Github release token under `~/.local/secrets/github.qvacua.release.token`.
+
+#### Manual steps
+
+You can just use the Jenkins job `vimr_release` which takes care of all the steps. The below describes how to release
+manually.
+
 * Set a new version of VimR via
     ```bash
     is_snapshot=true ./bin/set_new_versions.sh # for snapshot or
