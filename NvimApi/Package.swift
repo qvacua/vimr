@@ -9,7 +9,7 @@ let package = Package(
     .library(name: "NvimApi", targets: ["NvimApi"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/qvacua/MessagePack.swift", .upToNextMinor(from: "4.1.0")),
+    .package(url: "https://github.com/qvacua/MessagePack.swift", from: "5.0.0"),
     .package(url: "https://github.com/qvacua/BlueSocket", from: "2.1.0"),
     .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", .upToNextMajor(from: "0.62.2")),
     .package(name: "Commons", path: "../Commons"),

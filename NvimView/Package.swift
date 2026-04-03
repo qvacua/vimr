@@ -9,7 +9,6 @@ let package = Package(
     .library(name: "NvimView", targets: ["NvimView"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/qvacua/MessagePack.swift", from: "4.1.0"),
     .package(url: "https://github.com/Quick/Nimble", from: "14.0.0"),
     .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", .upToNextMajor(from: "0.62.2")),
     .package(name: "Commons", path: "../Commons"),
@@ -21,7 +20,6 @@ let package = Package(
       name: "NvimView",
       dependencies: [
         "Tabs",
-        .product(name: "MessagePack", package: "MessagePack.swift"),
         "Commons",
         "NvimApi",
       ],

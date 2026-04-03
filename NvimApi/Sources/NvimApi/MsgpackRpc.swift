@@ -300,14 +300,14 @@ public actor MsgpackRpc {
     var values = [Value]()
     var remainderData: Data?
 
-    var subdata = Subdata(data: data)
+    var subdata = data
     while !subdata.isEmpty {
       let value: Value
       do {
         (value, subdata) = try unpack(subdata, compatibility: false)
         values.append(consume value)
       } catch MessagePackError.insufficientData {
-        remainderData = subdata.data
+        remainderData = data
         break
       }
     }

@@ -73,7 +73,6 @@
 		4B0B36202595236000B06899 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655224E8014100D52809 /* Swifter */; };
 		4B0B36212595236000B06899 /* PureLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5655824E8040E00D52809 /* PureLayout */; };
 		4B0B36232595236000B06899 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD5657724E8443300D52809 /* DictionaryCoding */; };
-		4B0B36252595236000B06899 /* MessagePack in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC41D24EB2E22000209B5 /* MessagePack */; };
 		4B0B36292595236000B06899 /* NvimView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42624EB2E51000209B5 /* NvimView */; };
 		4B0B362A2595236000B06899 /* ShortcutRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */; };
 		4B0B362C2595236000B06899 /* Commons in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD67C7A24EC765900147C51 /* Commons */; };
@@ -362,7 +361,6 @@
 				4B0B362D2595236000B06899 /* MaterialIcons in Frameworks */,
 				4B0B36292595236000B06899 /* NvimView in Frameworks */,
 				4BBE7F512D21C12B006090D9 /* EonilFSEvents in Frameworks */,
-				4B0B36252595236000B06899 /* MessagePack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,7 +716,6 @@
 				4BD5655224E8014100D52809 /* Swifter */,
 				4BD5655824E8040E00D52809 /* PureLayout */,
 				4BD5657724E8443300D52809 /* DictionaryCoding */,
-				4B9BC41D24EB2E22000209B5 /* MessagePack */,
 				4B9BC42624EB2E51000209B5 /* NvimView */,
 				4B9BC42924EB2E6D000209B5 /* ShortcutRecorder */,
 				4BD67C7A24EC765900147C51 /* Commons */,
@@ -796,7 +793,6 @@
 				4BD5655124E8014100D52809 /* XCRemoteSwiftPackageReference "swifter" */,
 				4BD5655724E8040E00D52809 /* XCRemoteSwiftPackageReference "PureLayout" */,
 				4BD5657624E8443300D52809 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
-				4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */,
 				4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */,
 				4B69B31924EDBAF000B1E5EB /* XCRemoteSwiftPackageReference "material-icons" */,
 				4BD67CD824EE45CA00147C51 /* XCRemoteSwiftPackageReference "Nimble" */,
@@ -1333,14 +1329,6 @@
 				version = 0.2.0;
 			};
 		};
-		4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/qvacua/MessagePack.swift";
-			requirement = {
-				kind = exactVersion;
-				version = 4.1.0;
-			};
-		};
 		4B9BC42824EB2E6D000209B5 /* XCRemoteSwiftPackageReference "ShortcutRecorder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Kentzo/ShortcutRecorder";
@@ -1437,11 +1425,6 @@
 		4B69B31C24EDC9F100B1E5EB /* Workspace */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Workspace;
-		};
-		4B9BC41D24EB2E22000209B5 /* MessagePack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4B9BC41C24EB2E22000209B5 /* XCRemoteSwiftPackageReference "MessagePack" */;
-			productName = MessagePack;
 		};
 		4B9BC42624EB2E51000209B5 /* NvimView */ = {
 			isa = XCSwiftPackageProductDependency;

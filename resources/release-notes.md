@@ -3,6 +3,7 @@
 * Dependencides updates:
   - sparkle-project/Sparkle@2.9.1
   - SimplyDanny/SwiftLintPlugins@0.63.2
+  - qvacua/MessagePack.swift@5.0.0
   - Moved from Kitura/BlueSocket@2.0.2 to qvacua/BlueSocket@2.1.0
 
 # 0.61.1-20260402.202245
