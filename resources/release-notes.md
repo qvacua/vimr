@@ -1,5 +1,12 @@
 # Next
 
+* Dependencides updates:
+  - sparkle-project/Sparkle@2.9.1
+  - SimplyDanny/SwiftLintPlugins@0.63.2
+  - Moved from Kitura/BlueSocket@2.0.2 to qvacua/BlueSocket@2.1.0
+
+# 0.61.1-20260402.202245
+
 * Improve tab rendering performance, #1152. Thanks @lukeasrodgers for the PR!
 * Optimize session loading performance by debouncing heavy UI updates, #1142. Thanks @rainux for the PR!
 * Inherit base colors from the active Neovim theme, #1150. Thanks @oddish3 for the PR!
