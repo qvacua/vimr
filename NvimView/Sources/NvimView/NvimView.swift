@@ -370,9 +370,8 @@ public final class NvimView: NSView,
 
   private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
     do {
-      let apiInfoValue = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
-      guard let apiInfo = apiInfoValue.arrayValue,
-            apiInfo.count == 2,
+      let apiInfo = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
+      guard apiInfo.count == 2,
             let channel = apiInfo[0].int32Value
       else {
         throw NvimApi.Error.exception(message: "Error matching API version")
@@ -435,9 +434,8 @@ public final class NvimView: NSView,
       // We do some autocmd setup and send a response to exit the blocking state in
       // NvimView.swift
       try await self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
-      let apiInfoValue = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
-      guard let apiInfo = apiInfoValue.arrayValue,
-            apiInfo.count == 2,
+      let apiInfo = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
+      guard apiInfo.count == 2,
             let channel = apiInfo[0].int32Value,
             let dict = apiInfo[1].dictionaryValue,
             let version = dict["version"]?.dictionaryValue,

@@ -203,7 +203,7 @@ public extension NvimView {
       try? self.api.nvimGetCurrentBuf().get(), try? self.api.nvimListBufs().get()
     )
     guard let curBuf, let bufs else { return nil }
-    return await bufs.asyncCompactMap { buf in
+    return await bufs.compactMap({ NvimApi.Buffer($0) }).asyncCompactMap { buf in
       await self.neoVimBuffer(for: buf, currentBuffer: curBuf)
     }
   }
@@ -218,7 +218,7 @@ public extension NvimView {
           let tabs = try? await self.api.nvimListTabpages().get()
     else { return nil }
 
-    return await tabs.asyncCompactMap { tab in
+    return await tabs.compactMap({ NvimApi.Tabpage($0) }).asyncCompactMap { tab in
       await self.neoVimTab(for: tab, currentTabpage: curTab, currentBuffer: curBuf)
     }
   }
@@ -318,7 +318,9 @@ public extension NvimView {
   func cursorGo(to position: Position) async {
     guard let curWin = try? await self.api.nvimGetCurrentWin().get() else { return }
     await self.api.nvimWinSetCursor(
-      window: curWin, pos: [position.row, position.column], expectsReturnValue: false
+      window: curWin,
+      pos: [NvimApi.Value.int(Int64(position.row)), .int(Int64(position.column))],
+      expectsReturnValue: false
     ).cauterize()
   }
 
@@ -348,7 +350,9 @@ public extension NvimView {
     currentBuffer: NvimApi.Buffer?
   ) async -> NvimView.Tabpage? {
     guard let curWin = try? await self.api.nvimTabpageGetWin(tabpage: tabpage).get(),
-          let wins = try? await self.api.nvimTabpageListWins(tabpage: tabpage).get()
+          let wins = try? await self.api.nvimTabpageListWins(tabpage: tabpage).get().compactMap(
+            { NvimApi.Window($0) }
+          )
     else { return nil }
 
     let ws = await wins.asyncCompactMap { win in

@@ -60,6 +60,29 @@ get_mode_func_template = Template(
 """
 )
 
+array_value_func_template = Template(
+    """\
+  func ${func_name}(${args}
+    errWhenBlocked: Bool = true
+  ) -> Result<[NvimApi.Value], NvimApi.Error> {
+
+    let params: [NvimApi.Value] = [
+        ${params}
+    ]
+
+    if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
+
+    let reqResult = self.sendRequest(method: "${nvim_func_name}", params: params)
+    switch reqResult {
+    case let .success(value):
+      return .success(value.arrayValue ?? [])
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+"""
+)
+
 func_template = Template(
     """\
   func ${func_name}(${args}
@@ -79,7 +102,7 @@ func_template = Template(
     }
 
     if errWhenBlocked, let error = self.blockedError() { return .failure(error) }
-    
+
     let reqResult = self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case let .success(value):
@@ -112,11 +135,17 @@ $body
 def parse_function(f):
     is_void_func = f["return_type"] == "void"
     args = parse_args(f["parameters"])
+    result_type = nvim_type_to_swift(f["return_type"])
 
     if is_void_func:
         args = args[:-1] if args else args
 
-    template = void_func_template if is_void_func else func_template
+    if is_void_func:
+        template = void_func_template
+    elif result_type == "[NvimApi.Value]":
+        template = array_value_func_template
+    else:
+        template = func_template
     nvim_func_name = f["name"]
     template = get_mode_func_template if nvim_func_name == "nvim_get_mode" else template
 

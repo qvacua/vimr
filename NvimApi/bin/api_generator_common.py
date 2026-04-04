@@ -26,7 +26,7 @@ def nvim_type_to_swift(nvim_type):
         return "String"
 
     if nvim_type == "Array":
-        return "NvimApi.Value"
+        return "[NvimApi.Value]"
 
     if nvim_type == "Dict":
         return "Dictionary<String, NvimApi.Value>"
@@ -84,6 +84,9 @@ def msgpack_to_swift(msgpack_value_name, type):
 
     if type.startswith("[Dictionary<"):
         return f"msgPackArrayDictToSwift({msgpack_value_name}.arrayValue)"
+
+    if type == "[NvimApi.Value]":
+        return f"{msgpack_value_name}.arrayValue"
 
     if type.startswith("["):
         element_type = re.match(r"\[(.*)\]", type).group(1)

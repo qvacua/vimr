@@ -65,6 +65,29 @@ get_mode_func_template = Template(
 """
 )
 
+array_value_func_template = Template(
+    """\
+  func ${func_name}(${args}
+    errWhenBlocked: Bool = true
+  ) async -> Result<[NvimApi.Value], NvimApi.Error> {
+
+    let params: [NvimApi.Value] = [
+        ${params}
+    ]
+
+    if errWhenBlocked, let error = await self.blockedError() { return .failure(error) }
+
+    let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
+    switch reqResult {
+    case let .success(value):
+      return .success(value.arrayValue ?? [])
+    case let .failure(error):
+      return .failure(.other(cause: error))
+    }
+  }
+"""
+)
+
 func_template = Template(
     """\
   func ${func_name}(${args}
@@ -84,7 +107,7 @@ func_template = Template(
     }
 
     if errWhenBlocked, let error = await self.blockedError() { return .failure(error) }
-    
+
     let reqResult = await self.sendRequest(method: "${nvim_func_name}", params: params)
     switch reqResult {
     case let .success(value):
@@ -207,7 +230,13 @@ extension NvimApi.Tabpage {
 
 def parse_function(f):
     args = parse_args(f["parameters"])
-    template = void_func_template if f["return_type"] == "void" else func_template
+    result_type = nvim_type_to_swift(f["return_type"])
+    if f["return_type"] == "void":
+        template = void_func_template
+    elif result_type == "[NvimApi.Value]":
+        template = array_value_func_template
+    else:
+        template = func_template
     nvim_func_name = f["name"]
     template = get_mode_func_template if nvim_func_name == "nvim_get_mode" else template
 
