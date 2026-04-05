@@ -5,20 +5,33 @@ import Socket
 
 /// Only supports requests
 public class NvimApiSync: @unchecked Sendable {
-  public init() {
-    // We know it will succeed
-    // swiftlint:disable:next force_try
-    self.socket = try! Socket.create(family: .unix, proto: .unix)
-  }
+  public init() {}
 
   public func run(socketPath: String) throws {
-    try self.socket.connect(to: socketPath)
+    let sock = try Socket.create(family: .unix, proto: .unix)
+    try sock.connect(to: socketPath)
+    self.socket = sock
+  }
+
+  public func run(host: String, port: Int32) throws {
+    let sock = try Socket.create(family: .inet, type: .stream, proto: .tcp)
+    try sock.connect(to: host, port: port)
+    self.socket = sock
+  }
+
+  /// Connect to a neovim `--listen` address (Unix socket path or host:port).
+  public func run(address: String) throws {
+    if let (host, port) = MsgpackRpc.parseTcpAddress(address) {
+      try self.run(host: host, port: port)
+    } else {
+      try self.run(socketPath: address)
+    }
   }
 
   public func stop() {
     self.lock.lock()
     defer { lock.unlock() }
-    self.socket.close()
+    self.socket?.close()
   }
 
   public func sendRequest(
@@ -40,10 +53,13 @@ public class NvimApiSync: @unchecked Sendable {
     let data = MessagePack.pack(.array(request))
 
     do {
-      try self.socket.write(from: data)
+      guard let socket = self.socket else {
+        return .failure(.exception(message: "NvimApiSync: not connected"))
+      }
+      try socket.write(from: data)
 
       var response = Data()
-      _ = try self.socket.read(into: &response)
+      _ = try socket.read(into: &response)
 
       let decoded = try MessagePack.unpack(response)
       guard case let .array(unpacked) = decoded.value,
@@ -88,7 +104,7 @@ public class NvimApiSync: @unchecked Sendable {
     return nil
   }
 
-  private let socket: Socket
+  private var socket: Socket?
   private var msgId: UInt32 = 0
   private let lock = OSAllocatedUnfairLock()
 }

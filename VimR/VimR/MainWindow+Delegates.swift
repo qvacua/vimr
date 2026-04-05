@@ -212,6 +212,12 @@ extension MainWindow {
         return
       }
 
+      // Connected to an external nvim — just detach, never send :q/:qa!
+      if self.neoVimView.isAttachedToRunningNvim {
+        await self.neoVimView.stop()
+        return
+      }
+
       if closeWindow {
         if await self.neoVimView.hasDirtyBuffers() {
           self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in

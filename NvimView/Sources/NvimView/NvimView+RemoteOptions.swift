@@ -91,19 +91,24 @@ extension NvimView {
       return
     }
 
-    guard let newFont = FontUtils.font(fromVimFontSpec: fontSpec) else {
-      self.logger.error("Invalid specification for guifont '\(fontSpec)'")
-
-      self.signalError(code: 596, message: "Invalid font(s): guifont=\(fontSpec)")
-      self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag))
-      return
+    // guifont may be a comma-separated fallback list (neovide-style) or a single
+    // VimR-style Name:hSize spec. Try each candidate in order.
+    let candidates = fontSpec.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+    for candidate in candidates {
+      if let newFont = FontUtils.font(fromVimFontSpec: candidate) {
+        self.font = newFont
+        // Cell size likely changed, do a resize.
+        self.resizeNeoVimUi(to: self.frame.size)
+        self.markForRenderWholeView()
+        self.delegate?.nextEvent(.guifontChanged(newFont))
+        return
+      }
     }
 
-    self.font = newFont
-    // Cell size likely changed, do a resize.
-    self.resizeNeoVimUi(to: self.frame.size)
-    self.markForRenderWholeView()
-    self.delegate?.nextEvent(.guifontChanged(newFont))
+    // No candidate matched — log quietly and push back the current font so nvim
+    // is in sync. Don't surface E596 to the user for unsupported font spec formats.
+    self.logger.error("No usable font in guifont spec '\(fontSpec)' — keeping current font")
+    self.signalRemoteOptionChange(RemoteOption.fromFont(self.font, forWideFont: wideFlag))
   }
 }
 

@@ -21,4 +21,11 @@ enum RpcEvent: String, CaseIterable {
   case revealCurrentBufferInFileBrowser =
     "com.qvacua.vimr.rpc-events.reveal-current-buffer-in-file-browser"
   case refreshFileBrowser = "com.qvacua.vimr.rpc-events.refresh-file-browser"
+
+  /// Open a new blank VimR window with VimR's own nvim process.
+  case openNewWindow = "com.qvacua.vimr.rpc-events.open-new-window"
+
+  /// Open a new VimR window connected to an already-running neovim at the given address.
+  /// Pass the socket path or host:port as the first RPC argument.
+  case connectToRemote = "com.qvacua.vimr.rpc-events.connect-to-remote"
 }

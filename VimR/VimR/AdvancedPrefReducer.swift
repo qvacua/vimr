@@ -26,6 +26,9 @@ final class AdvancedPrefReducer: ReducerType {
 
     case let .setNvimAppName(value):
       state.nvimAppName = value
+
+    case let .setConnectionMode(value):
+      state.mainWindowTemplate.connectionMode = value
     }
 
     return ReduceTuple(state: state, action: tuple.action, modified: true)

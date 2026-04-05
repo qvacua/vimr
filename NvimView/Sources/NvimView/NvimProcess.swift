@@ -41,6 +41,12 @@ final class NvimProcess {
     try self.launchNvimUsingLoginShellEnv()
   }
 
+  /// Launch nvim in headless mode with --listen only (no --embed, no stdio pipes).
+  /// Used for socket-launch mode: we connect to the socket afterwards.
+  func runLocalServerHeadless() throws {
+    try self.launchNvimHeadless()
+  }
+
   func quit() {
     self.nvimServerProc?.waitUntilExit()
     dlog.debug("NvimServer \(self.uuid) exited successfully.")
@@ -55,6 +61,44 @@ final class NvimProcess {
   private func forceExitNvimServer() {
     self.nvimServerProc?.interrupt()
     self.nvimServerProc?.terminate()
+  }
+
+  private func launchNvimHeadless() throws {
+    var env = self.envDict
+
+    let process = Process()
+    // Redirect stdio to /dev/null — we connect via the --listen socket, not pipes.
+    let devNull = FileHandle.nullDevice
+    process.standardInput = devNull
+    process.standardOutput = devNull
+    process.standardError = devNull
+    process.currentDirectoryPath = self.cwd.path
+    process.qualityOfService = .userInteractive
+
+    if self.nvimBinary != "", FileManager.default.fileExists(atPath: self.nvimBinary) {
+      process.launchPath = self.nvimBinary
+    } else {
+      env["VIMRUNTIME"] = Bundle.module.url(forResource: "runtime", withExtension: nil)!.path
+      let launchPath = Bundle.module.url(forResource: "NvimServer", withExtension: nil)!.path
+      process.launchPath = launchPath
+    }
+    process.environment = env
+    // --headless runs nvim without a TUI but with a full event loop, so the
+    // --listen socket is created and kept alive. We then connect via socket.
+    // (--embed would exit immediately because stdin is /dev/null.)
+    process.arguments = ["--headless", "--listen", self.pipeUrl.path] + self.nvimArgs
+
+    dlog.debug("Servername (headless): \(self.pipeUrl.path)")
+    dlog.debug(
+      "Launching NvimServer (headless) \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
+    )
+    do {
+      try process.run()
+    } catch {
+      throw NvimApi.Error.exception(message: "Could not run neovim process (headless).")
+    }
+
+    self.nvimServerProc = process
   }
 
   private func launchNvimUsingLoginShellEnv() throws -> (Pipe, Pipe, Pipe) {

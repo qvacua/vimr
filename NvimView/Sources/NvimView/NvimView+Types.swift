@@ -27,6 +27,11 @@ public extension NvimView {
     var nvimArgs: [String]?
     var additionalEnvs: [String: String]
     var sourceFiles: [URL]
+    /// When set, connect to an already-running neovim at this Unix socket path
+    /// instead of spawning a child process.
+    var remoteSocketPath: String?
+    /// When true, launch nvim with --listen and connect via socket instead of stdio pipes.
+    var useSocketConnection: Bool
 
     public init(
       usesCustomTabBar: Bool,
@@ -35,7 +40,9 @@ public extension NvimView {
       nvimBinary: String,
       nvimArgs: [String]?,
       additionalEnvs: [String: String],
-      sourceFiles: [URL]
+      sourceFiles: [URL],
+      remoteSocketPath: String? = nil,
+      useSocketConnection: Bool = false
     ) {
       self.usesCustomTabBar = usesCustomTabBar
       self.useInteractiveZsh = useInteractiveZsh
@@ -44,6 +51,8 @@ public extension NvimView {
       self.nvimArgs = nvimArgs
       self.additionalEnvs = additionalEnvs
       self.sourceFiles = sourceFiles
+      self.remoteSocketPath = remoteSocketPath
+      self.useSocketConnection = useSocketConnection
     }
   }
 

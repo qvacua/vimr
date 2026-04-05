@@ -56,3 +56,16 @@ function! s:VimRSetCharacterspacing(characterspacing) abort
 call rpcnotify(0, 'com.qvacua.NvimView', 'set-characterspacing', a:characterspacing)
 endfunction
 command! -nargs=1 VimRSetCharacterspacing call s:VimRSetCharacterspacing(<args>)
+
+" Open a new blank VimR window with VimR's own nvim process.
+function! s:VimRNewWindow() abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'open-new-window')
+endfunction
+command! -nargs=0 VimRNewWindow call s:VimRNewWindow()
+
+" Open a new VimR window connected to an already-running neovim at ADDRESS.
+" ADDRESS is a Unix socket path or host:port (e.g. /tmp/nvim.sock or 127.0.0.1:6666).
+function! s:VimRConnectToRemote(address) abort
+	call rpcnotify(0, 'com.qvacua.NvimView', 'connect-to-remote', a:address)
+endfunction
+command! -nargs=1 VimRConnectToRemote call s:VimRConnectToRemote(<f-args>)

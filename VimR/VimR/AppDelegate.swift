@@ -37,6 +37,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     var nvimArgs: [String]?
     var additionalEnvs: [String: String]
     var line: Int?
+    /// When set, connect to this running neovim socket instead of launching a new one.
+    var remoteSocketPath: String?
   }
 
   enum Action {
@@ -233,6 +235,20 @@ extension AppDelegate {
     self.launching = false
 
     self.updaterController.startUpdater()
+
+    // Add "Connect to Running Neovim..." menu item to File menu
+    if let fileMenu = NSApp.mainMenu?.items.first(where: { $0.title == "File" })?.submenu {
+      let connectItem = NSMenuItem(
+        title: "Connect to Running Neovim...",
+        action: #selector(AppDelegate.connectToRunningNvim(_:)),
+        keyEquivalent: ""
+      )
+      connectItem.keyEquivalentModifierMask = [.command, .shift, .option]
+      connectItem.keyEquivalent = "n"
+      // Insert after "New with Custom Config Location" (index 1), or at position 2
+      let insertIndex = min(2, fileMenu.items.count)
+      fileMenu.insertItem(connectItem, at: insertIndex)
+    }
 
     #if DEBUG
     NSApp.mainMenu?.items.first { $0.identifier == debugMenuItemIdentifier }?.isHidden = false
@@ -461,6 +477,23 @@ extension AppDelegate {
         line: line
       )
       self.emit(.newMainWindow(config: config))
+
+    case .connectRemote:
+      guard let remoteAddress = self.queryParam(
+        remoteAddressPrefix,
+        from: rawParams,
+        transforming: identity
+      ).first else { return }
+      let config = OpenConfig(
+        urls: [],
+        cwd: cwd,
+        cliPipePath: pipePath,
+        nvimArgs: nil,
+        additionalEnvs: [:],
+        line: nil,
+        remoteSocketPath: remoteAddress
+      )
+      self.emit(.newMainWindow(config: config))
     }
   }
 
@@ -538,6 +571,34 @@ extension AppDelegate {
     self.stopCustomConfigWindow()
   }
 
+  /// Shows a dialog for the user to enter a socket path, then opens a new window
+  /// connected to that running neovim instance.
+  @IBAction func connectToRunningNvim(_: Any?) {
+    let alert = NSAlert()
+    alert.messageText = "Connect to Running Neovim"
+    alert.informativeText = "Enter the Unix socket path of a running neovim instance.\n"
+      + "Start neovim with: nvim --listen /tmp/nvim.sock --headless"
+    alert.alertStyle = .informational
+    alert.addButton(withTitle: "Connect")
+    alert.addButton(withTitle: "Cancel")
+
+    let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 340, height: 24))
+    input.placeholderString = "/tmp/nvim.sock"
+    alert.accessoryView = input
+
+    let response = alert.runModal()
+    guard response == .alertFirstButtonReturn else { return }
+
+    let socketPath = input.stringValue.trimmingCharacters(in: .whitespaces)
+    guard !socketPath.isEmpty else { return }
+
+    let config = OpenConfig(
+      urls: [], cwd: FileUtils.userHomeUrl, cliPipePath: nil, nvimArgs: nil,
+      additionalEnvs: [:], line: nil, remoteSocketPath: socketPath
+    )
+    self.emit(.newMainWindow(config: config))
+  }
+
   @IBAction func openInNewWindow(_ sender: Any?) { self.openDocument(sender) }
 
   @IBAction func showPrefWindow(_: Any?) { self.emit(.preferences) }
@@ -560,6 +621,11 @@ extension AppDelegate {
       self.emit(.newMainWindow(config: config))
     }
   }
+
+  /// Open a new main window. Called from RPC event handlers in other files.
+  func openNewMainWindow(config: OpenConfig) {
+    self.emit(.newMainWindow(config: config))
+  }
 }
 
 // MARK: - NSUserNotificationCenterDelegate
@@ -578,6 +644,7 @@ private enum VimRUrlAction: String {
   case newWindow = "open-in-new-window"
   case separateWindows = "open-in-separate-windows"
   case nvim
+  case connectRemote = "connect-to-remote"
 }
 
 // Keep in sync with QueryParamKey in the `vimr` Python script.
@@ -588,3 +655,4 @@ private let pipePathPrefix = "pipe-path="
 private let waitPrefix = "wait="
 private let envPathPrefix = "env-path="
 private let linePrefix = "line="
+private let remoteAddressPrefix = "remote-address="

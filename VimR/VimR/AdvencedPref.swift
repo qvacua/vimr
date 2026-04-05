@@ -14,6 +14,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     case setUseSnapshotUpdate(Bool)
     case setNvimBinary(String)
     case setNvimAppName(String)
+    case setConnectionMode(MainWindow.NvimConnectionMode)
   }
 
   let uuid = UUID()
@@ -33,6 +34,7 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useSnapshotUpdate = state.useSnapshotUpdate
     self.nvimBinary = state.mainWindowTemplate.nvimBinary
     self.nvimAppName = state.nvimAppName
+    self.connectionMode = state.mainWindowTemplate.connectionMode
 
     super.init(frame: .zero)
 
@@ -44,11 +46,13 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
         || self.nvimBinary != state.mainWindowTemplate.nvimBinary
         || self.nvimAppName != state.nvimAppName
         || self.useSnapshotUpdate != state.useSnapshotUpdate
+        || self.connectionMode != state.mainWindowTemplate.connectionMode
       {
         self.useInteractiveZsh = state.mainWindowTemplate.useInteractiveZsh
         self.nvimBinary = state.mainWindowTemplate.nvimBinary
         self.nvimAppName = state.nvimAppName
         self.useSnapshotUpdate = state.useSnapshotUpdate
+        self.connectionMode = state.mainWindowTemplate.connectionMode
 
         self.updateViews()
       }
@@ -61,11 +65,13 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
   private var useSnapshotUpdate: Bool
   private var nvimBinary: String = ""
   private var nvimAppName: String = ""
+  private var connectionMode: MainWindow.NvimConnectionMode
 
   private let useInteractiveZshCheckbox = NSButton(forAutoLayout: ())
   private let useSnapshotUpdateCheckbox = NSButton(forAutoLayout: ())
   private let nvimBinaryField = NSTextField(forAutoLayout: ())
   private let nvimAppNameField = NSTextField(forAutoLayout: ())
+  private let connectionModePopup = NSPopUpButton(forAutoLayout: ())
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
@@ -82,6 +88,10 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.useInteractiveZshCheckbox.boolState = self.useInteractiveZsh
     self.nvimBinaryField.stringValue = self.nvimBinary
     self.nvimAppNameField.stringValue = self.nvimAppName
+
+    let modeIndex = MainWindow.NvimConnectionMode.allCases
+      .firstIndex(of: self.connectionMode) ?? 0
+    self.connectionModePopup.selectItem(at: modeIndex)
   }
 
   private func addViews() {
@@ -122,6 +132,21 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     When set, VimR will set the `NVIM_APPNAME` environment variable to this value by default.
     """#)
 
+    let connectionModeTitle = self.titleTextField(title: "Connection Mode:")
+    let connectionModePopup = self.connectionModePopup
+    connectionModePopup.removeAllItems()
+    connectionModePopup.addItems(withTitles: [
+      "Embedded (stdio pipe)",
+      "Embedded (socket)",
+    ])
+    connectionModePopup.target = self
+    connectionModePopup.action = #selector(AdvancedPref.connectionModeAction(_:))
+    let connectionModeInfo = self.infoTextField(markdown: #"""
+    **Embedded (stdio pipe)**: Classic mode. VimR launches nvim and communicates via stdin/stdout.\
+    **Embedded (socket)**: VimR launches nvim with `--listen` and connects via Unix socket.\
+    Socket mode enables future support for attaching to running servers.
+    """#)
+
     self.addSubview(paneTitle)
 
     self.addSubview(useSnapshotUpdate)
@@ -133,6 +158,9 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
     self.addSubview(nvimAppNameTitle)
     self.addSubview(nvimAppNameField)
     self.addSubview(nvimAppNameInfo)
+    self.addSubview(connectionModeTitle)
+    self.addSubview(connectionModePopup)
+    self.addSubview(connectionModeInfo)
 
     paneTitle.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
     paneTitle.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -190,6 +218,15 @@ final class AdvancedPref: PrefPane, UiComponent, NSTextFieldDelegate {
 
     nvimAppNameInfo.autoPinEdge(.top, to: .bottom, of: nvimAppNameField, withOffset: 5)
     nvimAppNameInfo.autoPinEdge(.left, to: .right, of: nvimAppNameTitle, withOffset: 5)
+
+    connectionModeTitle.autoPinEdge(.top, to: .bottom, of: nvimAppNameInfo, withOffset: 18)
+    connectionModeTitle.autoPinEdge(.right, to: .right, of: nvimAppNameTitle)
+
+    connectionModePopup.autoAlignAxis(.baseline, toSameAxisOf: connectionModeTitle)
+    connectionModePopup.autoPinEdge(.left, to: .right, of: connectionModeTitle, withOffset: 5)
+
+    connectionModeInfo.autoPinEdge(.top, to: .bottom, of: connectionModePopup, withOffset: 5)
+    connectionModeInfo.autoPinEdge(.left, to: .left, of: connectionModePopup)
   }
 }
 
@@ -212,5 +249,12 @@ extension AdvancedPref {
   func nvimAppNameFieldAction() {
     let newNvimAppName = self.nvimAppNameField.stringValue
     self.emit(.setNvimAppName(newNvimAppName))
+  }
+
+  @objc func connectionModeAction(_ sender: NSPopUpButton) {
+    let modes = MainWindow.NvimConnectionMode.allCases
+    let index = sender.indexOfSelectedItem
+    guard index >= 0, index < modes.count else { return }
+    self.emit(.setConnectionMode(modes[index]))
   }
 }

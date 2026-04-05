@@ -84,7 +84,9 @@ final class MainWindow: NSObject,
       nvimBinary: state.nvimBinary,
       nvimArgs: state.nvimArgs,
       additionalEnvs: state.additionalEnvs,
-      sourceFiles: sourceFileUrls
+      sourceFiles: sourceFileUrls,
+      remoteSocketPath: state.remoteSocketPath,
+      useSocketConnection: state.connectionMode == .embeddedSocket
     )
     self.neoVimView = NvimView(
       frame: .init(x: 0, y: 0, width: 640, height: 480),
