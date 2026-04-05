@@ -83,9 +83,17 @@ final class NvimProcess {
       process.launchPath = launchPath
     }
     process.environment = env
-    // --headless runs nvim without a TUI but with a full event loop, so the
-    // --listen socket is created and kept alive. We then connect via socket.
-    // (--embed would exit immediately because stdin is /dev/null.)
+    // --headless (not --embed) is intentional here. The nvim docs say
+    // "UI embedders that want the UI protocol on a socket must pass --embed --listen".
+    // That pattern applies when the parent process drives nvim via stdio RPC AND
+    // also wants a socket — which is what pipe mode (launchNvimUsingLoginShellEnv)
+    // does with ["--embed", "--listen", ...].
+    //
+    // This socket-launch mode is different: VimR is NOT the stdio parent.
+    // nvim must run independently with its own event loop. Using --embed here
+    // would cause nvim to exit immediately when it reads EOF on the /dev/null stdin.
+    // --headless starts nvim without a TUI but with a live event loop, creates the
+    // socket, and keeps running until explicitly quit — exactly what we need.
     process.arguments = ["--headless", "--listen", self.pipeUrl.path] + self.nvimArgs
 
     dlog.debug("Servername (headless): \(self.pipeUrl.path)")

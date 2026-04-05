@@ -382,30 +382,20 @@ public final class NvimView: NSView,
 
   // MARK: - Shared Nvim Setup
 
-  /// Lua chunk that defines the GetHiColor helper and sets vim.g.gui_vimr.
-  /// Used by all connection modes before any autocmds are registered.
-  /// Takes no args (called with `...` = empty).
+  /// Lua chunk that defines the GetHiColor helper, sets vim.g.gui_vimr, and registers
+  /// the ColorScheme autocmd. Receives the RPC channel as the first vararg.
+  /// By including ColorScheme here it is registered early (before attachUi / VimEnter)
+  /// in pipe mode, so the initial colorscheme event fires naturally — matching the old
+  /// single-block vimscript approach.
   private static let preambleLua = """
+    local ch = select(1, ...)
     vim.g.gui_vimr = 1
     _G.GetHiColor = function(hlID, component)
       local color = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(hlID)), component)
       if color == nil or color == '' then return -1 end
       return tonumber(color:sub(2), 16) or -1
     end
-    """
-
-  /// Lua chunk that registers all autocmds VimR needs.
-  /// Receives the RPC channel as the first vararg (`select(1, ...)`).
-  /// Separated from the preamble so that pipe mode can register these
-  /// during vimenter (after the blocking rpcrequest handshake) without
-  /// double-registering.
-  private static let autocmdLua = """
-    local ch = select(1, ...)
     local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = true })
-    vim.api.nvim_create_autocmd('VimLeave', {
-      group = augroup,
-      callback = function() vim.rpcnotify(ch, 'autocommand', 'vimleave') end,
-    })
     vim.api.nvim_create_autocmd('ColorScheme', {
       group = augroup,
       callback = function()
@@ -417,6 +407,17 @@ public final class NvimView: NSView,
           GetHiColor('Tabline', 'bg'), GetHiColor('Tabline', 'fg'),
           GetHiColor('TablineSel', 'bg'), GetHiColor('TablineSel', 'fg'))
       end,
+    })
+    """
+
+  /// Lua chunk that registers the remaining autocmds VimR needs (everything except
+  /// ColorScheme, which is in preambleLua). Receives the RPC channel as the first vararg.
+  private static let autocmdLua = """
+    local ch = select(1, ...)
+    local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = false })
+    vim.api.nvim_create_autocmd('VimLeave', {
+      group = augroup,
+      callback = function() vim.rpcnotify(ch, 'autocommand', 'vimleave') end,
     })
     vim.api.nvim_create_autocmd('BufWinEnter', {
       group = augroup,
@@ -474,7 +475,7 @@ public final class NvimView: NSView,
   private func runCommonNvimSetup(channel: Int32, includePreamble: Bool) async throws {
     if includePreamble {
       _ = try await self.api.nvimExecLua(
-        code: Self.preambleLua, args: [], errWhenBlocked: false
+        code: Self.preambleLua, args: [.int(Int64(channel))], errWhenBlocked: false
       ).get()
     }
 
@@ -593,8 +594,8 @@ public final class NvimView: NSView,
   }
 
   /// Handles the blocking "vimenter" rpcrequest during the embedded pipe startup sequence.
-  /// The preamble (GetHiColor etc) was already exec'd by launchNvim(), so we only
-  /// register the autocmds and do subscribe/source/ginit here.
+  /// The preamble and autocmds were already registered by launchNvim(), so we only
+  /// do subscribe/source/ginit here and re-register autocmds (idempotent via clear=true).
   private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
     do {
       let channel = try await self.getChannelAndVerifyVersion()
@@ -629,16 +630,18 @@ public final class NvimView: NSView,
       let channel = try await self.getChannelAndVerifyVersion()
       dlog.debug("Version fine")
 
-      // Only the preamble and VimEnter hooks here. The full autocmd set is
-      // registered later in doSetupForVimenterAndSendResponse() when the
-      // blocking rpcrequest arrives.
+      // Preamble: registers GetHiColor, gui_vimr, and the ColorScheme autocmd.
+      // ColorScheme is registered here so it fires naturally during VimEnter,
+      // matching the original single-block vimscript approach.
       _ = try await self.api.nvimExecLua(
-        code: Self.preambleLua, args: [], errWhenBlocked: false
+        code: Self.preambleLua, args: [.int(Int64(channel))], errWhenBlocked: false
       ).get()
+
+      // VimEnter hooks: notify + blocking rpcrequest handled in doSetupForVimenterAndSendResponse.
       _ = try await self.api.nvimExecLua(
         code: """
           local ch = select(1, ...)
-          local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = true })
+          local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = false })
           vim.api.nvim_create_autocmd('VimEnter', {
             group = augroup, once = true,
             callback = function() vim.rpcnotify(ch, 'autocommand', 'vimenter') end,
