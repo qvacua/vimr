@@ -488,33 +488,48 @@ public final class NvimView: NSView,
       .nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false).get()
 
     for url in self.sourceFileUrls {
-      _ = try await self.api.nvimExecLua(
-        code: "vim.cmd.source(select(1, ...))",
-        args: [.string(url.path)],
-        errWhenBlocked: false
-      ).get()
+      if self.remoteSocketPath != nil {
+        // Remote nvim can't access paths in the local app bundle, so read the
+        // file content here and ship it over the RPC channel.
+        let content = try String(contentsOf: url, encoding: .utf8)
+        _ = try await self.api.nvimExecLua(
+          code: "vim.api.nvim_exec2(select(1, ...), {})",
+          args: [.string(content)],
+          errWhenBlocked: false
+        ).get()
+      } else {
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(url.path)],
+          errWhenBlocked: false
+        ).get()
+      }
     }
 
-    let ginitVimPath = FileManager.default
-      .homeDirectoryForCurrentUser
-      .appendingPathComponent(".config/nvim/ginit.vim").path
-    let ginitLuaPath = FileManager.default
-      .homeDirectoryForCurrentUser
-      .appendingPathComponent(".config/nvim/ginit.lua").path
-    if FileManager.default.fileExists(atPath: ginitLuaPath) {
-      dlog.debug("Source'ing ginit.lua")
-      _ = try await self.api.nvimExecLua(
-        code: "vim.cmd.source(select(1, ...))",
-        args: [.string(ginitLuaPath)],
-        errWhenBlocked: false
-      ).get()
-    } else if FileManager.default.fileExists(atPath: ginitVimPath) {
-      dlog.debug("Source'ing ginit.vim")
-      _ = try await self.api.nvimExecLua(
-        code: "vim.cmd.source(select(1, ...))",
-        args: [.string(ginitVimPath)],
-        errWhenBlocked: false
-      ).get()
+    // Skip ginit sourcing when attached to a remote nvim — the remote process
+    // has already sourced its own ginit on startup.
+    if self.remoteSocketPath == nil {
+      let ginitVimPath = FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".config/nvim/ginit.vim").path
+      let ginitLuaPath = FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".config/nvim/ginit.lua").path
+      if FileManager.default.fileExists(atPath: ginitLuaPath) {
+        dlog.debug("Source'ing ginit.lua")
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(ginitLuaPath)],
+          errWhenBlocked: false
+        ).get()
+      } else if FileManager.default.fileExists(atPath: ginitVimPath) {
+        dlog.debug("Source'ing ginit.vim")
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(ginitVimPath)],
+          errWhenBlocked: false
+        ).get()
+      }
     }
   }
 
