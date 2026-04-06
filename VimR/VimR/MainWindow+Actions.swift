@@ -100,6 +100,8 @@ extension MainWindow {
 
     case .connectToRemote:
       guard params.count == 1, let address = params[0].stringValue else { return }
+      let trimmedAddress = address.trimmingCharacters(in: .whitespaces)
+      guard !trimmedAddress.isEmpty else { return }
       guard let appDelegate = NSApp.delegate as? AppDelegate else { return }
       let config = AppDelegate.OpenConfig(
         urls: [],
@@ -107,7 +109,7 @@ extension MainWindow {
         cliPipePath: nil,
         nvimArgs: nil,
         additionalEnvs: [:],
-        remoteSocketPath: address
+        remoteSocketPath: trimmedAddress
       )
       appDelegate.openNewMainWindow(config: config)
     }
