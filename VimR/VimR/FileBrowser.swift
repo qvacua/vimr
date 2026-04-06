@@ -31,6 +31,7 @@ final class FileBrowser: NSView, UiComponent {
     self.mainWinUuid = state.uuid
 
     self.cwd = state.cwd
+    self.isRemote = state.remoteSocketPath != nil
 
     self.fileView = FileOutlineView(context: context, state: state)
 
@@ -70,6 +71,7 @@ final class FileBrowser: NSView, UiComponent {
   private let emit: (UuidAction<Action>) -> Void
 
   private let mainWinUuid: UUID
+  private let isRemote: Bool
 
   private var currentBufferUrl: URL?
 
@@ -82,12 +84,25 @@ final class FileBrowser: NSView, UiComponent {
   required init?(coder _: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
   private func addViews() {
-    let scrollView = NSScrollView.standardScrollView()
-    scrollView.borderType = .noBorder
-    scrollView.documentView = self.fileView
+    if self.isRemote {
+      let label = NSTextField(labelWithString: "File browser is not available\nfor remote connections.")
+      label.alignment = .center
+      label.textColor = .secondaryLabelColor
+      label.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
+      label.isSelectable = false
 
-    self.addSubview(scrollView)
-    scrollView.autoPinEdgesToSuperviewEdges()
+      self.addSubview(label)
+      label.autoCenterInSuperview()
+      label.autoPinEdge(toSuperviewEdge: .left, withInset: 16)
+      label.autoPinEdge(toSuperviewEdge: .right, withInset: 16)
+    } else {
+      let scrollView = NSScrollView.standardScrollView()
+      scrollView.borderType = .noBorder
+      scrollView.documentView = self.fileView
+
+      self.addSubview(scrollView)
+      scrollView.autoPinEdgesToSuperviewEdges()
+    }
   }
 }
 
