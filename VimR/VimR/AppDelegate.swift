@@ -576,14 +576,15 @@ extension AppDelegate {
   @IBAction func connectToRunningNvim(_: Any?) {
     let alert = NSAlert()
     alert.messageText = "Connect to Running Neovim"
-    alert.informativeText = "Enter the Unix socket path of a running neovim instance.\n"
-      + "Start neovim with: nvim --listen /tmp/nvim.sock --headless"
+    alert.informativeText = "Enter the Unix socket path or TCP address (host:port) of a running neovim instance.\n"
+      + "Start neovim with: nvim --listen /tmp/nvim.sock --headless\n"
+      + "or for TCP: nvim --listen 0.0.0.0:6666 --headless"
     alert.alertStyle = .informational
     alert.addButton(withTitle: "Connect")
     alert.addButton(withTitle: "Cancel")
 
     let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 340, height: 24))
-    input.placeholderString = "/tmp/nvim.sock"
+    input.placeholderString = "/tmp/nvim.sock  or  192.168.1.10:6666"
     alert.accessoryView = input
 
     let response = alert.runModal()
