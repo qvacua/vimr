@@ -41,10 +41,10 @@ final class NvimProcess {
     try self.launchNvimUsingLoginShellEnv()
   }
 
-  /// Launch nvim in headless mode with --listen only (no --embed, no stdio pipes).
-  /// Used for socket-launch mode: we connect to the socket afterwards.
-  func runLocalServerHeadless() throws {
-    try self.launchNvimHeadless()
+  /// Launch nvim with --embed --listen for socket-launch mode.
+  /// nvim blocks its event loop until nvim_ui_attach is called on the socket.
+  func runLocalServerEmbedSocket() throws {
+    try self.launchNvimEmbedSocket()
   }
 
   func quit() {
@@ -63,15 +63,17 @@ final class NvimProcess {
     self.nvimServerProc?.terminate()
   }
 
-  private func launchNvimHeadless() throws {
+  private func launchNvimEmbedSocket() throws {
     var env = self.envDict
 
     let process = Process()
-    // Redirect stdio to /dev/null — we connect via the --listen socket, not pipes.
-    let devNull = FileHandle.nullDevice
-    process.standardInput = devNull
-    process.standardOutput = devNull
-    process.standardError = devNull
+    // Use a pipe for stdin so nvim doesn't read EOF from /dev/null.
+    // With --embed --listen, nvim blocks its event loop waiting for nvim_ui_attach
+    // on the socket rather than driving the UI via stdio, so this pipe is never
+    // written to — it just keeps stdin open.
+    process.standardInput = Pipe()
+    process.standardOutput = Pipe()
+    process.standardError = Pipe()
     process.currentDirectoryPath = self.cwd.path
     process.qualityOfService = .userInteractive
 
@@ -83,27 +85,20 @@ final class NvimProcess {
       process.launchPath = launchPath
     }
     process.environment = env
-    // --headless (not --embed) is intentional here. The nvim docs say
-    // "UI embedders that want the UI protocol on a socket must pass --embed --listen".
-    // That pattern applies when the parent process drives nvim via stdio RPC AND
-    // also wants a socket — which is what pipe mode (launchNvimUsingLoginShellEnv)
-    // does with ["--embed", "--listen", ...].
-    //
-    // This socket-launch mode is different: VimR is NOT the stdio parent.
-    // nvim must run independently with its own event loop. Using --embed here
-    // would cause nvim to exit immediately when it reads EOF on the /dev/null stdin.
-    // --headless starts nvim without a TUI but with a live event loop, creates the
-    // socket, and keeps running until explicitly quit — exactly what we need.
-    process.arguments = ["--headless", "--listen", self.pipeUrl.path] + self.nvimArgs
+    // --embed --listen: nvim starts without a TUI and blocks its event loop until
+    // nvim_ui_attach is called on the socket. This means we don't need to poll for
+    // socket creation — connecting and calling nvim_ui_attach is sufficient
+    // synchronisation.
+    process.arguments = ["--embed", "--listen", self.pipeUrl.path] + self.nvimArgs
 
-    dlog.debug("Servername (headless): \(self.pipeUrl.path)")
+    dlog.debug("Servername (socket-launch): \(self.pipeUrl.path)")
     dlog.debug(
-      "Launching NvimServer (headless) \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
+      "Launching NvimServer (socket-launch) \(String(describing: process.launchPath)) with args: \(String(describing: process.arguments))"
     )
     do {
       try process.run()
     } catch {
-      throw NvimApi.Error.exception(message: "Could not run neovim process (headless).")
+      throw NvimApi.Error.exception(message: "Could not run neovim process (socket-launch).")
     }
 
     self.nvimServerProc = process

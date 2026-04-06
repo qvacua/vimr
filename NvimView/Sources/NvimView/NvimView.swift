@@ -586,26 +586,79 @@ public final class NvimView: NSView,
     dlog.debug("Connected to running Nvim")
   }
 
-  /// Launch a local nvim with --listen, then connect via socket (no stdio pipes).
+  /// Launch a local nvim with --embed --listen, then connect via socket.
+  /// --embed makes nvim block its event loop waiting for nvim_ui_attach, but the
+  /// socket file is created during nvim's startup before that blocking point, so
+  /// we wait for the file to appear before connecting.
   private func launchNvimAndConnectViaSocket(_ size: Size) async {
     dlog.debug("Starting Nvim (socket-launch mode)")
 
     do {
-      try self.nvimProc.runLocalServerHeadless()
+      try self.nvimProc.runLocalServerEmbedSocket()
     } catch {
       self.dieWithFatalError(description: "Could not launch Nvim: \(error)")
       return
     }
 
-    // Give nvim a moment to create the socket
     let socketPath = self.nvimProc.pipeUrl.path
-    for _ in 0..<50 {
-      if FileManager.default.fileExists(atPath: socketPath) { break }
-      try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+    do {
+      try await waitForFile(atPath: socketPath, timeout: 5.0)
+    } catch {
+      self.dieWithFatalError(description: "Nvim socket did not appear at \(socketPath): \(error)")
+      return
     }
 
     await self.connectToRunningNvim(address: socketPath, size: size)
     dlog.debug("Launched Nvim (socket-launch mode)")
+  }
+
+  /// Waits for a file to appear at `path`, checking via a `DispatchSourceFileSystemObject`
+  /// on the parent directory. Falls back to a timeout error if the file hasn't appeared
+  /// within `timeout` seconds.
+  private func waitForFile(atPath path: String, timeout: TimeInterval) async throws {
+    guard !FileManager.default.fileExists(atPath: path) else { return }
+
+    let directory = (path as NSString).deletingLastPathComponent
+    let dirFd = Darwin.open(directory, O_EVTONLY)
+    guard dirFd >= 0 else {
+      throw NvimApi.Error.exception(message: "Could not open directory for monitoring: \(directory)")
+    }
+
+    try await withThrowingTaskGroup(of: Void.self) { group in
+      // Watcher task: resolves as soon as the file appears
+      group.addTask {
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+          let source = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: dirFd,
+            eventMask: .write,
+            queue: .global()
+          )
+          source.setEventHandler {
+            if FileManager.default.fileExists(atPath: path) {
+              source.cancel()
+              cont.resume()
+            }
+          }
+          source.setCancelHandler { close(dirFd) }
+          source.resume()
+          // Check once immediately in case it appeared before the source was armed
+          if FileManager.default.fileExists(atPath: path) {
+            source.cancel()
+            cont.resume()
+          }
+        }
+      }
+
+      // Timeout task
+      group.addTask {
+        try await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+        throw NvimApi.Error.exception(message: "Timed out waiting for socket at \(path)")
+      }
+
+      // First to finish wins; cancel the other
+      try await group.next()
+      group.cancelAll()
+    }
   }
 
   /// Handles the blocking "vimenter" rpcrequest during the embedded pipe startup sequence.
