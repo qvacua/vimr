@@ -156,7 +156,6 @@ extension MainWindow {
   }
 
   @IBAction func closeWindow(_: Any?) {
-    self.closeWindow = true
     self.window.performClose(nil)
   }
 

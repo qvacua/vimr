@@ -276,6 +276,7 @@ extension AppDelegate {
         alert.alertStyle = .informational
         alert.runModal()
 
+        NSApplication.shared.reply(toApplicationShouldTerminate: false)
         return
       }
 
@@ -297,6 +298,7 @@ extension AppDelegate {
           return
         }
 
+        NSApplication.shared.reply(toApplicationShouldTerminate: false)
         return
       }
 

@@ -103,7 +103,9 @@ extension MainWindow {
         + reason
     alert.alertStyle = .critical
     alert.beginSheetModal(for: self.window) { _ in
-      self.windowController.close()
+      // Route through neoVimStopped so isClosing is set, the CLI pipe is closed,
+      // and the Redux .close action is emitted — same as the normal close path.
+      self.neoVimStopped()
     }
   }
 
@@ -200,31 +202,12 @@ extension MainWindow {
   }
 
   func windowShouldClose(_: NSWindow) -> Bool {
-    defer { self.closeWindow = false }
-    let closeWindow = self.closeWindow
-
     Task {
       if await self.neoVimView.isBlocked() {
         let alert = NSAlert()
         alert.messageText = "Nvim is waiting for your input."
         alert.alertStyle = .informational
         alert.runModal()
-        return
-      }
-
-      if closeWindow {
-        if await self.neoVimView.hasDirtyBuffers() {
-          self.discardCloseActionAlert().beginSheetModal(for: self.window) { response in
-            if response == .alertSecondButtonReturn {
-              Task {
-                await self.neoVimView.quitNeoVimWithoutSaving()
-              }
-            }
-          }
-        } else {
-          await self.neoVimView.quitNeoVimWithoutSaving()
-        }
-
         return
       }
 
