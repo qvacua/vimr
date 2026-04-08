@@ -6,24 +6,27 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.61.1-20260402.202245</title>
+      <title>v0.62.0-20260408.124559</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20260402.202245</sparkle:version>
-      <sparkle:shortVersionString>v0.61.1</sparkle:shortVersionString>
+      <sparkle:version>20260408.124559</sparkle:version>
+      <sparkle:shortVersionString>v0.62.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Improve tab rendering performance, #1152. Thanks @lukeasrodgers for the PR!</li>
-<li>Optimize session loading performance by debouncing heavy UI updates, #1142. Thanks @rainux for the PR!</li>
-<li>Inherit base colors from the active Neovim theme, #1150. Thanks @oddish3 for the PR!</li>
+<li>Neovim 0.12.1 😀</li>
+<li>Dependencides updates:</li>
+<li>sparkle-project/Sparkle@2.9.1</li>
+<li>SimplyDanny/SwiftLintPlugins@0.63.2</li>
+<li>qvacua/MessagePack.swift@5.0.0</li>
+<li>Moved from Kitura/BlueSocket@2.0.2 to qvacua/BlueSocket@2.1.0</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.61.1-20260402.202245
+        https://github.com/qvacua/vimr/releases/tag/v0.62.0-20260408.124559
       </releaseNotesLink>
-      <pubDate>2026-04-02T20:27:30.071243</pubDate>
+      <pubDate>2026-04-08T12:50:23.562031</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.61.1-20260402.202245/VimR-v0.61.1.tar.bz2"
-                 sparkle:edSignature="/IU3/O+MuTAb5CAULQ0tahQdcJOjABEy0lbwN5wz9CRi6d4DtRuewLI7dgutjT60tI5uQxr5fh4aUE4m9JpJAw==" length="19029018"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.62.0-20260408.124559/VimR-v0.62.0.tar.bz2"
+                 sparkle:edSignature="UN88WpLZkGKBRiapD9o5YxQNf31LpkRiGuBNtsryiLTQneRNMuz7/bh97kq3v13zVMPMtPoFkudz9ntZ8LecCQ==" length="19085273"
                  type="application/octet-stream"/>
     </item>
   </channel>
