@@ -25,6 +25,11 @@ extension Collection where Element: Sendable {
 }
 
 public extension NvimView {
+  /// True when this view is connected to an already-running neovim instance
+  /// (via "Connect to Running Neovim"). False when VimR launched the process
+  /// itself (pipe or socket-launch mode).
+  var isAttachedToRunningNvim: Bool { self.remoteSocketPath != nil }
+
   func stop() async {
     if self.stopped {
       dlog.debug("Bridge already stopped.")
@@ -32,7 +37,21 @@ public extension NvimView {
     }
 
     self.stopped = true
-    self.nvimProc.quit()
+
+    if self.remoteSocketPath != nil {
+      // We connected to an already-running nvim — clear the gui flag then
+      // detach the UI without killing the server process.
+      _ = await self.api.nvimExecLua(
+        code: "vim.g.gui_vimr = nil",
+        args: [],
+        errWhenBlocked: false
+      )
+      _ = await self.api.nvimUiDetach()
+      dlog.debug("UI detached from remote Nvim.")
+    } else {
+      // We spawned this nvim (pipe or socket-launch) — let it exit normally.
+      self.nvimProc.quit()
+    }
 
     self.apiSync.stop()
     await self.api.stop()

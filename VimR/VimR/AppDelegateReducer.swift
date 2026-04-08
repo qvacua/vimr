@@ -76,6 +76,7 @@ final class AppDelegateReducer: ReducerType {
     if let line = config.line {
       mainWindow.goToLineFromCli = Marked(line)
     }
+    mainWindow.remoteSocketPath = config.remoteSocketPath
 
     return mainWindow
   }

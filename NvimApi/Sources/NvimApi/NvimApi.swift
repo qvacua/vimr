@@ -32,6 +32,16 @@ public actor NvimApi {
     try await self.msgpackRpc.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
   }
 
+  /// Connect to an already-running neovim instance via its Unix domain socket.
+  public func run(socketPath: String) async throws {
+    try await self.msgpackRpc.run(socketPath: socketPath)
+  }
+
+  /// Connect to a neovim `--listen` address (Unix socket path or host:port).
+  public func run(address: String) async throws {
+    try await self.msgpackRpc.run(address: address)
+  }
+
   public func stop() async { await self.msgpackRpc.stop() }
 
   public func isBlocked() async -> Result<Bool, NvimApi.Error> {

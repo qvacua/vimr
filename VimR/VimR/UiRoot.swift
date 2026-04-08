@@ -28,6 +28,7 @@ final class UiRoot: UiComponent {
     context.subscribe(uuid: self.uuid) { state in
       let uuidsInState = Set(state.mainWindows.keys)
 
+      // Open any new windows that appeared in state.
       uuidsInState
         .subtracting(self.mainWindows.keys)
         .compactMap { state.mainWindows[$0] }
@@ -36,17 +37,9 @@ final class UiRoot: UiComponent {
           mainWindow.show()
         }
 
-      if self.mainWindows.isEmpty {
-        // We exit here if there are no main windows open.
-        // Otherwise, when hide/quit after last main window is active,
-        // you have to be really quick to open a new window
-        // when re-activating VimR w/o automatic new main window.
-        return
-      }
-
-      self.mainWindows.keys
-        .filter { !uuidsInState.contains($0) }
-        .forEach(self.removeMainWindow)
+      // Remove windows that are no longer in state.
+      let uuidsToRemove = self.mainWindows.keys.filter { !uuidsInState.contains($0) }
+      uuidsToRemove.forEach(self.removeMainWindow)
 
       if self.activateAsciiImInInsertMode != state.activateAsciiImInNormalMode {
         self.activateAsciiImInInsertMode = state.activateAsciiImInNormalMode
@@ -54,7 +47,12 @@ final class UiRoot: UiComponent {
           .forEach { $0.activateAsciiImInInsertMode = self.activateAsciiImInInsertMode }
       }
 
-      guard self.mainWindows.isEmpty else { return }
+      // Only trigger the after-last-window action if we actually removed something
+      // in this update and the result is that no windows remain. Guarding on
+      // `!uuidsToRemove.isEmpty` prevents a rapid second state update (where
+      // self.mainWindows is already empty at entry) from erroneously skipping or
+      // double-firing the quit/hide action.
+      guard !uuidsToRemove.isEmpty, self.mainWindows.isEmpty else { return }
 
       switch state.afterLastWindowAction {
       case .doNothing: return

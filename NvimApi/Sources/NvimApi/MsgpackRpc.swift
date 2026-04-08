@@ -4,6 +4,7 @@
 import Foundation
 import MessagePack
 import os
+import Socket
 
 // Inspired by https://stackoverflow.com/a/76941591
 extension Pipe {
@@ -81,7 +82,44 @@ public actor MsgpackRpc {
     self.outPipe = outPipe
     self.errorPipe = errorPipe
 
-    try await self.startReading()
+    try await self.startReadingFromPipe()
+  }
+
+  /// Connect to an already-running neovim instance via a Unix domain socket
+  /// (the path neovim was started with via `--listen`).
+  public func run(socketPath: String) async throws {
+    let sock = try Socket.create(family: .unix, proto: .unix)
+    try sock.connect(to: socketPath)
+    self.socket = sock
+    try await self.startReadingFromSocket()
+  }
+
+  /// Connect to an already-running neovim instance via TCP (host:port).
+  public func run(host: String, port: Int32) async throws {
+    let sock = try Socket.create(family: .inet, type: .stream, proto: .tcp)
+    try sock.connect(to: host, port: port)
+    self.socket = sock
+    try await self.startReadingFromSocket()
+  }
+
+  /// Connect to a neovim `--listen` address. Accepts either a Unix socket path
+  /// (e.g. "/tmp/nvim.sock") or a TCP address (e.g. "localhost:6666").
+  public func run(address: String) async throws {
+    if let (host, port) = Self.parseTcpAddress(address) {
+      try await self.run(host: host, port: port)
+    } else {
+      try await self.run(socketPath: address)
+    }
+  }
+
+  /// Parses "host:port" into components. Returns nil if it's not a TCP address.
+  nonisolated static func parseTcpAddress(_ address: String) -> (host: String, port: Int32)? {
+    // URL needs a scheme to parse host/port correctly.
+    guard let url = URL(string: "tcp://\(address)"),
+          let host = url.host, !host.isEmpty,
+          let port = url.port, (1...65535).contains(port)
+    else { return nil }
+    return (host, Int32(port))
   }
 
   public func stop() {
@@ -104,7 +142,7 @@ public actor MsgpackRpc {
       ]
     )
 
-    try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+    try self.writeData(packed)
   }
 
   public func request(
@@ -129,7 +167,7 @@ public actor MsgpackRpc {
       ]
     )
 
-    try self.inPipe?.fileHandleForWriting.write(contentsOf: packed)
+    try self.writeData(packed)
 
     if !expectsReturnValue {
       return .nilResponse(msgid)
@@ -151,15 +189,27 @@ public actor MsgpackRpc {
   private var inPipe: Pipe?
   private var outPipe: Pipe?
   private var errorPipe: Pipe?
+  private var socket: Socket?
 
   private var readingTask: Task<Void, any Swift.Error>?
 
   private var nextMsgid: UInt32 = 1
   private var pendingRequests = [UInt32: CheckedContinuation<Response, Never>]()
 
-  private func startReading() async throws {
+  /// Unified write: sends data through whichever transport is active.
+  private func writeData(_ data: Data) throws {
+    if let socket = self.socket {
+      try socket.write(from: data)
+    } else if let pipe = self.inPipe {
+      try pipe.fileHandleForWriting.write(contentsOf: data)
+    } else {
+      throw Error(msg: "No transport available for writing")
+    }
+  }
+
+  private func startReadingFromPipe() async throws {
     self.readingTask = Task.detached(priority: .high) {
-      dlog.debug("Start reading")
+      dlog.debug("Start reading (pipe)")
       guard let dataStream = await self.outPipe?.asyncData else {
         throw Error(msg: "Could not get the async data stream")
       }
@@ -184,7 +234,53 @@ public actor MsgpackRpc {
         }
       }
 
-      dlog.debug("End reading")
+      dlog.debug("End reading (pipe)")
+      await self.cleanUp()
+    }
+  }
+
+  private func startReadingFromSocket() async throws {
+    guard let socket = self.socket else {
+      throw Error(msg: "Socket not available for reading")
+    }
+    // Capture socket locally before entering the detached task to satisfy Sendable.
+    // BlueSocket is not Sendable but we guarantee exclusive read access from this single task.
+    nonisolated(unsafe) let sock = socket
+    self.readingTask = Task.detached(priority: .high) {
+      dlog.debug("Start reading (socket)")
+
+      var buffer = Data()
+      while !Task.isCancelled {
+        var chunk = Data()
+        let bytesRead: Int
+        do {
+          bytesRead = try sock.read(into: &chunk)
+        } catch {
+          if Task.isCancelled { break }
+          throw Error(msg: "Socket read error", cause: error)
+        }
+
+        if bytesRead == 0 {
+          // Connection closed by peer
+          break
+        }
+
+        buffer.append(chunk)
+
+        let (values, remainder) = try self.unpackAllWithRemainder(buffer)
+
+        if let remainder {
+          buffer = remainder
+        } else {
+          buffer.removeAll(keepingCapacity: true)
+        }
+
+        for value in values {
+          await self.processMessage(value)
+        }
+      }
+
+      dlog.debug("End reading (socket)")
       await self.cleanUp()
     }
   }
@@ -201,6 +297,7 @@ public actor MsgpackRpc {
     self.readingTask?.cancel()
     self.readingTask = nil
 
+    // Clean up pipe transport
     self.inPipe?.fileHandleForReading.readabilityHandler = nil
     self.inPipe?.fileHandleForWriting.closeFile()
     self.outPipe?.fileHandleForReading.closeFile()
@@ -209,6 +306,10 @@ public actor MsgpackRpc {
     self.inPipe = nil
     self.outPipe = nil
     self.errorPipe = nil
+
+    // Clean up socket transport
+    self.socket?.close()
+    self.socket = nil
 
     self.streamContinuation.finish()
     for (msgid, continuation) in self.pendingRequests {

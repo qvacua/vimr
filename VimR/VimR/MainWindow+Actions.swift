@@ -86,6 +86,32 @@ extension MainWindow {
       guard let characterspacing = params[0].doubleValue else { return }
 
       self.emit(self.uuidAction(for: .setCharacterspacing(characterspacing)))
+
+    case .openNewWindow:
+      guard let appDelegate = NSApp.delegate as? AppDelegate else { return }
+      let config = AppDelegate.OpenConfig(
+        urls: [],
+        cwd: self.neoVimView.cwd,
+        cliPipePath: nil,
+        nvimArgs: nil,
+        additionalEnvs: [:]
+      )
+      appDelegate.openNewMainWindow(config: config)
+
+    case .connectToRemote:
+      guard params.count == 1, let address = params[0].stringValue else { return }
+      let trimmedAddress = address.trimmingCharacters(in: .whitespaces)
+      guard !trimmedAddress.isEmpty else { return }
+      guard let appDelegate = NSApp.delegate as? AppDelegate else { return }
+      let config = AppDelegate.OpenConfig(
+        urls: [],
+        cwd: self.neoVimView.cwd,
+        cliPipePath: nil,
+        nvimArgs: nil,
+        additionalEnvs: [:],
+        remoteSocketPath: trimmedAddress
+      )
+      appDelegate.openNewMainWindow(config: config)
     }
   }
 
@@ -156,7 +182,6 @@ extension MainWindow {
   }
 
   @IBAction func closeWindow(_: Any?) {
-    self.closeWindow = true
     self.window.performClose(nil)
   }
 

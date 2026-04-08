@@ -164,6 +164,8 @@ public final class NvimView: NSView,
       usesLigatures: self.usesLigatures
     )
     self.nvimProc = NvimProcess(uuid: self.uuid, config: config)
+    self.remoteSocketPath = config.remoteSocketPath
+    self.useSocketConnection = config.useSocketConnection
 
     self.sourceFileUrls = config.sourceFiles
 
@@ -270,6 +272,8 @@ public final class NvimView: NSView,
   var markedText: String?
 
   let sourceFileUrls: [URL]
+  let remoteSocketPath: String?
+  let useSocketConnection: Bool
 
   var tabEntries = [TabEntry]()
 
@@ -303,7 +307,15 @@ public final class NvimView: NSView,
   
   private func runBridge() {
     Task(priority: .high) {
-      await self.launchNvim(self.discreteSize(size: frame.size))
+      let size = self.discreteSize(size: frame.size)
+
+      if let socketPath = self.remoteSocketPath {
+        await self.connectToRunningNvim(address: socketPath, size: size)
+      } else if self.useSocketConnection {
+        await self.launchNvimAndConnectViaSocket(size)
+      } else {
+        await self.launchNvim(size)
+      }
 
       let stream = await self.api.msgpackRawStream
       for await msg in stream {
@@ -368,52 +380,301 @@ public final class NvimView: NSView,
     }
   }
 
-  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
-    do {
-      let apiInfo = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
-      guard apiInfo.count == 2,
-            let channel = apiInfo[0].int32Value
-      else {
-        throw NvimApi.Error.exception(message: "Error matching API version")
+  // MARK: - Shared Nvim Setup
+
+  /// Lua chunk that defines the GetHiColor helper, sets vim.g.gui_vimr, and registers
+  /// the ColorScheme autocmd. Receives the RPC channel as the first vararg.
+  /// By including ColorScheme here it is registered early (before attachUi / VimEnter)
+  /// in pipe mode, so the initial colorscheme event fires naturally — matching the old
+  /// single-block vimscript approach.
+  private static let preambleLua = """
+    local ch = select(1, ...)
+    vim.g.gui_vimr = 1
+    _G.GetHiColor = function(hlID, component)
+      local color = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(hlID)), component)
+      if color == nil or color == '' then return -1 end
+      return tonumber(color:sub(2), 16) or -1
+    end
+    local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = true })
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = augroup,
+      callback = function()
+        vim.rpcnotify(ch, 'autocommand', 'colorscheme',
+          GetHiColor('Normal', 'fg'), GetHiColor('Normal', 'bg'),
+          GetHiColor('Visual', 'fg'), GetHiColor('Visual', 'bg'),
+          GetHiColor('Directory', 'fg'),
+          GetHiColor('TablineFill', 'bg'), GetHiColor('TablineFill', 'fg'),
+          GetHiColor('Tabline', 'bg'), GetHiColor('Tabline', 'fg'),
+          GetHiColor('TablineSel', 'bg'), GetHiColor('TablineSel', 'fg'))
+      end,
+    })
+    """
+
+  /// Lua chunk that registers the remaining autocmds VimR needs (everything except
+  /// ColorScheme, which is in preambleLua). Receives the RPC channel as the first vararg.
+  private static let autocmdLua = """
+    local ch = select(1, ...)
+    local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = false })
+    vim.api.nvim_create_autocmd('VimLeave', {
+      group = augroup,
+      callback = function() vim.rpcnotify(ch, 'autocommand', 'vimleave') end,
+    })
+    vim.api.nvim_create_autocmd('BufWinEnter', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'bufwinenter', ev.buf) end,
+    })
+    vim.api.nvim_create_autocmd('BufWinLeave', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'bufwinleave', ev.buf) end,
+    })
+    vim.api.nvim_create_autocmd('TabEnter', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'tabenter', ev.buf) end,
+    })
+    vim.api.nvim_create_autocmd('BufWritePost', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'bufwritepost', ev.buf) end,
+    })
+    vim.api.nvim_create_autocmd('BufEnter', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'bufenter', ev.buf) end,
+    })
+    vim.api.nvim_create_autocmd('DirChanged', {
+      group = augroup,
+      callback = function(ev) vim.rpcnotify(ch, 'autocommand', 'dirchanged', ev.file) end,
+    })
+    vim.api.nvim_create_autocmd('BufModifiedSet', {
+      group = augroup,
+      callback = function(ev)
+        local info = vim.fn.getbufinfo(ev.buf)
+        local changed = info and info[1] and info[1].changed or 0
+        vim.rpcnotify(ch, 'autocommand', 'bufmodifiedset', ev.buf, changed)
+      end,
+    })
+    """
+
+  /// Gets the API channel, verifies the nvim version, returns the channel number.
+  private func getChannelAndVerifyVersion() async throws -> Int32 {
+    let apiInfo = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
+    guard apiInfo.count == 2,
+          let channel = apiInfo[0].int32Value,
+          let dict = apiInfo[1].dictionaryValue,
+          let version = dict["version"]?.dictionaryValue,
+          let major = version["major"]?.intValue,
+          let minor = version["minor"]?.intValue,
+          major > kMinMajorVersion || (major == kMinMajorVersion && minor >= kMinMinorVersion)
+    else {
+      throw NvimApi.Error.exception(message: "Error matching API version")
+    }
+    return channel
+  }
+
+  /// Runs the shared autocmd/subscription/source setup that all connection modes need.
+  /// In pipe mode this is called during the vimenter handshake (after the preamble was
+  /// already exec'd by launchNvim). In socket modes it is called directly.
+  private func runCommonNvimSetup(channel: Int32, includePreamble: Bool) async throws {
+    if includePreamble {
+      _ = try await self.api.nvimExecLua(
+        code: Self.preambleLua, args: [.int(Int64(channel))], errWhenBlocked: false
+      ).get()
+    }
+
+    _ = try await self.api.nvimExecLua(
+      code: Self.autocmdLua, args: [.int(Int64(channel))], errWhenBlocked: false
+    ).get()
+    dlog.debug("Nvim setup Lua exec'ed (preamble=\(includePreamble))")
+
+    _ = try await self.api
+      .nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false).get()
+
+    for url in self.sourceFileUrls {
+      if self.remoteSocketPath != nil {
+        // Remote nvim can't access paths in the local app bundle, so read the
+        // file content here and ship it over the RPC channel.
+        let content = try String(contentsOf: url, encoding: .utf8)
+        _ = try await self.api.nvimExecLua(
+          code: "vim.api.nvim_exec2(select(1, ...), {})",
+          args: [.string(content)],
+          errWhenBlocked: false
+        ).get()
+      } else {
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(url.path)],
+          errWhenBlocked: false
+        ).get()
       }
+    }
 
-      // swiftformat:disable all
-      _ = try await self.api.nvimExec2(src: """
-      autocmd BufWinEnter * call rpcnotify(\(channel), 'autocommand', 'bufwinenter', str2nr(expand('<abuf>')))
-      autocmd BufWinLeave * call rpcnotify(\(channel), 'autocommand', 'bufwinleave', str2nr(expand('<abuf>')))
-      autocmd TabEnter * call rpcnotify(\(channel), 'autocommand', 'tabenter', str2nr(expand('<abuf>')))
-      autocmd BufWritePost * call rpcnotify(\(channel), 'autocommand', 'bufwritepost', str2nr(expand('<abuf>')))
-      autocmd BufEnter * call rpcnotify(\(channel), 'autocommand', 'bufenter', str2nr(expand('<abuf>')))
-      autocmd DirChanged * call rpcnotify(\( channel), 'autocommand', 'dirchanged', expand('<afile>'))
-      autocmd BufModifiedSet * call rpcnotify(\(channel), 'autocommand', 'bufmodifiedset', str2nr(expand('<abuf>')), getbufinfo(str2nr(expand('<abuf>')))[0].changed)
-      """, opts: [:], errWhenBlocked: false).get()
-      // swiftformat:enable all
-
-      _ = try await self.api
-        .nvimSubscribe(event: NvimView.rpcEventName, expectsReturnValue: false).get()
-
-      for url in self.sourceFileUrls {
-        _ = try await self.api
-          .nvimExec2(
-            src: "source \(url.shellEscapedPath)",
-            opts: [:],
-            errWhenBlocked: false
-          ).get()
-      }
-      _ = try await self.api.sendResponse(.nilResponse(msgid)).get()
-
-      let ginitPath = FileManager.default
+    // Skip ginit sourcing when attached to a remote nvim — the remote process
+    // has already sourced its own ginit on startup.
+    if self.remoteSocketPath == nil {
+      let ginitVimPath = FileManager.default
         .homeDirectoryForCurrentUser
         .appendingPathComponent(".config/nvim/ginit.vim").path
-      if FileManager.default.fileExists(atPath: ginitPath) {
+      let ginitLuaPath = FileManager.default
+        .homeDirectoryForCurrentUser
+        .appendingPathComponent(".config/nvim/ginit.lua").path
+      if FileManager.default.fileExists(atPath: ginitLuaPath) {
+        dlog.debug("Source'ing ginit.lua")
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(ginitLuaPath)],
+          errWhenBlocked: false
+        ).get()
+      } else if FileManager.default.fileExists(atPath: ginitVimPath) {
         dlog.debug("Source'ing ginit.vim")
-        _ = try await self.api.nvimCommand(command: "source \(ginitPath.shellEscapedPath)").get()
+        _ = try await self.api.nvimExecLua(
+          code: "vim.cmd.source(select(1, ...))",
+          args: [.string(ginitVimPath)],
+          errWhenBlocked: false
+        ).get()
       }
+    }
+  }
+
+  /// Attaches the UI to neovim at the given grid size.
+  private func attachUi(width: Int, height: Int) async throws {
+    _ = try await self.api
+      .nvimUiAttach(width: width, height: height, options: [
+        "ext_linegrid": true,
+        "ext_multigrid": false,
+        "ext_tabline": MessagePackValue(self.usesCustomTabBar),
+        "rgb": true,
+      ]).get()
+    dlog.debug("UI attached")
+  }
+
+  // MARK: - Connection Modes
+
+  /// Connect to an already-running neovim instance via Unix socket or TCP.
+  /// Accepts a socket path (e.g. "/tmp/nvim.sock") or host:port (e.g. "localhost:6666").
+  private func connectToRunningNvim(address: String, size: Size) async {
+    dlog.debug("Connecting to running Nvim at \(address)")
+
+    do {
+      try await self.api.run(address: address)
+      try self.apiSync.run(address: address)
+      dlog.debug("Both async and sync APIs connected to \(address)")
+
+      let channel = try await self.getChannelAndVerifyVersion()
+      dlog.debug("Remote Nvim version OK")
+
+      try await self.runCommonNvimSetup(channel: channel, includePreamble: true)
+      try await self.attachUi(width: size.width, height: size.height)
+
+      // In socket/headless mode, nvim has already sourced init.vim before we
+      // connected, so the ColorScheme autocmd fired before our rpcnotify was
+      // registered. Re-applying the active colorscheme causes nvim to re-emit
+      // hl_attr_define + default_colors_set + our ColorScheme rpcnotify so that
+      // VimR's Theme and cell colors are correctly populated.
+      _ = try await self.api.nvimExecLua(
+        code: "vim.cmd.colorscheme(vim.g.colors_name or 'default')",
+        args: [],
+        errWhenBlocked: false
+      ).get()
+
+      self.delegate?.nextEvent(.nvimReady)
+      self.setFrameSize(self.bounds.size)
+    } catch {
+      self.dieWithFatalError(
+        description: "Could not connect to remote Nvim at \(address): \(error)"
+      )
+      return
+    }
+
+    dlog.debug("Connected to running Nvim")
+  }
+
+  /// Launch a local nvim with --embed --listen, then connect via socket.
+  /// --embed makes nvim block its event loop waiting for nvim_ui_attach, but the
+  /// socket file is created during nvim's startup before that blocking point, so
+  /// we wait for the file to appear before connecting.
+  private func launchNvimAndConnectViaSocket(_ size: Size) async {
+    dlog.debug("Starting Nvim (socket-launch mode)")
+
+    do {
+      try self.nvimProc.runLocalServerEmbedSocket()
+    } catch {
+      self.dieWithFatalError(description: "Could not launch Nvim: \(error)")
+      return
+    }
+
+    let socketPath = self.nvimProc.pipeUrl.path
+    do {
+      try await waitForFile(atPath: socketPath, timeout: 5.0)
+    } catch {
+      self.dieWithFatalError(description: "Nvim socket did not appear at \(socketPath): \(error)")
+      return
+    }
+
+    await self.connectToRunningNvim(address: socketPath, size: size)
+    dlog.debug("Launched Nvim (socket-launch mode)")
+  }
+
+  /// Waits for a file to appear at `path`, checking via a `DispatchSourceFileSystemObject`
+  /// on the parent directory. Falls back to a timeout error if the file hasn't appeared
+  /// within `timeout` seconds.
+  private func waitForFile(atPath path: String, timeout: TimeInterval) async throws {
+    guard !FileManager.default.fileExists(atPath: path) else { return }
+
+    let directory = (path as NSString).deletingLastPathComponent
+    let dirFd = Darwin.open(directory, O_EVTONLY)
+    guard dirFd >= 0 else {
+      throw NvimApi.Error.exception(message: "Could not open directory for monitoring: \(directory)")
+    }
+
+    try await withThrowingTaskGroup(of: Void.self) { group in
+      // Watcher task: resolves as soon as the file appears
+      group.addTask {
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+          let source = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: dirFd,
+            eventMask: .write,
+            queue: .global()
+          )
+          source.setEventHandler {
+            if FileManager.default.fileExists(atPath: path) {
+              source.cancel()
+              cont.resume()
+            }
+          }
+          source.setCancelHandler { close(dirFd) }
+          source.resume()
+          // Check once immediately in case it appeared before the source was armed
+          if FileManager.default.fileExists(atPath: path) {
+            source.cancel()
+            cont.resume()
+          }
+        }
+      }
+
+      // Timeout task
+      group.addTask {
+        try await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+        throw NvimApi.Error.exception(message: "Timed out waiting for socket at \(path)")
+      }
+
+      // First to finish wins; cancel the other
+      try await group.next()
+      group.cancelAll()
+    }
+  }
+
+  /// Handles the blocking "vimenter" rpcrequest during the embedded pipe startup sequence.
+  /// The preamble and autocmds were already registered by launchNvim(), so we only
+  /// do subscribe/source/ginit here and re-register autocmds (idempotent via clear=true).
+  private func doSetupForVimenterAndSendResponse(forMsgid msgid: UInt32) async {
+    do {
+      let channel = try await self.getChannelAndVerifyVersion()
+      try await self.runCommonNvimSetup(channel: channel, includePreamble: false)
+      _ = try await self.api.sendResponse(.nilResponse(msgid)).get()
     } catch {
       self.dieWithFatalError(description: "Could not set up vimenter event: \(error)")
     }
   }
 
+  /// Classic mode: spawn nvim with --embed, communicate via stdio pipes.
   private func launchNvim(_ size: Size) async {
     dlog.debug("Starting Nvim")
 
@@ -432,51 +693,38 @@ public final class NvimView: NSView,
       // When we call nvim_command("autocmd VimEnter * call rpcrequest(1, 'vimenter')")
       // Neovim will send us a vimenter request and enter a blocking state.
       // We do some autocmd setup and send a response to exit the blocking state in
-      // NvimView.swift
+      // the vimenter handler in runBridge().
       try await self.api.run(inPipe: inPipe, outPipe: outPipe, errorPipe: errorPipe)
-      let apiInfo = try await self.api.nvimGetApiInfo(errWhenBlocked: false).get()
-      guard apiInfo.count == 2,
-            let channel = apiInfo[0].int32Value,
-            let dict = apiInfo[1].dictionaryValue,
-            let version = dict["version"]?.dictionaryValue,
-            let major = version["major"]?.intValue,
-            let minor = version["minor"]?.intValue,
-            major > kMinMajorVersion || (major == kMinMajorVersion && minor >= kMinMinorVersion)
-      else {
-        throw NvimApi.Error.exception(message: "Error matching API version")
-      }
-
+      let channel = try await self.getChannelAndVerifyVersion()
       dlog.debug("Version fine")
 
-      // swiftformat:disable all
-      let vimscript = """
-        function! GetHiColor(hlID, component)
-          let color = synIDattr(synIDtrans(hlID(a:hlID)), a:component)
-          if empty(color)
-            return -1
-          else
-            return str2nr(color[1:], 16)
-          endif
-        endfunction
-        let g:gui_vimr = 1
-        autocmd VimLeave * call rpcnotify(\(channel), 'autocommand', 'vimleave')
-        autocmd VimEnter * call rpcnotify(\(channel), 'autocommand', 'vimenter')
-        autocmd ColorScheme * call rpcnotify(\(channel), 'autocommand', 'colorscheme', GetHiColor('Normal', 'fg'), GetHiColor('Normal', 'bg'), GetHiColor('Visual', 'fg'), GetHiColor('Visual', 'bg'), GetHiColor('Directory', 'fg'), GetHiColor('TablineFill', 'bg'), GetHiColor('TablineFill', 'fg'), GetHiColor('Tabline', 'bg'), GetHiColor('Tabline', 'fg'), GetHiColor('TablineSel', 'bg'), GetHiColor('TablineSel', 'fg'))
-        autocmd VimEnter * call rpcrequest(\(channel), 'vimenter')
-        """
-      // swiftformat:enable all
+      // Preamble: registers GetHiColor, gui_vimr, and the ColorScheme autocmd.
+      // ColorScheme is registered here so it fires naturally during VimEnter,
+      // matching the original single-block vimscript approach.
+      _ = try await self.api.nvimExecLua(
+        code: Self.preambleLua, args: [.int(Int64(channel))], errWhenBlocked: false
+      ).get()
 
-      _ = try await self.api.nvimExec2(src: vimscript, opts: [:], errWhenBlocked: false).get()
-      dlog.debug("Initial script exec'ed")
+      // VimEnter hooks: notify + blocking rpcrequest handled in doSetupForVimenterAndSendResponse.
+      _ = try await self.api.nvimExecLua(
+        code: """
+          local ch = select(1, ...)
+          local augroup = vim.api.nvim_create_augroup('VimRBridge', { clear = false })
+          vim.api.nvim_create_autocmd('VimEnter', {
+            group = augroup, once = true,
+            callback = function() vim.rpcnotify(ch, 'autocommand', 'vimenter') end,
+          })
+          vim.api.nvim_create_autocmd('VimEnter', {
+            group = augroup, once = true,
+            callback = function() vim.rpcrequest(ch, 'vimenter') end,
+          })
+          """,
+        args: [.int(Int64(channel))],
+        errWhenBlocked: false
+      ).get()
+      dlog.debug("Initial Lua exec'ed")
 
-      _ = try await self.api
-        .nvimUiAttach(width: size.width, height: size.height, options: [
-          "ext_linegrid": true,
-          "ext_multigrid": false,
-          "ext_tabline": MessagePackValue(self.usesCustomTabBar),
-          "rgb": true,
-        ]).get()
-      dlog.debug("UI attached")
+      try await self.attachUi(width: size.width, height: size.height)
     } catch {
       self.dieWithFatalError(
         description: "Could not attach UI and exec initial setup script: \(error)"

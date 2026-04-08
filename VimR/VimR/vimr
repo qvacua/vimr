@@ -16,6 +16,7 @@ class Action(Enum):
     NEW_WINDOW = "open-in-new-window"
     SEPARATE_WINDOWS = "open-in-separate-windows"
     NVIM = "nvim"
+    CONNECT_REMOTE = "connect-to-remote"
 
 
 class QueryParamKey(Enum):
@@ -26,6 +27,7 @@ class QueryParamKey(Enum):
     NVIM_ARGS = "nvim-args"
     WAIT = "wait"
     LINE = "line"
+    REMOTE_ADDRESS = "remote-address"
 
 
 def wait_for_ui_to_close(pipe_path):
@@ -58,6 +60,12 @@ def vimr_nvim(other_args, nvim_args, query_params):
         query_params[QueryParamKey.NVIM_ARGS.value] = nvim_args
 
     call_open(Action.NVIM, query_params, other_args)
+
+
+def vimr_remote(args, query_params):
+    query_params[QueryParamKey.REMOTE_ADDRESS.value] = args.remote
+    query_params[QueryParamKey.CWD.value] = os.getcwd()
+    call_open(Action.CONNECT_REMOTE, query_params, args)
 
 
 def vimr(action, args, query_params):
@@ -114,6 +122,9 @@ def main(args):
         other_args, nvim_args = nvim_parser.parse_known_args()
         vimr_nvim(other_args, nvim_args, query_params)
 
+    elif args.remote:
+        vimr_remote(args, query_params)
+
     else:
         if not args.file:
             action = Action.ACTIVATE
@@ -152,6 +163,11 @@ The working directory will be set to the current directory.
                         action="store_true",
                         help="All arguments except --cur-env, --line, --dry-run and --wait will be passed "
                              "over to the (new) nvim instance in a new UI window.")
+    parser.add_argument("--remote",
+                        action="store",
+                        metavar="ADDRESS",
+                        help="Open a new VimR window connected to the already-running neovim at ADDRESS "
+                             "(Unix socket path or host:port). Cannot be combined with file arguments.")
 
     group = parser.add_mutually_exclusive_group()
     # no option => Open files in tabs in the front most window.

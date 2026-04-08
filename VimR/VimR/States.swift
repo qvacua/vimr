@@ -267,6 +267,14 @@ struct AppearanceState: Codable, Sendable {
 }
 
 extension MainWindow {
+  /// How VimR connects to neovim.
+  enum NvimConnectionMode: String, Codable, CaseIterable, Sendable {
+    /// Classic mode: spawn nvim with --embed, communicate via stdio pipes.
+    case embeddedPipe = "embedded-pipe"
+    /// Launch nvim with --listen, then connect via Unix domain socket.
+    case embeddedSocket = "embedded-socket"
+  }
+
   struct State: Codable, Sendable {
     static let `default` = State(
       isAllToolsVisible: true,
@@ -327,6 +335,10 @@ extension MainWindow {
     var nvimArgs: [String]?
     var cliPipePath: String?
     var additionalEnvs: [String: String] = [:]
+    var connectionMode = NvimConnectionMode.embeddedPipe
+
+    /// Set at window creation time for "Connect to Running Neovim" (transient, not serialized).
+    var remoteSocketPath: String?
 
     var usesVcsIgnores = true
 
@@ -357,6 +369,7 @@ extension MainWindow {
 
       case useInteractiveZsh = "use-interactive-zsh"
       case nvimBinary = "nvim-binary"
+      case connectionMode = "connection-mode"
 
       case useLiveResize = "use-live-resize"
       case isShowHidden = "is-show-hidden"
@@ -384,6 +397,10 @@ extension MainWindow {
       )
       self.nvimBinary = try container.decodeIfPresent(String.self, forKey: .nvimBinary) ?? State
         .default.nvimBinary
+      self.connectionMode = try container.decode(
+        forKey: .connectionMode,
+        default: State.default.connectionMode
+      )
 
       if let frameRawValue = try container.decodeIfPresent(String.self, forKey: .frame) {
         self.frame = NSRectFromString(frameRawValue)
@@ -462,6 +479,7 @@ extension MainWindow {
       try container.encode(self.isRightOptionMeta, forKey: .isRightOptionMeta)
       try container.encode(self.useInteractiveZsh, forKey: .useInteractiveZsh)
       try container.encode(self.nvimBinary, forKey: .nvimBinary)
+      try container.encode(self.connectionMode, forKey: .connectionMode)
       try container.encode(self.fileBrowserShowHidden, forKey: .isShowHidden)
 
       // See [1]
