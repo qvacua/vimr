@@ -1,5 +1,6 @@
 # Next
 
+* Neovim 0.12.1 😀
 * Dependencides updates:
   - sparkle-project/Sparkle@2.9.1
   - SimplyDanny/SwiftLintPlugins@0.63.2
