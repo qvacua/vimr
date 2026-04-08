@@ -56,7 +56,6 @@ final class MainWindow: NSObject,
   var repIcon: NSButton?
   var titleView: NSTextField?
 
-  var closeWindow = false
   var isClosing = false
   let cliPipePath: String?
 
