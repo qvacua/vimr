@@ -6,24 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.63.0-20260425.152925</title>
+      <title>v0.64.0-20260615.163555</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20260425.152925</sparkle:version>
-      <sparkle:shortVersionString>v0.63.0</sparkle:shortVersionString>
+      <sparkle:version>20260615.163555</sparkle:version>
+      <sparkle:shortVersionString>v0.64.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1161: Connect to a remote Neovim instance via TCP or Unix domain socket. Thanks @georgeharker for the PR!</li>
-<li>GH-1162: Fix window close / quit safety races. Thanks @georgeharker for the PR!</li>
-<li>Neovim 0.12.2 😀</li>
+<li>Neovim 0.12.3 😀</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.63.0-20260425.152925
+        https://github.com/qvacua/vimr/releases/tag/v0.64.0-20260615.163555
       </releaseNotesLink>
-      <pubDate>2026-04-25T15:37:27.114671</pubDate>
+      <pubDate>2026-06-15T16:42:24.024862</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.63.0-20260425.152925/VimR-v0.63.0.tar.bz2"
-                 sparkle:edSignature="jDUJkPnvPRrpELzh6cmmUnahHky9ZT/XpO8jWjWaXLJQI4LYnGiOm3U4z8S5iOqdKo8QeL/yFOqmpWs/rs9fAQ==" length="19129100"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.64.0-20260615.163555/VimR-v0.64.0.tar.bz2"
+                 sparkle:edSignature="zoeJCSzIyPFADXM/soY367c7x3YQzob6ZaL2ljKOEz75p0k6lmQiXh7nks8X4XZCgq6xjq5dUABmcoBiAVT6Bg==" length="19207547"
                  type="application/octet-stream"/>
     </item>
   </channel>
