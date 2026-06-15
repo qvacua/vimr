@@ -1,9 +1,12 @@
 # Next
 
+* Neovim 0.12.3 😀
+
+# v0.63.0-20260425.152925
+
 * GH-1161: Connect to a remote Neovim instance via TCP or Unix domain socket. Thanks @georgeharker for the PR!
 * GH-1162: Fix window close / quit safety races. Thanks @georgeharker for the PR!
 * Neovim 0.12.2 😀
-
 
 # 0.62.0-20260408.124559
 
