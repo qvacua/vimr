@@ -6,23 +6,22 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.66.0-20260827.194249</title>
+      <title>v0.66.1-20260920.105849</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20260827.194249</sparkle:version>
-      <sparkle:shortVersionString>v0.66.0</sparkle:shortVersionString>
+      <sparkle:version>20260920.105849</sparkle:version>
+      <sparkle:shortVersionString>v0.66.1</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>Neovim 0.12.5 😀</li>
-<li>GH-1168: Add "New Window" Dock menu. Thanks @jessie-murray for the PR!</li>
+<li>GH-1170: Fix MsgpackRpc error handler. Thanks @lukeasrodgers for the PR!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.66.0-20260827.194249
+        https://github.com/qvacua/vimr/releases/tag/v0.66.1-20260920.105849
       </releaseNotesLink>
-      <pubDate>2026-08-27T19:48:45.616369</pubDate>
+      <pubDate>2026-09-20T11:02:47.222009</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.66.0-20260827.194249/VimR-v0.66.0.tar.bz2"
-                 sparkle:edSignature="LVXSD6ZDMlQQbHG+GiFYiLDnNuXmLWEEWe507coRLQikVHoEsIR1SE55Hdp2rrsmUnZ/LzeT9uHVbNkpUjirDQ==" length="19222829"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.66.1-20260920.105849/VimR-v0.66.1.tar.bz2"
+                 sparkle:edSignature="vEEzZYhT2B2XAxeOVVCVWXETaUcqyClF4GZ86l0DIqCYc/griI/eSZLeT9JJocELZjVQqvmGkd8SwPnKErEDDw==" length="19185896"
                  type="application/octet-stream"/>
     </item>
   </channel>
