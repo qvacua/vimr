@@ -408,7 +408,7 @@ public actor MsgpackRpc {
         (value, subdata) = try unpack(subdata, compatibility: false)
         values.append(consume value)
       } catch MessagePackError.insufficientData {
-        remainderData = data
+        remainderData = subdata
         break
       }
     }
