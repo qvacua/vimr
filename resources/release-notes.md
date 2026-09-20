@@ -1,5 +1,9 @@
 # Next
 
+* GH-1170: Fix MsgpackRpc error handler. Thanks @lukeasrodgers for the PR!
+
+# 0.66.0-20260827.194249
+
 * Neovim 0.12.5 😀
 * GH-1168: Add "New Window" Dock menu. Thanks @jessie-murray for the PR!
 
