@@ -1,5 +1,5 @@
 {
-  "originHash" : "eb33555455a7a7a9bedb6a20a6b0319abe17c28ed9057fee5b2353497d23dfa3",
+  "originHash" : "17c5e9b0dd0cc4df6e67c392e2689f13bf5debbec13b61ba7f73fe30a1744439",
   "pins" : [
     {
       "identity" : "cwlcatchexception",
@@ -56,15 +56,6 @@
       }
     },
     {
-      "identity" : "messagepack.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/qvacua/MessagePack.swift",
-      "state" : {
-        "revision" : "e5e7708911a1032f0fa120c38292797734f4160c",
-        "version" : "4.1.0"
-      }
-    },
-    {
       "identity" : "misc.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qvacua/misc.swift",
@@ -78,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble",
       "state" : {
-        "revision" : "7795df4fff1a9cd231fe4867ae54f4dc5f5734f9",
-        "version" : "13.7.1"
+        "revision" : "035b88ad6ae8035f5ce2b50b0a6d69c3b16d2120",
+        "version" : "14.0.0"
       }
     },
     {
@@ -105,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "6276ba2b404829d139c45ff98427cf90e2efc59b",
-        "version" : "2.9.2"
+        "revision" : "d46d456107feacc80711b21847b82b07bd9fb46e",
+        "version" : "2.9.3"
       }
     },
     {
@@ -114,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
-        "version" : "1.2.1"
+        "revision" : "98ef3c98609a1e31b7e157b5b619579001a789d6",
+        "version" : "1.7.1"
       }
     },
     {
@@ -125,6 +116,15 @@
       "state" : {
         "revision" : "9483a5d459b45c3ffd059f7b55f9638e268632fd",
         "version" : "1.5.0"
+      }
+    },
+    {
+      "identity" : "swiftlintplugins",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SimplyDanny/SwiftLintPlugins",
+      "state" : {
+        "revision" : "ef7d692fc6706e8f5628e26bcafaefa445c58a97",
+        "version" : "0.65.1"
       }
     }
   ],
