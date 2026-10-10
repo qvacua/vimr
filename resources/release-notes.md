@@ -1,5 +1,10 @@
 # Next
 
+* Neovim 0.12.6 😀
+* New icon. Thanks @georgeharker!
+
+# 0.66.1-20260920.105849 
+
 * GH-1170: Fix MsgpackRpc error handler. Thanks @lukeasrodgers for the PR!
 
 # 0.66.0-20260827.194249
