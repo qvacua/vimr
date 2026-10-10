@@ -6,22 +6,23 @@
     <description>Most recent changes with links to updates for VimR.</description>
     <language>en</language>
     <item>
-      <title>v0.66.1-20260920.105849</title>
+      <title>v0.67.0-20261010.130648</title>
       <link>https://twitter.com/vimrefined</link>
-      <sparkle:version>20260920.105849</sparkle:version>
-      <sparkle:shortVersionString>v0.66.1</sparkle:shortVersionString>
+      <sparkle:version>20261010.130648</sparkle:version>
+      <sparkle:shortVersionString>v0.67.0</sparkle:shortVersionString>
       <description><![CDATA[
     <ul>
-<li>GH-1170: Fix MsgpackRpc error handler. Thanks @lukeasrodgers for the PR!</li>
+<li>Neovim 0.12.6 😀</li>
+<li>New icon. Thanks @georgeharker!</li>
 </ul>
   ]]></description>
       <releaseNotesLink>
-        https://github.com/qvacua/vimr/releases/tag/v0.66.1-20260920.105849
+        https://github.com/qvacua/vimr/releases/tag/v0.67.0-20261010.130648
       </releaseNotesLink>
-      <pubDate>2026-09-20T11:02:47.222009</pubDate>
+      <pubDate>2026-10-10T13:11:01.934681</pubDate>
       <minimumSystemVersion>14.8</minimumSystemVersion>
-      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.66.1-20260920.105849/VimR-v0.66.1.tar.bz2"
-                 sparkle:edSignature="vEEzZYhT2B2XAxeOVVCVWXETaUcqyClF4GZ86l0DIqCYc/griI/eSZLeT9JJocELZjVQqvmGkd8SwPnKErEDDw==" length="19185896"
+      <enclosure url="https://github.com/qvacua/vimr/releases/download/v0.67.0-20261010.130648/VimR-v0.67.0.tar.bz2"
+                 sparkle:edSignature="8U2fWhiZOvEAKuEm0kvBVoZsq+rvTtGWg3Fml8LTft0zeYkD8n1WiDmM0Y4UNYab4qN+zgbTPbS80+l4/vx1CA==" length="19530909"
                  type="application/octet-stream"/>
     </item>
   </channel>
