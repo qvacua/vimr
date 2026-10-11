@@ -219,7 +219,14 @@ public actor MsgpackRpc {
         do {
           buffer.append(data)
 
-          let (values, remainder) = try self.unpackAllWithRemainder(buffer)
+          let (values, remainder): (values: [Value], remainder: Data?)
+          do {
+            (values, remainder) = try self.unpackAllWithRemainder(buffer)
+          } catch {
+            dlog.error("Failed to unpack Msgpack RPC data from pipe: \(error)")
+            await self.cleanUp()
+            return
+          }
 
           if let remainder {
             buffer = remainder
@@ -267,7 +274,14 @@ public actor MsgpackRpc {
 
         buffer.append(chunk)
 
-        let (values, remainder) = try self.unpackAllWithRemainder(buffer)
+        let (values, remainder): (values: [Value], remainder: Data?)
+        do {
+          (values, remainder) = try self.unpackAllWithRemainder(buffer)
+        } catch {
+          dlog.error("Failed to unpack Msgpack RPC data from socket: \(error)")
+          await self.cleanUp()
+          return
+        }
 
         if let remainder {
           buffer = remainder
